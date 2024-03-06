@@ -139,6 +139,7 @@ type
     procedure ConfirmaResetVolume(pPedidoVolumeId: Integer);
     Procedure ThreaConfirmaResetVolumeTerminate(Sender: TObject);
     Procedure Limpar; OverRide;
+    procedure StartCheckOutColetor(pJsonArrayProduto: TJsonArray);
   Protected
     Procedure AtivaCampoDefault; OverRide;
   public
@@ -383,7 +384,7 @@ begin
   Else If Key = vkF9 then
 //     CancelarVolume   //Para ativar color RctF9.Visible := True;
   Else if Key = vkReturn then Begin
-     if StrToInt64Def(EdtProduto.Text, 0 ) > 0 then
+     if (Length(EdtProduto.Text)<=25) or (StrToInt64Def(EdtProduto.Text, 0 ) > 0) then
         AtualizaCheckOut
      else if EdtProduto.Text <> '' Then Begin
         SetCampoDefault('EdtProduto');
@@ -623,6 +624,46 @@ begin
   Limpar;
 end;
 
+procedure TFrmCheckOut.StartCheckOutColetor(pJsonArrayProduto : TJsonArray);
+Var Svc: IFMXClipboardService;
+    xProd : Integer;
+begin
+  If QryListaPadrao.Active then
+     QryListaPadrao.EmptyDataSet;
+  QryListaPadrao.Close;
+  QryListaPadrao.Open;
+  For xProd := 0 To Pred(pJsonArrayProduto.Count) do Begin
+    QryListaPadrao.Append;
+    QryLIstaPadrao.FieldByName('pedidovolumeid').AsInteger  := pJsonArrayProduto.Items[xProd].GetValue<Integer>('pedidovolumeid');
+    QryLIstaPadrao.FieldByName('produtoid').AsInteger       := pJsonArrayProduto.Items[xProd].GetValue<Integer>('produtoid');
+    QryLIstaPadrao.FieldByName('codproduto').AsInteger      := pJsonArrayProduto.Items[xProd].GetValue<Integer>('codproduto');
+    QryLIstaPadrao.FieldByName('codbarras').AsString        := pJsonArrayProduto.Items[xProd].GetValue<String>('codbarras');
+    QryLIstaPadrao.FieldByName('descricao').AsString        := pJsonArrayProduto.Items[xProd].GetValue<String>('descricao');
+    QryLIstaPadrao.FieldByName('unidadesecundariasigla').AsString := pJsonArrayProduto.Items[xProd].GetValue<String>('unidadesecundariasigla');
+    QryLIstaPadrao.FieldByName('endereco').AsString         := pJsonArrayProduto.Items[xProd].GetValue<String>('endereco');
+    QryLIstaPadrao.FieldByName('mascara').AsString          := pJsonArrayProduto.Items[xProd].GetValue<String>('mascara');
+    QryLIstaPadrao.FieldByName('demanda').AsInteger         := pJsonArrayProduto.Items[xProd].GetValue<Integer>('demanda');
+    QryLIstaPadrao.FieldByName('embalagempadrao').AsInteger := pJsonArrayProduto.Items[xProd].GetValue<Integer>('embalagempadrao');
+    QryLIstaPadrao.FieldByName('qtdsuprida').AsInteger      := pJsonArrayProduto.Items[xProd].GetValue<Integer>('qtdsuprida');
+  End;
+  LblEndereco.Text := EnderecoMask(QryListaPadrao.FieldByName('Endereco').AsString,
+                                     QryListaPadrao.FieldByName('Mascara').AsString, True);
+  LblProduto.Text := QryListaPadrao.FieldByName('CodProduto').AsString+' '+Copy(QryListaPadrao.FieldByName('Descricao').AsString, 1, 30);
+  LblProd2.Text   := Copy(QryListaPadrao.FieldByName('Descricao').AsString, 31,30);
+  if FrmeXactWMS.ConfigWMS.BeepProdIndividual = 1 then
+     EdtQtdApanhe.Text := '0'
+  Else EdtQtdApanhe.Text := (QryListaPadrao.FieldByName('Demanda').AsInteger Div QryListaPadrao.FieldByName('EmbalagemPadrao').AsInteger).ToString();
+  EdtQtdDemanda.Text := (QryListaPadrao.FieldByName('Demanda').AsInteger Div QryListaPadrao.FieldByName('EmbalagemPadrao').AsInteger).ToString();
+  if QryListaPadrao.FieldByName('EmbalagemPadrao').AsInteger = 1 then
+     EdtUnid.Text := QryListaPadrao.FieldByName('EmbalagemPadrao').AsString
+  else EdtUnid.Text := QryListaPadrao.FieldByName('UnidadeSecundariaSigla').AsString+
+                       ' c/ '+QryListaPadrao.FieldByName('EmbalagemPadrao').AsString;
+  LblSkuVolume.Text := QryListaPadrao.FieldByName('Demanda').AsString;
+  DelayedSetFocus(EdtProduto);
+  F3Press   := False;
+  EdtQtdApanhe.ReadOnly := True;
+End;
+
 procedure TFrmCheckOut.StartCheckOut;
 Var JsonArrayRetorno, JsonArrayVolumeProduto : TJsonArray;
     vErro : String;
@@ -677,61 +718,88 @@ begin
 end;
 
 function TFrmCheckOut.ValidarVolume: Boolean;
-Var JsonArrayVolume : TJsonArray;
-    vErro : String;
+Var JsonArrayVolume     : TJsonArray;
+    JsonObjectVolume    : TJsonObject;
+    vErro               : String;
+    ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
 begin
-  Result := False;
   Try
-    JsonArrayVolume := DmClient.GetVolumeeXact(StrTointDef(EdtVolumeId.Text, 0));
-    if JsonArrayVolume.Items[0].TryGetValue('Erro', vErro) then Begin
-       SetCampoDefault('EdtVolumeId');
-       ShowErro('Erro: '+vErro);
-       //FrmeXactWMS.PlaySound('notfound.wav');
-    End
-    Else Begin
-       if JsonArrayVolume.Items[0].GetValue<Integer>('volumetipo') = 0 then Begin
-          LblTituloForm.Text := 'CheckOut Volume Cxa.Fechada';
-       End
-       Else Begin
+    ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create();
+    Result := False;
+    Try
+      //JsonArrayVolume := DmClient.GetVolumeeXact(StrTointDef(EdtVolumeId.Text, 0));   //Substituido pelo trecho abaixo, Indiana 050324
+      JsonObjectVolume := ObjPedidoVolumeCtrl.GetPedidoCxaFechadaCheckOut(StrTointDef(EdtVolumeId.Text, 0));
+      if JsonObjectVolume.TryGetValue('Erro', vErro) then Begin
          SetCampoDefault('EdtVolumeId');
-         ShowErro('Fracionado(s) devem ir para o CheckOut.');
-         Exit;
-       End;
-       case JsonArrayVolume.Items[0].GetValue<Integer>('processoid') of
-          2: Begin
-               SetCampoDefault('EdtVolumeId');
-               ShowErro('Imprima a etiqueta do volume!');
-               Exit
-             End;
-          3, 8, 9: Begin Result := True; CabecalhoPedido(JsonArrayVolume.Items[0].GetValue<Integer>('pedidoid'),
-                                                      JsonArrayVolume.Items[0].Getvalue<TjsonObject>('destino').GetValue<String>('razao'),
-                                                      JsonArrayVolume.Items[0].GetValue<TJsonObject>('pedido'). GetValue<String>('documentodata'),
-                                                      JsonArrayVolume.Items[0].GetValue<TJsonObject>('rota').GetValue<Integer>('rotaid') );
-               StartCheckOut;
-               Operacao := opCheckOut;
-             End;
-          7: Begin
-               SetCampoDefault('EdtVolumeId');
-               ShowErro('Volume em Separação. Finalize a separação!');
-               DelayEdSetFocus(EdtVolumeId);
-               Exit;
-             End;
-          10, 11, 12: Begin //Reconferência
-              SetCampoDefault('EdtVolumeId');
-              ShowErro('Não é possível Recheckout do volume ('+EdtVolumeId.Text+')!');
-              End;
-          Else Begin
-             EdtVolumeId.Text := '';
-             DelayedSetFocus(EdtVolumeId);
-             raise Exception.Create('Volume não pode ser separado. Etapa Atual: '+JsonArrayVolume.Items[0].GetValue<String>('processo'));
-          End;
-       end;
+         ShowErro('Erro: '+vErro);
+         //FrmeXactWMS.PlaySound('notfound.wav');
+      End
+      Else Begin
+         JsonArrayVolume := JsonObjectVolume.GetValue<TJsonArray>('volume');
+         Result := True;
+         CabecalhoPedido(JsonArrayVolume.Items[0].GetValue<Integer>('pedidoid'),
+                         JsonArrayVolume.Items[0].GetValue<String>('fantasia'),
+                         DateEUAToBr( JsonArrayVolume.Items[0].GetValue<String>('documentodata')),
+                         JsonArrayVolume.Items[0].GetValue<Integer>('rotaid') );
+         StartCheckOutColetor(JsonObjectVolume.GetValue<TJsonArray>('produto'));
+         Operacao := opCheckOut;
+      End;
+
+      Exit;
+
+      if 1=2 then Begin //JsonArrayVolume.Items[0].TryGetValue('Erro', vErro) then Begin
+         SetCampoDefault('EdtVolumeId');
+         ShowErro('Erro: '+vErro);
+         //FrmeXactWMS.PlaySound('notfound.wav');
+      End
+      Else Begin
+         if JsonArrayVolume.Items[0].GetValue<Integer>('volumetipo') = 0 then Begin
+            LblTituloForm.Text := 'CheckOut Volume Cxa.Fechada';
+         End
+         Else Begin
+           SetCampoDefault('EdtVolumeId');
+           ShowErro('Fracionado(s) devem ir para o CheckOut.');
+           Exit;
+         End;
+         case JsonArrayVolume.Items[0].GetValue<Integer>('processoid') of
+            2: Begin
+                 SetCampoDefault('EdtVolumeId');
+                 ShowErro('Imprima a etiqueta do volume!');
+                 Exit
+               End;
+            3, 7, 8, 9: Begin Result := True; CabecalhoPedido(JsonArrayVolume.Items[0].GetValue<Integer>('pedidoid'),
+                                                              JsonArrayVolume.Items[0].Getvalue<TjsonObject>('destino').GetValue<String>('fantasia'),
+                                                              JsonArrayVolume.Items[0].GetValue<TJsonObject>('pedido'). GetValue<String>('documentodata'),
+                                                              JsonArrayVolume.Items[0].GetValue<TJsonObject>('rota').GetValue<Integer>('rotaid') );
+                 StartCheckOut;
+                 Operacao := opCheckOut;
+               End;
+            71: Begin
+                 SetCampoDefault('EdtVolumeId');
+                 ShowErro('Volume em Separação. Finalize ou Envie para CheckOut!');
+                 DelayEdSetFocus(EdtVolumeId);
+                 Exit;
+               End;
+            10, 11, 12: Begin //Reconferência
+                SetCampoDefault('EdtVolumeId');
+                ShowErro('Não é possível Recheckout do volume ('+EdtVolumeId.Text+')!');
+                End;
+            Else Begin
+               EdtVolumeId.Text := '';
+               DelayedSetFocus(EdtVolumeId);
+               ObjPedidoVolumeCtrl.Free;
+               raise Exception.Create('Volume não pode ser separado. Etapa Atual: '+JsonArrayVolume.Items[0].GetValue<String>('processo'));
+            End;
+         end;
+      End;
+    Except On E: Exception do Begin
+      Limpar;
+      SetCampoDefault('EdtVolumeId');
+      ShowErro('Erro: '+E.Message);
+      End;
     End;
-  Except On E: Exception do Begin
-    Limpar;
-    SetCampoDefault('EdtVolumeId');
-    ShowErro('Erro: '+E.Message);
-    End;
+  Finally
+    ObjPedidoVolumeCtrl.Free;
   End;
 end;
 

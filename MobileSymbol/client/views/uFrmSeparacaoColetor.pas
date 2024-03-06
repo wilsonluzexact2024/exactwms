@@ -1518,6 +1518,11 @@ Var vCod : Integer;
     vQtdSuprida        : Integer;
     ObjProdutoCtrl     : TProdutoCtrl;
 begin
+  if (Length(EdtProduto.Text)<=25) then Begin
+     SetCampoDefault('EdtProduto');
+     ShowErro('Código/Ean inválido');
+     Exit/
+  End;
   inherited;
   If (Key = vkReturn) and (EdtProduto.Text<>'') then Begin
      DelayEdSetFocus(EdtDesativarDigitacao);
