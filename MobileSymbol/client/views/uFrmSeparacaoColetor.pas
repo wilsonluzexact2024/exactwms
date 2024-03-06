@@ -1375,6 +1375,11 @@ end;
 procedure TFrmSeparacaoColetor.EdtEmbalagemIdKeyUp(Sender: TObject;
   var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
+  if (Length(EdtEmbalagemId.Text) > 20) then Begin
+     SetCampoDefault('EdtProduto');
+     ShowErro('Nr Embalagem inválido!!!');
+     Exit;
+  End;
   if Key = vkF2 then Begin
      FrmeXactWMS.BrnMenuClick(Sender);
      Exit;
@@ -1518,16 +1523,16 @@ Var vCod : Integer;
     vQtdSuprida        : Integer;
     ObjProdutoCtrl     : TProdutoCtrl;
 begin
-  if (Length(EdtProduto.Text)<=25) then Begin
+  if (Length(EdtProduto.Text)>20) then Begin
      SetCampoDefault('EdtProduto');
      ShowErro('Código/Ean inválido');
-     Exit/
+     Exit;
   End;
   inherited;
   If (Key = vkReturn) and (EdtProduto.Text<>'') then Begin
      DelayEdSetFocus(EdtDesativarDigitacao);
-     if (StrToInt64Def(EdtEmbalagemId.Text, 0) <> 0) and
-        (StrToInt64Def(EdtProduto.Text, 0) = StrToInt64Def(EdtEmbalagemId.Text, 0))then Begin
+     if (StrToIntDef(EdtEmbalagemId.Text, 0) > 0) and
+        (StrToIntDef(EdtProduto.Text, 0) = StrToIntDef(EdtEmbalagemId.Text, 0))then Begin
         LogOff;
         Exit;
      End
