@@ -304,10 +304,7 @@ type
     function Insert(ArrayEntradas: TJsonArray): TJsonArray;
     Function Retorno(pPedidoId: String): TJsonArray;
     Procedure RegistrarRetorno(pEntradaId: Integer);
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
   end;
 
 implementation
@@ -1119,29 +1116,6 @@ begin
   end;
 end;
 
-procedure TEntradaIntegracaoDao.SalvarLog(pMethod: TMethodType;
-  pUsuarioId: Integer; pTerminal, pIpClient: String; pPort: Integer;
-  pUrl, pParams, pBody, pResponsestr, pResponseJson: String;
-  pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
-
-begin
-  If length(pParams) > 1000 then
-    pParams := Copy(pParams, 1, 1000);
-  If length(pBody) > 4000 then
-    pBody := Copy(pBody, 1, 4000);
-  If length(pResponsestr) > 1000 then
-    pResponsestr := Copy(pResponsestr, 1, 1000);
-  If length(pResponseJson) > 8000 then
-    pResponseJson := Copy(pResponseJson, 1, 8000);
-
-  Try
-    Tutil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-  finally
-
-  end;
-end;
 
 procedure TEntradaIntegracaoDao.SalvarLogOld(pFuncao, pMensagem: String);
 var

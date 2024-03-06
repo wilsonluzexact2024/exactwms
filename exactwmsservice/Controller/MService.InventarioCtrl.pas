@@ -39,16 +39,23 @@ Procedure SaveContagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Cancelar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure InventarioFechar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure InventarioFechar(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure Pendente(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Contagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure ApuracaoInventarioEndereco(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure ApuracaoInventarioProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure ApuracaoInventarioEndereco(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure ApuracaoInventarioProduto(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure LimparContagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetInventarioConsultaIntegracao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure PutInventarioIntegracao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure PutInventarioIntegracaoLote(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetDSHAcompanhamentoContagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetInventarioConsultaIntegracao(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure PutInventarioIntegracao(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure PutInventarioIntegracaoLote(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetDSHAcompanhamentoContagem(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 
 implementation
 
@@ -60,28 +67,25 @@ uses MService.InventarioDAO, uFuncoes, Services.Inventario;
 
 procedure Registry;
 begin
-  THorse.Group
-  .Prefix('v1')
-    .Get('/inventario', Get)
+  THorse.Group.Prefix('v1').Get('/inventario', Get)
     .Get('/inventario/:inventarioid', GetId)
     .Get('/inventario/itens/:inventarioid', GetItens)
     .Get('/inventario/loteinventariado', GetLoteInventariado)
     .Post('/inventario', Insert)
-    .Post('/inventario/zerarendereco/:inventarioid/:enderecoid/:produtoid', ZerarEndereco)
-    .Post('/inventario/savecontagem', SaveContagem)
-    .Put('/inventario/:inventarioid', Update)
-    .Delete('/inventario/cancelar', Cancelar)
-    .Delete('/inventario/:inventarioid', Delete)
-    .Get('/inventario/pendente', Pendente)
-    .Get('/inventario/contagem/:item', Contagem)
-    .Post('/inventario/fechar', InventarioFechar)
+    .Post('/inventario/zerarendereco/:inventarioid/:enderecoid/:produtoid',
+    ZerarEndereco).Post('/inventario/savecontagem', SaveContagem)
+    .Put('/inventario/:inventarioid', Update).Delete('/inventario/cancelar',
+    Cancelar).Delete('/inventario/:inventarioid', Delete)
+    .Get('/inventario/pendente', Pendente).Get('/inventario/contagem/:item',
+    Contagem).Post('/inventario/fechar', InventarioFechar)
     .Post('/inventario/apuracao/endereco', ApuracaoInventarioEndereco)
     .Post('/inventario/apuracao/produto', ApuracaoInventarioProduto)
-    .Put('/inventario/limparcontagem/:inventarioid/:enderecoid/:produtoid', LimparContagem)
-    .Get('/inventario/integracao/consulta', GetInventarioConsultaIntegracao)
-    .Put('/inventario/integracao/:inventarioid', PutInventarioIntegracao)
-    .Put('/inventario/integracaolote/:inventarioid', PutInventarioIntegracaoLote)
-    .Get('/inventario/dshcontageminventario', GetDSHAcompanhamentoContagem)
+    .Put('/inventario/limparcontagem/:inventarioid/:enderecoid/:produtoid',
+    LimparContagem).Get('/inventario/integracao/consulta',
+    GetInventarioConsultaIntegracao).Put('/inventario/integracao/:inventarioid',
+    PutInventarioIntegracao).Put('/inventario/integracaolote/:inventarioid',
+    PutInventarioIntegracaoLote).Get('/inventario/dshcontageminventario',
+    GetDSHAcompanhamentoContagem)
 
 end;
 
@@ -101,24 +105,25 @@ begin
       JsonArrayRetorno := LService.ApuracaoInventarioEndereco
         (Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       On E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayErro.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     end;
   Finally
@@ -140,12 +145,12 @@ begin
       JsonArrayRetorno := InventarioDAO.ApuracaoInventarioProduto
         (Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -153,13 +158,13 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed); // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+          .Status(THttpStatus.ExpectationFailed);
+        // Status(THTTPStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -180,9 +185,8 @@ begin
       InventarioDAO := TInventarioDao.Create;
       JsonArrayRetorno := InventarioDAO.GetInventario(Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/inventario',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -193,13 +197,14 @@ begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario',
-          Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario', Trim(Req.Params.Content.Text), Req.Body, '',
+          JsonArrayErro.ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
         JsonArrayErro := Nil;
       End;
     End;
@@ -212,7 +217,9 @@ procedure GetId(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   InventarioDAO: TInventarioDao;
 begin
-  Res.Send<TJsonObject>(TJsonObject.Create.AddPair('Erro', 'Chame a rota inventario/get e com parâmetros.')).Status(THttpStatus.Created);
+  Res.Send<tJsonObject>(tJsonObject.Create.AddPair('Erro',
+    'Chame a rota inventario/get e com parâmetros.'))
+    .Status(THttpStatus.Created);
 end;
 
 Procedure GetInventarioConsultaIntegracao(Req: THorseRequest;
@@ -229,12 +236,12 @@ begin
     Try
       JsonArrayRetorno := InventarioDAO.GetInventarioConsultaIntegracao;
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/integracao/consulta',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/integracao/consulta', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -242,13 +249,14 @@ begin
         ErroJsonArray.AddElement(tJsonObject.Create.AddPair('status', '500')
           .AddPair('ajuste', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(ErroJsonArray).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(ErroJsonArray)
+          .Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/integracao/consulta',
-          Trim(Req.Params.Content.Text), Req.Body, '', ErroJsonArray.ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/integracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', ErroJsonArray.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -283,8 +291,8 @@ begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.Created);
         // THTTPStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/inventario/dshcontageminventario', Trim(Req.Params.Content.Text),
           Req.Body, '', tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
           .ToString(), 500, ((Time - HrInicioLog) / 1000),
@@ -306,15 +314,15 @@ begin
     HrInicioLog := Time;
     InventarioDAO := TInventarioDao.Create;
     Try
-      JsonArrayRetorno := InventarioDAO.GetItens(Req.Params.Items['inventarioid']
-        .ToInteger());
+      JsonArrayRetorno := InventarioDAO.GetItens
+        (Req.Params.Items['inventarioid'].ToInteger());
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);;
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/itens/:inventarioid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/itens/:inventarioid', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -322,13 +330,13 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed); // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/itens/:inventarioid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+          .Status(THttpStatus.ExpectationFailed);
+        // Status(THTTPStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/itens/:inventarioid', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -347,14 +355,15 @@ begin
     HrInicioLog := Time;
     InventarioDAO := TInventarioDao.Create;
     Try
-      JsonArrayRetorno := InventarioDAO.GetLoteInventariado(Req.Query.Dictionary);
+      JsonArrayRetorno := InventarioDAO.GetLoteInventariado
+        (Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -362,13 +371,13 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed); // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+          .Status(THttpStatus.ExpectationFailed);
+        // Status(THTTPStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -388,22 +397,22 @@ begin
     Try
       JsonObjectRetorno := InventarioDAO.InsertUpdate(Req.Body<tJsonObject>);
       Res.Send<tJsonObject>(JsonObjectRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '', JsonObjectRetorno.ToString(),
-        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', JsonObjectRetorno.ToString(), 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
         Res.Status(500).Send<tJsonObject>
           (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          tJsonObject.Create(TJSONPair.Create('Erro', E.Message)).ToString(), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          .ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -426,12 +435,12 @@ begin
         Req.Params.Items['enderecoid'].ToInteger(),
         Req.Params.Items['produtoid'].ToInteger());
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);;
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -439,12 +448,11 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -463,21 +471,29 @@ begin
     HrInicioLog := Time;
     InventarioDAO := TInventarioDao.Create;
     Try
-      JsonArrayRetorno := InventarioDAO.PutInventarioIntegracao(Req.Params.Items['inventarioid']);
+      JsonArrayRetorno := InventarioDAO.PutInventarioIntegracao
+        (Req.Params.Items['inventarioid']);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);;
-      InventarioDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(tJsonObject.Create.AddPair('status', '500')
-                                    .AddPair('ajuste', TJsonNumber.Create(0)).AddPair('mensagem', E.Message));
-        Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        InventarioDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+          .AddPair('ajuste', TJsonNumber.Create(0)).AddPair('mensagem',
+          E.Message));
+        Res.Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.ExpectationFailed);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -499,12 +515,12 @@ begin
       JsonArrayRetorno := InventarioDAO.PutInventarioIntegracaoLote
         (Req.Params.Items['inventarioid']);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);;
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -514,12 +530,11 @@ begin
           E.Message));
         Res.Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.ExpectationFailed);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -540,22 +555,22 @@ begin
       JsonObjectRetorno := tJsonObject.Create;
       Res.Send<tJsonObject>(InventarioDAO.InsertUpdate(Req.Body<tJsonObject>))
         .Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '', JsonObjectRetorno.ToString(),
-        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', JsonObjectRetorno.ToString(), 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
         Res.Status(500).Send<tJsonObject>
           (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -575,23 +590,23 @@ begin
       InventarioDAO := TInventarioDao.Create;
       JsonObjectRetorno := InventarioDAO.SaveContagem(Req.Body<TJsonArray>);
       Res.Send<tJsonObject>(JsonObjectRetorno).Status(THttpStatus.Created);;
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '', JsonObjectRetorno.ToString(),
-        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', JsonObjectRetorno.ToString(), 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -614,11 +629,11 @@ begin
         Req.Params.Items['enderecoid'].ToInteger(),
         Req.Params.Items['produtoid'].ToInteger());
       Res.Send<tJsonObject>(JsonOjbectRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '', JsonOjbectRetorno.ToString(),
-        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', JsonOjbectRetorno.ToString(), 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       JsonOjbectRetorno := Nil;
     Except
       on E: Exception do
@@ -626,12 +641,12 @@ begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -652,11 +667,10 @@ begin
       Res.Status(200).Send<tJsonObject>
         (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        (tJsonObject.Create(TJSONPair.Create('Resultado',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).ToString(), 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
@@ -665,12 +679,12 @@ begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -692,11 +706,10 @@ begin
       Res.Status(200).Send<tJsonObject>
         (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Inventário fechado com Sucesso!'))).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        (tJsonObject.Create(TJSONPair.Create('Resultado',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).ToString(), 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
@@ -705,12 +718,12 @@ begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -731,12 +744,12 @@ begin
       JsonArrayRetorno := InventarioDAO.Contagem
         (StrToIntDef(Req.Params.Items['item'], 0));
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname']);
     Except
       on E: Exception do
       Begin
@@ -744,13 +757,13 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed); // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString(), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+          .Status(THttpStatus.ExpectationFailed);
+        // Status(THTTPStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString(), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -772,11 +785,10 @@ begin
       Res.Status(200).Send<tJsonObject>
         (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).Status(THttpStatus.Created);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        (tJsonObject.Create(TJSONPair.Create('Resultado',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+        Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).ToString(), 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except
@@ -785,12 +797,12 @@ begin
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THttpStatus.ExpectationFailed);
         // Status(THTTPStatus.Created);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario/loteinventariado',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))).ToString(),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
+          Req.Body, '', (tJsonObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString(), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -821,9 +833,8 @@ begin
     Try
       JsonArrayRetorno := InventarioDAO.GetPendente;
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      InventarioDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/inventario',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/inventario',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -834,11 +845,11 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create.AddPair('Erro',
           E.Message));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        InventarioDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/inventario',
-          Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/inventario', Trim(Req.Params.Content.Text), Req.Body, '',
+          JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally

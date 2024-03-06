@@ -44,7 +44,7 @@ implementation
 
 { tCtrlLote }
 
-uses MService.LoteDAO, uFuncoes;
+uses MService.LoteDAO, uFuncoes, exactwmsservice.lib.utils;
 
 // uses UDmRhemaWMS, uFrmRhemaWms; //, uFrmPesquisa
 
@@ -74,7 +74,7 @@ begin
       LoteDAO := TLoteDAO.Create;
       JsonArrayRetorno := LoteDAO.Estrutura;
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      LoteDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/lote/estrutura',
         Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString(),
@@ -84,7 +84,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LoteDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/lote/estrutura',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString(),
@@ -110,7 +110,7 @@ begin
       LoteDAO := TLoteDAO.Create;
       JsonArrayRetorno := LoteDAO.GetID(0);
       Res.Send<TJSonArray>(JsonArrayRetorno);
-      LoteDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + jsonArrayRetorno.Count.ToString + ' Registros.',
@@ -122,7 +122,7 @@ begin
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-        LoteDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
@@ -148,7 +148,7 @@ begin
                                                Req.Params.Items['loteid'].ToInteger(),
                                                Req.Params.Items['descricao']);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      LoteDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + jsonArrayRetorno.Count.ToString + ' Registros.',
@@ -160,7 +160,7 @@ begin
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-        LoteDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
@@ -218,7 +218,7 @@ begin
       LoteDAO := TLoteDAO.Create;
       JsonArrayRetorno := LoteDAO.GetID(StrToIntDef(Req.Params.Items['id'], 0));
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      LoteDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + jsonArrayRetorno.Count.ToString + ' Registros.',
@@ -230,7 +230,7 @@ begin
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-        LoteDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),

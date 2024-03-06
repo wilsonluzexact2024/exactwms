@@ -36,7 +36,7 @@ implementation
 
 { tCtrlEntradaIntegracao }
 
-uses MService.EntradaIntegracaoDAO, uFuncoes;
+uses MService.EntradaIntegracaoDAO, uFuncoes, exactwmsservice.lib.utils;
 
 // uses UDmRhemaWMS, uFrmRhemaWms; //, uFrmPesquisa
 
@@ -64,7 +64,7 @@ begin
       if (JsonRetornoArray.Items[0].TryGetValue('Erro', vStatus)) then
       Begin // and (vStatus.ToInteger() > 299) then
         Res.Status(500).Send<TJsonArray>(JsonRetornoArray);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao/consulta',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -74,7 +74,7 @@ begin
       Else
       Begin
         Res.Status(200).Send<TJsonArray>(JsonRetornoArray);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao/consulta',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonRetornoArray.ToString,
@@ -88,7 +88,7 @@ begin
           .AddPair('entradaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
           .AddPair('mensagem', E.Message));
         Res.Status(500).Send<TJsonArray>(ErroJsonArray);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao/consulta',
           Trim(Req.Params.Content.Text), Req.Body, '', e.Message,
@@ -130,7 +130,7 @@ begin
       if (JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro)) then
       Begin
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao', Trim(Req.Params.Content.Text),
           Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
@@ -140,7 +140,7 @@ begin
       Else
       Begin
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao', Trim(Req.Params.Content.Text),
           Req.Body, '', JsonArrayRetorno.ToString, 200,
@@ -156,7 +156,7 @@ begin
         JsonErro.AddPair('mensagem', E.Message);
         JsonArrayRetorno.AddElement(JsonErro);
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao', Trim(Req.Params.Content.Text),
           Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -184,7 +184,7 @@ begin
       if (JsonArrayRetorno.Items[0].TryGetValue('Erro', vStatus)) then
       Begin
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/entradaintegracao/retorno/:pedidoid',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -194,7 +194,7 @@ begin
       Else
       Begin
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao/retorno/:pedidoid',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
@@ -208,7 +208,7 @@ begin
           .AddPair('entradaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
           .AddPair('mensagem', E.Message));
         Res.Status(500).Send<TJsonArray>(ErroJsonArray);
-        EntradaIntegracaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
           THorse.Port, '/v1/entradaintegracao/retorno/:pedidoid',
           Trim(Req.Params.Content.Text), Req.Body, '', e.Message,

@@ -61,10 +61,7 @@ type
       : TDictionary<string, string>): TJSonArray;
     Function PutAtualizarStatus(Const pJsonObjectCargas: TJsonObject)
       : TJSonArray;
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
   end;
 
 implementation
@@ -1229,41 +1226,6 @@ begin
         StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
         '', [rfReplaceAll]));
-    End;
-  end;
-end;
-
-procedure TCargasDAO.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-  pTerminal, pIpClient: String; pPort: Integer;
-  pUrl, pParams, pBody, pResponsestr, pResponseJson: String;
-  pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
-
-begin
-  If length(pParams) > 1000 then
-    pParams := Copy(pParams, 1, 1000);
-  If length(pBody) > 4000 then
-    pBody := Copy(pBody, 1, 4000);
-  If length(pResponsestr) > 1000 then
-    pResponsestr := Copy(pResponsestr, 1, 1000);
-  If length(pResponseJson) > 8000 then
-    pResponseJson := Copy(pResponseJson, 1, 8000);
-
-  Try
-    If length(pParams) > 1000 then
-      pParams := Copy(pParams, 1, 1000);
-    If length(pBody) > 4000 then
-      pBody := Copy(pBody, 1, 4000);
-    If length(pResponsestr) > 1000 then
-      pResponsestr := Copy(pResponsestr, 1, 1000);
-    If length(pResponseJson) > 8000 then
-      pResponseJson := Copy(pResponseJson, 1, 8000);
-    Tutil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-
-  Except
-    Begin
-
     End;
   end;
 end;

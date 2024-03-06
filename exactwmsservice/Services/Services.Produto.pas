@@ -489,8 +489,6 @@ Var
 begin
   Try
     Result := TJsonArray.Create;
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
     FConexao.Query.connection.StartTransaction;
     FConexao.Query.connection.TxOptions.Isolation := xiReadCommitted;
     FConexao.Query.Close;
@@ -570,8 +568,7 @@ Var
 begin
   Try
     Result := TJsonArray.Create;
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.connection.StartTransaction;
     FConexao.Query.Close;
     FConexao.Query.SQL.Add('Declare @codproduto  Integer     = :pCodProduto');

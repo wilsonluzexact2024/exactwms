@@ -43,7 +43,7 @@ implementation
 
 { tCtrlLaboratorio }
 
-uses uLaboratorioDAO, uFuncoes;
+uses uLaboratorioDAO, uFuncoes, exactwmsservice.lib.utils;
 
 // uses UDmRhemaWMS, uFrmRhemaWms; //, uFrmPesquisa
 
@@ -74,7 +74,7 @@ begin
       LaboratorioDAO := TLaboratorioDAO.Create;
       JsonArrayRetorno := LaboratorioDAO.Estrutura;
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      LaboratorioDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -86,7 +86,7 @@ begin
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/estrutura',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
@@ -110,7 +110,7 @@ begin
       LaboratorioDAO := TLaboratorioDAO.Create;
       JsonArrayRetorno := LaboratorioDAO.GetID(0);
       Res.Send<TJSonArray>(JsonArrayRetorno);
-      LaboratorioDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/get',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -122,7 +122,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/get',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
@@ -170,7 +170,7 @@ begin
       JsonArrayRetorno := TJsonArray.Create;
       Res.Send<TJSonArray>(LaboratorioDAO.GetDescricao(Req.Params.Items
         ['descricao'])).Status(THttpStatus.Created);
-      LaboratorioDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -180,7 +180,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
@@ -204,7 +204,7 @@ begin
       LaboratorioDAO := TLaboratorioDAO.Create;
       JsonArrayRetorno := LaboratorioDAO.GetID(StrToIntDef(Req.Params.Items['id'], 0));
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      LaboratorioDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -214,7 +214,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
@@ -238,7 +238,7 @@ begin
       LaboratorioDAO := TLaboratorioDAO.Create;
       Res.Send<TJSonArray>(LaboratorioDAO.Import(Req.Body<TJSonArray>))
         .Status(THttpStatus.Created);
-      LaboratorioDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -248,7 +248,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
@@ -272,7 +272,7 @@ begin
       LaboratorioDAO := TLaboratorioDAO.Create;
       Res.Send<TJSonArray>(LaboratorioDAO.ImportDados(Req.Body<TJSonArray>))
         .Status(THttpStatus.Created);
-          LaboratorioDAO.SalvarLog(Req.MethodType,
+          Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
         Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString,
@@ -282,7 +282,7 @@ begin
         JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
-        LaboratorioDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/laboratorio/getdescricao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message,

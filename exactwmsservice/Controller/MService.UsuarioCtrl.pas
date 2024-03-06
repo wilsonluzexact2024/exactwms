@@ -491,7 +491,7 @@ begin
       Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
         'Controle de Acesso Rgistrado com Sucesso!')))
         .Status(THttpStatus.Created);
-      UsuarioDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
         0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/usuario/:Usuarioid', Trim(Req.Params.Content.Text), Req.Body, '',
         StringReplace(Retorno.ToString, #39, '', [rfReplaceAll]), 201,
@@ -503,7 +503,7 @@ begin
         Retorno := TJsonArray.Create;
         Retorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        UsuarioDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/usuario/:Usuarioid', Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(Retorno.ToString, #39, '', [rfReplaceAll]), 500,

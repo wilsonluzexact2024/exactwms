@@ -4,64 +4,79 @@ interface
 
 uses
   FireDAC.Comp.Client, System.SysUtils, FireDAC.Stan.Error, FireDAC.Stan.Option,
-  System.StrUtils,  DataSet.Serialize, System.JSON, REST.JSON,
+  System.StrUtils, DataSet.Serialize, System.JSON, REST.JSON,
   Generics.Collections, Web.HTTPApp, exactwmsservice.lib.connection,
   exactwmsservice.lib.utils, exactwmsservice.dao.base;
 
-Const SqlSaidaIntegracaoConsulta = ';With' + sLineBreak +
-      'Ped as (Select De.ProcessoId, Ped.* From VPedidos Ped' + sLineBreak +
-      '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid' + sLineBreak +
-      '        Where Ped.Status <= 2' + sLineBreak +
-      '		      and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'+ sLineBreak +
-      'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, ' + sLineBreak +
-      '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada' + sLineBreak +
-      'From PedidoItens PI' + sLineBreak +
-      'Inner Join Ped P ON P.PedidoId = PI.PedidoId' + sLineBreak +
-      'Group by PI.PedidoId) ' + sLineBreak + 'Select P.*, TC.*' + sLineBreak +
-      'From Ped P' + sLineBreak +
-      'Left Join TotCheckIn TC On Tc.PedidoId = P.PedidoId'; // CheckIn Concluído
+Const
+  SqlSaidaIntegracaoConsulta = ';With' + sLineBreak +
+    'Ped as (Select De.ProcessoId, Ped.* From VPedidos Ped' + sLineBreak +
+    '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid' +
+    sLineBreak + '        Where Ped.Status <= 2' + sLineBreak +
+    '		      and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'
+    + sLineBreak +
+    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '
+    + sLineBreak +
+    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'
+    + sLineBreak + 'From PedidoItens PI' + sLineBreak +
+    'Inner Join Ped P ON P.PedidoId = PI.PedidoId' + sLineBreak +
+    'Group by PI.PedidoId) ' + sLineBreak + 'Select P.*, TC.*' + sLineBreak +
+    'From Ped P' + sLineBreak +
+    'Left Join TotCheckIn TC On Tc.PedidoId = P.PedidoId'; // CheckIn Concluído
 
-Const SqlSaidaInsert = 'Begin Try' + sLineBreak +
-    '  If Not Exists (Select PedidoId From Pedido Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP) Begin' + sLineBreak +
-    '     Insert Into Pedido (OperacaoTipoId, operacaonaturezaid, PessoaId, DocumentoNr, DocumentoOriginal, DocumentoData, DtInclusao, HrInclusao,	' + sLineBreak +
-    '                         ArmazemId, RegistroERP, Status, uuid) Values (@OperacaoTipoId, (select operacaonaturezaid From OperacaoNatureza where Descricao = @OperacaoNatureza), ' + sLineBreak +
-    '                         @PessoaId, @DocumentoNr, @DocumentoOriginal, @DocumentoData, ' + sLineBreak +
-    '                                (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), ' + sLineBreak +
-    '                                (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), 1, @RegistroERP, 0, NewId())' + sLineBreak +
-    '     Insert Into DocumentoEtapas Values ((select uuid from pedido where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP), 1, '+sLineBreak+
-    '                                         Null, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),  ' + sLineBreak +
-    '            (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), ' + sLineBreak+
-    '            GetDate(), ' + #39 + 'IntegracaoERP' + #39 + ', 1)' + sLineBreak +
-    '  End' + sLineBreak +
-    '  Else Begin ' + sLineBreak +
-    '    --Retirar o Erro Forçado abaixo por depender do Status do PEdido' + sLineBreak +
-    '    --RAISERROR (' + #39 + 'Não é permitido o reenvio deste ressuprimento.' + #39 + ', 16, 1 );' + sLineBreak +
-    '    Delete from PedidoProdutos Where PedidoId = (Select Pedidoid From Pedido Where PessoaId = @PessoaId and '+sLineBreak+
-    '                                     DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId and RegistroERP = @RegistroERP)'+sLineBreak +
-    '    Update Pedido Set' + sLineBreak +
+Const
+  SqlSaidaInsert = 'Begin Try' + sLineBreak +
+    '  If Not Exists (Select PedidoId From Pedido Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP) Begin'
+    + sLineBreak +
+    '     Insert Into Pedido (OperacaoTipoId, operacaonaturezaid, PessoaId, DocumentoNr, DocumentoOriginal, DocumentoData, DtInclusao, HrInclusao,	'
+    + sLineBreak +
+    '                         ArmazemId, RegistroERP, Status, uuid) Values (@OperacaoTipoId, (select operacaonaturezaid From OperacaoNatureza where Descricao = @OperacaoNatureza), '
+    + sLineBreak +
+    '                         @PessoaId, @DocumentoNr, @DocumentoOriginal, @DocumentoData, '
+    + sLineBreak +
+    '                                (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '
+    + sLineBreak +
+    '                                (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), 1, @RegistroERP, 0, NewId())'
+    + sLineBreak +
+    '     Insert Into DocumentoEtapas Values ((select uuid from pedido where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP), 1, '
+    + sLineBreak +
+    '                                         Null, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),  '
+    + sLineBreak +
+    '            (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), '
+    + sLineBreak + '            GetDate(), ' + #39 + 'IntegracaoERP' + #39 +
+    ', 1)' + sLineBreak + '  End' + sLineBreak + '  Else Begin ' + sLineBreak +
+    '    --Retirar o Erro Forçado abaixo por depender do Status do PEdido' +
+    sLineBreak + '    --RAISERROR (' + #39 +
+    'Não é permitido o reenvio deste ressuprimento.' + #39 + ', 16, 1 );' +
+    sLineBreak +
+    '    Delete from PedidoProdutos Where PedidoId = (Select Pedidoid From Pedido Where PessoaId = @PessoaId and '
+    + sLineBreak +
+    '                                     DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId and RegistroERP = @RegistroERP)'
+    + sLineBreak + '    Update Pedido Set' + sLineBreak +
     '       OperacaoTipoId = @OperacaoTipoId' + sLineBreak +
     '      ,DocumentoData  = @DocumentoData' + sLineBreak +
     '      ,ArmazemId      = 1' + sLineBreak +
     '      , RegistroERP   = @RegistroERP' + sLineBreak +
-    '    Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId and RegistroERP = @RegistroERP'+ sLineBreak +
-    '   End' + sLineBreak + sLineBreak +
-    'Select PedidoId From Pedido Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId' + sLineBreak +
-    'End Try' + sLineBreak +
-    'Begin Catch' + sLineBreak +
+    '    Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId and RegistroERP = @RegistroERP'
+    + sLineBreak + '   End' + sLineBreak + sLineBreak +
+    'Select PedidoId From Pedido Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and OperacaoTipoid = @OperacaoTipoId'
+    + sLineBreak + 'End Try' + sLineBreak + 'Begin Catch' + sLineBreak +
     '  DECLARE @ErrorMsg NVARCHAR(4000);' + sLineBreak +
-    '  DECLARE @ErrSeverity INT;' + sLineBreak +
-    '  DECLARE @ErrState INT;' + sLineBreak +
-    '  SELECT @ErrorMsg = Error_message(), @ErrSeverity = Error_severity(), @ErrState = Error_state(); ' + sLineBreak +
-    '	 RAISERROR (@ErrorMsg, @ErrSeverity, @ErrState )' + sLineBreak +
-    'End Catch;';
+    '  DECLARE @ErrSeverity INT;' + sLineBreak + '  DECLARE @ErrState INT;' +
+    sLineBreak +
+    '  SELECT @ErrorMsg = Error_message(), @ErrSeverity = Error_severity(), @ErrState = Error_state(); '
+    + sLineBreak + '	 RAISERROR (@ErrorMsg, @ErrSeverity, @ErrState )' +
+    sLineBreak + 'End Catch;';
 
-Const SqlSaidaItensInsert = 'If Not Exists (Select PedidoItemId From PedidoItens Where PedidoId = @PedidoId and LoteId = @LoteId) Begin'+ sLineBreak +
-                            '   Insert Into PedidoItens (PedidoId, LoteId, QtdXML, uuid) Values (@PedidoId, @LoteId, @QtdXML, 0, NewId())'+ sLineBreak +
-                            'End' + sLineBreak +
-                            'Else Begin ' + sLineBreak +
-                            '  Update PedidoItens Set' + sLineBreak + '     QtdXML = @QtdXML' + sLineBreak +
-                            '  Where PedidoId = @PedidoId and LoteId = @LoteId' + sLineBreak +
-                            'End;';
+Const
+  SqlSaidaItensInsert =
+    'If Not Exists (Select PedidoItemId From PedidoItens Where PedidoId = @PedidoId and LoteId = @LoteId) Begin'
+    + sLineBreak +
+    '   Insert Into PedidoItens (PedidoId, LoteId, QtdXML, uuid) Values (@PedidoId, @LoteId, @QtdXML, 0, NewId())'
+    + sLineBreak + 'End' + sLineBreak + 'Else Begin ' + sLineBreak +
+    '  Update PedidoItens Set' + sLineBreak + '     QtdXML = @QtdXML' +
+    sLineBreak + '  Where PedidoId = @PedidoId and LoteId = @LoteId' +
+    sLineBreak + 'End;';
 
 type
 
@@ -98,10 +113,7 @@ type
     function Insert(ArraySaidas: TJsonArray; pVersao: String): TJsonArray;
     Function Retorno(pPedido: String; pVersao: String): TJsonArray;
     Procedure RegistrarRetorno(pSaidaId: Integer);
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
   end;
 
 implementation
@@ -149,18 +161,21 @@ begin
       FConexao.Query.Sql.SaveToFile('ConsultaSaidaRetorno2.Sql');
     FConexao.Query.Open();
     if FConexao.Query.FieldByName('ConsultaRetorno').AsString = '' then
-      Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados))
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        TuEvolutConst.QrySemDados))
     Else
     Begin
       Result := TJsonObject.ParseJSONValue
-                (TEncoding.UTF8.GetBytes(FConexao.Query.FieldByName('ConsultaRetorno').AsString), 0) as TJsonArray;
+        (TEncoding.UTF8.GetBytes(FConexao.Query.FieldByName('ConsultaRetorno')
+        .AsString), 0) as TJsonArray;
     End;
     // jsonRetorno.Free;
   Except
     ON E: Exception do
     Begin
       // jsonRetorno.Free;
-      raise Exception.Create('Processo: SaidaIntegracaoConsulta - '+StringReplace(E.Message,
+      raise Exception.Create('Processo: SaidaIntegracaoConsulta - ' +
+        StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
         '', [rfReplaceAll]));
     End;
@@ -309,57 +324,74 @@ begin
   end;
 end;
 
-function TSaidaIntegracaoDao.Retorno(pPedido: String; pVersao: String) : TJsonArray;
+function TSaidaIntegracaoDao.Retorno(pPedido: String; pVersao: String)
+  : TJsonArray;
 var
-  VQryPed, vQryPedVolumes, vQryPedidoLotes                          : TFDQuery;
-  jsonPedido, jsonDestinatario, jsonPedidoVolume, jsonPedidoProduto : TJsonObject;
-  jsonPedidoLotes, tjsonPedidoVolumeLacres                          : TJsonObject;
-  ArrayJsonVolumes, ArrayJsonProdutos, ArrayJsonLotes               : TJsonArray;
+  VQryPed, vQryPedVolumes, vQryPedidoLotes: TFDQuery;
+  jsonPedido, jsonDestinatario, jsonPedidoVolume, jsonPedidoProduto
+    : TJsonObject;
+  jsonPedidoLotes, tjsonPedidoVolumeLacres: TJsonObject;
+  ArrayJsonVolumes, ArrayJsonProdutos, ArrayJsonLotes: TJsonArray;
   vCodProduto, vQtdVolumes: Integer;
   vPeso, vVolumem3: Real;
 begin
-  Result          := TJsonArray.Create;
-  VQryPed         := FConexao.GetQuery;
-  vQryPedVolumes  := FConexao.GetQuery;
+  Result := TJsonArray.Create;
+  VQryPed := FConexao.GetQuery;
+  vQryPedVolumes := FConexao.GetQuery;
   vQryPedidoLotes := FConexao.GetQuery;
   try
     VQryPed.Sql.Add(TuEvolutConst.SqlSaidaIntegracaoRetornoPedido);
     VQryPed.ParamByName('pPedido').Value := pPedido;
     if DebugHook <> 0 then
-       VQryPed.Sql.SaveToFile('RetornoSaida.Sql');
+      VQryPed.Sql.SaveToFile('RetornoSaida.Sql');
     FConexao.Query.Open();
     Result := TJsonArray.Create();
     if VQryPed.isEmpty then
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        TuEvolutConst.QrySemDados));
     With VQryPed do
-      While Not Eof do Begin
+      While Not Eof do
+      Begin
         jsonPedido := TJsonObject.Create;
 
         jsonDestinatario := TJsonObject.Create;
         jsonDestinatario.AddPair('destinatarioid',
           tjsonNumber.Create(VQryPed.FieldByName('DestinatarioId').AsInteger));
-        jsonDestinatario.AddPair('razao', VQryPed.FieldByName('razao').AsString);
-        jsonDestinatario.AddPair('fantasia', VQryPed.FieldByName('Fantasia').AsString);
+        jsonDestinatario.AddPair('razao', VQryPed.FieldByName('razao')
+          .AsString);
+        jsonDestinatario.AddPair('fantasia', VQryPed.FieldByName('Fantasia')
+          .AsString);
         // jsonDestinatario.AddPair('cnpj', vQryPed.FieldByName('cnpj').AsString);
-        jsonDestinatario.AddPair('email', VQryPed.FieldByName('Email').AsString);
-        jsonPedido.AddPair('identificacao', pVersao+'/saidaintegracao/retorno/'+ pPedido);
-        jsonPedido.AddPair('pedidoid', tjsonNumber.Create(VQryPed.FieldByName('PedidoId').AsInteger));
-        jsonPedido.AddPair('documentonr', VQryPed.FieldByName('DocumentoNr').AsString);
+        jsonDestinatario.AddPair('email', VQryPed.FieldByName('Email')
+          .AsString);
+        jsonPedido.AddPair('identificacao',
+          pVersao + '/saidaintegracao/retorno/' + pPedido);
+        jsonPedido.AddPair('pedidoid',
+          tjsonNumber.Create(VQryPed.FieldByName('PedidoId').AsInteger));
+        jsonPedido.AddPair('documentonr', VQryPed.FieldByName('DocumentoNr')
+          .AsString);
         if pVersao = 'V2' then
-          jsonPedido.AddPair('documentooriginal', VQryPed.FieldByName('DocumentoOriginal').AsString);
-        jsonPedido.AddPair('documentodata', FormatDateTime('YYYY-MM-DD', VQryPed.FieldByName('DocumentoData').AsDateTime));
-        jsonPedido.AddPair('natureza', VQryPed.FieldByName('natureza').AsString);
-        jsonPedido.AddPair('situacao', VQryPed.FieldByName('Situacao').AsString);
-        jsonPedido.AddPair('registroerp', VQryPed.FieldByName('RegistroERP').AsString);
+          jsonPedido.AddPair('documentooriginal',
+            VQryPed.FieldByName('DocumentoOriginal').AsString);
+        jsonPedido.AddPair('documentodata', FormatDateTime('YYYY-MM-DD',
+          VQryPed.FieldByName('DocumentoData').AsDateTime));
+        jsonPedido.AddPair('natureza', VQryPed.FieldByName('natureza')
+          .AsString);
+        jsonPedido.AddPair('situacao', VQryPed.FieldByName('Situacao')
+          .AsString);
+        jsonPedido.AddPair('registroerp', VQryPed.FieldByName('RegistroERP')
+          .AsString);
         jsonPedido.AddPair('destinatario', jsonDestinatario);
         vQryPedVolumes.Close;
         vQryPedVolumes.Sql.Clear;
         vQryPedVolumes.Sql.Add(TuEvolutConst.SqlSaidaIntegracaoRetornoVolume);
-        vQryPedVolumes.ParamByName('pPedidoId').Value := VQryPed.FieldByName('PedidoId').AsInteger;
+        vQryPedVolumes.ParamByName('pPedidoId').Value :=
+          VQryPed.FieldByName('PedidoId').AsInteger;
         vQryPedVolumes.Open;
         ArrayJsonVolumes := TJsonArray.Create;
         vQtdVolumes := 0;
-        While Not vQryPedVolumes.Eof do begin
+        While Not vQryPedVolumes.Eof do
+        begin
           // tjsonPedidoVolumeLacres := tjsonObject.Create;
           jsonPedidoVolume := TJsonObject.Create;
           // if assigned(jsonpedidovolume) then
@@ -396,22 +428,39 @@ begin
             vCodProduto := vQryPedidoLotes.FieldByName('CodProduto').AsInteger;
             vPeso := 0;
             vVolumem3 := 0;
-            while (not vQryPedidoLotes.Eof) and (vCodProduto = vQryPedidoLotes.FieldByName('CodProduto').AsInteger) do Begin
+            while (not vQryPedidoLotes.Eof) and
+              (vCodProduto = vQryPedidoLotes.FieldByName('CodProduto')
+              .AsInteger) do
+            Begin
               jsonPedidoLotes := TJsonObject.Create;
               jsonPedidoLotes.AddPair('loteid',
-                tjsonNumber.Create(vQryPedidoLotes.FieldByName('LoteId').AsInteger));
-              jsonPedidoLotes.AddPair('descricao', vQryPedidoLotes.FieldByName('DescrLote').AsString);
-              jsonPedidoLotes.AddPair('fabricacao', FormatDateTime('YYYY-MM-DD', vQryPedidoLotes.FieldByName('Fabricacao').AsDateTime));
-              jsonPedidoLotes.AddPair('vencimento', FormatDateTime('YYYY-MM-DD', vQryPedidoLotes.FieldByName('vencimento').AsDateTime));
-              if vQryPedidoLotes.FieldByName('QtdSuprida').AsInteger > vQryPedidoLotes.FieldByName('embalagempadrao').AsInteger then
-                 jsonPedidoLotes.AddPair('QtdSuprida', tjsonNumber.Create(vQryPedidoLotes.FieldByName('Quantidade').AsInteger))
+                tjsonNumber.Create(vQryPedidoLotes.FieldByName('LoteId')
+                .AsInteger));
+              jsonPedidoLotes.AddPair('descricao',
+                vQryPedidoLotes.FieldByName('DescrLote').AsString);
+              jsonPedidoLotes.AddPair('fabricacao', FormatDateTime('YYYY-MM-DD',
+                vQryPedidoLotes.FieldByName('Fabricacao').AsDateTime));
+              jsonPedidoLotes.AddPair('vencimento', FormatDateTime('YYYY-MM-DD',
+                vQryPedidoLotes.FieldByName('vencimento').AsDateTime));
+              if vQryPedidoLotes.FieldByName('QtdSuprida').AsInteger >
+                vQryPedidoLotes.FieldByName('embalagempadrao').AsInteger then
+                jsonPedidoLotes.AddPair('QtdSuprida',
+                  tjsonNumber.Create(vQryPedidoLotes.FieldByName('Quantidade')
+                  .AsInteger))
               Else
-                 jsonPedidoLotes.AddPair('QtdSuprida', tjsonNumber.Create(vQryPedidoLotes.FieldByName('QtdSuprida').AsInteger));
-              jsonPedidoLotes.AddPair('embalagempadrao', tjsonNumber.Create(vQryPedidoLotes.FieldByName('embalagempadrao').AsInteger));
-              jsonPedidoLotes.AddPair('quantidade', tjsonNumber.Create(vQryPedidoLotes.FieldByName('quantidade').AsInteger));
+                jsonPedidoLotes.AddPair('QtdSuprida',
+                  tjsonNumber.Create(vQryPedidoLotes.FieldByName('QtdSuprida')
+                  .AsInteger));
+              jsonPedidoLotes.AddPair('embalagempadrao',
+                tjsonNumber.Create(vQryPedidoLotes.FieldByName
+                ('embalagempadrao').AsInteger));
+              jsonPedidoLotes.AddPair('quantidade',
+                tjsonNumber.Create(vQryPedidoLotes.FieldByName('quantidade')
+                .AsInteger));
               ArrayJsonLotes.AddElement(jsonPedidoLotes);
               vPeso := vPeso + vQryPedidoLotes.FieldByName('Peso').AsFloat;
-              vVolumem3 := vVolumem3 + vQryPedidoLotes.FieldByName('Volumem3').AsFloat;
+              vVolumem3 := vVolumem3 + vQryPedidoLotes.FieldByName
+                ('Volumem3').AsFloat;
               vQryPedidoLotes.Next;
             End;
             jsonPedidoProduto.AddPair('peso', tjsonNumber.Create(vPeso));
@@ -506,7 +555,7 @@ begin
         pRegistroERP + '.');
     End;
     vQryPedStatus.Close;
-    vQryPedStatus.sql.Clear;
+    vQryPedStatus.Sql.Clear;
     vQry.Sql.Add('Declare @PedidoId Integer = ' + pPedidoId.toString());
     vQry.Sql.Add
       ('Declare @OperacaoTipoId Integer = (Select OperacaoTipoId From OperacaoTipo Where Upper(Descricao) = '
@@ -602,30 +651,6 @@ begin
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
         '', [rfReplaceAll]));
     End;
-  end;
-end;
-
-procedure TSaidaIntegracaoDao.SalvarLog(pMethod: TMethodType;
-  pUsuarioId: Integer; pTerminal, pIpClient: String; pPort: Integer;
-  pUrl, pParams, pBody, pResponsestr, pResponseJson: String;
-  pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
-
-begin
-  If length(pParams) > 1000 then
-    pParams := Copy(pParams, 1, 1000);
-  If length(pBody) > 4000 then
-    pBody := Copy(pBody, 1, 4000);
-  If length(pResponsestr) > 1000 then
-    pResponsestr := Copy(pResponsestr, 1, 1000);
-  If length(pResponseJson) > 8000 then
-    pResponseJson := Copy(pResponseJson, 1, 8000);
-
-  Try
-    tUtil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-  finally
-
   end;
 end;
 

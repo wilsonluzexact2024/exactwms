@@ -29,54 +29,70 @@ Type
 procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure ConsultaKardex(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetRelEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetEstoqueEnderecoPorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEstoqueProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+procedure GetRelEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+procedure GetEstoqueEnderecoPorTipo(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetEstoqueProduto(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetMovimentacaoInterna(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetListaTransferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetMovimentacaoInterna(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetListaTransferencia(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 // Produtos disponíveis da Coleta de Reposição para ser transferido para Picking
-Procedure GetMotivoMovimentacaoSegregado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEstoqueSemPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure ValidarMovimentacaoPallet(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetControleArmazenagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure SalvarEstoqueChecklist(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetMotivoMovimentacaoSegregado(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure GetEstoqueSemPicking(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure ValidarMovimentacaoPallet(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetControleArmazenagem(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure SalvarEstoqueChecklist(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 
 implementation
 
 { tCtrlEstoque }
 
-uses MService.EstoqueDAO, uFuncoes, Horse.Utils.ClientIP;
+uses MService.EstoqueDAO, uFuncoes, Horse.Utils.ClientIP,
+  exactwmsservice.lib.utils;
 
 // uses UDmRhemaWMS, uFrmRhemaWms; //, uFrmPesquisa
 
 procedure Registry;
 begin
-  THorse.Group
-    .Prefix('v1')
-    .Get('/estoque/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo', Get)
-    .Get('/estoque/kardex', ConsultaKardex)
+  THorse.Group.Prefix('v1')
+    .Get('/estoque/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
+    Get).Get('/estoque/kardex', ConsultaKardex)
     .Get('/estoqueenderecoportipodetalhes', GetEstoqueEnderecoPorTipoDetalhes)
-    .Get('/estoque/saldo', GetRelEstoqueSaldo)
-    .Get('/estoque/preorvencido', GetRelEstoquePreOrVencido)
-    .Get('/estoqueloteportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',   GetEstoqueLotePorTipo)
-    .Get('/estoque/lote/:produtoid/:loteid/:enderecoid/:zonaid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo/:ordem', GetRelEstoqueLotePorTipo)
-    .Get('/estoque/produto', GetEstoqueProduto)
-    .Get('/estoqueenderecoportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo', GetEstoqueEnderecoPorTipo)
-    .Put('/estoque', Update)
-    .Put('/estoque/checklist', SalvarEstoqueChecklist)
+    .Get('/estoque/saldo', GetRelEstoqueSaldo).Get('/estoque/preorvencido',
+    GetRelEstoquePreOrVencido)
+    .Get('/estoqueloteportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
+    GetEstoqueLotePorTipo)
+    .Get('/estoque/lote/:produtoid/:loteid/:enderecoid/:zonaid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo/:ordem',
+    GetRelEstoqueLotePorTipo).Get('/estoque/produto', GetEstoqueProduto)
+    .Get('/estoqueenderecoportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
+    GetEstoqueEnderecoPorTipo).Put('/estoque', Update).Put('/estoque/checklist',
+    SalvarEstoqueChecklist)
     .Delete('/estoque/:loteid/:enderecoid/:estoquetipoid', Delete)
     .Get('/estoque/movimentacaointerna', GetMovimentacaoInterna)
     .Get('/estoque/listatransferencia', GetListaTransferencia)
-    .Get('/estoque/motivomovimentacaosegregado/:ativo', GetMotivoMovimentacaoSegregado)
-    .Get('/estoquesempicking', GetEstoqueSemPicking)
-    .Get('/estoque/validarmovimentacaopallet', ValidarMovimentacaoPallet)
-    .Get('/estoque/controlearmazenagem', GetControleArmazenagem)
+    .Get('/estoque/motivomovimentacaosegregado/:ativo',
+    GetMotivoMovimentacaoSegregado).Get('/estoquesempicking',
+    GetEstoqueSemPicking).Get('/estoque/validarmovimentacaopallet',
+    ValidarMovimentacaoPallet).Get('/estoque/controlearmazenagem',
+    GetControleArmazenagem)
 
 end;
 
@@ -91,7 +107,7 @@ Var
   vNomeEstacao: String;
   vOrigem: String;
   vDestino: String;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 Begin
   Try
     Try
@@ -131,7 +147,7 @@ Begin
           vDestino := AQueryParam.Items['destino']
         Else
           vDestino := '';
-        Res.Send<TJSonArray>(EstoqueDAO.ConsultaKardex(vUsuarioId, vDataInicial,
+        Res.Send<TJsonArray>(EstoqueDAO.ConsultaKardex(vUsuarioId, vDataInicial,
           vDataFinal, vCodigoERP, vNomeEstacao, vOrigem, vDestino))
           .Status(THTTPStatus.Created);
       End;
@@ -140,8 +156,8 @@ Begin
       Begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -152,14 +168,15 @@ End;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno : TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.Get(Req.Params.Items['produtoid'].ToInteger,
-        Req.Params.Items['loteid'].ToInteger, Req.Params.Items['enderecoid']
-        .ToInteger, Req.Params.Items['estoquetipoid'].ToInteger,
+      Res.Send<TJsonArray>(EstoqueDAO.Get(Req.Params.Items['produtoid']
+        .ToInteger, Req.Params.Items['loteid'].ToInteger,
+        Req.Params.Items['enderecoid'].ToInteger,
+        Req.Params.Items['estoquetipoid'].ToInteger,
         Req.Params.Items['producao'].ToInteger, Req.Params.Items['distribuicao']
         .ToInteger, Req.Params.Items['zerado'], Req.Params.Items['negativo']))
         .Status(THTTPStatus.Created);
@@ -168,8 +185,8 @@ begin
       Begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -181,22 +198,21 @@ Procedure ValidarMovimentacaoPallet(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  Result: TJSonArray;
+  Result: TJsonArray;
   AQueryParam: TDictionary<String, String>;
 begin
   Try
     try
       AQueryParam := Req.Query.Dictionary;
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.ValidarMovimentacaoPallet(AQueryParam))
+      Res.Send<TJsonArray>(EstoqueDAO.ValidarMovimentacaoPallet(AQueryParam))
         .Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJSonArray>(Result)
-          .Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(Result).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -208,22 +224,22 @@ Procedure GetEstoqueSemPicking(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  Result: TJSonArray;
+  Result: TJsonArray;
   AQueryParam: TDictionary<String, String>;
 begin
   Try
     try
       AQueryParam := Req.Query.Dictionary;
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.GetEstoqueSemPicking(AQueryParam))
+      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueSemPicking(AQueryParam))
         .Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
-        Result := TJSonArray.Create;
+        Result := TJsonArray.Create;
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(Result);
+        Res.Status(500).Send<TJsonArray>(Result);
       End;
     end;
   Finally
@@ -235,12 +251,12 @@ procedure GetEstoqueEnderecoPorTipo(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  Result: TJSonArray;
+  Result: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipo(Req.Params.Items
+      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipo(Req.Params.Items
         ['produtoid'].ToInteger, Req.Params.Items['loteid'].ToInteger,
         Req.Params.Items['enderecoid'].ToInteger,
         Req.Params.Items['estoquetipoid'].ToInteger,
@@ -250,10 +266,10 @@ begin
     Except
       On E: Exception do
       Begin
-        Result := TJSonArray.Create;
+        Result := TJsonArray.Create;
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(Result);
+        Res.Status(500).Send<TJsonArray>(Result);
       End;
     end;
   Finally
@@ -265,18 +281,21 @@ procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest;
   Res: THorseResponse; Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno : TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipoDetalhes(Req.Query.Dictionary)).Status(THTTPStatus.Created);
+      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipoDetalhes
+        (Req.Query.Dictionary)).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
+        Res.Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -288,20 +307,20 @@ Procedure GetEstoqueProduto(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  Result: TJSonArray;
+  Result: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.GetEstoqueProduto(Req.Query.Dictionary))
+      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueProduto(Req.Query.Dictionary))
         .Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
-        Result := TJSonArray.Create;
+        Result := TJsonArray.Create;
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(Result);
+        Res.Status(500).Send<TJsonArray>(Result);
       End;
     end;
   Finally
@@ -309,20 +328,25 @@ begin
   End;
 End;
 
-Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno : TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      JsonArrayRetorno := EstoqueDAO.GetRelEstoquePreOrVencido(Req.Query.Dictionary);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
-    Except On E: Exception do Begin
-      JsonArrayRetorno := TJSonArray.Create;
-      JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-      Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+      JsonArrayRetorno := EstoqueDAO.GetRelEstoquePreOrVencido
+        (Req.Query.Dictionary);
+      Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+    Except
+      On E: Exception do
+      Begin
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -334,17 +358,20 @@ Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno : TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
       JsonArrayRetorno := EstoqueDAO.GetRelEstoqueSaldo(Req.Query.Dictionary);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
-    Except On E: Exception do Begin
-      JsonArrayRetorno := TJSonArray.Create;
-      JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-      Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+      Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+    Except
+      On E: Exception do
+      Begin
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -356,20 +383,20 @@ Procedure GetListaTransferencia(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  Result: TJSonArray;
+  Result: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJSonArray>(EstoqueDAO.GetListaTransferencia)
+      Res.Send<TJsonArray>(EstoqueDAO.GetListaTransferencia)
         .Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
-        Result := TJSonArray.Create;
+        Result := TJsonArray.Create;
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(Result);
+        Res.Status(500).Send<TJsonArray>(Result);
       End;
     end;
   Finally
@@ -390,9 +417,9 @@ Var
   vEnderecoDestino: String;
   vArmazenagem: Integer;
   vMovInterna: Integer;
-  Result: TJSonArray;
+  Result: TJsonArray;
   HrInicioLog: TTime;
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   HrInicioLog := Time;
   Try
@@ -404,7 +431,7 @@ begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
           'Defina os parâmetros para consultar a movimentação!')))
           .Status(THTTPStatus.Created);
-        EstoqueDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/estoque/movimentacaointerna', Trim(Req.Params.Content.Text),
           Req.Body, '', 'Defina os parâmetros para consultar o Kardex!', 201,
@@ -447,8 +474,8 @@ begin
         JsonArrayRetorno := EstoqueDAO.GetMovimentacaoInterna(vUsuarioId,
           vDataInicial, vDataFinal, vCodProduto, vEnderecoOrigem,
           vEnderecoDestino, vArmazenagem, vMovInterna);
-        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
-        EstoqueDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+        Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/dshseparacao', Trim(Req.Params.Content.Text), Req.Body, '',
           'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -457,11 +484,11 @@ begin
     Except
       on E: Exception do
       Begin
-        Result := TJSonArray.Create;
+        Result := TJsonArray.Create;
         Result.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(Result);
-        EstoqueDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+        Res.Status(500).Send<TJsonArray>(Result);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/estoque/movimentacaointerna', Trim(Req.Params.Content.Text),
           Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),
@@ -477,20 +504,21 @@ Procedure GetControleArmazenagem(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 Begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      JsonArrayRetorno := EstoqueDAO.GetControleArmazenagem(Req.Query.Dictionary);
-      Res.Status(200).Send<TJSonArray>(JsonArrayRetorno);
+      JsonArrayRetorno := EstoqueDAO.GetControleArmazenagem
+        (Req.Query.Dictionary);
+      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
     Except
       On E: Exception do
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
+        JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -502,21 +530,21 @@ Procedure GetMotivoMovimentacaoSegregado(Req: THorseRequest;
   Res: THorseResponse; Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 Begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
       JsonArrayRetorno := EstoqueDAO.GetMotivoMovimentacaoSegregado
         (Req.Params.Items['ativo'].ToInteger);
-      Res.Status(200).Send<TJSonArray>(JsonArrayRetorno);
+      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
     Except
       On E: Exception do
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
+        JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -528,7 +556,7 @@ procedure GetEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
@@ -539,14 +567,14 @@ begin
         .ToInteger, Req.Params.Items['estoquetipoid'].ToInteger,
         Req.Params.Items['producao'].ToInteger, Req.Params.Items['distribuicao']
         .ToInteger, Req.Params.Items['zerado'], Req.Params.Items['negativo']);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+      Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
+        JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -558,27 +586,26 @@ procedure GetRelEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      JsonArrayRetorno := EstoqueDAO.GetRelEstoqueLotePorTipo(Req.Params.Items['produtoid'].ToInteger,
-                                                              Req.Params.Items['loteid'].ToInteger,
-                                                              Req.Params.Items['enderecoid'].ToInteger,
-                                                              Req.Params.Items['zonaid'].ToInteger,
-                                                              Req.Params.Items['estoquetipoid'].ToInteger,
-                                                              Req.Params.Items['producao'].ToInteger,
-                                                              Req.Params.Items['distribuicao'].ToInteger,
-                                                              Req.Params.Items['zerado'], Req.Params.Items['negativo']);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+      JsonArrayRetorno := EstoqueDAO.GetRelEstoqueLotePorTipo
+        (Req.Params.Items['produtoid'].ToInteger,
+        Req.Params.Items['loteid'].ToInteger, Req.Params.Items['enderecoid']
+        .ToInteger, Req.Params.Items['zonaid'].ToInteger,
+        Req.Params.Items['estoquetipoid'].ToInteger,
+        Req.Params.Items['producao'].ToInteger, Req.Params.Items['distribuicao']
+        .ToInteger, Req.Params.Items['zerado'], Req.Params.Items['negativo']);
+      Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
+        JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     end;
   Finally
@@ -589,7 +616,7 @@ end;
 Procedure SalvarEstoqueChecklist(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Var
-  JsonArrayRetorno: TJSonArray;
+  JsonArrayRetorno: TJsonArray;
   EstoqueDAO: TEstoqueDao;
 begin
   Try
@@ -597,14 +624,14 @@ begin
       EstoqueDAO := TEstoqueDao.Create;
       JsonArrayRetorno := EstoqueDAO.SalvarEstoqueChecklist
         (TJSONObject.ParseJSONValue(Req.Body) as TJSONObject);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+      Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
+        JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Status(500).Send<TJSonArray>(JsonArrayRetorno);
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     End;
   Finally
@@ -644,7 +671,8 @@ begin
   Try
     Try
       EstoqueDAO := TEstoqueDao.Create;
-      EstoqueDAO.ObjEstoque.LoteId := StrToIntDef(Req.Params.Items['loteid'], 0);
+      EstoqueDAO.ObjEstoque.LoteId :=
+        StrToIntDef(Req.Params.Items['loteid'], 0);
       EstoqueDAO.ObjEstoque.EnderecoId :=
         StrToIntDef(Req.Params.Items['enderecoid'], 0);
       EstoqueDAO.ObjEstoque.EstoqueTipoId :=

@@ -594,8 +594,7 @@ function TServicePedidoSaida.GetReposicaoCapacidade(pPercDownMaxPicking,
   pNegativo: Integer): TjSonArray;
 begin
   Try
-    //FConexao.Query := TFDQuery.Create(nil);
-    //FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.FetchOptions.Mode := fmAll;
     FConexao.Query.Sql.Add(TuEvolutconst.SqlGetReposicaoCapacidade);
     FConexao.Query.ParamByName('pPercDownMaxPicking').Value :=
@@ -936,8 +935,7 @@ function TServicePedidoSaida.ReposicaoExcluir(pJsonObject: TJsonObject)
   : TjSonArray;
 begin
   Try
-    FConexao.Query := TFDQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.Sql.Add(TuEvolutconst.SqlDelReservaReposicao);
     FConexao.Query.Sql.Add('Update Reposicao Set ProcessoId = 31');
     FConexao.Query.Sql.Add('  , UsuarioId = ' + pJsonObject.GetValue<Integer>

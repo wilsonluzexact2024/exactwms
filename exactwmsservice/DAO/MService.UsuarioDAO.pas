@@ -60,10 +60,7 @@ type
     Function GetUsuario4D(const AParams: TDictionary<string, string>)
       : TJsonObject;
     Function ImportCSV(pJsonArray : TJsonArray) : TJsonArray;
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
   end;
 
 implementation
@@ -569,100 +566,6 @@ begin
 
 end;
 
-procedure TUsuarioDao.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-  pTerminal, pIpClient: String; pPort: Integer; pUrl: String; pParams: String;
-  pBody, pResponsestr, pResponseJson: String; pRespStatus: Integer;
-  pTimeExecution: Double; pAppName: String);
-var
-  vQryLog: TFDQuery;
-  FIndexConnLog: Integer;
-  FconexaoLog: TConnection;
-  vMethod: String;
-begin
-  case pMethod of
-    mtAny:
-      vMethod := 'Any';
-    mtGet:
-      vMethod := 'Get';
-    mtPut:
-      vMethod := 'Put';
-    mtPost:
-      vMethod := 'Post';
-    mtHead:
-      vMethod := 'Head';
-    mtDelete:
-      vMethod := 'Delete';
-    mtPatch:
-      vMethod := 'Patch';
-  end;
-
-  FconexaoLog := TConnection.Create(1);
-  try
-    vQryLog := FConexao.GetQuery;
-    vQryLog.connection := FconexaoLog.DB;
-    If length(pParams) > 1000 then
-      pParams := Copy(pParams, 1, 1000);
-    If length(pBody) > 4000 then
-      pBody := Copy(pBody, 1, 4000);
-    If length(pResponsestr) > 1000 then
-      pResponsestr := Copy(pResponsestr, 1, 1000);
-    If length(pResponseJson) > 8000 then
-      pResponseJson := Copy(pResponseJson, 1, 8000);
-    if pParams = '' then
-      pParams := 'Null'
-    Else
-      pParams := #39 + pParams + #39;
-    if pBody = '' then
-      pBody := '[]'
-    Else
-    begin
-      if (TJsonObject.ParseJSONValue(pBody) Is TJsonObject) or
-        (TJsonObject.ParseJSONValue(pBody) Is TjSonArray) then
-      Else
-      Begin
-        pParams := #39 + pBody + #39;
-        pBody := '[]';
-      End;
-    end;
-    If pResponseJson = '' then
-      pResponseJson := 'Null'
-    Else
-    Begin
-      if (TJsonObject.ParseJSONValue(pResponseJson) Is TJsonObject) or
-        (TJsonObject.ParseJSONValue(pResponseJson) Is TjSonArray) then
-      Else
-      Begin
-        pResponsestr := #39 + pResponseJson + #39;
-        pResponseJson := '[]';
-      End;
-    End;
-    vQryLog.Sql.Add
-      ('Insert into RequestResponse (data,	hora,	usuarioid,	terminal,	verbo	,'
-      + sLineBreak +
-      '            ipclient,	Port,	url,	params, body,	responsestr,	responsejson, '
-      + sLineBreak + '           	respstatus,	timeexecution, AppName) ' +
-      sLineBreak + '            Values (GetDate(), GetDate(), ' + '      ' +
-      pUsuarioId.ToString() + ', ' + #39 + pTerminal + #39 + ', ' + #39 +
-      vMethod + #39 + ', ' + '      ' + #39 + pIpClient + #39 + ', ' +
-      pPort.ToString() + ', ' + #39 + pUrl + #39 + ', ' + '      ' + pParams +
-      ', :pBody, ' + #39 + pResponsestr + #39 + ', ' + '      :pResponseJson, '
-      + pRespStatus.ToString() + ', ' + '      ' +
-      StringReplace(pTimeExecution.ToString(), ',', '.', [rfReplaceAll]) + ', '
-      + QuotedStr(pAppName) + ')');
-    vQryLog.ParamByName('pBody').Value := pBody;
-    vQryLog.ParamByName('pResponseJson').Value := pResponseJson;
-    If DebugHook <> 0 then
-      vQryLog.Sql.SaveToFile('SalvarLog.Sql');
-    Try
-      vQryLog.ExecSQL
-    Except
-    End;
-    vQryLog.Close;
-    //vQryLog.Free;
-  finally
-    FconexaoLog.Free
-  end;
-end;
 
 function TUsuarioDao.UsuarioConectado: TjSonArray;
 Begin
