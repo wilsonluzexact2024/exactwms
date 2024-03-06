@@ -5,7 +5,7 @@ interface
 uses
   FireDAC.Comp.Client, System.SysUtils, Math, FireDAC.Stan.Intf,
   FireDAC.Phys.Intf,
-   DataSet.Serialize, System.JSON, REST.JSON, Generics.Collections,
+  DataSet.Serialize, System.JSON, REST.JSON, Generics.Collections,
   FireDAC.Stan.Option, Web.HTTPApp, LotesClass, MService.ProdutoDAO,
   PedidoSaidaClass, PedidoProdutoClass, MService.PedidoProdutoDAO,
   exactwmsservice.lib.connection, exactwmsservice.lib.utils,
@@ -16,7 +16,7 @@ type
   TPedidoSaidaDao = class(TBasicDao)
   private
     //
-    
+
     FPedidoSaida: TPedidoSaida;
     function IfThen(AValue: Boolean; const ATrue: String;
       const AFalse: String = ''): String; overload; inline;
@@ -118,10 +118,7 @@ type
       : TjSonArray;
     Function GetConsultaReposicaoProduto(pReposicaoId: Integer): TjSonArray;
     Function PutRegistrarProcesso(pJsonObject: TJsonObject): TjSonArray;
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
   end;
 
 implementation
@@ -621,25 +618,32 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetEstoqueCaixaFracionada(pPedidoId: Integer) : TjSonArray;
-var vSql: String;
-    jsonEstoqueDisponivel: TJsonObject;
+function TPedidoSaidaDao.GetEstoqueCaixaFracionada(pPedidoId: Integer)
+  : TjSonArray;
+var
+  vSql: String;
+  jsonEstoqueDisponivel: TJsonObject;
 begin
   try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlEstoqueVolumeCaixaFracionada);
     FConexao.Query.ParamByName('pPedidoid').Value := pPedidoId.ToString();
     if DebugHook <> 0 then
-       FConexao.Query.SQL.SaveToFile('EstoqueFracionado.Sql');
+      FConexao.Query.SQL.SaveToFile('EstoqueFracionado.Sql');
     FConexao.Query.Open();
-    if FConexao.Query.IsEmpty then Begin
+    if FConexao.Query.IsEmpty then
+    Begin
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('MSG', 'Pedido(' + pPedidoId.ToString()+'). Sem cálculo para Fracionado!!')));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('MSG',
+        'Pedido(' + pPedidoId.ToString() +
+        '). Sem cálculo para Fracionado!!')));
       Exit;
     End
     Else
       Result := FConexao.Query.ToJSONArray(); // Alterado em 26/07/23
     // ProdutoId	EmbPrim	EmbSec	MesSaidaMinima	LoteId	Vencimento	EnderecoId	Endereco	Estrutura	Qtde	DtEntrada	HrEntrada	EstoqueTipoId	TipoEstoque	Producao	Distribuicao	CxaFechada
-  Except ON E: Exception do Begin
+  Except
+    ON E: Exception do
+    Begin
       raise Exception.Create(E.Message);
     End;
   end;
@@ -950,7 +954,7 @@ begin
     FConexao.Query.ParamByName('pCargaId').Value := 0;
     FConexao.Query.ParamByName('pNotaFiscalERP').Value := '';
     if DebugHook <> 0 then
-       FConexao.Query.Sql.SaveToFile('PedidoDocumento.Sql');
+      FConexao.Query.SQL.SaveToFile('PedidoDocumento.Sql');
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
     Begin
@@ -1002,7 +1006,7 @@ begin
     FConexao.Query.ParamByName('pNotaFiscalERP').Value := '';
 
     if pPedidoId = 0 then
-       FConexao.Query.ParamByName('pPedidoPendente').Value := 1;
+      FConexao.Query.ParamByName('pPedidoPendente').Value := 1;
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
@@ -1147,6 +1151,7 @@ var
 begin
   Result := TjSonArray.Create;
   try
+  try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedido);
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     if pDataIni = 0 then
@@ -1287,6 +1292,9 @@ begin
         '', [rfReplaceAll]))));
     End;
   end;
+  finally
+    FConexao.Query.Close
+  end;
 end;
 
 function TPedidoSaidaDao.GetPedidoProcesso(pPedidoId: Integer): TjSonArray;
@@ -1341,50 +1349,65 @@ begin
     End
     Else
       Result := FConexao.Query.ToJSONArray;
-  Except ON E: Exception do
-    raise Exception.Create(StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
+  Except
+    ON E: Exception do
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
   end;
 end;
 
-function TPedidoSaidaDao.GetAuditoriaSaidaPorProduto(const AParams : TDictionary<string, string>): TjSonArray;
+function TPedidoSaidaDao.GetAuditoriaSaidaPorProduto(const AParams
+  : TDictionary<string, string>): TjSonArray;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetAuditoriaSaidaPorProduto);
     if AParams.ContainsKey('datainicial') then
-       FConexao.Query.ParamByName('pdatainicial').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']))
+      FConexao.Query.ParamByName('pdatainicial').Value :=
+        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']))
     Else
-       FConexao.Query.ParamByName('pdatainicial').Value := 0;
+      FConexao.Query.ParamByName('pdatainicial').Value := 0;
     if AParams.ContainsKey('datafinal') then
-       FConexao.Query.ParamByName('pdatafinal').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']))
+      FConexao.Query.ParamByName('pdatafinal').Value :=
+        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']))
     Else
-       FConexao.Query.ParamByName('pdatafinal').Value := 0;
+      FConexao.Query.ParamByName('pdatafinal').Value := 0;
     if AParams.ContainsKey('pedidoid') then
-       FConexao.Query.ParamByName('pPedidoid').Value := AParams.Items['pedidoid'].ToInteger()
+      FConexao.Query.ParamByName('pPedidoid').Value := AParams.Items['pedidoid']
+        .ToInteger()
     Else
-       FConexao.Query.ParamByName('pPedidoId').Value := 0;
+      FConexao.Query.ParamByName('pPedidoId').Value := 0;
     if AParams.ContainsKey('codproduto') then
-       FConexao.Query.ParamByName('pCodProduto').Value := AParams.Items['codproduto'].ToInteger()
+      FConexao.Query.ParamByName('pCodProduto').Value :=
+        AParams.Items['codproduto'].ToInteger()
     Else
-       FConexao.Query.ParamByName('pusuarioid').Value := 0;
+      FConexao.Query.ParamByName('pusuarioid').Value := 0;
     if AParams.ContainsKey('descrlote') then
-       FConexao.Query.ParamByName('pDescrLote').Value := AParams.Items['descrlote']
+      FConexao.Query.ParamByName('pDescrLote').Value :=
+        AParams.Items['descrlote']
     Else
-       FConexao.Query.ParamByName('pDescrLote').Value := '';
+      FConexao.Query.ParamByName('pDescrLote').Value := '';
     if AParams.ContainsKey('ressuprimento') then
-       FConexao.Query.ParamByName('pRessuprimento').Value := AParams.Items['ressuprimento']
+      FConexao.Query.ParamByName('pRessuprimento').Value :=
+        AParams.Items['ressuprimento']
     Else
-       FConexao.Query.ParamByName('pRessuprimento').Value := '';
+      FConexao.Query.ParamByName('pRessuprimento').Value := '';
     if DebugHook <> 0 then
-       FConexao.Query.SQL.SaveToFile('SaidaPorProduto.Sql');
+      FConexao.Query.SQL.SaveToFile('SaidaPorProduto.Sql');
     FConexao.Query.Open();
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', TuEvolutConst.QrySemDados)));
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
+        TuEvolutConst.QrySemDados)));
     End
     Else
-       Result := FConexao.Query.ToJSONArray;
-  Except ON E: Exception do
-      raise Exception.Create(StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
+      Result := FConexao.Query.ToJSONArray;
+  Except
+    ON E: Exception do
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
   end;
 end;
 
@@ -1555,16 +1578,16 @@ begin
       End;
     End;
     vQryBasico.Close;
-    
+
     vQry.Close;
-   
+
   Except
     ON E: Exception do
     Begin
       vQryBasico.Close;
-      
+
       vQry.Close;
-     
+
       Result := Nil;
       Result := TjSonArray.Create;
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
@@ -1667,23 +1690,23 @@ begin
   try
     vSql := TuEvolutConst.SqlPedidoProcessar;
     FConexao.Query.SQL.Add(vSql);
-    FConexao.Query.ParamByName('pPedidoId').Value    := 0;
-    FConexao.Query.ParamByName('pDataIni').Value     := 0;
-    FConexao.Query.ParamByName('pDataFin').Value     := 0;
-    FConexao.Query.ParamByName('pCodigoERP').Value   := 0;
-    FConexao.Query.ParamByName('pPessoaId').Value   := 0;
+    FConexao.Query.ParamByName('pPedidoId').Value := 0;
+    FConexao.Query.ParamByName('pDataIni').Value := 0;
+    FConexao.Query.ParamByName('pDataFin').Value := 0;
+    FConexao.Query.ParamByName('pCodigoERP').Value := 0;
+    FConexao.Query.ParamByName('pPessoaId').Value := 0;
     FConexao.Query.ParamByName('pDocumentoNr').Value := '';
-    FConexao.Query.ParamByName('pRazao').Value       := '';
+    FConexao.Query.ParamByName('pRazao').Value := '';
     FConexao.Query.ParamByName('pRegistroERP').Value := '';
-    FConexao.Query.ParamByName('pRotaId').Value      := 0;
+    FConexao.Query.ParamByName('pRotaId').Value := 0;
     FConexao.Query.ParamByName('pRotaIdFinal').Value := 0;
-    FConexao.Query.ParamByName('pZonaId').Value      := 0;
-    FConexao.Query.ParamByName('pProcessoId').Value  := 1;
-    FConexao.Query.ParamByName('pRecebido').Value    := 1;
-    FConexao.Query.ParamByName('pCubagem').Value     := 0;
-    FConexao.Query.ParamByName('pEtiqueta').Value    := 0;
-    FConexao.Query.ParamByName('pPrintTag').Value    := 2;
-    FConexao.Query.ParamByName('pEmbalagem').Value   := 2;
+    FConexao.Query.ParamByName('pZonaId').Value := 0;
+    FConexao.Query.ParamByName('pProcessoId').Value := 1;
+    FConexao.Query.ParamByName('pRecebido').Value := 1;
+    FConexao.Query.ParamByName('pCubagem').Value := 0;
+    FConexao.Query.ParamByName('pEtiqueta').Value := 0;
+    FConexao.Query.ParamByName('pPrintTag').Value := 2;
+    FConexao.Query.ParamByName('pEmbalagem').Value := 2;
     // Todos os pedidos disponíveis para processamento
     // vSql := vSql + ' Where PedidoId = '+pPedidoId.ToString+' and Ped.OperacaoTipoId = 2';
     FConexao.Query.Open;
@@ -2563,28 +2586,30 @@ Function TPedidoSaidaDao.PedidoPrintTag(pPedidoId: Integer;
 begin
   try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedidoPrintTag);
-    if (pRotaId>0) or (pRotaIdFinal>0) then
-       FConexao.Query.sql.Add('Order by Ped.RotaId, Ped.PedidoId')
+    if (pRotaId > 0) or (pRotaIdFinal > 0) then
+      FConexao.Query.SQL.Add('Order by Ped.RotaId, Ped.PedidoId')
     Else
-       FConexao.Query.sql.Add('Order by Ped.DocumentoData, ped.PedidoId');
-    FConexao.Query.ParamByName('pPedidoId').Value       := pPedidoId;
+      FConexao.Query.SQL.Add('Order by Ped.DocumentoData, ped.PedidoId');
+    FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     FConexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-    FConexao.Query.ParamByName('pCodigoERP').Value      := pCodigoERP;
+    FConexao.Query.ParamByName('pCodigoERP').Value := pCodigoERP;
     if pDataIni = 0 then
       FConexao.Query.ParamByName('pDataIni').Value := pDataIni
     Else
-      FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', pDataIni);
+      FConexao.Query.ParamByName('pDataIni').Value :=
+        FormatDateTime('YYYY-MM-DD', pDataIni);
     if pDataFin = 0 then
       FConexao.Query.ParamByName('pDataFin').Value := pDataFin
     Else
-      FConexao.Query.ParamByName('pDataFin').Value   := FormatDateTime('YYYY-MM-DD', pDataFin);
-    FConexao.Query.ParamByName('pPessoaId').Value    := pPessoaId;
-    FConexao.Query.ParamByName('pRazao').Value       := '%' + pRazao + '%';
-    FConexao.Query.ParamByName('pRotaId').Value      := pRotaId;
+      FConexao.Query.ParamByName('pDataFin').Value :=
+        FormatDateTime('YYYY-MM-DD', pDataFin);
+    FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
+    FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
+    FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
     FConexao.Query.ParamByName('pRotaIdFinal').Value := pRotaIdFinal;
-    FConexao.Query.ParamByName('pZonaId').Value      := pZonaId;
-    FConexao.Query.ParamByName('pPrintTag').Value    := pPrintTag;
-    FConexao.Query.ParamByName('pEmbalagem').Value   := pEmbalagem;
+    FConexao.Query.ParamByName('pZonaId').Value := pZonaId;
+    FConexao.Query.ParamByName('pPrintTag').Value := pPrintTag;
+    FConexao.Query.ParamByName('pEmbalagem').Value := pEmbalagem;
     // Clipboard.AsText := FConexao.Query.Text;
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('PedidoPrintTag.Sql');
@@ -3319,38 +3344,7 @@ begin
       raise Exception.Create(E.Message);
     End;
   end;
-end;
 
-procedure TPedidoSaidaDao.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-  pTerminal, pIpClient: String; pPort: Integer;
-  pUrl, pParams, pBody, pResponsestr, pResponseJson: String;
-  pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
-
-begin
-  If length(pParams) > 1000 then
-    pParams := Copy(pParams, 1, 1000);
-  If length(pBody) > 4000 then
-    pBody := Copy(pBody, 1, 4000);
-  If length(pResponsestr) > 1000 then
-    pResponsestr := Copy(pResponsestr, 1, 1000);
-  If length(pResponseJson) > 8000 then
-    pResponseJson := Copy(pResponseJson, 1, 8000);
-  Try
-    If length(pParams) > 1000 then
-      pParams := Copy(pParams, 1, 1000);
-    If length(pBody) > 4000 then
-      pBody := Copy(pBody, 1, 4000);
-    If length(pResponsestr) > 1000 then
-      pResponsestr := Copy(pResponsestr, 1, 1000);
-    If length(pResponseJson) > 8000 then
-      pResponseJson := Copy(pResponseJson, 1, 8000);
-    TUtil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-
-  Except
-
-  End;
 end;
 
 end.

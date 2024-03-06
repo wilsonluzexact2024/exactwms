@@ -176,7 +176,7 @@ begin
         (TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0)
         as TJsonArray, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/pedidovolume/atualizarconferencia',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -190,7 +190,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/pedidovolume/atualizarconferencia',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -220,7 +220,7 @@ begin
       JsonArrayRetorno := PedidoVolumeDAO.AtualizarConferenciaSemLotes
         (Req.Body<TJsonArray>, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/atualizarconferenciasemlotes',
@@ -235,7 +235,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/atualizarconferenciasemlotes',
@@ -266,7 +266,7 @@ begin
       JsonArrayRetorno := PedidoVolumeDAO.FinalizarConferenciaComRegistro
         (Req.Body<TJSONObject>, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/finalizarconferenciacomregistro',
@@ -281,7 +281,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/finalizarconferenciacomregistro',
@@ -723,7 +723,7 @@ begin
       PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
         Req.Params.Items['pedidovolumeid'].ToInteger();
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/etiquetaporvolume/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -737,7 +737,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/etiquetaporvolume/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -767,7 +767,7 @@ begin
       PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
         Req.Params.Items['pedidovolumeid'].ToInteger();
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/identificavolumecxafechada/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -781,7 +781,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/identificavolumecxafechada/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
@@ -881,7 +881,7 @@ begin
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetPedidoVolumeSeparacao(0, 0);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/pedidovolume',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -895,7 +895,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/pedidovolume',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -1190,7 +1190,7 @@ begin
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/etapas/:pedidovolumeid',
@@ -1205,7 +1205,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/etapas/:pedidovolumeid',
@@ -1234,7 +1234,7 @@ begin
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/lotes/:pedidovolumeid',
@@ -1249,7 +1249,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/lotes/:pedidovolumeid',
@@ -1280,7 +1280,7 @@ begin
         StrToIntDef(Req.Params.Items['produtoid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
@@ -1295,7 +1295,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
@@ -1325,7 +1325,7 @@ begin
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/pedidovolume/produto/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -1339,7 +1339,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/pedidovolume/produto/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -1368,7 +1368,7 @@ begin
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produto/reconferencia/:pedidovolumeid',
@@ -1383,7 +1383,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produto/reconferencia/:pedidovolumeid',
@@ -1456,7 +1456,7 @@ begin
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/producaodiariaporloja',
@@ -1469,7 +1469,7 @@ begin
       Begin
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporloja',
@@ -1499,7 +1499,7 @@ begin
       JsonRetorno := PedidoVolumeDAO.GetProducaoDiariaPorRua
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/producaodiariaporrua',
@@ -1512,7 +1512,7 @@ begin
       Begin
         Res.Status(500).Send<TJSONObject>
           ((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))));
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporrua',
@@ -1542,7 +1542,7 @@ begin
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/producaodiariaporrota',
@@ -1555,7 +1555,7 @@ begin
       Begin
         Res.Status(500).Send<TJSONObject>
           ((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))));
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporrota',
@@ -1585,7 +1585,7 @@ begin
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/producaodiariaporsetor',
@@ -1598,7 +1598,7 @@ begin
       Begin
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporsetor',
@@ -1627,7 +1627,7 @@ begin
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeConsulta(Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/consulta',
@@ -1642,7 +1642,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/consulta',
@@ -1741,7 +1741,7 @@ begin
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeProdutoSeparacao
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produtoseparacao/:pedidovolumeid',
@@ -1756,7 +1756,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produtoseparacao/:pedidovolumeid',
@@ -1787,7 +1787,7 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1//pedidovolumeseparacao/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -1801,7 +1801,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1//pedidovolumeseparacao/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -1832,7 +1832,7 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
@@ -1847,7 +1847,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
@@ -1878,7 +1878,7 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/mapaseparacao/:pedidoid/:pedidovolumeid',
@@ -1893,7 +1893,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/mapaseparacao/:pedidoid/:pedidovolumeid',
@@ -1924,7 +1924,7 @@ begin
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
@@ -1939,7 +1939,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
@@ -2112,7 +2112,7 @@ begin
         Res.Status(200).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Resultado',
           'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidovolumeid',
@@ -2127,7 +2127,7 @@ begin
         Res.Status(200).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro',
           'Ocorreu um erro desconhecido!'))).Status(THTTPStatus.Created);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidovolumeid',
@@ -2144,7 +2144,7 @@ begin
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
@@ -2174,7 +2174,7 @@ begin
       Res.Status(200).Send<TJSONObject>
         (TJSONObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/:pedidovolumeid',
@@ -2188,7 +2188,7 @@ begin
       Begin
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidovolumeid',
@@ -2466,7 +2466,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta não definidos!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshcheckout',
@@ -2480,7 +2480,7 @@ begin
       JsonArrayRetorno := PedidoVolumeDAO.DshCheckout(Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      PedidoVolumeDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/dshcheckout',
@@ -2495,7 +2495,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        PedidoVolumeDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',

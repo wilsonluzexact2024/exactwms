@@ -279,8 +279,8 @@ begin
     End;
     End);
   }
-  THorse.MaxConnections := 0;
-  THorse.ListenQueue    := 0;
+  THorse.MaxConnections := 150;
+  THorse.ListenQueue    := 150;
   PortaServer := 8200;
 
   try
@@ -339,7 +339,7 @@ begin
     Procedure(horse: THorse)
     Begin
       Writeln(Format
-        ('Servidor v2023-12-07-19  Ativo na Porta: %d Versão: V1  Ativo em: %s. Para testar use 127.0.0.1:%d/eXactWMS',
+        ('Servidor v2024-03-06  Ativo na Porta: %d Versão: V1  Ativo em: %s. Para testar use 127.0.0.1:%d/eXactWMS',
         [horse.Port, DateTimeToStr(Now()), horse.Port]));
     End);
 

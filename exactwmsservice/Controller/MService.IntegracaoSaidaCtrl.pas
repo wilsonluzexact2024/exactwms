@@ -49,16 +49,11 @@ uses MService.SaidaIntegracaoDAO, uFuncoes;
 
 procedure Registry;
 begin
-  THorse.Group
-  .Prefix('v1')
-     .Get('/saidaintegracao/consulta', Consulta)
-     .Put('/saidaintegracao', Insert)
-     .Put('/saidaintegracao/retorno/:pedido', Retorno)
-  .Prefix('v2').Get('/saidaintegracao/consulta', ConsultaV2)
-    .Put('/saidaintegracao', InsertV2)
-    .Put('/saidaintegracao/retorno/:pedido', RetornoV2)
-  .Prefix('v3')
-    .Get('/saidaintegracao/consulta', ConsultaV3)
+  THorse.Group.Prefix('v1').Get('/saidaintegracao/consulta', Consulta)
+    .Put('/saidaintegracao', Insert).Put('/saidaintegracao/retorno/:pedido',
+    Retorno).Prefix('v2').Get('/saidaintegracao/consulta', ConsultaV2)
+    .Put('/saidaintegracao', InsertV2).Put('/saidaintegracao/retorno/:pedido',
+    RetornoV2).Prefix('v3').Get('/saidaintegracao/consulta', ConsultaV3)
     .Put('/saidaintegracao/retorno/:pedido', RetornoV3)
 end;
 
@@ -74,8 +69,10 @@ begin
       Res.Status(404).Send<TJsonArray>(JsonArray);
       JsonArray := Nil;
     Except
-      On E: Exception do Begin
-         JsonArray.AddElement(TjsonObject.Create(TJSONPair.Create('Erro', E.Message)));
+      On E: Exception do
+      Begin
+        JsonArray.AddElement(TjsonObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArray);
       End;
     End;
@@ -100,20 +97,21 @@ begin
         (vStatus.ToInteger > 299) then
       Begin
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
-          '/v2/saidaintegracao/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v2/saidaintegracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End
       Else
       begin
         Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
-          '/v2/saidaintegracao/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', JsonArrayRetorno.ToString, 200, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v2/saidaintegracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString, 200,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       end;
     Except
       on E: Exception do
@@ -124,8 +122,8 @@ begin
           .AddPair('mensagem', E.Message));
         Res.Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
           '/v2/entradaintegracao/consulta', Trim(Req.Params.Content.Text),
           Req.Body, '', JsonArrayRetorno.ToString, 500,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -153,21 +151,23 @@ begin
       Begin
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
-          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End
       Else
       begin
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
-          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       end;
     Except
       on E: Exception do
@@ -178,11 +178,11 @@ begin
           .AddPair('mensagem', E.Message));
         Res.Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port,
-          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/consulta', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -212,12 +212,11 @@ begin
       JsonArrayRetorno := SaidaIntegracaoDAO.Insert
         (ArrayJsonSaidaIntegracao, 'V1');
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      SaidaIntegracaoDAO.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
-        THorse.Port, '/v1/saidaintegracao', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        'Integracao', ClientIP(Req), THorse.Port, '/v1/saidaintegracao',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       ArrayJsonSaidaIntegracao := Nil;
     Except
       on E: Exception do
@@ -226,11 +225,11 @@ begin
         JsonArrayRetorno.AddElement(TjsonObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        SaidaIntegracaoDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
-          THorse.Port, '/v1/saidaintegracao', Trim(Req.Params.Content.Text),
-          Req.Body, '', JsonArrayRetorno.ToString, 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port, '/v1/saidaintegracao',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -259,8 +258,8 @@ begin
       Begin
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port, '/v2/saidaintegracao',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port, '/v2/saidaintegracao',
           Trim(Req.Params.Content.Text), Req.Body, '',
           'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -270,8 +269,8 @@ begin
       Begin
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          'Integracao', ClientIP(Req), THorse.Port, '/v2/saidaintegracao',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port, '/v2/saidaintegracao',
           Trim(Req.Params.Content.Text), Req.Body, '',
           'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
@@ -285,11 +284,11 @@ begin
           .AddPair('mensagem', E.Message));
         Res.Send<TJsonArray>(JsonArrayRetorno)
           .Status(THttpStatus.ExpectationFailed);
-        SaidaIntegracaoDAO.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req),
-          THorse.Port, '/v2/saidaintegracao', Trim(Req.Params.Content.Text),
-          Req.Body, '', JsonArrayRetorno.ToString, 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port, '/v2/saidaintegracao',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
     End;
   Finally
@@ -306,13 +305,14 @@ begin
   Try
     Try
       JsonArray := TJsonArray.Create;
-      JsonArray.AddElement(TJsonObject.Create.AddPair('Erro',
+      JsonArray.AddElement(TjsonObject.Create.AddPair('Erro',
         'Rota desativada. use a versão 2: v2/saidaintegracao/retorno/:pedido'));
       Res.Status(500).Send<TJsonArray>(JsonArray);
     Except
       on E: Exception do
       Begin
-        JsonArray.AddElement(TjsonObject.Create(TJSONPair.Create('Erro', E.Message)));
+        JsonArray.AddElement(TjsonObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArray);
       End;
     End;
@@ -334,27 +334,42 @@ begin
     Try
       LService := TServiceSaidaIntegracao.Create;
       JsonArrayRetorno := LService.Retorno(Req.Params.Items['pedido'], 'V2');
-      if (JsonArrayRetorno.Items[0].TryGetValue('status', vStatus)) and (vStatus.ToInteger > 299) then Begin
-         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                         '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-                         ' Registros.', 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      if (JsonArrayRetorno.Items[0].TryGetValue('status', vStatus)) and
+        (vStatus.ToInteger > 299) then
+      Begin
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End
-      Else Begin
-         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                        '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-                        ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Else
+      Begin
+        Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
-    Except on E: Exception do Begin
-      JsonArrayRetorno := TJsonArray.Create;
-      JsonArrayRetorno.AddElement(TjsonObject.Create.AddPair('status', '500')
-                                  .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
-                                  .AddPair('mensagem', E.Message));
-      Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                      '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
-                      500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+    Except
+      on E: Exception do
+      Begin
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TjsonObject.Create.AddPair('status', '500')
+          .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
+          .AddPair('mensagem', E.Message));
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v2/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally
@@ -363,38 +378,54 @@ begin
 end;
 
 procedure RetornoV3(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var SaidaIntegracaoDAO: TSaidaIntegracaoDao;
-    JsonArrayRetorno: TJsonArray;
-    vStatus: String;
-    LService: TServiceSaidaIntegracao;
-    HrInicioLog: Ttime;
+Var
+  SaidaIntegracaoDAO: TSaidaIntegracaoDao;
+  JsonArrayRetorno: TJsonArray;
+  vStatus: String;
+  LService: TServiceSaidaIntegracao;
+  HrInicioLog: Ttime;
 begin
   HrInicioLog := Time;
   Try
     LService := TServiceSaidaIntegracao.Create;
     Try
       JsonArrayRetorno := LService.Retorno(Req.Params.Items['pedido'], 'V3');
-      if (JsonArrayRetorno.Items[0].TryGetValue('status', vStatus)) and (vStatus.ToInteger > 299) then Begin
-         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                         '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-                         ' Registros.', 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      if (JsonArrayRetorno.Items[0].TryGetValue('status', vStatus)) and
+        (vStatus.ToInteger > 299) then
+      Begin
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End
-      Else Begin
-        Res.Status(200).Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                        '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-                        ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Else
+      Begin
+        Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+          ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname']);
       End;
-    Except on E: Exception do Begin
-      JsonArrayRetorno := TJsonArray.Create;
-      JsonArrayRetorno.AddElement(TjsonObject.Create.AddPair('status', '500')
-                                  .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
-                                  .AddPair('mensagem', E.Message));
-      Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), 'Integracao', ClientIP(Req), THorse.Port,
-                      '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
-                      500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+    Except
+      on E: Exception do
+      Begin
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TjsonObject.Create.AddPair('status', '500')
+          .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
+          .AddPair('mensagem', E.Message));
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), 'Integracao', ClientIP(Req), THorse.Port,
+          '/v3/saidaintegracao/retorno/:pedido', Trim(Req.Params.Content.Text),
+          Req.Body, '', JsonArrayRetorno.ToString, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally

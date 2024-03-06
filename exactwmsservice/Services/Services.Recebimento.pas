@@ -712,8 +712,7 @@ function TServiceRecebimento.GetAcompanhamentoCheckIn(pPedidoId,
   pCodPessoaERP: Integer; pDataInicial, pDataFinal: TDateTime): tJsonArray;
 begin
   Try
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.Sql.Add(TuEvolutConst.SqlGetAcompanhamentoCheckIn);
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     FConexao.Query.ParamByName('pCodPessoaERP').Value := pCodPessoaERP;
@@ -877,8 +876,7 @@ Var
 begin
   Result := tJsonArray.Create;
   Try
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.Sql.Add('Declare @PedidoId      Integer = :pPedidoId');
     FConexao.Query.Sql.Add('Declare @AgrupamentoId Integer = :pAgrupamentoId');
     FConexao.Query.Sql.Add('Select * from PedidoAgrupamentoNotas');
@@ -967,8 +965,7 @@ function TServiceRecebimento.GetEntradaLoteDevolucao(pPedidoId, pAgrupamentoId,
   pCodProduto: Integer): tJsonArray;
 begin
   Try
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.Sql.Add(TuEvolutConst.SqlGetEntradaLoteDevolucao);
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     FConexao.Query.ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
@@ -1330,8 +1327,7 @@ function TServiceRecebimento.Header(pEntradaId, pAgrupamentoId: Integer)
   : tJsonArray;
 begin
   Try
-    FConexao.Query := TFdQuery.Create(nil);
-    FConexao.Query.connection := FConexao.DB;
+
     FConexao.Query.Sql.Add(TuEvolutConst.SqlEntradaHeader);
     FConexao.Query.ParamByName('pPedidoId').Value := pEntradaId;
     FConexao.Query.ParamByName('pAgrupamentoId').Value := pAgrupamentoId;

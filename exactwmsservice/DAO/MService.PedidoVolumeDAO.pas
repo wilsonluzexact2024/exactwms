@@ -74,10 +74,7 @@ type
       : TDictionary<String, String>): TJsonObject;
     Function GetVolumeConsulta(Const AParams: TDictionary<String, String>)
       : TJsonArray;
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String; pBody, pResponsestr, pResponseJson: String;
-      pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
+
     Property ObjPedidoVolume: TPedidoVolume Read FPedidoVolume
       Write FPedidoVolume;
   end;
@@ -229,7 +226,8 @@ begin
 end;
 
 // Identificação Etiqueta Volume Caixa Fracionada
-function TPedidoVolumeDao.EtiquetaPorVolume(pPedidoVolumeId: Integer) : TJsonArray;
+function TPedidoVolumeDao.EtiquetaPorVolume(pPedidoVolumeId: Integer)
+  : TJsonArray;
 var
   ObjJson: TJsonObject;
 begin
@@ -1060,14 +1058,20 @@ begin
   Except
     ON E: Exception do
     Begin
-      If Assigned(JsonPedido) Then
-        JsonPedido.Free;
-      If Assigned(JsonDestino) Then
-        JsonDestino.Free;
-      If Assigned(JsonRota) Then
-        JsonRota.Free;
-      If Assigned(jsonVolume) Then
-        jsonVolume.Free; //
+      try
+
+        If Assigned(JsonPedido) Then
+          JsonPedido.Free;
+        If Assigned(JsonDestino) Then
+          JsonDestino.Free;
+        If Assigned(JsonRota) Then
+          JsonRota.Free;
+        If Assigned(jsonVolume) Then
+          jsonVolume.Free; //
+      except
+
+      end;
+
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
         StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
@@ -2229,31 +2233,6 @@ begin
     Begin
       raise Exception.Create(E.Message);
     End;
-  end;
-end;
-
-procedure TPedidoVolumeDao.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-  pTerminal, pIpClient: String; pPort: Integer;
-  pUrl, pParams, pBody, pResponsestr, pResponseJson: String;
-  pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
-
-begin
-  If length(pParams) > 1000 then
-    pParams := Copy(pParams, 1, 1000);
-  If length(pBody) > 4000 then
-    pBody := Copy(pBody, 1, 4000);
-  If length(pResponsestr) > 1000 then
-    pResponsestr := Copy(pResponsestr, 1, 1000);
-  If length(pResponseJson) > 8000 then
-    pResponseJson := Copy(pResponseJson, 1, 8000);
-
-  Try
-    TUtil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-
-  Except
-
   end;
 end;
 

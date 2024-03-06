@@ -8,6 +8,8 @@ uses
   FireDAC.Comp.Client,
   FireDAC.DApt,
   FireDAC.Stan.Def,
+  // Posix.Base,
+  // Posix.Fcntl;
   FireDAC.Phys.FBDef,
   FireDAC.Stan.Intf,
   FireDAC.Phys,
@@ -85,10 +87,10 @@ begin
   DB.BeforeConnect := DConnectionBeforeConnect;
   DB.AfterConnect := DAfterforeConnect;
   // criando sem pool - n�o funcina no modelo atual
-  //Tutil.SetConection(DB, TypeConnecion);
-   if TypeConnecion = 1 then
+  // Tutil.SetConection(DB, TypeConnecion);
+  if TypeConnecion = 1 then
     DB.ConnectionDefName := _CTCONEXAOLOG
-    else
+  else
     DB.ConnectionDefName := _CTCONEXAO;
 
   Query := TFDQuery.Create(nil);
@@ -99,8 +101,8 @@ end;
 { ------------------------------------------------------------------------------- }
 procedure TConnection.DAfterforeConnect(Sender: TObject);
 begin
-  Tutil.Gravalog('  ' + GetSender + '  Conectado ao banco delay conexao: ' +
-    FormatDateTime('HH:mm:ss:zzz', Time - FtimeConnect));
+  // Tutil.Gravalog('  ' + GetSender + '  Conectado ao banco delay conexao: ' +
+  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeConnect));
 
 end;
 
@@ -116,6 +118,9 @@ destructor TConnection.Destroy;
 var
   I: Integer;
 begin;
+
+  // 'sysctl -w vm.drop_caches=3'
+
   DB.Connected := False;
   for I := 0 to pred(FListQuerys.Count) do
   begin
@@ -138,7 +143,7 @@ begin;
   try
     if assigned(DB) then
     begin
-      DB.Rollback;
+      Db.Close ;
       DB.Connected := False;
       FreeAndNil(DB);
     end;
@@ -151,7 +156,8 @@ end;
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryAfterExecute(DataSet: TFDDataSet);
 begin
-  Tutil.Gravalog('  ' + GetSender + ' Comando executado ' + FormatDateTime('HH:mm:ss:zzz', Time - FtimeExecute));
+  Tutil.Gravalog('  ' + GetSender + ' Comando executado ' +
+    FormatDateTime('HH:mm:ss:zzz', Time - FtimeExecute));
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -166,8 +172,9 @@ end;
 
 procedure TConnection.FDQueryBeforeExecute(DataSet: TFDDataSet);
 begin
-
-  Tutil.Gravalog('  ' + GetSender + ' Executando comando ');
+  if (DataSet is TFDQuery) then
+    Tutil.Gravalog('  ' + GetSender + ' Executando comando ' +
+      copy(TFDQuery(DataSet).SQL.Text, 0, 100));
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -203,7 +210,7 @@ end;
 procedure TConnection.QueryError(ASender, AInitiator: TObject;
   var AException: Exception);
 begin
-  Tutil.Gravalog('  ' + GetSender + ' Erro na execu�ao da query ->  ' +
+  Tutil.Gravalog('  ' + GetSender + ' Erro na execucao da query ->  ' +
     AException.Message);
 end;
 

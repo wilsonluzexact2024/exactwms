@@ -76,7 +76,7 @@ implementation
 
 { tCtrlVolumeEmbalagem }
 
-uses MService.CargasDAO, uFuncoes;
+uses MService.CargasDAO, uFuncoes, exactwmsservice.lib.utils;
 
 procedure Registry;
 begin
@@ -576,7 +576,7 @@ begin
         JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Par�metros da consulta(Id da Carga) n�o definido!')));
         Res.Send<TJsonArray>(JsonErro).Status(THTTPStatus.BadRequest);
-        ObjCargaDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, 'v1/cargas/notafiscal/:cargaid',
           Trim(Req.Params.Content.Text), Req.Body, '',
@@ -590,7 +590,7 @@ begin
       JsonRetorno := ObjCargaDAO.GetCargaNotaFiscal
         (StrToIntDef(Req.Params.Items['cargaid'], 0));
       Res.Send<TJsonArray>(JsonRetorno).Status(THTTPStatus.Created);
-      ObjCargaDAO.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
         0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/cargas/notafiscal/:cargaid', Trim(Req.Params.Content.Text), Req.Body,
         '', 'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.', 201,
@@ -601,7 +601,7 @@ begin
         JsonErro := TJsonArray.Create;
         JsonErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
         Res.Send<TJsonArray>(JsonErro).Status(THTTPStatus.InternalServerError);
-        ObjCargaDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/saida', Trim(Req.Params.Content.Text),
           Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),

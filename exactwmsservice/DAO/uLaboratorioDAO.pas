@@ -28,11 +28,7 @@ type
     Function Estrutura: TjSonArray;
     Function Import(pJsonArray: TjSonArray): TjSonArray;
     Function ImportDados(pJsonArray: TjSonArray): TjSonArray;
-    Procedure SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-      pTerminal, pIpClient: String; pPort: Integer; pUrl: String;
-      pParams: String;
-      pBody, pResponsestr, pResponseJson: String; pRespStatus: Integer;
-      pTimeExecution: Double; pAppName: String);
+  
     Property Laboratorio: TLaboratorio Read FLaboratorio Write FLaboratorio;
   end;
 
@@ -345,30 +341,6 @@ Begin
   Except
     On E: Exception do
       raise Exception.Create(E.Message);
-  end;
-end;
-
-procedure TLaboratorioDao.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
-  pTerminal, pIpClient: String; pPort: Integer; pUrl, pParams, pBody,
-  pResponsestr, pResponseJson: String; pRespStatus: Integer;
-  pTimeExecution: Double; pAppName: String);
-begin
-  Try
-    If length(pParams) > 1000 then
-      pParams := Copy(pParams, 1, 1000);
-    If length(pBody) > 4000 then
-      pBody := Copy(pBody, 1, 4000);
-    If length(pResponsestr) > 1000 then
-      pResponsestr := Copy(pResponsestr, 1, 1000);
-    If length(pResponseJson) > 8000 then
-      pResponseJson := Copy(pResponseJson, 1, 8000);
-
-    Tutil.SalvarLog(pMethod, pUsuarioId, pTerminal, pIpClient, pPort, pUrl,
-      pParams, pBody, pResponsestr, pResponseJson, pRespStatus, pTimeExecution,
-      pAppName);
-
-  Except
-
   end;
 end;
 

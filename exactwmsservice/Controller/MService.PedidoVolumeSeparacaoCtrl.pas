@@ -48,7 +48,7 @@ implementation
 { tCtrlPedidoVolumeSeparacao }
 
 uses MService.PedidoVolumeSeparacaoDAO, uFuncoes, Services.PedidoVolume,
-  Horse.Utils.ClientIP;
+  Horse.Utils.ClientIP, exactwmsservice.lib.utils;
 
 // uses UDmRhemaWMS, uFrmRhemaWms; //, uFrmPesquisa
 
@@ -131,7 +131,7 @@ begin
       JsonArrayRetorno := PedidoVolumeSeparacaoDAO.GetDshSeparacao
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSonArray>(JsonArrayRetorno);
-      PedidoVolumeSeparacaoDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/dshseparacao',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -144,7 +144,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJSonArray>(JsonArrayErro);
-        PedidoVolumeSeparacaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/dshseparacao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
@@ -171,7 +171,7 @@ begin
       JsonArrayRetorno := PedidoVolumeSeparacaoDAO.GetResumoSeparacao
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJSonArray>(JsonArrayRetorno);
-      PedidoVolumeSeparacaoDAO.SalvarLog(Req.MethodType,
+      Tutil.SalvarLog(Req.MethodType,
         StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
         ClientIP(Req), THorse.Port, '/v1/resumoseparacao',
         Trim(Req.Params.Content.Text), Req.Body, '',
@@ -184,7 +184,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJSonArray>(JsonArrayErro);
-        PedidoVolumeSeparacaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/resumoseparacao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
@@ -217,7 +217,7 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJSonArray>(JsonArrayErro);
-        PedidoVolumeSeparacaoDAO.SalvarLog(Req.MethodType,
+        Tutil.SalvarLog(Req.MethodType,
           StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
           ClientIP(Req), THorse.Port, '/v1/resumoseparacao',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
