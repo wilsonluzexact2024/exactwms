@@ -1,10 +1,10 @@
 version: '3'
 services:
   exactwmsserver:    
-    image : rhemasyssolucoes/exactwmsservice
+    image : rhemasyssolucoes/exactwmsservice:04_03_2024
     environment :
       RHEMA_DB_HOST : "exactwms.ddns.net"
-      RHEMA_DB_DATABASE : "eXactWMS_Indiana"
+      RHEMA_DB_DATABASE : "eXactWMS_DC"
       RHEMA_DB_USER : "eXactWMS"
       RHEMA_DB_PASSWORD : "3X4ctWM5"  
       RHEMA_DB_LOG_HOST : "exactwms.ddns.net"

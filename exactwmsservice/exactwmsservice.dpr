@@ -165,9 +165,7 @@ uses
   Services.Usuarios in 'Services\Services.Usuarios.pas' {ServiceUsuario: TDataModule},
   exactwmsservice.lib.utils in 'Lib\exactwmsservice.lib.utils.pas',
   exactwmsservice.lib.connection in 'Lib\exactwmsservice.lib.connection.pas',
-  exactwmsservice.Dao.base in 'DAO\exactwmsservice.Dao.base.pas',
-  exactwmsservice.schedule.manutencao in 'Schedule\exactwmsservice.schedule.manutencao.pas',
-  exactwmsservice.schedule.expedicao in 'Schedule\exactwmsservice.schedule.expedicao.pas';
+  exactwmsservice.Dao.base in 'DAO\exactwmsservice.Dao.base.pas';
 
 Var
   ArqIni: TIniFile;
@@ -176,23 +174,9 @@ Var
   FidScheduleManutencao, FidScheduleExpedicao: Cardinal;
 
 
-procedure ScheduleManutencao;
-begin
-  With TScheduleManutencao.create(true) do
-  begin
-    resume;
-  end;
-end;
 
-procedure ScheduleExpedicao;
-begin
-{
-   With TScheduleExpedicao.create(true) do
-   begin
-     resume;
-   end
-};
-end;
+
+
 
 begin
   // ReportMemoryLeaksOnShutdown := DebugHook <> 0;
@@ -307,15 +291,7 @@ begin
   TSistemaControl.GetInstance();
   Tutil.SetConectionsDef();
 
-{$IFDEF MSWINDOWS}
-  BeginThread(Nil, 0, @ScheduleManutencao, nil, 0, FidScheduleManutencao);
-//  sleep(300);
-//  BeginThread(Nil, 0, @ScheduleExpedicao,  nil, 0, FidScheduleExpedicao);
-{$ELSE}
-  ScheduleManutencao();
-//  Sleep(300);
-//  ScheduleExpedicao();
-{$ENDIF}
+
   THorse.Get('/eXactWMS',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
