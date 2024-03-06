@@ -7870,7 +7870,7 @@ Const SqlGetEntradaLoteCheckIn = 'Declare @PedidoId   Integer    = :pPedidoId' +
       'Group by PL.Lote, Pl.Data, Pl.Vencimento';
 
 Const SqlPedidoCxaFechadaCheckOut = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
-      'select Pv.PedidoVolumeId, De.ProcessoId, Ped.PedidoId, Ped.Razao, Ped.Fantasia, Ped.DocumentoData, Ped.Rota, Ped.rotaid, Vl.Quantidade'+sLineBreak+
+      'select Pv.PedidoVolumeId, De.ProcessoId, De.Descricao Processo, Ped.PedidoId, Ped.Razao, Ped.Fantasia, Ped.DocumentoData, Ped.Rota, Ped.rotaid, Vl.Quantidade'+sLineBreak+
       'from PedidoVolumes Pv'+sLineBreak+
       'Inner join vPedidos Ped On Ped.PedidoId = Pv.PedidoId'+sLineBreak+
       'Inner join vDocumentoEtapas De On De.Documento = Pv.Uuid'+sLineBreak+
@@ -7887,6 +7887,13 @@ Const SqlPedidoCxaFechadaCheckOutProd = 'Declare @PedidoVolumeId Integer = :pPed
       'Inner join vProduto Prd On Prd.IdProduto = Pl.IdProduto'+sLineBreak+
       'Inner join vEnderecamentos TEnd On TEnd.EnderecoId = Vl.EnderecoId'+sLineBreak+
       'Where Vl.PedidoVolumeId = @PedidoVolumeId';
+
+Const SqlPedidoCxaFechadaCheckOutCodBarras = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+     'select Vl.PedidoVolumeId, Pc.CodBarras'+sLineBreak+
+     'from PedidoVolumeLotes Vl'+sLineBreak+
+     'Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId'+sLineBreak+
+     'Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Pl.ProdutoId'+sLineBreak+
+     'where PedidoVolumeId = @PedidoVolumeId';
 
     { else if TJSONObject.ParseJSONValue(Req.Body) Is TJsonArray then
       ShowMessage('Recebido Array')

@@ -109,6 +109,18 @@ type
     LblF5: TLabel;
     RctF8: TRectangle;
     LblF8: TLabel;
+    FDMemProdutoCodBarras: TFDMemTable;
+    IntegerField1: TIntegerField;
+    IntegerField2: TIntegerField;
+    IntegerField3: TIntegerField;
+    StringField1: TStringField;
+    StringField2: TStringField;
+    StringField3: TStringField;
+    StringField4: TStringField;
+    StringField5: TStringField;
+    IntegerField4: TIntegerField;
+    IntegerField5: TIntegerField;
+    IntegerField6: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -220,35 +232,45 @@ Var pQtdCheckOut   : Integer;
     vErro : String;
 begin
   vCodDigitado := EdtProduto.Text;
-  JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
-  if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
-     SetCampoDefault('EdtProduto');
-     ShowErro('Erro: '+vErro);
-     JsonObjectRetorno := Nil;
-     Exit;
-  End;
-  vProdutoId :=  JsonObjectRetorno.GetValue<Integer>('produtoid');
-  if (FrmeXactWMS.ConfigWMS.SeparacaoCodInterno = 0) and
-     (vProdutoId<>0) and (EdtProduto.Text <> JsonObjectRetorno.GetValue<String>('ean')) then Begin
-     SetCampoDefault('EdtProduto');
-     JsonObjectRetorno := Nil;
-     MensagemStand('Informe o Ean do produto!');
-     Exit;
-  End;
-  if vProdutoId <= 0 then Begin
-     EdtProduto.Text := '';
-     SetCampoDefault('EdtProduto');
-     MensagemStand('Produto('+vCodDigitado+') não encontrado!');
-     JsonObjectRetorno := Nil;
-     Exit;
-  End;
-  if Not (QryListaPadrao.Locate('ProdutoId', vProdutoId, [])) then Begin
-     EdtProduto.Text := '';
-     SetCampoDefault('EdtProduto');
-     MensagemStand('Produto('+vCodDigitado+') não faz parte deste volume!');
-     JsonObjectRetorno := Nil;
-     Exit;
-  End;
+  if (StrToIntDef(EdtProduto.Text, 0) <> FDMemProdutoCodBarras.FieldByName('Produtoid').AsInteger) then Begin
+{     JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
+     if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
+        SetCampoDefault('EdtProduto');
+        ShowErro('Erro: '+vErro);
+        JsonObjectRetorno := Nil;
+        Exit;
+     End;
+}
+     vProdutoId := 0;
+     if (FDMemProdutoCodBarras.Locate('CodBarras', EdtProduto.Text, [])) then
+        vProdutoId :=  JsonObjectRetorno.GetValue<Integer>('produtoid');
+     if (vProdutoId <= 0) Then Begin
+        SetCampoDefault('EdtProduto');
+        MensagemStand('Código/Ean do produto inválido!');
+        Exit;
+     End;
+{     if (FrmeXactWMS.ConfigWMS.SeparacaoCodInterno = 0) and
+        (vProdutoId<>0) and (EdtProduto.Text <> JsonObjectRetorno.GetValue<String>('ean')) then Begin
+        SetCampoDefault('EdtProduto');
+        JsonObjectRetorno := Nil;
+        MensagemStand('Informe o Ean do produto!');
+        Exit;
+     End;
+     if vProdutoId <= 0 then Begin
+        EdtProduto.Text := '';
+        SetCampoDefault('EdtProduto');
+        MensagemStand('Produto('+vCodDigitado+') não encontrado!');
+        JsonObjectRetorno := Nil;
+        Exit;
+     End;
+     if Not (QryListaPadrao.Locate('ProdutoId', vProdutoId, [])) then Begin
+        EdtProduto.Text := '';
+        SetCampoDefault('EdtProduto');
+        MensagemStand('Produto('+vCodDigitado+') não faz parte deste volume!');
+        JsonObjectRetorno := Nil;
+        Exit;
+     End;
+}  End;
   if F3Press then Begin
      if (Trunc(StrToIntDef(EdtQtdApanhe.Text, 0)) Mod QryListaPadrao.FieldByName('EmbalagemPadrao').AsInteger) <> 0 then Begin
         SetCampoDefault('EdtQtdApanhe');
@@ -736,6 +758,11 @@ begin
       End
       Else Begin
          JsonArrayVolume := JsonObjectVolume.GetValue<TJsonArray>('volume');
+         If FDMemProdutoCodBarras.Active then
+            FDMemProdutoCodBarras.EmptyDataSet;
+         FDMemProdutoCodBarras.Close;
+         FdMemProdutoCodBarras.LoadFromJSON(JsonObjectVolume.GetValue<TJsonArray>('codbarras'), False);
+         FDMemProdutoCodBarras.Open;
          Result := True;
          CabecalhoPedido(JsonArrayVolume.Items[0].GetValue<Integer>('pedidoid'),
                          JsonArrayVolume.Items[0].GetValue<String>('fantasia'),

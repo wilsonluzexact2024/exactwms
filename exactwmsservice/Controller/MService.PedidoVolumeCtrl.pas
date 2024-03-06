@@ -1669,7 +1669,7 @@ begin
     Try
       JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut(Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonObject>(JsonObjectRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+     Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
                       '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
                       'Retorno: ' + JsonObjectRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
     Except on E: Exception do Begin

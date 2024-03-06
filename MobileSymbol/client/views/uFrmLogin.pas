@@ -288,8 +288,11 @@ begin
     procedure
     Var
       jArray: TJsonArray;
+      Teste : String;
     begin
       DmClient.RESTRequest1.ResetToDefaults;
+      Teste :=  DmClient.RestClient1.BaseURL;
+      //Teste :=  DmClient.RestClient1.Port;
       DmClient.RESTResponse1.ResetToDefaults;
       DmClient.ResetREST;
       DmClient.RESTRequest1.Resource := 'v1/usuario/{usuarioid}';

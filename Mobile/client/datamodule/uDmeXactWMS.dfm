@@ -1,6 +1,7 @@
 object DmeXactWMS: TDmeXactWMS
-  Height = 470
-  Width = 530
+  Height = 588
+  Width = 663
+  PixelsPerInch = 120
   object RESTRequestWMS: TRESTRequest
     AssignedValues = [rvConnectTimeout, rvReadTimeout]
     Client = RESTClientWMS
@@ -9,8 +10,8 @@ object DmeXactWMS: TDmeXactWMS
     ConnectTimeout = 300000
     ReadTimeout = 300000
     SynchronizedEvents = False
-    Left = 52
-    Top = 28
+    Left = 65
+    Top = 35
   end
   object RESTClientWMS: TRESTClient
     Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
@@ -19,12 +20,12 @@ object DmeXactWMS: TDmeXactWMS
     Params = <>
     RaiseExceptionOn500 = False
     SynchronizedEvents = False
-    Left = 53
-    Top = 82
+    Left = 66
+    Top = 103
   end
   object RESTResponseWMS: TRESTResponse
-    Left = 57
-    Top = 138
+    Left = 71
+    Top = 173
   end
   object RESTClientCep: TRESTClient
     Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
@@ -33,8 +34,8 @@ object DmeXactWMS: TDmeXactWMS
     Params = <>
     RaiseExceptionOn500 = False
     SynchronizedEvents = False
-    Left = 398
-    Top = 6
+    Left = 498
+    Top = 8
   end
   object RESTRequestCep: TRESTRequest
     AssignedValues = [rvConnectTimeout, rvReadTimeout]
@@ -50,12 +51,12 @@ object DmeXactWMS: TDmeXactWMS
     ConnectTimeout = 300000
     ReadTimeout = 300000
     SynchronizedEvents = False
-    Left = 333
-    Top = 25
+    Left = 416
+    Top = 31
   end
   object RESTResponseCep: TRESTResponse
-    Left = 460
-    Top = 27
+    Left = 575
+    Top = 34
   end
   object FdWmsSqlLite: TFDConnection
     Params.Strings = (
@@ -65,8 +66,8 @@ object DmeXactWMS: TDmeXactWMS
     FetchOptions.AssignedValues = [evMode]
     FetchOptions.Mode = fmAll
     LoginPrompt = False
-    Left = 202
-    Top = 98
+    Left = 253
+    Top = 123
   end
   object QryVolumeProduto: TFDQuery
     Connection = FdWmsSqlLite
@@ -74,8 +75,8 @@ object DmeXactWMS: TDmeXactWMS
       '--Codigo Nao usado, passado em tempo de execucao'
       'Select * From PedidoVolumeProduto'
       'Order by Endereco')
-    Left = 44
-    Top = 206
+    Left = 55
+    Top = 258
   end
   object QryVolumeProdutoSalvar: TFDQuery
     Connection = FdWmsSqlLite
@@ -100,8 +101,8 @@ object DmeXactWMS: TDmeXactWMS
       
         'where PedidoVolumeid = :pedidovolumeid and codproduto = :codprod' +
         'uto')
-    Left = 156
-    Top = 206
+    Left = 195
+    Top = 258
     ParamData = <
       item
         Name = 'F3PRESS'
@@ -138,8 +139,8 @@ object DmeXactWMS: TDmeXactWMS
       '--Codigo Nao usado, passado em tempo de execucao'
       'Select * From PedidoVolumeProduto'
       '')
-    Left = 40
-    Top = 260
+    Left = 50
+    Top = 325
   end
   object QryVolumeLoteSalvar: TFDQuery
     Connection = FdWmsSqlLite
@@ -181,8 +182,8 @@ object DmeXactWMS: TDmeXactWMS
         'where PedidoVolumeid = :pedidovolumeid and codproduto = :codprod' +
         'uto and lote = :lote'
       '*/')
-    Left = 156
-    Top = 268
+    Left = 195
+    Top = 335
     ParamData = <
       item
         Name = 'F3PRESS'
@@ -225,8 +226,8 @@ object DmeXactWMS: TDmeXactWMS
       ' From PedidoVolumeProduto'
       'Where PedidoVolumeId = :PedidoVolumeId'
       'Order by Endereco;')
-    Left = 272
-    Top = 224
+    Left = 340
+    Top = 280
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEID'
@@ -240,8 +241,8 @@ object DmeXactWMS: TDmeXactWMS
       'Select * From PedidoVolumeLote'
       'Where PedidoVolumeId = :PedidoVolumeId'
       '   And CodProduto = :CodProduto')
-    Left = 272
-    Top = 278
+    Left = 340
+    Top = 348
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEID'
@@ -268,8 +269,8 @@ object DmeXactWMS: TDmeXactWMS
         'eIdLote;'
       ''
       '')
-    Left = 390
-    Top = 216
+    Left = 488
+    Top = 270
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEIDPRD'
@@ -292,8 +293,8 @@ object DmeXactWMS: TDmeXactWMS
         'eIdLote'
       ''
       '')
-    Left = 204
-    Top = 152
+    Left = 255
+    Top = 190
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEIDPRD'
@@ -316,8 +317,8 @@ object DmeXactWMS: TDmeXactWMS
       'inner join ProdutocodBarras Pc On Pc.ProdutoId = Pl.ProdutoId'
       'where Vl.PedidoVOlumeId = :PedidoVolumeId'
       'Order by produtoid, pc.CodBarras')
-    Left = 394
-    Top = 270
+    Left = 493
+    Top = 338
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEID'
@@ -349,8 +350,8 @@ object DmeXactWMS: TDmeXactWMS
         'eIdLote'
       ''
       '')
-    Left = 272
-    Top = 334
+    Left = 340
+    Top = 418
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEIDPRD'
@@ -368,8 +369,8 @@ object DmeXactWMS: TDmeXactWMS
     Params = <>
     RaiseExceptionOn500 = False
     SynchronizedEvents = False
-    Left = 396
-    Top = 80
+    Left = 495
+    Top = 100
   end
   object RequestReport: TRESTRequest
     AssignedValues = [rvConnectTimeout, rvReadTimeout]
@@ -385,12 +386,12 @@ object DmeXactWMS: TDmeXactWMS
     ConnectTimeout = 300000
     ReadTimeout = 300000
     SynchronizedEvents = False
-    Left = 331
-    Top = 99
+    Left = 414
+    Top = 124
   end
   object ResponseReport: TRESTResponse
-    Left = 458
-    Top = 101
+    Left = 573
+    Top = 126
   end
   object QryVolumeCorteLote: TFDQuery
     Connection = FdWmsSqlLite
@@ -407,8 +408,8 @@ object DmeXactWMS: TDmeXactWMS
       'where PedidoVolumeid = :pedidovolumeid'
       '  and codproduto = :codproduto'
       '  and Demanda > QtdSuprida')
-    Left = 156
-    Top = 330
+    Left = 195
+    Top = 413
     ParamData = <
       item
         Name = 'USUARIOID'
@@ -434,8 +435,8 @@ object DmeXactWMS: TDmeXactWMS
       'Where Vl.PedidoVolumeId = :PedidoVolumeId'
       '  and Vl.UsuarioId = :UsuarioId'
       'Order by Vl.CodProduto')
-    Left = 398
-    Top = 340
+    Left = 498
+    Top = 425
     ParamData = <
       item
         Name = 'PEDIDOVOLUMEID'
@@ -453,8 +454,8 @@ object DmeXactWMS: TDmeXactWMS
       'select Sum(Demanda) Demanda, Sum(QtdSuprida) QtdSuprida'
       'from PedidoVOlumeProduto'
       'where PedidoVolumeId = :pPedidoVolumeId;')
-    Left = 272
-    Top = 396
+    Left = 340
+    Top = 495
     ParamData = <
       item
         Name = 'PPEDIDOVOLUMEID'
@@ -463,11 +464,11 @@ object DmeXactWMS: TDmeXactWMS
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'FMX'
-    Left = 234
-    Top = 14
+    Left = 293
+    Top = 18
   end
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 138
-    Top = 16
+    Left = 173
+    Top = 20
   end
 end

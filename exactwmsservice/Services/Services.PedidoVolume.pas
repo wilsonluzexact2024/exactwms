@@ -1037,7 +1037,7 @@ Begin
        FConexao.Query.Sql.SaveToFile('GetPedidoCxaFechadaCheckOut.Sql');
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then Begin
-       TJsonObject.Create(tJsonPair.Create('Erro', 'Volume não encontra!'));
+       Result.AddPair('Erro', 'Volume não encontrado!');
     End
     Else Begin
       vErro := '';
@@ -1047,7 +1047,7 @@ Begin
         15: vErro := 'Volume Cancelado.';
       end;
       if vErro <> '' then Begin
-         TJsonObject.Create.AddPair('Erro', vErro);
+         Result.AddPair('Erro', vErro);
       End
       Else Begin
          Result.AddPair('volume', FConexao.Query.ToJsonArray);
@@ -1062,6 +1062,12 @@ Begin
          End
          Else Begin
            Result.AddPair('produto', FConexao.Query.ToJsonArray);
+           FConexao.Query.Close;
+           FConexao.Query.SQL.Clear;
+           FConexao.Query.SQL.Add( TuEvolutConst.SqlPedidoCxaFechadaCheckOutCodBarras );
+           FConexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+           FConexao.Query.Open();
+           Result.AddPair('codbarras', FConexao.Query.ToJsonArray);
          End;
       End;
     End;

@@ -14,7 +14,8 @@ uses
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, System.JSON.Readers,
   FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.FMXUI.Wait, System.JSON.Types,
   uTHistorico, uRetorno, Rest.Json, FireDAC.Comp.UI, REST.Authenticator.Basic,
-  uTProdutoColetor, uTEnderecoColetor, REST.Types, REST.Response.Adapter
+  uTProdutoColetor, uTEnderecoColetor, REST.Types, REST.Response.Adapter,
+  FireDAC.Phys.SQLiteWrapper.Stat
   {$IFDEF ANDROID}
     ,Androidapi.Helpers
     ,Androidapi.JNI.GraphicsContentViewText

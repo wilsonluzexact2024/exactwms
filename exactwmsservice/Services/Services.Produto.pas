@@ -687,6 +687,8 @@ begin
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetProduto);
     FConexao.Query.ParamByName('pProdutoid').Value := pCodProduto;
     FConexao.Query.Open;
+    if DebugHook <> 0 then
+       FConexao.Query.SQL.SaveToFile('produtoEan.Sql');
     if FConexao.Query.IsEmpty then
     Begin
       Result := TJsonObject.Create;
