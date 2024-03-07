@@ -683,6 +683,7 @@ end;
 function TServiceProduto.GetCodProdutoEan(pCodProduto: String): TJsonObject;
 begin
   Try
+    //FConexao.GetQuery;
     FConexao.Query.SQL.Clear;
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetProduto);
     FConexao.Query.ParamByName('pProdutoid').Value := pCodProduto;

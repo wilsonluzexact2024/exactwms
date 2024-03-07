@@ -1481,8 +1481,8 @@ end;
 
 function TPedidoSaidaDao.GetConsultaReposicao(Const AParams
   : TDictionary<string, string>): TjSonArray;
-var
-  vQryBasico, vQry: TFDQuery;
+var vQryBasico, vQry: TFDQuery;
+    vErroBody : TJsonArray;
 begin
   Try
     vQryBasico := FConexao.GetQuery;
@@ -1566,9 +1566,10 @@ begin
       if vQry.IsEmpty then
       Begin
         Result := TjSonArray.Create;
-        Result.AddElement(TJsonObject.Create.AddPair('header',
-          vQryBasico.ToJSONArray()).AddPair('body',
-          'Sem Dados para a consulta.'));
+        vErroBody := TJsonArray.Create;
+        vErroBody.AddElement(TJsonObject.Create.AddPair('Erro', 'Reposição sem itens para coleta.'));
+        Result.AddElement(TJsonObject.Create.AddPair('header', vQryBasico.ToJSONArray())
+        .AddPair('body', vErroBody ));
       End
       Else
       Begin

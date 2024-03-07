@@ -1666,10 +1666,7 @@ begin
     end;
   finally
     vQry.Close;
-    vQryVolumeLotes.Close;
-    vQryEstoque.Close;
     vQryPedStatus.Close;
-    vQryKardex.Close;
   end;
 end;
 

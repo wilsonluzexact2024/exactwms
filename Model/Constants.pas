@@ -77,7 +77,7 @@ Const SqlGetUsuarioListaFuncionalidade = 'select UF.* From Funcionalidades F' +
       + sLineBreak + 'from Topicos T' + sLineBreak +
       'Left Join PerfilTopicos PT ON PT.TopicoId = T.TopicoId and PT.Perfilid = :pPerfilId';
 
-  Const
+Const
     SqlGetControleAcessoFuncionalidade =
       'Declare @Usuarioid Integer = :pUsuarioId' + sLineBreak +
       'select T.TopicoId, F.FuncionalidadeId, F.Descricao, F.Status, (Case When UF.FuncionalidadeId Is Not Null Then 1 Else 0 End) as Acesso'
@@ -2292,8 +2292,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Where De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1)'
       + sLineBreak + '      and De.ProcessoId in (11, 12)';
 
-  Const
-    SqlGetOpenVolumeParaSeparacao =
+  Const SqlGetOpenVolumeParaSeparacao =
     // 'Declare @CaixaId Integer = :pCaixaId'+sLineBreak+
       'Declare @PedidoVolumeId Int = :pPedidoVolumeid' + sLineBreak +
       'Declare @UsuarioId Integer = :pUsuarioid' + sLineBreak + '' + sLineBreak
