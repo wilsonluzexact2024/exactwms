@@ -5,6 +5,10 @@
 
 uses
   System.Threading,
+  {$IFDEF linux}
+  Posix.SysMman, 444
+  {$ENDIF}
+
   System.JSON,
   IniFiles,
   horse,

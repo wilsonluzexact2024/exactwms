@@ -126,7 +126,7 @@ begin;
   begin
     try
       FListQuerys[I].close;
-      FListQuerys[I].Free;
+      FreeAndNil(  FListQuerys[I]);
     except
       on e: Exception do
         Tutil.Gravalog('  ' + GetSender + ' Querry foi previamente liberada !');
