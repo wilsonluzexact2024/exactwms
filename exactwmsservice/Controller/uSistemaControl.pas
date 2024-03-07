@@ -18,7 +18,7 @@ type
 
     class function GetInstance: TSistemaControl;
 
-    property Conexao: TConnection read FConexao write FConexao;
+    property Conexao1: TConnection read FConexao write FConexao;
   end;
 
 implementation
@@ -27,13 +27,13 @@ implementation
 
 constructor TSistemaControl.Create();
 begin
-  FConexao := TConnection.Create;
-  FConexao.Sender := Self;
+ // FConexao := TConnection.Create;
+ // FConexao.Sender := Self;
 end;
 
 destructor TSistemaControl.Destroy;
 begin
-  FConexao.Free;
+  //FConexao.Free;
 
   inherited;
 end;

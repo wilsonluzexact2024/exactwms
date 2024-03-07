@@ -24,7 +24,7 @@ uses
   FireDAC.Phys.MSSQL, Generics.Collections;
 
 type
-  TConnection = class
+  TConnection = class(TComponent)
   private
     FQuery: TFDQuery;
     FSender: TObject;
@@ -122,6 +122,14 @@ begin;
   // 'sysctl -w vm.drop_caches=3'
 
   DB.Connected := False;
+  { while FListQuerys.Count > 0 do
+    begin
+    FListQuerys[0].close;
+    FreeAndNil(FListQuerys[0]);
+    FListQuerys.de
+
+    end; }
+
   for I := 0 to pred(FListQuerys.Count) do
   begin
     try
@@ -131,6 +139,11 @@ begin;
       on e: Exception do
         Tutil.Gravalog('  ' + GetSender + ' Querry foi previamente liberada !');
     end;
+  end;
+  try
+    FListQuerys.Destroy;
+  except
+
   end;
   try
     if assigned(Query) then
@@ -168,7 +181,8 @@ begin
     inttostr(DataSet.RecordCount));
 
   if DataSet.RecordCount > 500 then
-    Tutil.Gravalog('   ' + GetSender +   '< Warning > Limit Records  ! ' +copy( TFDQuery(Sender).sql.text  ,0,100));
+    Tutil.Gravalog('   ' + GetSender + '< Warning > Limit Records  ! ' +
+      copy(TFDQuery(Sender).sql.text, 0, 100));
 
   DataSet.First;
 end;
@@ -178,7 +192,7 @@ procedure TConnection.FDQueryBeforeExecute(DataSet: TFDDataSet);
 begin
   if (DataSet is TFDQuery) then
     Tutil.Gravalog('  ' + GetSender + ' Executando comando ' +
-      copy(TFDQuery(DataSet).SQL.Text, 0, 100));
+      copy(TFDQuery(DataSet).sql.text, 0, 100));
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -187,12 +201,12 @@ begin
   FtimeOpen := Time;
   // Tutil.Gravalog('Executando consulta ');
   Tutil.Gravalog('  ' + GetSender + ' Executando consulta ' +
-    copy(TFDQuery(DataSet).SQL.Text, 0, 100));
+    copy(TFDQuery(DataSet).sql.text, 0, 100));
 end;
 
 function TConnection.GetQuery: TFDQuery;
 begin
-  result := TFDQuery.Create(Nil);
+  result := TFDQuery.Create(Self);
   SetupQuery(result);
   FListQuerys.Add(result);
 end;

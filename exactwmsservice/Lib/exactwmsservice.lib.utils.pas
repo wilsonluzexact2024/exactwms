@@ -249,7 +249,9 @@ begin
       OParams.add('Pooled=True');
       OParams.add('POOL_ExpireTimeout=100');
       OParams.add('POOL_CleanupTimeout=300');
+      {$IFDEF LINUX}
       Writeln('Servidor DB: ' + ArqIni.ReadString('BD', 'Server', 'locahost'));
+      {$ENDIF}
       try
         if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO))
         then
@@ -472,7 +474,9 @@ begin
         LSaida: string;
       begin
         LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
+{$IFDEF LINUX}
         Writeln(LSaida);
+{$ENDIF}
         try
           try
             p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
@@ -484,7 +488,9 @@ begin
               Rewrite(F)
             else
               Append(F);
+{$IFDEF LINUX}
             Writeln(F, LSaida);
+{$ENDIF}
           except
           end;
         finally
@@ -527,12 +533,12 @@ var
   MainHandle: THandle;
 begin
   try
-   // MainHandle := OpenProcess(PROCESS_ALL_ACCESS, false, GetCurrentProcessID);
- //   SetProcessWorkingSetSize(MainHandle, $FFFFFFFF, $FFFFFFFF);
- //   CloseHandle(MainHandle);
+    // MainHandle := OpenProcess(PROCESS_ALL_ACCESS, false, GetCurrentProcessID);
+    // SetProcessWorkingSetSize(MainHandle, $FFFFFFFF, $FFFFFFFF);
+    // CloseHandle(MainHandle);
   except
   end;
-  //Application.ProcessMessages;
+  // Application.ProcessMessages;
 end;
 
 end.
