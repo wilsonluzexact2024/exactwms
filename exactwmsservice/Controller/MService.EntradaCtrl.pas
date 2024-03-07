@@ -1112,7 +1112,8 @@ var
   PedidoEntradaDAO: TEntradaDAO;
   AQueryParam: TDictionary<String, String>;
   vDocumentoNr, vRazao, vRegistroERP: String;
-  vPedidoId, vPessoaId, vPendente, vAgrupamentoId, vCodProduto : Integer;
+  vPedidoId, vPessoaId, vPendente, vAgrupamentoId : Integer;
+  vCodProduto : String;
   vDtNotaFiscal: TDateTime;
   vBasico: Boolean;
 begin
@@ -1160,9 +1161,11 @@ begin
   {$REGION CubagemPedido}
         // Como Criar Region
   {$ENDREGION}
+        if AQueryParam.ContainsKey('codproduto') then
+          vCodProduto := AQueryParam.Items['codproduto'];
         Res.Send<TJSonArray>(PedidoEntradaDAO.Pesquisar(vPedidoId, vPessoaId,
           vDocumentoNr, vRazao, vRegistroERP, vDtNotaFiscal, vPendente,
-          vAgrupamentoId, vCodProduto, vBasico, 0)).Status(THttpStatus.Created);
+          vAgrupamentoId, vBasico, 0, vCodProduto)).Status(THttpStatus.Created);
       End;
     Except
       on E: Exception do

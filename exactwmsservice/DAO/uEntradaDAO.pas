@@ -83,8 +83,8 @@ type
       pPessoaId: Integer): TjSonArray;
     function Pesquisar(pPedidoId, pPessoaId: Integer;
       pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
-      pShowErro: Integer = 1): TjSonArray;
+      pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+      pShowErro: Integer = 1; pCodProduto : String = '0'): TjSonArray;
     Function GetEspelho(const AParams: TDictionary<string, string>): TjSonArray;
     Function Cancelar(pJsonPedidoCancelar: TJsonObject): Boolean;
     Function Delete(pJsonPedidoDelete: TJsonObject): Boolean;
@@ -738,8 +738,8 @@ end;
 
 function TEntradaDao.Pesquisar(pPedidoId, pPessoaId: Integer;
   pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
-  pShowErro: Integer = 1): TjSonArray;
+  pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+  pShowErro: Integer = 1; pCodProduto : String = '0'): TjSonArray;
 var
   vQry, vQryItens: TFdQuery;
   vSql, vSqlItens: String;
