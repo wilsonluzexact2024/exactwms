@@ -180,9 +180,9 @@ begin
     FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
     inttostr(DataSet.RecordCount));
 
-  if DataSet.RecordCount > 500 then
-    Tutil.Gravalog('   ' + GetSender + '< Warning > Limit Records  ! ' +
-      copy(TFDQuery(Sender).sql.text, 0, 100));
+//  if DataSet.RecordCount > 500 then
+//    Tutil.Gravalog('   ' + GetSender + '< Warning > Limit Records  ! ' +
+//      copy(TFDQuery(Sender).sql.text, 0, 100));
 
   DataSet.First;
 end;

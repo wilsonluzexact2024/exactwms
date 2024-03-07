@@ -3,7 +3,6 @@ inherited FrmReposicao: TFrmReposicao
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Properties.ActivePage = TabListagem
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157

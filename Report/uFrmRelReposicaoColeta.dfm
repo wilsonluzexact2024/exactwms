@@ -9,8 +9,6 @@ inherited FrmRelReposicaoColeta: TFrmRelReposicaoColeta
     ExplicitHeight = 689
     ClientRectBottom = 689
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 665
       inherited LstCadastro: TAdvStringGrid
         Height = 627
@@ -123,7 +121,7 @@ inherited FrmRelReposicaoColeta: TFrmRelReposicaoColeta
         end
         object EdtReposicaoId: TEdit
           Left = 24
-          Top = 20
+          Top = 22
           Width = 45
           Height = 24
           CustomHint = BalloonHint1
@@ -898,13 +896,9 @@ inherited FrmRelReposicaoColeta: TFrmRelReposicaoColeta
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 665
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 665
       inherited DbgImporta: TDBGrid
         Height = 461
