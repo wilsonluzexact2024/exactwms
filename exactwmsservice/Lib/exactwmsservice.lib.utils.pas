@@ -522,4 +522,17 @@ begin
   Result := Result + '  Bd: ' + Ldatabase;
 end;
 
+procedure TrimAppMemorySize;
+var
+  MainHandle: THandle;
+begin
+  try
+   // MainHandle := OpenProcess(PROCESS_ALL_ACCESS, false, GetCurrentProcessID);
+ //   SetProcessWorkingSetSize(MainHandle, $FFFFFFFF, $FFFFFFFF);
+ //   CloseHandle(MainHandle);
+  except
+  end;
+  //Application.ProcessMessages;
+end;
+
 end.

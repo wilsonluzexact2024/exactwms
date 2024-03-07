@@ -5,10 +5,11 @@
 
 uses
   System.Threading,
-  {$IFDEF linux}
-  Posix.SysMman, 444
-  {$ENDIF}
-
+{$IFDEF linux}
+  Posix.SysMman,
+  Posix.SysStat,
+  Posix.Base,
+{$ENDIF}
   System.JSON,
   IniFiles,
   horse,
@@ -27,7 +28,8 @@ uses
   MService.LaboratoriosCtrl in 'Controller\MService.LaboratoriosCtrl.Pas',
   uPessoaTipoDAO in 'DAO\uPessoaTipoDAO.pas',
   OperacaoNaturezaClass in '..\Model\OperacaoNaturezaClass.Pas',
-  MService.OperacaoNaturezaCtrl in 'Controller\MService.OperacaoNaturezaCtrl.Pas',
+  MService.OperacaoNaturezaCtrl
+    in 'Controller\MService.OperacaoNaturezaCtrl.Pas',
   MService.OperacaoNaturezaDAO in 'DAO\MService.OperacaoNaturezaDAO.Pas',
   MService.OperacaoTipoCtrl in 'Controller\MService.OperacaoTipoCtrl.Pas',
   MService.OperacaoTipoDAO in 'DAO\MService.OperacaoTipoDAO.Pas',
@@ -50,9 +52,11 @@ uses
   MService.UnidadeDAO in 'DAO\MService.UnidadeDAO.pas',
   MService.DesenhoArmazemCtrl in 'Controller\MService.DesenhoArmazemCtrl.pas',
   MService.DesenhoArmazemDAO in 'DAO\MService.DesenhoArmazemDAO.pas',
-  MService.EnderecamentoZonaCtrl in 'Controller\MService.EnderecamentoZonaCtrl.pas',
+  MService.EnderecamentoZonaCtrl
+    in 'Controller\MService.EnderecamentoZonaCtrl.pas',
   MService.EnderecamentoZonaDAO in 'DAO\MService.EnderecamentoZonaDAO.pas',
-  MService.EnderecoEstruturaCtrl in 'Controller\MService.EnderecoEstruturaCtrl.pas',
+  MService.EnderecoEstruturaCtrl
+    in 'Controller\MService.EnderecoEstruturaCtrl.pas',
   MService.EnderecoEstruturaDAO in 'DAO\MService.EnderecoEstruturaDAO.pas',
   MService.EnderecoCtrl in 'Controller\MService.EnderecoCtrl.pas',
   MService.EnderecoDAO in 'DAO\MService.EnderecoDAO.pas',
@@ -64,9 +68,11 @@ uses
   MService.RegistroTipoCtrl in 'Controller\MService.RegistroTipoCtrl.pas',
   RegistroTipoClass in '..\Model\RegistroTipoClass.pas',
   MService.RegistroTipoDAO in 'DAO\MService.RegistroTipoDAO.pas',
-  MService.RegistroTipoProcessoCtrl in 'Controller\MService.RegistroTipoProcessoCtrl.pas',
+  MService.RegistroTipoProcessoCtrl
+    in 'Controller\MService.RegistroTipoProcessoCtrl.pas',
   RegistroTipoProcessoClass in '..\Model\RegistroTipoProcessoClass.pas',
-  MService.RegistroTipoProcessoDAO in 'DAO\MService.RegistroTipoProcessoDAO.pas',
+  MService.RegistroTipoProcessoDAO
+    in 'DAO\MService.RegistroTipoProcessoDAO.pas',
   MService.LotesCtrl in 'Controller\MService.LotesCtrl.pas',
   LotesClass in '..\Model\LotesClass.pas',
   MService.LoteDAO in 'DAO\MService.LoteDAO.pas',
@@ -84,15 +90,18 @@ uses
   RastroClass in '..\Model\RastroClass.pas',
   MService.RastroCtrl in 'Controller\MService.RastroCtrl.pas',
   MService.RastroDAO in 'DAO\MService.RastroDAO.pas',
-  MService.MedicamentoTiposCtrl in 'Controller\MService.MedicamentoTiposCtrl.pas',
+  MService.MedicamentoTiposCtrl
+    in 'Controller\MService.MedicamentoTiposCtrl.pas',
   MService.MedicamentoTipoDAO in 'DAO\MService.MedicamentoTipoDAO.pas',
   UsuarioClass in '..\Model\UsuarioClass.pas',
   MService.UsuarioCtrl in 'Controller\MService.UsuarioCtrl.pas',
   MService.UsuarioDAO in 'DAO\MService.UsuarioDAO.pas',
-  MService.EnderecamentoRuaCtrl in 'Controller\MService.EnderecamentoRuaCtrl.pas',
+  MService.EnderecamentoRuaCtrl
+    in 'Controller\MService.EnderecamentoRuaCtrl.pas',
   MService.EnderecamentoRuaDAO in 'DAO\MService.EnderecamentoRuaDAO.pas',
   EnderecamentoRuaClass in '..\Model\EnderecamentoRuaClass.pas',
-  MService.IntegracaoEntradaCtrl in 'Controller\MService.IntegracaoEntradaCtrl.pas',
+  MService.IntegracaoEntradaCtrl
+    in 'Controller\MService.IntegracaoEntradaCtrl.pas',
   MService.EntradaIntegracaoDAO in 'DAO\MService.EntradaIntegracaoDAO.pas',
   PedidoSaidaClass in '..\Model\PedidoSaidaClass.pas',
   PedidoProdutoClass in '..\Model\PedidoProdutoClass.pas',
@@ -115,8 +124,10 @@ uses
   MService.EmbalagemCaixaCtrl in 'Controller\MService.EmbalagemCaixaCtrl.pas',
   MService.EmbalagemCaixaDAO in 'DAO\MService.EmbalagemCaixaDAO.pas',
   PedidoVolumeSeparacaoClass in '..\Model\PedidoVolumeSeparacaoClass.pas',
-  MService.PedidoVolumeSeparacaoCtrl in 'Controller\MService.PedidoVolumeSeparacaoCtrl.pas',
-  MService.PedidoVolumeSeparacaoDAO in 'DAO\MService.PedidoVolumeSeparacaoDAO.pas',
+  MService.PedidoVolumeSeparacaoCtrl
+    in 'Controller\MService.PedidoVolumeSeparacaoCtrl.pas',
+  MService.PedidoVolumeSeparacaoDAO
+    in 'DAO\MService.PedidoVolumeSeparacaoDAO.pas',
   MService.IntegracaoSaidaCtrl in 'Controller\MService.IntegracaoSaidaCtrl.pas',
   MService.SaidaIntegracaoDAO in 'DAO\MService.SaidaIntegracaoDAO.pas',
   MService.EstoqueCtrl in 'Controller\MService.EstoqueCtrl.pas',
@@ -148,39 +159,46 @@ uses
   MService.InventarioDAO in 'DAO\MService.InventarioDAO.pas',
   MService.DevolucaoCtrl in 'Controller\MService.DevolucaoCtrl.pas',
   MService.DevolucaoDAO in 'DAO\MService.DevolucaoDAO.pas',
-  MService.operacaonaturezamotivoCtrl in 'Controller\MService.operacaonaturezamotivoCtrl.Pas',
+  MService.operacaonaturezamotivoCtrl
+    in 'Controller\MService.operacaonaturezamotivoCtrl.Pas',
   operacaonaturezamotivoClass in '..\Model\operacaonaturezamotivoClass.Pas',
-  MService.operacaonaturezamotivoDAO in 'DAO\MService.operacaonaturezamotivoDAO.Pas',
-  Services.Recebimento in 'Services\Services.Recebimento.pas' {ServiceRecebimento: TDataModule},
-  Services.PedidoSaida in 'Services\Services.PedidoSaida.pas' {ServicePedidoSaida: TDataModule},
-  Services.PedidoVolume in 'Services\Services.PedidoVolume.pas' {ServicePedidoVolume: TDataModule},
+  MService.operacaonaturezamotivoDAO
+    in 'DAO\MService.operacaonaturezamotivoDAO.Pas',
+  Services.Recebimento
+    in 'Services\Services.Recebimento.pas' {ServiceRecebimento: TDataModule} ,
+  Services.PedidoSaida
+    in 'Services\Services.PedidoSaida.pas' {ServicePedidoSaida: TDataModule} ,
+  Services.PedidoVolume
+    in 'Services\Services.PedidoVolume.pas' {ServicePedidoVolume: TDataModule} ,
   MService.NovidadesCtrl in 'Controller\MService.NovidadesCtrl.pas',
   MService.NovidadesDAO in 'DAO\MService.NovidadesDAO.pas',
-  Services.Produto in 'Services\Services.Produto.pas' {ServiceProduto: TDataModule},
-  Services.SegregadoCausa in 'Services\Services.SegregadoCausa.pas' {ServiceSegregadoCausa: TDataModule},
+  Services.Produto
+    in 'Services\Services.Produto.pas' {ServiceProduto: TDataModule} ,
+  Services.SegregadoCausa
+    in 'Services\Services.SegregadoCausa.pas' {ServiceSegregadoCausa: TDataModule} ,
   MService.SegregadoCausaCtrl in 'Controller\MService.SegregadoCausaCtrl.pas',
-  Services.SaidaIntegracao in 'Services\Services.SaidaIntegracao.pas' {ServiceSaidaIntegracao: TDataModule},
+  Services.SaidaIntegracao
+    in 'Services\Services.SaidaIntegracao.pas' {ServiceSaidaIntegracao: TDataModule} ,
   ProdutoLinhaClass in '..\Model\ProdutoLinhaClass.pas',
-  Services.ProdutoLinha in 'Services\Services.ProdutoLinha.pas' {ServiceProdutoLinha: TDataModule},
+  Services.ProdutoLinha
+    in 'Services\Services.ProdutoLinha.pas' {ServiceProdutoLinha: TDataModule} ,
   MService.ProdutoLinhaCtrl in 'Controller\MService.ProdutoLinhaCtrl.pas',
-  Services.Inventario in 'Services\Services.Inventario.pas' {ServiceInventario: TDataModule},
+  Services.Inventario
+    in 'Services\Services.Inventario.pas' {ServiceInventario: TDataModule} ,
   MService.MonitorLogCtrl in 'Controller\MService.MonitorLogCtrl.pas',
-  Services.MonitorLog in 'Services\Services.MonitorLog.pas' {ServiceMonitorLog: TDataModule},
-  Services.Usuarios in 'Services\Services.Usuarios.pas' {ServiceUsuario: TDataModule},
-  exactwmsservice.lib.utils in 'Lib\exactwmsservice.lib.utils.pas',
+  Services.MonitorLog
+    in 'Services\Services.MonitorLog.pas' {ServiceMonitorLog: TDataModule} ,
+  Services.Usuarios
+    in 'Services\Services.Usuarios.pas' {ServiceUsuario: TDataModule} ,
+  exactwmsservice.lib.Utils in 'Lib\exactwmsservice.lib.utils.pas',
   exactwmsservice.lib.connection in 'Lib\exactwmsservice.lib.connection.pas',
-  exactwmsservice.Dao.base in 'DAO\exactwmsservice.Dao.base.pas';
+  exactwmsservice.Dao.Base in 'DAO\exactwmsservice.Dao.base.pas';
 
 Var
   ArqIni: TIniFile;
   PortaServer: Integer;
   LLogFileConfig: THorseLoggerLogFileConfig;
   FidScheduleManutencao, FidScheduleExpedicao: Cardinal;
-
-
-
-
-
 
 begin
   // ReportMemoryLeaksOnShutdown := DebugHook <> 0;
@@ -189,8 +207,7 @@ begin
   FormatSettings.ShortTimeFormat := 'hh:mm';
   FormatSettings.LongTimeFormat := 'hh:mm:ss';
 
-  THorse.Use(Compression()).Use(jhonson).Use(HandleException)
-    .Use(THorseLoggerManager.HorseCallback);
+  THorse.Use(Compression()).Use(jhonson);
 
   LLogFileConfig := THorseLoggerLogFileConfig.New.SetLogFormat
     ('${request_clientip}:${request_server_port}${request_path_info} [${time_short}] '
@@ -268,7 +285,7 @@ begin
     End);
   }
   THorse.MaxConnections := 150;
-  THorse.ListenQueue    := 150;
+  THorse.ListenQueue := 150;
   PortaServer := 8200;
 
   try
@@ -282,19 +299,20 @@ begin
       then
       Begin
         Writeln('arquivo de configuração carrregado com sucesso ');
-        ArqIni := TIniFile.create(ExtractFilePath(GetModuleName(HInstance)) + 'eXactWMS.ini');
+        ArqIni := TIniFile.create(ExtractFilePath(GetModuleName(HInstance)) +
+          'eXactWMS.ini');
         PortaServer := ArqIni.Readinteger('Server', 'Port', 8200);
         FreeAndNil(ArqIni);
       End
       else
-        Writeln('Arquivo de configuracao não encontrado  !! ' + ExtractFilePath(GetModuleName(HInstance)) + 'eXactWMS.ini');
+        Writeln('Arquivo de configuracao não encontrado  !! ' +
+          ExtractFilePath(GetModuleName(HInstance)) + 'eXactWMS.ini');
     end;
   except
 
   end;
   TSistemaControl.GetInstance();
   Tutil.SetConectionsDef();
-
 
   THorse.Get('/eXactWMS',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
@@ -308,13 +326,7 @@ begin
       Res.Send(Tutil.ServerBd);
     end);
 
-  THorse.Get('/LimparSessoes',
-    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
-    begin
-      Res.Send(Tutil.EncerarConexoesInativas);
-
-    end);
-
+  Tutil.gravalog('Inciando Servidor v2024-03-06');
   THorse.Listen(PortaServer,
     Procedure(horse: THorse)
     Begin
