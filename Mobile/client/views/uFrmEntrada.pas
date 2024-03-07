@@ -274,7 +274,8 @@ type
     TipoAutorizarAlteracaoLote     : TTipoAutorizarAlteracaoLote;
     StartEntrada, permitirVisualizarDivergencia : Boolean;
     Function GetListaEntrada(pPedidoId : Integer = 0; pPessoaId : Integer = 0; pDocumento : String = '';
-             pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0; pPendente : Integer = 1; pAgrupamentoId : Integer = 0) : Boolean;
+             pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0;
+             pPendente : Integer = 1; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0) : Boolean;
     Procedure OpenEntrada;
     Function GetEntradaProduto(pPedidoId, pAgrupamentoId : Integer) : TJsonArray;
     Procedure GetEntradaLotes(pPedidoId, pAgrupamentoId  : Integer);
@@ -1729,7 +1730,7 @@ begin
 end;
 }
 function TFrmEntrada.GetListaEntrada(pPedidoId, pPessoaId: Integer; pDocumento,
-  pRazao, pRegistroERP: String; pDtNotaFiscal : TDateTime; pPendente: Integer; pAgrupamentoId : Integer): Boolean;
+  pRazao, pRegistroERP: String; pDtNotaFiscal : TDateTime; pPendente: Integer; pAgrupamentoId : Integer; pCodProduto : Integer): Boolean;
 Var xLista           : Integer;
     Th               : TThread;
 begin
@@ -1741,7 +1742,8 @@ begin
        ObjEntradaCtrl   : TEntradaCtrl;
    Begin
     ObjEntradaCtrl   := TEntradaCtrl.Create;
-    JsonArrayEntrada := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento, pRazao, pRegistroERP, 0, 1, pAgrupamentoId, 0);
+    JsonArrayEntrada := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento,
+                        pRazao, pRegistroERP, 0, 1, pAgrupamentoId, pCodProduto, 0);
     if JsonArrayEntrada.Items[0].TryGetValue('Erro', vErro) then begin
        JsonArrayEntrada := Nil;
        ObjEntradaCtrl.Free;
@@ -2076,20 +2078,22 @@ begin
      Try
        if CbCampoPesq.ItemIndex = 0 then //0 Id
           if StrToIntDef(EdtConteudoPesq.Text, 0) > 0 then
-             Result := GetListaEntrada(StrToInt(EdtConteudoPesq.Text), 0, '', '', '', 0, 0, 0)
+             Result := GetListaEntrada(StrToInt(EdtConteudoPesq.Text), 0, '', '', '', 0, 0, 0, 0)
           else raise Exception.Create('Id inválido para pesquisar!')
        Else if (CbCampoPesq.ItemIndex = 1) and (StrToIntDef(EdtConteudoPesq.Text, 0)>0) then //Código ERP
-          Result := GetListaEntrada(0, StrToInt(EdtConteudoPesq.Text), '', '', '', 0, 0, 0)
+          Result := GetListaEntrada(0, StrToInt(EdtConteudoPesq.Text), '', '', '', 0, 0, 0, 0)
        Else if CbCampoPesq.ItemIndex = 2 then //Documento Nr
-          Result := GetListaEntrada(0, 0, EdtConteudoPesq.Text, '', '', 0, 0, 0)
+          Result := GetListaEntrada(0, 0, EdtConteudoPesq.Text, '', '', 0, 0, 0, 0)
        Else if CbCampoPesq.ItemIndex = 3 then //Razao
-          Result := GetListaEntrada(0, 0, '', EdtConteudoPesq.Text, '', 0, 0, 0)
+          Result := GetListaEntrada(0, 0, '', EdtConteudoPesq.Text, '', 0, 0, 0, 0)
        Else if CbCampoPesq.ItemIndex = 4 then //RegistroERP
-          Result := GetListaEntrada(0, 0, '', '', EdtConteudoPesq.Text, 0, 0, 0)
+          Result := GetListaEntrada(0, 0, '', '', EdtConteudoPesq.Text, 0, 0, 0, 0)
        Else if CbCampoPesq.ItemIndex = 5 then //Data Nota Fiscal
-          Result := GetListaEntrada(0, 0, '', '', '', StrToDate(EdtConteudoPesq.Text), 0, 0)
+          Result := GetListaEntrada(0, 0, '', '', '', StrToDate(EdtConteudoPesq.Text), 0, 0, 0)
        Else if CbCampoPesq.ItemIndex = 6 then //Agrupamento
-          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0));
+          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0), 0)
+       Else if CbCampoPesq.ItemIndex = 7 then //Agrupamento
+          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0));
      Except On E: Exception do
         ShowErro('Erro: '+E.Message);
      End;

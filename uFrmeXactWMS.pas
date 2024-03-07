@@ -1210,6 +1210,7 @@ end;
 
 procedure TFrmeXactWMS.ActSeparacaoExecute(Sender: TObject);
 begin
+  raise Exception.Create('Funcionalidade Desativada!');
   if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Apanhe - Separação') then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   if (Assigned(FrmSeparacaoDesktop) = False) then

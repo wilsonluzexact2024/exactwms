@@ -18,6 +18,7 @@ Const
     'Declare @Razao VarChar(100) = :pRazao' + sLineBreak +
     'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
     'Declare @Pendente Integer = :pPendente' + sLineBreak +
+    'Declare @CodProduto Integer = :pCodProduto'+sLineBreak+
     'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid, P.CodPessoaERP, P.Razao, '
     + 'Ped.DocumentoNr, FORMAT(Rd.Data, ' + #39 + 'dd/MM/yyyy' + #39 +
     ') as DocumentoData, Ped.RegistroERP ' + ', FORMAT(RE.Data, ' + #39 +
@@ -82,7 +83,7 @@ type
       pPessoaId: Integer): TjSonArray;
     function Pesquisar(pPedidoId, pPessoaId: Integer;
       pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-      pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
       pShowErro: Integer = 1): TjSonArray;
     Function GetEspelho(const AParams: TDictionary<string, string>): TjSonArray;
     Function Cancelar(pJsonPedidoCancelar: TJsonObject): Boolean;
@@ -737,7 +738,7 @@ end;
 
 function TEntradaDao.Pesquisar(pPedidoId, pPessoaId: Integer;
   pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
   pShowErro: Integer = 1): TjSonArray;
 var
   vQry, vQryItens: TFdQuery;
@@ -767,6 +768,9 @@ begin // Processo lento
       vQry.ParamByname('pDtNotaFiscal').Value := 0
     Else
       vQry.ParamByname('pDtNotaFiscal').Value := pDtNotaFiscal;
+    vQry.ParamByName('pCodProduto').Value     := pCodProduto;
+    if DebugHook <> 0 then
+       vQry.SQL.SaveToFile('EntradaPesquisar.Sql');
     vQry.Open;
     if vQry.IsEmpty then
       Result.AddElement(TJsonObject.Create.AddPair('Erro',

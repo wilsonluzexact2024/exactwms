@@ -1236,7 +1236,7 @@ Var ReturnJsonArray   : TJsonArray;
 begin
   inherited;
   If TAdvStringGrid(Sender).Name = 'LstVolumesAdv' then
-     aColGrid := 7
+     aColGrid := 6
   Else
      aColGrid := 8;
   if (aRow = 0) and (aColGrid <> 7) then Begin

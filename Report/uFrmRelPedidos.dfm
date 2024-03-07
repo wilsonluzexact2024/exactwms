@@ -460,7 +460,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabPedidos
+        Properties.ActivePage = TabVolumes
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 522

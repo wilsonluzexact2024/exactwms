@@ -658,7 +658,7 @@ begin
        LimparDigitaCaoStart(True);
        raise Exception.Create('Etiqueta de Volume não impressa!');
     End;
-    3, 8, 9: begin //
+    3, 7, 8, 9: begin //
        if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.RegApanhe = 1) and
           (ObjVolumeCtrl.ObjPedidoVolume.ProcessoEtapaId < 8) then Begin
           EdtVolumeId.Text         := '';
@@ -678,7 +678,7 @@ begin
        ObjVolumeCtrl.CaixaSeparacao(StrToIntDef(EdtCaixaEmbalagemId.Text, 0));
        Operacao := opCheckOut;
        end;
-    7: Begin
+    71: Begin
        RetornoVolJsonArray := Nil;
        ObjPedidoVolumeCtrl.Free;
        LimparDigitaCaoStart(True);
