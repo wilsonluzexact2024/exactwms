@@ -23,8 +23,8 @@ Type
     Function FinalizarCheckIn(pjsonEntrada : TJsonObject) : Boolean;
     Function Pesquisar(pEntradaId : Integer = 0; pCodPessoaERP : Integer = 0; pDocumentoNr : String = '';
                         pRazao : String = ''; pRegistroERP : STring = ''; pDtNotaFiscal : TDateTime = 0;
-                        pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0;
-                        pBasico : Boolean = False; pShowErro : Integer = 1) : tJsonArray;
+                        pPendente : Integer = 0; pAgrupamentoId : Integer = 0;
+                        pBasico : Boolean = False; pShowErro : Integer = 1; pCodProduto : String = '0') : tJsonArray;
     Function Salvar : Boolean;
     Property Entrada : TEntrada Read FEntrada Write FEntrada;
     Function MontarPaginacao : TJsonObject;
@@ -700,8 +700,8 @@ end;
 
 function TEntradaDao.Pesquisar(pEntradaId : Integer = 0; pCodPessoaERP : Integer = 0; pDocumentoNr : String = '';
                                 pRazao : String = ''; pRegistroERP : STring = ''; pDtNotaFiscal : TDateTime = 0;
-                                pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0;
-                                pBasico : Boolean = False; pShowErro : Integer = 1): tJsonArray;
+                                pPendente : Integer = 0; pAgrupamentoId : Integer = 0;
+                                pBasico : Boolean = False; pShowErro : Integer = 1; pCodProduto : String = '0'): tJsonArray;
 Var vResourceURI    : String;
     Teste : Integer;
 begin
@@ -724,8 +724,7 @@ begin
        vResourceURI := vResourceURI+'&pendente='+pPendente.ToString();
     if pDtNotaFiscal <> 0 then
        vResourceURI := vResourceURI+'&dtnotafiscal='+DateToStr(pDtNotaFiscal);
-    if pCodProduto <> 0 then
-       vResourceURI := vResourceURI+'&codproduto='+pCodProduto.ToString();
+    vResourceURI := vResourceURI+'&codproduto='+pCodProduto;
     if pBasico then
        vResourceURI := vResourceURI+'&basico=1';
     if pAgrupamentoId <> 0 then

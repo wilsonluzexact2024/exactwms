@@ -1184,7 +1184,7 @@ var
   vDocumentoNr, vRazao, vRegistroERP: String;
   vPedidoId, vCodPessoaERP, vPendente, vAgrupamentoId: Integer;
   vDtNotaFiscal: TDateTime;
-  vCodProduto : Integer;
+  vCodProduto : String;
   vBasico: Boolean;
   LService: TServiceRecebimento;
   JsonArrayRetorno: TJSonArray;
@@ -1200,7 +1200,7 @@ begin
       vRegistroERP := '';
       vPendente := 0;
       vAgrupamentoId := 0;
-      vCodProduto := 0;
+      vCodProduto := '0';
       vBasico := False;
       vDtNotaFiscal := 0;
       AQueryParam := Req.Query.Dictionary;
@@ -1222,7 +1222,7 @@ begin
         if AQueryParam.ContainsKey('dtnotafiscal') then
           vDtNotaFiscal := StrToDate(AQueryParam.Items['dtnotafiscal']);
         if AQueryParam.ContainsKey('codproduto') then
-          vCodProduto := StrToIntDef(AQueryParam.Items['codproduto'], 0);
+          vCodProduto := AQueryParam.Items['codproduto'];
         if AQueryParam.ContainsKey('pendente') then
           vPendente := StrToIntDef(AQueryParam.Items['pendente'], 0);
         if AQueryParam.ContainsKey('agrupamentoid') then

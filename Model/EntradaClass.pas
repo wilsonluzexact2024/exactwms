@@ -46,12 +46,12 @@ type
     Function GetEntrada(pEntradaId: Integer = 0; pPessoaId: Integer = 0;
       pDocumentoNr: String = ''; pRazao: String = ''; pRegistroERP: String = '';
       pDtNotaFiscal: TDateTime = 0; pPendente: Integer = 0;
-      pAgrupamentoId: Integer = 0; pCodProduto : integer = 0; pShowErro: Integer = 1): tJsonArray;
+      pAgrupamentoId: Integer = 0; pShowErro: Integer = 1; pCodProduto : String = '0'): tJsonArray;
     Function GetEntradaBasica(pEntradaId: Integer = 0;
       pCodPessoaERP: Integer = 0; pDocumentoNr: String = '';
       pRazao: String = ''; pRegistroERP: String = '';
       pDtNotaFiscal: TDateTime = 0; pPendente: Integer = 0;
-      pAgrupamentoId: Integer = 0; pCodProduto : Integer = 0; pShowErro: Integer = 1): tJsonArray;
+      pAgrupamentoId: Integer = 0; pShowErro: Integer = 1; pCodProduto : String = '0'): tJsonArray;
     Function DeleteEntrada(pJsonDelete: TJsonObject): Boolean;
     Function GetEntradaProduto(pPedidoId: Integer): tJsonArray;
     Function GetEntradaItens(pPedidoId: Integer): tJsonArray;
@@ -206,27 +206,27 @@ end;
 
 Function TEntrada.GetEntrada(pEntradaId, pPessoaId: Integer;
   pDocumentoNr, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : integer; pShowErro: Integer): tJsonArray;
+  pPendente: Integer; pAgrupamentoId: Integer; pShowErro: Integer; pCodProduto : String): tJsonArray;
 Var
   ObjEntradaDAO: TEntradaDAO;
 begin
   ObjEntradaDAO := TEntradaDAO.Create;
   ObjEntradaDAO.Entrada.EntradaId := Self.EntradaId;
   Result := ObjEntradaDAO.Pesquisar(pEntradaId, pPessoaId, pDocumentoNr, pRazao,
-    pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, pCodProduto, False, 0);
+    pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, False, 0, pCodProduto);
   ObjEntradaDAO.Free;
 end;
 
 function TEntrada.GetEntradaBasica(pEntradaId, pCodPessoaERP: Integer;
   pDocumentoNr, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente, pAgrupamentoId, pCodProduto, pShowErro: Integer): tJsonArray;
+  pPendente, pAgrupamentoId, pShowErro: Integer; pCodProduto : String): tJsonArray;
 Var
   ObjEntradaDAO: TEntradaDAO;
 begin
   ObjEntradaDAO := TEntradaDAO.Create;
   ObjEntradaDAO.Entrada.EntradaId := Self.EntradaId;
   Result := ObjEntradaDAO.Pesquisar(pEntradaId, pCodPessoaERP, pDocumentoNr,
-    pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, pCodProduto, True, 0);
+    pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, True, 0, pCodProduto);
   ObjEntradaDAO.Free;
 end;
 

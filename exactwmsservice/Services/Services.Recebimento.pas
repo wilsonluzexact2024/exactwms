@@ -22,7 +22,10 @@ Const
     'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
     'Declare @Pendente Integer        = :pPendente' + sLineBreak +
     'Declare @AgrupamentoId Integer   = :pAgrupamentoId' + sLineBreak +
-    'Declare @CodProduto Integer      = :pCodProduto'+sLineBreak+
+    'Declare @CodBarra Varchar(25)    = :pCodProduto'+sLineBreak+
+    'Declare @CodProduto Integer      = Coalesce((Select CodProduto From PRoduto Prd '+sLineBreak+
+    '                                Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Prd.IdProduto'+sLineBreak+
+				'					Where Cast(CodProduto as varchar(25)) = @CodBarra or Pc.CodBarras = @CodBarra), 0)'+sLineBreak+
     'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal' + sLineBreak +
     'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid,'
     + sLineBreak +
@@ -54,7 +57,7 @@ Const
     sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' + sLineBreak +
     '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+ sLineBreak +
     '      And De.ProcessoId <> 31' + sLineBreak +
-    '      And (@CodProduto=0 or @CodProduto = Pl.CodProduto)'+sLinebreak+
+    '      And (@CodProduto='+#39+'0'+#39+' or (@CodProduto=0 or @CodProduto = Pl.CodProduto))'+sLinebreak+
     'Order by Ped.PedidoId';
   // Retiraro o 5, ver se não gera impacto no retorno da integração
 
@@ -90,7 +93,7 @@ type
     { Public declarations }
     function Pesquisar(pPedidoId, pCodPessoaERP: Integer;
       pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
+      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : String; pBasico: Boolean;
       pShowErro: Integer = 1): tJsonArray;
     Function GetEtiquetaArmazenagem(pPedidoId: Integer = 0;
       pDocumentoNr: String = ''; pZonaId: Integer = 0; pCodProduto: Integer = 0;
@@ -1352,7 +1355,7 @@ end;
 
 function TServiceRecebimento.Pesquisar(pPedidoId, pCodPessoaERP: Integer;
   pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
+  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : String; pBasico: Boolean;
   pShowErro: Integer): tJsonArray;
 var // VQry,
   vQryRecebimentos: TFdQuery;

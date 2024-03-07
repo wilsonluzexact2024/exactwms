@@ -33711,7 +33711,6 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Armazenagem'
           ImageIndex = 4
           OnShow = TbTagArmazenagemShow
-          ExplicitTop = 26
           object LblTotRegCaption: TLabel
             Left = 2
             Top = 182
@@ -33969,7 +33968,6 @@ inherited FrmPrintTag: TFrmPrintTag
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitTop = 202
             ColWidths = (
               74
               118
