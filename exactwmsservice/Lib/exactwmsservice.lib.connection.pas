@@ -126,7 +126,7 @@ begin;
   begin
     try
       FListQuerys[I].close;
-      FreeAndNil(  FListQuerys[I]);
+      FreeAndNil(FListQuerys[I]);
     except
       on e: Exception do
         Tutil.Gravalog('  ' + GetSender + ' Querry foi previamente liberada !');
@@ -143,7 +143,7 @@ begin;
   try
     if assigned(DB) then
     begin
-      Db.Close ;
+      DB.close;
       DB.Connected := False;
       FreeAndNil(DB);
     end;
@@ -166,6 +166,10 @@ begin
   Tutil.Gravalog('   ' + GetSender + ' - Consulta executada: ' +
     FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
     inttostr(DataSet.RecordCount));
+
+  if DataSet.RecordCount > 500 then
+    Tutil.Gravalog('   ' + GetSender +   '< Warning > Limit Records  ! ' +copy( TFDQuery(Sender).sql.text  ,0,100));
+
   DataSet.First;
 end;
 { ------------------------------------------------------------------------------- }
