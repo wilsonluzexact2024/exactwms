@@ -249,9 +249,9 @@ begin
       OParams.add('Pooled=True');
       OParams.add('POOL_ExpireTimeout=100');
       OParams.add('POOL_CleanupTimeout=300');
-      {$IFDEF LINUX}
+{$IFDEF LINUX}
       Writeln('Servidor DB: ' + ArqIni.ReadString('BD', 'Server', 'locahost'));
-      {$ENDIF}
+{$ENDIF}
       try
         if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO))
         then
@@ -291,6 +291,7 @@ class procedure Tutil.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
   pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
 
 begin
+  exit;
   TTask.Create(
     procedure()
     Var
@@ -370,6 +371,7 @@ begin
               pResponseJson := '[]'
             End;
           End;
+
           Lconnection.Query.SQL.add
             ('Insert into RequestResponse (data,	hora,	usuarioid,	terminal,	verbo	,'
             + sLineBreak +
@@ -379,23 +381,35 @@ begin
             + '      ' + pUsuarioId.ToString() + ', ' + #39 + pTerminal + #39 +
             ', ' + #39 + vMethod + #39 + ', ' + '      ' + #39 + pIpClient + #39
             + ', ' + pPort.ToString() + ', ' + #39 + pUrl + #39 + ', ' +
-            '      :pParams, :pBody, ' + #39 + Copy(pResponseStr, 1, 3000) + #39
-            + ', ' + '      :pResponseJson, ' +
+            '      :pParams, :pBody, ' + #39 + pResponseStr + #39 + ', ' +
+            '      :pResponseJson, ' +
 
             pRespStatus.ToString() + ', ' +
             StringReplace(pTimeExecution.ToString(), ',', '.', [rfReplaceAll]) +
 
             ')');
 
-          Lconnection.Query.ParamByName('pParams').Value := pParams;
-          Lconnection.Query.ParamByName('pBody').Value := pBody;
-          Lconnection.Query.ParamByName('pResponseJson').AsAnsiString :=
-            pResponseJson;
+          try
+            Lconnection.Query.ParamByName('pParams').Value := pParams;
+            Lconnection.Query.ParamByName('pBody').Value := pBody;
+            Lconnection.Query.ParamByName('pResponseJson').AsAnsiString :=
+              pResponseJson;
+            Lconnection.Query.ExecSQL;
+          except
+            on e: exception do
+            begin
+              if DebugHook > 0 then
+              begin
+                with TStringList.Create do
+                begin
+                  Text := Lconnection.Query.SQL.Text;
+                  SaveToFile('c:\teste.sql');
+                end;
+              end;
+            end;
 
-          Lconnection.Query.ExecSQL;
+          end;
         Except
-          on e: exception do
-            Tutil.Gravalog('ERRO AO GRAVAR LOG DB ' + e.Message);
 
         End;
       Finally
@@ -474,9 +488,9 @@ begin
         LSaida: string;
       begin
         LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
-{$IFDEF LINUX}
+
         Writeln(LSaida);
-{$ENDIF}
+
         try
           try
             p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
@@ -488,9 +502,9 @@ begin
               Rewrite(F)
             else
               Append(F);
-{$IFDEF LINUX}
+
             Writeln(F, LSaida);
-{$ENDIF}
+
           except
           end;
         finally
