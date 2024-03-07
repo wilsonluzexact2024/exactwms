@@ -403,7 +403,7 @@ begin
                 with TStringList.Create do
                 begin
                   Text := Lconnection.Query.SQL.Text;
-                  SaveToFile('c:\teste.sql');
+                  //SaveToFile('c:\teste.sql');
                 end;
               end;
             end;

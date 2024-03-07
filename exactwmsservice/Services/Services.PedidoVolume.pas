@@ -1330,7 +1330,7 @@ var
   vQry: TFdQuery;
   JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
-  vQry:= Fconexao.GetQuery;
+  vQry := FConexao.GetQuery;
   Result := TJsonArray.Create;
   try
     vQry.Sql.Add(TuEvolutConst.SqlGetVolumeEAN);
@@ -1666,11 +1666,12 @@ begin
       End;
     end;
   finally
-    vQry.Close;
-    vQryVolumeLotes.Close;
-    vQryEstoque.Close;
-    vQryPedStatus.Close;
-    vQryKardex.Close;
+    try
+      vQry.Close;
+      vQryPedStatus.Close;
+    except
+    end;
+
   end;
 end;
 
