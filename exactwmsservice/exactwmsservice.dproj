@@ -23,6 +23,16 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Base)'=='true') or '$(Base_iOSDevice64)'!=''">
+        <Base_iOSDevice64>true</Base_iOSDevice64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSSimARM64' and '$(Base)'=='true') or '$(Base_iOSSimARM64)'!=''">
+        <Base_iOSSimARM64>true</Base_iOSSimARM64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Base)'=='true') or '$(Base_Linux64)'!=''">
         <Base_Linux64>true</Base_Linux64>
         <CfgParent>Base</CfgParent>
@@ -133,6 +143,18 @@
         <Android_NotificationIcon96>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSSimARM64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Linux64)'!=''">
         <DCC_ExeOutput>D:\Projetos\exactwms\exactwmsservice\bin\</DCC_ExeOutput>
         <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
@@ -207,193 +229,11 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>C:\App\eXactWMS\Service\</DCC_ExeOutput>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\uFuncoes.pas"/>
-        <DCCReference Include="DAO\uLaboratorioDAO.pas"/>
-        <DCCReference Include="Controller\uSistemaControl.pas"/>
-        <DCCReference Include="Controller\MService.PessoaTipoCtrl.Pas"/>
-        <DCCReference Include="..\Model\PessoaTipoClass.pas"/>
-        <DCCReference Include="Controller\MService.LaboratoriosCtrl.Pas"/>
-        <DCCReference Include="DAO\uPessoaTipoDAO.pas"/>
-        <DCCReference Include="..\Model\OperacaoNaturezaClass.Pas"/>
-        <DCCReference Include="Controller\MService.OperacaoNaturezaCtrl.Pas"/>
-        <DCCReference Include="DAO\MService.OperacaoNaturezaDAO.Pas"/>
-        <DCCReference Include="Controller\MService.OperacaoTipoCtrl.Pas"/>
-        <DCCReference Include="DAO\MService.OperacaoTipoDAO.Pas"/>
-        <DCCReference Include="..\Model\OperacaoTipoClass.Pas"/>
-        <DCCReference Include="..\Model\PessoaClass.Pas"/>
-        <DCCReference Include="Controller\MService.pessoaCtrl.Pas"/>
-        <DCCReference Include="DAO\MService.PessoaDAO.Pas"/>
-        <DCCReference Include="..\Model\LaboratoriosClass.Pas"/>
-        <DCCReference Include="Controller\MService.ConfiguracaoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.configuracaoDAO.pas"/>
-        <DCCReference Include="..\Model\DesenhoArmazemClass.pas"/>
-        <DCCReference Include="..\Model\EnderecamentoZonaClass.pas"/>
-        <DCCReference Include="..\Model\EnderecoClass.pas"/>
-        <DCCReference Include="..\Model\EnderecoEstruturaClass.pas"/>
-        <DCCReference Include="..\Model\MedicamentoTipoClass.pas"/>
-        <DCCReference Include="..\Model\ProdutoClass.pas"/>
-        <DCCReference Include="..\Model\ProdutoTipoClass.pas"/>
-        <DCCReference Include="..\Model\UnidadeClass.pas"/>
-        <DCCReference Include="Controller\MService.UnidadeCtrl.pas"/>
-        <DCCReference Include="DAO\MService.UnidadeDAO.pas"/>
-        <DCCReference Include="Controller\MService.DesenhoArmazemCtrl.pas"/>
-        <DCCReference Include="DAO\MService.DesenhoArmazemDAO.pas"/>
-        <DCCReference Include="Controller\MService.EnderecamentoZonaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EnderecamentoZonaDAO.pas"/>
-        <DCCReference Include="Controller\MService.EnderecoEstruturaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EnderecoEstruturaDAO.pas"/>
-        <DCCReference Include="Controller\MService.EnderecoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EnderecoDAO.pas"/>
-        <DCCReference Include="Controller\MService.ProdutoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.ProdutoDAO.pas"/>
-        <DCCReference Include="Controller\MService.ProcessoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.ProcessoDAO.pas"/>
-        <DCCReference Include="..\Model\ProcessoClass.pas"/>
-        <DCCReference Include="Controller\MService.RegistroTipoCtrl.pas"/>
-        <DCCReference Include="..\Model\RegistroTipoClass.pas"/>
-        <DCCReference Include="DAO\MService.RegistroTipoDAO.pas"/>
-        <DCCReference Include="Controller\MService.RegistroTipoProcessoCtrl.pas"/>
-        <DCCReference Include="..\Model\RegistroTipoProcessoClass.pas"/>
-        <DCCReference Include="DAO\MService.RegistroTipoProcessoDAO.pas"/>
-        <DCCReference Include="Controller\MService.LotesCtrl.pas"/>
-        <DCCReference Include="..\Model\LotesClass.pas"/>
-        <DCCReference Include="DAO\MService.LoteDAO.pas"/>
-        <DCCReference Include="Controller\MService.ProdutoTipoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.ProdutoTipoDAO.pas"/>
-        <DCCReference Include="Controller\MService.EntradaCtrl.pas"/>
-        <DCCReference Include="DAO\uEntradaDAO.pas"/>
-        <DCCReference Include="..\Model\EntradaClass.pas"/>
-        <DCCReference Include="..\Model\EntradaItensClass.pas"/>
-        <DCCReference Include="Controller\MService.EntradaItensCtrl.pas"/>
-        <DCCReference Include="DAO\uEntradaItensDAO.pas"/>
-        <DCCReference Include="Controller\ProdutoCodBarrasCtrl.pas"/>
-        <DCCReference Include="..\Model\ProdutoCodBarrasClass.pas"/>
-        <DCCReference Include="DAO\ProdutoCodBarrasDAO.pas"/>
-        <DCCReference Include="..\Model\RastroClass.pas"/>
-        <DCCReference Include="Controller\MService.RastroCtrl.pas"/>
-        <DCCReference Include="DAO\MService.RastroDAO.pas"/>
-        <DCCReference Include="Controller\MService.MedicamentoTiposCtrl.pas"/>
-        <DCCReference Include="DAO\MService.MedicamentoTipoDAO.pas"/>
-        <DCCReference Include="..\Model\UsuarioClass.pas"/>
-        <DCCReference Include="Controller\MService.UsuarioCtrl.pas"/>
-        <DCCReference Include="DAO\MService.UsuarioDAO.pas"/>
-        <DCCReference Include="Controller\MService.EnderecamentoRuaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EnderecamentoRuaDAO.pas"/>
-        <DCCReference Include="..\Model\EnderecamentoRuaClass.pas"/>
-        <DCCReference Include="Controller\MService.IntegracaoEntradaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EntradaIntegracaoDAO.pas"/>
-        <DCCReference Include="..\Model\PedidoSaidaClass.pas"/>
-        <DCCReference Include="..\Model\PedidoProdutoClass.pas"/>
-        <DCCReference Include="DAO\MService.PedidoProdutoDAO.pas"/>
-        <DCCReference Include="Controller\MService.PedidoSaidaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.PedidoSaidaDAO.pas"/>
-        <DCCReference Include="..\Model\PedidoClass.pas"/>
-        <DCCReference Include="DAO\MService.PedidoDAO.pas"/>
-        <DCCReference Include="..\Model\RotaClass.pas"/>
-        <DCCReference Include="DAO\MService.RotaDAO.pas"/>
-        <DCCReference Include="Controller\MService.RotaCtrl.pas"/>
-        <DCCReference Include="..\Model\Constants.pas"/>
-        <DCCReference Include="..\Model\VolumeEmbalagemClass.pas"/>
-        <DCCReference Include="Controller\MService.VolumeEmbalagemCtrl.pas"/>
-        <DCCReference Include="DAO\MService.VolumeEmbalagemDAO.pas"/>
-        <DCCReference Include="..\Model\PedidoVolumeClass.pas"/>
-        <DCCReference Include="..\Model\EmbalagemCaixaClass.pas"/>
-        <DCCReference Include="Controller\MService.PedidoVolumeCtrl.pas"/>
-        <DCCReference Include="DAO\MService.PedidoVolumeDAO.pas"/>
-        <DCCReference Include="Controller\MService.EmbalagemCaixaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EmbalagemCaixaDAO.pas"/>
-        <DCCReference Include="..\Model\PedidoVolumeSeparacaoClass.pas"/>
-        <DCCReference Include="Controller\MService.PedidoVolumeSeparacaoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.PedidoVolumeSeparacaoDAO.pas"/>
-        <DCCReference Include="Controller\MService.IntegracaoSaidaCtrl.pas"/>
-        <DCCReference Include="DAO\MService.SaidaIntegracaoDAO.pas"/>
-        <DCCReference Include="Controller\MService.EstoqueCtrl.pas"/>
-        <DCCReference Include="..\Model\EstoqueClass.pas"/>
-        <DCCReference Include="..\Model\PerfilClass.pas"/>
-        <DCCReference Include="..\Model\TopicosClass.pas"/>
-        <DCCReference Include="..\Model\FuncionalidadeClass.pas"/>
-        <DCCReference Include="Controller\MService.TopicoCtrl.pas"/>
-        <DCCReference Include="Controller\MService.FuncionalidadeCtrl.pas"/>
-        <DCCReference Include="Controller\MService.PerfilCtrl.pas"/>
-        <DCCReference Include="DAO\MService.TopicoDAO.pas"/>
-        <DCCReference Include="DAO\MService.FuncionalidadeDAO.pas"/>
-        <DCCReference Include="DAO\MService.PerfilDAO.pas"/>
-        <DCCReference Include="Controller\MService.EnderecoTipoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.EnderecoTipoDAO.pas"/>
-        <DCCReference Include="Controller\MService.PessoaEnderecoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.PessoaEnderecoDAO.pas"/>
-        <DCCReference Include="Controller\MService.PessoaTelefoneCtrl.pas"/>
-        <DCCReference Include="DAO\MService.PessoaTelefoneDAO.pas"/>
-        <DCCReference Include="..\Model\VeiculoClass.pas"/>
-        <DCCReference Include="Controller\MService.VeiculoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.VeiculoDAO.pas"/>
-        <DCCReference Include="DAO\MService.EstoqueDAO.pas"/>
-        <DCCReference Include="..\Model\CargasClass.pas"/>
-        <DCCReference Include="Controller\MService.CargasCtrl.pas"/>
-        <DCCReference Include="DAO\MService.CargasDAO.pas"/>
-        <DCCReference Include="Controller\MService.InventarioCtrl.pas"/>
-        <DCCReference Include="..\Model\InventarioClass.pas"/>
-        <DCCReference Include="DAO\MService.InventarioDAO.pas"/>
-        <DCCReference Include="Controller\MService.DevolucaoCtrl.pas"/>
-        <DCCReference Include="DAO\MService.DevolucaoDAO.pas"/>
-        <DCCReference Include="Controller\MService.operacaonaturezamotivoCtrl.Pas"/>
-        <DCCReference Include="..\Model\operacaonaturezamotivoClass.Pas"/>
-        <DCCReference Include="DAO\MService.operacaonaturezamotivoDAO.Pas"/>
-        <DCCReference Include="Services\Services.Recebimento.pas">
-            <Form>ServiceRecebimento</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Services\Services.PedidoSaida.pas">
-            <Form>ServicePedidoSaida</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Services\Services.PedidoVolume.pas">
-            <Form>ServicePedidoVolume</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Controller\MService.NovidadesCtrl.pas"/>
-        <DCCReference Include="DAO\MService.NovidadesDAO.pas"/>
-        <DCCReference Include="Services\Services.Produto.pas">
-            <Form>ServiceProduto</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Services\Services.SegregadoCausa.pas">
-            <Form>ServiceSegregadoCausa</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Controller\MService.SegregadoCausaCtrl.pas"/>
-        <DCCReference Include="Services\Services.SaidaIntegracao.pas">
-            <Form>ServiceSaidaIntegracao</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\Model\ProdutoLinhaClass.pas"/>
-        <DCCReference Include="Services\Services.ProdutoLinha.pas">
-            <Form>ServiceProdutoLinha</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Controller\MService.ProdutoLinhaCtrl.pas"/>
-        <DCCReference Include="Services\Services.Inventario.pas">
-            <Form>ServiceInventario</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Controller\MService.MonitorLogCtrl.pas"/>
-        <DCCReference Include="Services\Services.MonitorLog.pas">
-            <Form>ServiceMonitorLog</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Services\Services.Usuarios.pas">
-            <Form>ServiceUsuario</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Lib\exactwmsservice.lib.utils.pas"/>
-        <DCCReference Include="Lib\exactwmsservice.lib.connection.pas"/>
-        <DCCReference Include="DAO\exactwmsservice.Dao.base.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1430,6 +1270,8 @@
             <Platforms>
                 <Platform value="Android">False</Platform>
                 <Platform value="Android64">False</Platform>
+                <Platform value="iOSDevice64">False</Platform>
+                <Platform value="iOSSimARM64">False</Platform>
                 <Platform value="Linux64">True</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
