@@ -168,7 +168,7 @@ begin
           ('      (Select Qtde-Vl.QtdSuprida From Estoque where LoteId = Vl.LoteId and EnderecoId = Vl.EnderecoId and EstoqueTipoId = Vl.EstoqueTipoId),');
         vQryEstoque.Sql.Add('      ' + #39 + 'Baixa Volume: ' + #39 +
           '+Cast(Vl.PedidoVolumeId as VarChar), Null, 0, 0, ' + #39 +
-          'Transferência para loja' + #39 + ', ');
+          'Transferï¿½ncia para loja' + #39 + ', ');
         vQryEstoque.Sql.Add('	     ' + TuEvolutConst.SqlDataAtual + ', ' +
           TuEvolutConst.SqlHoraAtual + ', ' + vQry.FieldByName('UsuarioId')
           .AsString);
@@ -284,7 +284,7 @@ begin
         vProcesso := vQryCheckPedido.FieldByName('Processo').AsString;
         vQryCheckPedido.Close;
 
-        raise Exception.Create('Cancelamento não permitido. Processo Atual: ' +
+        raise Exception.Create('Cancelamento nï¿½o permitido. Processo Atual: ' +
           vProcesso);
       End;
 
@@ -307,7 +307,7 @@ begin
         pJsonObject.GetValue<Integer>('usuarioid').ToString());
       vQry.Sql.Add('Declare @Terminal VarChar(50) = ' +
         QuotedStr(pJsonObject.GetValue<String>('terminal')));
-      vQry.Sql.Add('--Volumes Não expedido');
+      vQry.Sql.Add('--Volumes Nï¿½o expedido');
       vQry.Sql.Add
         ('Update Est Set LoteId = Vl.LoteId, Qtde = Qtde - Vl.QtdSuprida');
       vQry.Sql.Add('	From Estoque Est');
@@ -762,7 +762,7 @@ begin
     ON E: Exception do
     Begin
 
-      raise Exception.Create('Tabela: Mapa Separação Lista - ' +
+      raise Exception.Create('Tabela: Mapa Separaï¿½ï¿½o Lista - ' +
         StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
         '', [rfReplaceAll]));
@@ -939,7 +939,7 @@ var
 begin
   MsgErro := '';
   if (pCaixaId = 0) and (pPedidoVolumeId = 0) and (pUsuarioId = 0) then
-    raise Exception.Create('Parâmetro inválidos para a pesquisa!');
+    raise Exception.Create('Parï¿½metro invï¿½lidos para a pesquisa!');
   // Informe a Amanda
   try
     vQry := FConexao.GetQuery;
@@ -962,12 +962,12 @@ begin
       vQry.Open;
       if (vQry.IsEmpty) or (vQry.FieldByName('CaixaEmbalagemId').AsInteger = 0)
       then
-        MsgErro := 'Caixa não encontrada!'
+        MsgErro := 'Caixa nï¿½o encontrada!'
       Else if (vQry.FieldByName('Status').AsInteger = 0) then
         MsgErro := 'Caixa inativa!'
       Else if (vQry.FieldByName('UsuarioId').AsInteger <> 0) and
         (vQry.FieldByName('UsuarioId').AsInteger <> pUsuarioId) then
-        MsgErro := 'Caixa em uso por outro Usuário(' +
+        MsgErro := 'Caixa em uso por outro Usuï¿½rio(' +
           vQry.FieldByName('UsuarioId').AsString + ')!';
       if (MsgErro <> '') or (vQry.FieldByName('PedidoVolumeId').AsInteger = 0)
       then
@@ -1002,7 +1002,7 @@ begin
           TuEvolutConst.QrySemDados)))
       Else
         Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG',
-          'Caixa Disponível!')))
+          'Caixa Disponï¿½vel!')))
     End
     Else
     Begin
@@ -1012,25 +1012,25 @@ begin
         if vQry.FieldByName('ProcessoId').AsInteger < 3 then
           MsgErro := 'Imprima a etiqueta do volume!'
         Else if vQry.FieldByName('ProcessoId').AsInteger > 7 then
-          MsgErro := 'Separação não permitida. Processo Atual: ' +
+          MsgErro := 'Separaï¿½ï¿½o nï¿½o permitida. Processo Atual: ' +
             vQry.FieldByName('Processo').AsString;
       End
       Else If (vQry.FieldByName('Operacao').AsInteger = 1) then
-        MsgErro := 'Separação de Volume já concluída.'
+        MsgErro := 'Separaï¿½ï¿½o de Volume jï¿½ concluï¿½da.'
       Else If (vQry.FieldByName('VolumeSeparacaoId').AsInteger <> 0) Then
       Begin
         If (pCaixaId <> vQry.FieldByName('caixaembalagemid').AsInteger) then
         Begin
           If vQry.FieldByName('caixaembalagemid').AsInteger = 0 then
-            MsgErro := 'Volume Em Separação na Caixa(' +
-              vQry.FieldByName('caixaembalagemid').AsString + ' - Papelão).'
+            MsgErro := 'Volume Em Separaï¿½ï¿½o na Caixa(' +
+              vQry.FieldByName('caixaembalagemid').AsString + ' - Papelï¿½o).'
           Else
-            MsgErro := 'Volume Em Separação na Caixa(' +
+            MsgErro := 'Volume Em Separaï¿½ï¿½o na Caixa(' +
               vQry.FieldByName('caixaembalagemid').AsString + ').';
         End
         else If (vQry.FieldByName('UsuarioIdSeparacao').AsInteger <> 0) and
           (pUsuarioId <> vQry.FieldByName('UsuarioIdSeparacao').AsInteger) then
-          MsgErro := 'Volume em separação por outro usuário(' +
+          MsgErro := 'Volume em separaï¿½ï¿½o por outro usuï¿½rio(' +
             vQry.FieldByName('UsuarioIdSeparacao').AsString + ').';
       End;
       if MsgErro <> '' then
@@ -1042,7 +1042,7 @@ begin
       Begin
         vQrySeparacao := FConexao.GetQuery;;
         vQrySeparacao.connection := vQry.connection;
-        // Evitar DeadLock com transacao menor e mais rápida
+        // Evitar DeadLock com transacao menor e mais rï¿½pida
         vQrySeparacao.connection.StartTransaction;
         vQrySeparacao.connection.TxOptions.Isolation := xiReadCommitted;
         if vQry.FieldByName('VolumeSeparacaoId').AsInteger = 0 then
@@ -1147,7 +1147,7 @@ Begin
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
     Begin
-      Result.AddPair('Erro', 'Volume não encontrado!');
+      Result.AddPair('Erro', 'Volume nï¿½o encontrado!');
     End
     Else
     Begin
@@ -1156,7 +1156,7 @@ Begin
         2:
           vErro := 'Imprima a Etiqueta.';
         10, 11, 12, 13:
-          vErro := 'Situação Volume: ' + FConexao.Query.FieldByName
+          vErro := 'Situaï¿½ï¿½o Volume: ' + FConexao.Query.FieldByName
             ('Processo').AsString;
         15:
           vErro := 'Volume Cancelado.';
@@ -1209,7 +1209,7 @@ function TServicePedidoVolume.GetPedidoVolumeProdutoLote(pPedidoId,
 
 begin
   if (pPedidoId = 0) and (pCodProduto = 0) then
-    raise Exception.Create('Identificação de Pedido/volume não informado!');
+    raise Exception.Create('Identificaï¿½ï¿½o de Pedido/volume nï¿½o informado!');
 
   var
   vQry := FConexao.GetQuery;
@@ -1330,6 +1330,7 @@ var
   vQry: TFdQuery;
   JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
+  vQry := FConexao.GetQuery;
   Result := TJsonArray.Create;
   try
     vQry.Sql.Add(TuEvolutConst.SqlGetVolumeEAN);
@@ -1534,7 +1535,7 @@ begin
           ' and LoteId = ' + vQryVolumeLotes.FieldByName('LoteId').AsString +
           ' and EnderecoId = ' + vQryVolumeLotes.FieldByName('EnderecoId')
           .AsString + ') Begin');
-        // Verificar se Estoque Saldo Estoque Reservado maior que zero, senão Delete
+        // Verificar se Estoque Saldo Estoque Reservado maior que zero, senï¿½o Delete
         vQryEstoque.Sql.Add('   Update Estoque Set Qtde = Qtde - ' +
           vQryVolumeLotes.FieldByName('Quantidade').AsString +
           '      Where EstoqueTipoId = 6 and LoteId = ' +
@@ -1543,7 +1544,7 @@ begin
           ('EnderecoId').AsString);
         vQryEstoque.Sql.Add('End');
 
-        // Baixar Estoque Produção
+        // Baixar Estoque Produï¿½ï¿½o
 
         vQryEstoque.Sql.Add('If Exists (Select LoteId From Estoque');
         vQryEstoque.Sql.Add('Where EstoqueTipoId = ' +
@@ -1577,7 +1578,7 @@ begin
           (vQryVolumeLotes.FieldByName('QtdSuprida').AsInteger), 0,
           pJsonDocumentoEtapa.GetValue<Integer>('usuarioid'),
           'Baixa Volume: ' + pJsonDocumentoEtapa.GetValue<Integer>
-          ('pedidovolumeid').ToString(), 'Transferência para loja',
+          ('pedidovolumeid').ToString(), 'Transferï¿½ncia para loja',
           pJsonDocumentoEtapa.GetValue<String>('estacao'), vEstoqueInicial);
         vQryVolumeLotes.Next;
       End;
@@ -1699,7 +1700,7 @@ begin
         vQry.Sql.SaveToFile('ResetVolume.Sql');
       vQry.ExecSQL;
       Result.Add(TJsonObject.Create.AddPair('Ok',
-        'Operação concluída com sucesso!'));
+        'Operaï¿½ï¿½o concluï¿½da com sucesso!'));
 
     Except
       ON E: Exception do
@@ -1833,7 +1834,7 @@ begin
             pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
           // vQtdConferida;
           vQtdConferida := 0;
-          // Gravar acompanhamento da operacao para análise de resultados
+          // Gravar acompanhamento da operacao para anï¿½lise de resultados
           vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
             pJsonArrayColeta.Items[xColeta].GetValue<Integer>('pedidovolumeid');
           vQryAtualiza.ParamByName('poperLoteid').Value :=
@@ -2046,7 +2047,7 @@ begin
 
           vQtdConferida := 0;
           // End;
-          // Gravar acompanhamento da operacao para análise de resultados
+          // Gravar acompanhamento da operacao para anï¿½lise de resultados
           vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
             pJsonArray.Items[xColeta].GetValue<Integer>('pedidovolumeid');
           vQryAtualiza.ParamByName('poperLoteid').Value :=
@@ -2340,7 +2341,7 @@ begin
         vQryLoteSubstituicao.connection.Rollback;
         vQryLoteSubstituicao.Close;
 
-        raise Exception.Create('Processo: Volumes Lotes Substituição - ' +
+        raise Exception.Create('Processo: Volumes Lotes Substituiï¿½ï¿½o - ' +
           StringReplace(E.Message,
           '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
           '', [rfReplaceAll]));

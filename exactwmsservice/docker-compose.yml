@@ -1,7 +1,7 @@
 version: '3'
 services:
   exactwmsserver:    
-    image : rhemasyssolucoes/exactwmsservice:06_03_2024_teste
+    image : rhemasyssolucoes/exactwmsservice:07_03_2024_d3e386e
     environment :
       RHEMA_DB_HOST : "exactwms.ddns.net"
       RHEMA_DB_DATABASE : "eXactWMS_DC"

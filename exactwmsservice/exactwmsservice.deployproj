@@ -6,21 +6,11 @@
     <PropertyGroup>
         <DeviceId Condition="'$(Platform)'=='Android'"/>
         <DeviceId Condition="'$(Platform)'=='Android64'"/>
+        <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
+        <DeviceId Condition="'$(Platform)'=='iOSSimARM64'"/>
     </PropertyGroup>
-    <ItemGroup Condition="'$(Platform)'=='Win32'"/>
     <ItemGroup Condition="'$(Platform)'=='Android64'"/>
-    <ItemGroup Condition="'$(Platform)'=='Android'"/>
-    <ItemGroup Condition="'$(Platform)'=='Win64'">
-        <DeployFile Include="C:\App\eXactWMS\Service\exactwmsservice.exe" Condition="'$(Config)'=='Release'">
-            <RemoteDir>exactwmsservice\</RemoteDir>
-            <RemoteName>exactwmsservice.exe</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
         <DeployFile Include="bin\exactwmsservice.exe" Condition="'$(Config)'=='Debug'">
             <RemoteDir>exactwmsservice\</RemoteDir>
             <RemoteName>exactwmsservice.exe</RemoteName>
@@ -32,8 +22,31 @@
             <Required>True</Required>
         </DeployFile>
     </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Android'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win64'">
+        <DeployFile Include="C:\App\eXactWMS\Service\exactwmsservice.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>exactwmsservice\</RemoteDir>
+            <RemoteName>exactwmsservice.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="C:\App\eXactWMS\Service\exactwmsservice.exe" Condition="'$(Config)'=='Release'">
+            <RemoteDir>exactwmsservice\</RemoteDir>
+            <RemoteName>exactwmsservice.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+    </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Linux64'">
-        <DeployFile Include="Linux64\Debug\exactwmsservice" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="bin\exactwmsservice" Condition="'$(Config)'=='Debug'">
             <RemoteDir>exactwmsservice\</RemoteDir>
             <RemoteName>exactwmsservice</RemoteName>
             <DeployClass>ProjectOutput</DeployClass>
@@ -54,4 +67,6 @@
             <Required>True</Required>
         </DeployFile>
     </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='iOSDevice64'"/>
+    <ItemGroup Condition="'$(Platform)'=='iOSSimARM64'"/>
 </Project>
