@@ -23,7 +23,8 @@ Type
     Function FinalizarCheckIn(pjsonEntrada : TJsonObject) : Boolean;
     Function Pesquisar(pEntradaId : Integer = 0; pCodPessoaERP : Integer = 0; pDocumentoNr : String = '';
                         pRazao : String = ''; pRegistroERP : STring = ''; pDtNotaFiscal : TDateTime = 0;
-                        pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pBasico : Boolean = False; pShowErro : Integer = 1) : tJsonArray;
+                        pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0;
+                        pBasico : Boolean = False; pShowErro : Integer = 1) : tJsonArray;
     Function Salvar : Boolean;
     Property Entrada : TEntrada Read FEntrada Write FEntrada;
     Function MontarPaginacao : TJsonObject;
@@ -39,7 +40,8 @@ Type
              pPedidoId : Integer; pDocumentoNr : String; pZonaId, pCodProduto, pSintetico : Integer) : TjsonArray;
     Function GetRelDshRecebimentos(pDataInicial, pDataFinal : TDateTime) : TJsonArray;
     Function GetEntradaProduto(pPedidoId, pAgrupamentoId : Integer) : TJsonArray;
-    Function GetEntradaLotes(pPedidoId, pAgrupamentoId, pCodProduto, pLoteId : Integer) : TJsonArray;
+
+    Function GetEntradaLotes(pPedidoId, pAgrupamentoId, pCodProduto, pLoteId : Integer) : TJsonArray;
     Function GetEntradaItens(pPedidoId, pAgrupamentoId : Integer) : TJsonArray;
     Function ExcluirPreEntrada(pJsonArray : TJsonArray) : TjsonArray;
     Function GetValidaQtdCheckIn(pPedidoid, pCodProduto: Integer): TjsonArray;
@@ -698,7 +700,8 @@ end;
 
 function TEntradaDao.Pesquisar(pEntradaId : Integer = 0; pCodPessoaERP : Integer = 0; pDocumentoNr : String = '';
                                 pRazao : String = ''; pRegistroERP : STring = ''; pDtNotaFiscal : TDateTime = 0;
-                                pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pBasico : Boolean = False; pShowErro : Integer = 1): tJsonArray;
+                                pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0;
+                                pBasico : Boolean = False; pShowErro : Integer = 1): tJsonArray;
 Var vResourceURI    : String;
     Teste : Integer;
 begin
@@ -720,7 +723,9 @@ begin
     //if pPendente <> 0 then
        vResourceURI := vResourceURI+'&pendente='+pPendente.ToString();
     if pDtNotaFiscal <> 0 then
-       vResourceURI := vResourceURI+'&agrupamentoid='+pAgrupamentoId.ToString();
+       vResourceURI := vResourceURI+'&dtnotafiscal='+DateToStr(pDtNotaFiscal);
+    if pCodProduto <> 0 then
+       vResourceURI := vResourceURI+'&codproduto='+pCodProduto.ToString();
     if pBasico then
        vResourceURI := vResourceURI+'&basico=1';
     if pAgrupamentoId <> 0 then

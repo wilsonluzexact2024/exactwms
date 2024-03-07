@@ -1112,7 +1112,7 @@ var
   PedidoEntradaDAO: TEntradaDAO;
   AQueryParam: TDictionary<String, String>;
   vDocumentoNr, vRazao, vRegistroERP: String;
-  vPedidoId, vPessoaId, vPendente, vAgrupamentoId: Integer;
+  vPedidoId, vPessoaId, vPendente, vAgrupamentoId, vCodProduto : Integer;
   vDtNotaFiscal: TDateTime;
   vBasico: Boolean;
 begin
@@ -1162,7 +1162,7 @@ begin
   {$ENDREGION}
         Res.Send<TJSonArray>(PedidoEntradaDAO.Pesquisar(vPedidoId, vPessoaId,
           vDocumentoNr, vRazao, vRegistroERP, vDtNotaFiscal, vPendente,
-          vAgrupamentoId, vBasico, 0)).Status(THttpStatus.Created);
+          vAgrupamentoId, vCodProduto, vBasico, 0)).Status(THttpStatus.Created);
       End;
     Except
       on E: Exception do
@@ -1184,6 +1184,7 @@ var
   vDocumentoNr, vRazao, vRegistroERP: String;
   vPedidoId, vCodPessoaERP, vPendente, vAgrupamentoId: Integer;
   vDtNotaFiscal: TDateTime;
+  vCodProduto : Integer;
   vBasico: Boolean;
   LService: TServiceRecebimento;
   JsonArrayRetorno: TJSonArray;
@@ -1199,12 +1200,13 @@ begin
       vRegistroERP := '';
       vPendente := 0;
       vAgrupamentoId := 0;
+      vCodProduto := 0;
       vBasico := False;
       vDtNotaFiscal := 0;
       AQueryParam := Req.Query.Dictionary;
       If AQueryParam.Count <= 0 then
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          'Defina os par�metros para cubagem!'))).Status(THttpStatus.Created)
+          'Defina os parâmetros para cubagem!'))).Status(THttpStatus.Created)
       Else
       Begin
         if AQueryParam.ContainsKey('PedidoId') then
@@ -1219,6 +1221,8 @@ begin
           vRegistroERP := AQueryParam.Items['RegistroERP'];
         if AQueryParam.ContainsKey('dtnotafiscal') then
           vDtNotaFiscal := StrToDate(AQueryParam.Items['dtnotafiscal']);
+        if AQueryParam.ContainsKey('codproduto') then
+          vCodProduto := StrToIntDef(AQueryParam.Items['codproduto'], 0);
         if AQueryParam.ContainsKey('pendente') then
           vPendente := StrToIntDef(AQueryParam.Items['pendente'], 0);
         if AQueryParam.ContainsKey('agrupamentoid') then
@@ -1231,7 +1235,7 @@ begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno := LService.Pesquisar(vPedidoId, vCodPessoaERP,
           vDocumentoNr, vRazao, vRegistroERP, vDtNotaFiscal, vPendente,
-          vAgrupamentoId, vBasico, 0);
+          vAgrupamentoId, vCodProduto, vBasico, 0);
         Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       End;
     Except

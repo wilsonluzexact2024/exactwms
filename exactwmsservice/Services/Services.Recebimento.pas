@@ -22,6 +22,7 @@ Const
     'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
     'Declare @Pendente Integer        = :pPendente' + sLineBreak +
     'Declare @AgrupamentoId Integer   = :pAgrupamentoId' + sLineBreak +
+    'Declare @CodProduto Integer      = :pCodProduto'+sLineBreak+
     'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal' + sLineBreak +
     'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid,'
     + sLineBreak +
@@ -37,24 +38,23 @@ Const
     sLineBreak + 'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData ' +
     sLineBreak + 'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao ' +
     sLineBreak + 'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao ' +
-    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid' +
-    sLineBreak +
-    'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' +
-    sLineBreak +
-    'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '
-    + sLineBreak +
-    '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and ' +
-    sLineBreak + '      (@DocumentoNr = ' + #39 + #39 +
-    ' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak + '      (@Razao = '
-    + #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
-    '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)'
-    + sLineBreak +
-    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'
-    + sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
-    sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' +
-    sLineBreak +
-    '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'
-    + sLineBreak + '      And De.ProcessoId <> 31' + sLineBreak +
+    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid' + sLineBreak +
+    sLineBreak + 'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' + sLineBreak +
+                 'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi' + sLineBreak +
+    sLineBreak + '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId' + sLineBreak +
+		  sLineBreak + '           Where Pl.CodProduto = @CodProduto' + sLineBreak +
+		  sLineBreak + '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'+slinebreak+
+    'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '+ sLineBreak +
+    '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and ' + sLineBreak +
+    '      (@DocumentoNr = ' + #39 + #39 +' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak +
+    '      (@Razao = '+ #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
+    '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)' + sLineBreak +
+    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+
+    sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
+    sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' + sLineBreak +
+    '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+ sLineBreak +
+    '      And De.ProcessoId <> 31' + sLineBreak +
+    '      And (@CodProduto=0 or @CodProduto = Pl.CodProduto)'+sLinebreak+
     'Order by Ped.PedidoId';
   // Retiraro o 5, ver se não gera impacto no retorno da integração
 
@@ -90,7 +90,7 @@ type
     { Public declarations }
     function Pesquisar(pPedidoId, pCodPessoaERP: Integer;
       pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-      pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
       pShowErro: Integer = 1): tJsonArray;
     Function GetEtiquetaArmazenagem(pPedidoId: Integer = 0;
       pDocumentoNr: String = ''; pZonaId: Integer = 0; pCodProduto: Integer = 0;
@@ -1352,7 +1352,7 @@ end;
 
 function TServiceRecebimento.Pesquisar(pPedidoId, pCodPessoaERP: Integer;
   pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pBasico: Boolean;
+  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : Integer; pBasico: Boolean;
   pShowErro: Integer): tJsonArray;
 var // VQry,
   vQryRecebimentos: TFdQuery;
@@ -1373,12 +1373,13 @@ begin // Processo lento
     vQryRecebimentos := FConexao.GetQuery;
     vQryItens := FConexao.GetQuery;
     vQryRecebimentos.Sql.Add(SqlEntrada);
-    vQryRecebimentos.ParamByName('pPedidoId').Value := pPedidoId;
-    vQryRecebimentos.ParamByName('pCodPessoaERP').Value := pCodPessoaERP;
-    vQryRecebimentos.ParamByName('pDocumentoNr').Value := pDocumento;
-    vQryRecebimentos.ParamByName('pRazao').Value := '%' + pRazao + '%';
-    vQryRecebimentos.ParamByName('pRegistroERP').Value := pRegistroERP;
-    vQryRecebimentos.ParamByName('pPendente').Value := pPendente;
+    vQryRecebimentos.ParamByName('pPedidoId').Value      := pPedidoId;
+    vQryRecebimentos.ParamByName('pCodPessoaERP').Value  := pCodPessoaERP;
+    vQryRecebimentos.ParamByName('pDocumentoNr').Value   := pDocumento;
+    vQryRecebimentos.ParamByName('pRazao').Value         := '%' + pRazao + '%';
+    vQryRecebimentos.ParamByName('pRegistroERP').Value   := pRegistroERP;
+    vQryRecebimentos.ParamByName('pCodProduto').Value    := pCodProduto;
+    vQryRecebimentos.ParamByName('pPendente').Value      := pPendente;
     vQryRecebimentos.ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
     vQryRecebimentos.Sql.Add('--pAgrupamentoId = ' + pAgrupamentoId.ToString());
     if pDtNotaFiscal = 0 then

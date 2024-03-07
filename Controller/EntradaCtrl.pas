@@ -26,7 +26,8 @@ Type
     Function GetEntrada(pEntradaId : Integer = 0; pPessoaId : Integer = 0; pDocumentoNr : String = '';
                         pRazao : String = ''; pRegistroERP : String = ''; pPendente : Integer = 0; pShowErro : Integer = 1) : TObjectList<TEntradaCtrl>;
     Function GetEntradaBasica(pEntradaId : Integer = 0; pPessoaId : Integer = 0; pDocumentoNr : String = '';
-                        pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0; pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pShowErro : Integer = 0) : TjsonArray;
+                         pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0;
+                         pPendente : Integer = 0; pAgrupamentoId : Integer = 0; pCodProduto : Integer = 0; pShowErro : Integer = 0) : TjsonArray;
     Function GetEspelho(pPedidoId : Integer; pDocumentoNr, pRegistroERP : String; pDoctoDataIni, pDoctoDataFin, pCheckInDtIni, pCheckDtFin : TDateTime; pDivergencia, pShowErro : Integer) : TJsonArray;
     Function GetEntradaOcorrencia(pPedidoId : Integer; pDocumentoNr, pRegistroERP : String; pDoctoDataIni, pDoctoDataFin, pCheckInDtIni, pCheckDtFin : TDateTime) : TJsonArray;
     Function GetResumoCheckIn(pEntradaId : Integer) : TJsonArray;
@@ -234,10 +235,10 @@ End;
 
 function TEntradaCtrl.GetEntradaBasica(pEntradaId, pPessoaId: Integer;
   pDocumentoNr, pRazao, pRegistroERP: String; pDtNotaFiscal : TDateTime; pPendente, pAgrupamentoId,
-  pShowErro: Integer): TjsonArray;
+  pCodProduto, pShowErro: Integer): TjsonArray;
 Var vErro       : String;
 begin
-  Result := Self.FEntrada.GetEntradaBasica(pEntradaId, pPessoaId, pDocumentoNr, pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0);
+  Result := Self.FEntrada.GetEntradaBasica(pEntradaId, pPessoaId, pDocumentoNr, pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, pCodProduto, 0);
   If (Result.Get(0).tryGetValue<String>('Erro', vErro)) then
      If (pShowErro= 1) then
         Raise Exception.Create('Erro: '+vErro)

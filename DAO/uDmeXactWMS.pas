@@ -153,12 +153,12 @@ begin
   Str.Free;
 
   //if Not fileexists('\\192.168.1.5\atualiza\eXactWMS\eXactWMS.ini') then Exit;
-  if (PathAtualizar = ExtractFilePath(ParamStr(0))+'\eXactWMS.ini') or (Not fileexists(PathAtualizar)) then
+  if (UpperCase(PathAtualizar) = UpperCase(ExtractFilePath(ParamStr(0))+'eXactWMS.ini')) or (Not fileexists(PathAtualizar)) then
      Exit;
   try
     Try
       S := TFileStream.Create(PathAtualizar, fmOpenRead);  //'\\192.168.1.5\atualiza\eXactWMS\eXactWMS.ini'
-      T := TFileStream.Create( ExtractFilePath(ParamStr(0))+'\eXactWMS.ini',
+      T := TFileStream.Create( ExtractFilePath(ParamStr(0))+'eXactWMS.ini',
                                fmOpenWrite or fmCreate );
       //Atualizar Impressora no arquivo INI
       try
