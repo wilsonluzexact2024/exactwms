@@ -1,4 +1,4 @@
-unit Services.PedidoVolume;
+﻿unit Services.PedidoVolume;
 
 interface
 
@@ -444,13 +444,11 @@ begin
   inherited;
 end;
 
-function TServicePedidoVolume.EtiquetaVolumePorRua(pJsonObject: TJsonObject)
-  : TJsonArray;
-var
-  vQry: TFdQuery;
-  JsonRetorno: TJsonObject;
-  xArray: Integer;
-  vCompl, vListaPedido: String;
+function TServicePedidoVolume.EtiquetaVolumePorRua(pJsonObject: TJsonObject) : TJsonArray;
+var vQry: TFdQuery;
+    JsonRetorno: TJsonObject;
+    xArray: Integer;
+    vCompl, vListaPedido: String;
 begin
   Try
     Result := TJsonArray.Create;
