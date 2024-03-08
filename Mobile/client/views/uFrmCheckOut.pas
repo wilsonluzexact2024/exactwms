@@ -232,7 +232,7 @@ Var pQtdCheckOut   : Integer;
     vErro : String;
 begin
   vCodDigitado := EdtProduto.Text;
-  if (StrToIntDef(EdtProduto.Text, 0) <> FDMemProdutoCodBarras.FieldByName('Produtoid').AsInteger) then Begin
+  if (StrToInt64Def(EdtProduto.Text, 0) <> FDMemProdutoCodBarras.FieldByName('CodProduto').AsLargeInt) then Begin
 {     JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
      if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
         SetCampoDefault('EdtProduto');
