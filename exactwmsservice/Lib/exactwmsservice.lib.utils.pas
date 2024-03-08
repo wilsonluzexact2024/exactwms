@@ -502,9 +502,7 @@ begin
               Rewrite(F)
             else
               Append(F);
-
             Writeln(F, LSaida);
-
           except
           end;
         finally

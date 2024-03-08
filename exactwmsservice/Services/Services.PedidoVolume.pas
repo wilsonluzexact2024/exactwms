@@ -1,4 +1,4 @@
-unit Services.PedidoVolume;
+﻿unit Services.PedidoVolume;
 
 interface
 
@@ -137,84 +137,78 @@ Function TServicePedidoVolume.BaixarEstoqueExpedicao: Boolean;
 var
   vQry, vQryEstoque, vQryKardex: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-  vQryEstoque := FConexao.GetQuery;
-  vQryKardex := FConexao.GetQuery;
-  try
-    vQry.connection.StartTransaction;
-    try
-      vQry.Sql.Add
-        ('select Top 50 Pv.PedidoVolumeId, De.ProcessoId, De.UsuarioId');
-      vQry.Sql.Add('From PedidoVolumes Pv');
-      vQry.Sql.Add('inner join vDocumentoEtapas De On De.Documento = Pv.Uuid');
-      vQry.Sql.Add
-        ('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
-      vQry.Sql.Add
-        ('  And De.ProcessoId >= 13 and De.ProcessoId Not In (15,31) and expedido = 0');
-      vQry.Sql.Add('  and (Select ExpedicaoOffLine From Configuracao) = 1');
-      vQry.Sql.Add('Order by De.Processoid Desc');
-      vQry.Open;
-      while Not vQry.Eof do
-      Begin
-        vQryEstoque.Close;
-        vQryEstoque.Sql.Clear;
-        // Atualizar Kardex
-        vQryEstoque.Sql.Add('Insert Into Kardex');
-        vQryEstoque.Sql.Add
-          ('select 2, Vl.LoteId, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida,');
-        vQryEstoque.Sql.Add
-          ('      (Select Qtde From Estoque where LoteId = Vl.LoteId and EnderecoId = Vl.EnderecoId and EstoqueTipoId = Vl.EstoqueTipoId),');
-        vQryEstoque.Sql.Add
-          ('      (Select Qtde-Vl.QtdSuprida From Estoque where LoteId = Vl.LoteId and EnderecoId = Vl.EnderecoId and EstoqueTipoId = Vl.EstoqueTipoId),');
-        vQryEstoque.Sql.Add('      ' + #39 + 'Baixa Volume: ' + #39 +
-          '+Cast(Vl.PedidoVolumeId as VarChar), Null, 0, 0, ' + #39 +
-          'Transfer�ncia para loja' + #39 + ', ');
-        vQryEstoque.Sql.Add('	     ' + TuEvolutConst.SqlDataAtual + ', ' +
-          TuEvolutConst.SqlHoraAtual + ', ' + vQry.FieldByName('UsuarioId')
-          .AsString);
-        vQryEstoque.Sql.Add('      , ' + #39 + 'API EXP OFF' + #39);
-        vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
-        vQryEstoque.Sql.Add('Where Vl.PedidoVolumeId = ' +
-          vQry.FieldByName('PedidoVolumeId').AsString +
-          ' and Vl.QtdSuprida > 0');
 
-        vQryEstoque.Sql.Add('Update Est Set Qtde = Est.Qtde - Vl.QtdSuprida');
-        vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
-        vQryEstoque.Sql.Add
-          ('inner join Estoque Est on Est.LoteId = Vl.LoteId  and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId');
-        vQryEstoque.Sql.Add('where Vl.pedidovolumeid = ' +
-          vQry.FieldByName('PedidoVolumeId').AsString);
-        vQryEstoque.Sql.Add('Update Est Set Qtde = Est.Qtde - Vl.QtdSuprida');
-        vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
-        vQryEstoque.Sql.Add
-          ('inner join Estoque Est on Est.LoteId = Vl.LoteId  and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
-        vQryEstoque.Sql.Add('where Vl.pedidovolumeid = ' +
-          vQry.FieldByName('PedidoVolumeId').AsString);
-        vQryEstoque.Sql.Add('Update PedidoVolumes Set Expedido = 1');
-        vQryEstoque.Sql.Add('where pedidovolumeid = ' +
-          vQry.FieldByName('PedidoVolumeId').AsString);
-        vQryEstoque.ExecSQL;
-        vQry.Next;
-      End;
-      vQry.connection.Commit;
+  try
+    vQry := FConexao.GetQuery;
+    vQryEstoque := FConexao.GetQuery;
+    vQryKardex := FConexao.GetQuery;
+    vQry.connection.StartTransaction;
+    vQry.Sql.Add
+      ('select Top 50 Pv.PedidoVolumeId, De.ProcessoId, De.UsuarioId');
+    vQry.Sql.Add('From PedidoVolumes Pv');
+    vQry.Sql.Add('inner join vDocumentoEtapas De On De.Documento = Pv.Uuid');
+    vQry.Sql.Add
+      ('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
+    vQry.Sql.Add
+      ('  And De.ProcessoId >= 13 and De.ProcessoId Not In (15,31) and expedido = 0');
+    vQry.Sql.Add('  and (Select ExpedicaoOffLine From Configuracao) = 1');
+    vQry.Sql.Add('Order by De.Processoid Desc');
+    vQry.Open;
+    while Not vQry.Eof do
+    Begin
       vQryEstoque.Close;
       vQryEstoque.Sql.Clear;
+      // Atualizar Kardex
+      vQryEstoque.Sql.Add('Insert Into Kardex');
       vQryEstoque.Sql.Add
-        ('Delete From Estoque where Qtde < 0 and EstoqueTipoId = 6');
+        ('select 2, Vl.LoteId, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida,');
+      vQryEstoque.Sql.Add
+        ('      (Select Qtde From Estoque where LoteId = Vl.LoteId and EnderecoId = Vl.EnderecoId and EstoqueTipoId = Vl.EstoqueTipoId),');
+      vQryEstoque.Sql.Add
+        ('      (Select Qtde-Vl.QtdSuprida From Estoque where LoteId = Vl.LoteId and EnderecoId = Vl.EnderecoId and EstoqueTipoId = Vl.EstoqueTipoId),');
+      vQryEstoque.Sql.Add('      ' + #39 + 'Baixa Volume: ' + #39 +
+        '+Cast(Vl.PedidoVolumeId as VarChar), Null, 0, 0, ' + #39 +
+        'Transfer�ncia para loja' + #39 + ', ');
+      vQryEstoque.Sql.Add('	     ' + TuEvolutConst.SqlDataAtual + ', ' +
+        TuEvolutConst.SqlHoraAtual + ', ' + vQry.FieldByName('UsuarioId')
+        .AsString);
+      vQryEstoque.Sql.Add('      , ' + #39 + 'API EXP OFF' + #39);
+      vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
+      vQryEstoque.Sql.Add('Where Vl.PedidoVolumeId = ' +
+        vQry.FieldByName('PedidoVolumeId').AsString + ' and Vl.QtdSuprida > 0');
+
+      vQryEstoque.Sql.Add('Update Est Set Qtde = Est.Qtde - Vl.QtdSuprida');
+      vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
+      vQryEstoque.Sql.Add
+        ('inner join Estoque Est on Est.LoteId = Vl.LoteId  and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId');
+      vQryEstoque.Sql.Add('where Vl.pedidovolumeid = ' +
+        vQry.FieldByName('PedidoVolumeId').AsString);
+      vQryEstoque.Sql.Add('Update Est Set Qtde = Est.Qtde - Vl.QtdSuprida');
+      vQryEstoque.Sql.Add('from PedidoVolumeLotes Vl');
+      vQryEstoque.Sql.Add
+        ('inner join Estoque Est on Est.LoteId = Vl.LoteId  and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+      vQryEstoque.Sql.Add('where Vl.pedidovolumeid = ' +
+        vQry.FieldByName('PedidoVolumeId').AsString);
+      vQryEstoque.Sql.Add('Update PedidoVolumes Set Expedido = 1');
+      vQryEstoque.Sql.Add('where pedidovolumeid = ' +
+        vQry.FieldByName('PedidoVolumeId').AsString);
       vQryEstoque.ExecSQL;
-      Result := True;
-    Except
-      Begin
-        vQry.connection.Rollback;
-        Result := False;
-      End;
-    end;
-  finally
-    vQry.Close;
+      vQry.Next;
+    End;
+    vQry.connection.Commit;
     vQryEstoque.Close;
-    vQryKardex.Close;
-    FConexao.Query.Close;
+    vQryEstoque.Sql.Clear;
+    vQryEstoque.Sql.Add
+      ('Delete From Estoque where Qtde < 0 and EstoqueTipoId = 6');
+    vQryEstoque.ExecSQL;
+    Result := True;
+  Except
+    Begin
+      vQry.connection.Rollback;
+      Result := False;
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.CaixaSeparacao(pPedidoVolumeId, pCaixaEmbalagemId
@@ -222,32 +216,28 @@ function TServicePedidoVolume.CaixaSeparacao(pPedidoVolumeId, pCaixaEmbalagemId
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
   try
+    vQry := FConexao.GetQuery;
     Result := TJsonArray.Create;
-    try
-      vQry.Sql.Add('Update PedidoVolumes');
-      if pCaixaEmbalagemId > 0 then
-        vQry.Sql.Add('  Set CaixaEmbalagemId = ' + pCaixaEmbalagemId.ToString())
-      Else
-        vQry.Sql.Add('  Set CaixaEmbalagemId = Null');
-      vQry.Sql.Add('Where PedidoVolumeId = :pPedidoVolumeId');
-      vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-      vQry.ExecSQL;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Caixa Alterada com sucesso!'));
-    Except
-      ON E: Exception do
-      Begin
+    vQry.Sql.Add('Update PedidoVolumes');
+    if pCaixaEmbalagemId > 0 then
+      vQry.Sql.Add('  Set CaixaEmbalagemId = ' + pCaixaEmbalagemId.ToString())
+    Else
+      vQry.Sql.Add('  Set CaixaEmbalagemId = Null');
+    vQry.Sql.Add('Where PedidoVolumeId = :pPedidoVolumeId');
+    vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+    vQry.ExecSQL;
+    Result.AddElement(TJsonObject.Create.AddPair('Ok',
+      'Caixa Alterada com sucesso!'));
+  Except
+    ON E: Exception do
+    Begin
 
-        raise Exception.Create('Processo: Caixa Embalagem - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+      raise Exception.Create('Processo: Caixa Embalagem - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -258,10 +248,9 @@ var
   vTransacao: Boolean;
   vProcesso: String;
 begin
-  vQry := FConexao.GetQuery;
-  vQryCheckPedido := FConexao.GetQuery;
-
   try
+    vQry := FConexao.GetQuery;
+    vQryCheckPedido := FConexao.GetQuery;
     if pConexao = Nil then
       vQry.connection := FConexao.DB
     Else
@@ -427,9 +416,7 @@ begin
           '', [rfReplaceAll]));
       End;
     end;
-  finally
-    vQry.Close;
-    vQryCheckPedido.Close;
+  except
   end;
 end;
 
@@ -452,52 +439,47 @@ var
   xArray: Integer;
   vCompl, vListaPedido: String;
 begin
-  Try
+  try
     Result := TJsonArray.Create;
     vQry := FConexao.GetQuery;
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlEtiquetaVolumePorRua);
-      vCompl := '';
-      vListaPedido := '';
-      if pJsonObject.GetValue<TJsonArray>('pedido').Count > 0 then
-        vQry.Sql.Add('     And Pv.PedidoId in (');
-      for xArray := 0 to Pred(pJsonObject.GetValue<TJsonArray>('pedido')
-        .Count) do
-      Begin
-        vListaPedido := vListaPedido + vCompl + pJsonObject.GetValue<TJsonArray>
-          ('pedido').Items[xArray].GetValue<String>('pedidoid');
-        vCompl := ', ';
-      End;
-      if pJsonObject.Count > 0 then
-        vQry.Sql.Add(vListaPedido + ' )');
-      vQry.ParamByName('pProcessoId').Value := pJsonObject.GetValue<Integer>
-        ('processoid');
-      vQry.ParamByName('pEmbalagemId').Value := pJsonObject.GetValue<Integer>
-        ('embalagemid');
-      vQry.ParamByName('pZonaId').Value := pJsonObject.GetValue<Integer>
-        ('zonaid');
-      vQry.Sql.Add('order by VL.Inicio, vCxaFechada.CodProduto');
-      // --, Pv.PedidoVolumeId');
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
-      vQry.Open;
-      if vQry.IsEmpty then
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-          TuEvolutConst.QrySemDados)))
-      Else
-        Result := vQry.ToJsonArray;
-    Except
-      ON E: Exception do
-      Begin
-        raise Exception.Create('Processo: Etiqueta Por Rua - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  Finally
-    vQry.Close;
-  End;
+    vQry.Sql.Add(TuEvolutConst.SqlEtiquetaVolumePorRua);
+    vCompl := '';
+    vListaPedido := '';
+    if pJsonObject.GetValue<TJsonArray>('pedido').Count > 0 then
+      vQry.Sql.Add('     And Pv.PedidoId in (');
+    for xArray := 0 to Pred(pJsonObject.GetValue<TJsonArray>('pedido').Count) do
+    Begin
+      vListaPedido := vListaPedido + vCompl + pJsonObject.GetValue<TJsonArray>
+        ('pedido').Items[xArray].GetValue<String>('pedidoid');
+      vCompl := ', ';
+    End;
+    if pJsonObject.Count > 0 then
+      vQry.Sql.Add(vListaPedido + ' )');
+    vQry.ParamByName('pProcessoId').Value := pJsonObject.GetValue<Integer>
+      ('processoid');
+    vQry.ParamByName('pEmbalagemId').Value := pJsonObject.GetValue<Integer>
+      ('embalagemid');
+    vQry.ParamByName('pZonaId').Value := pJsonObject.GetValue<Integer>
+      ('zonaid');
+    vQry.Sql.Add('order by VL.Inicio, vCxaFechada.CodProduto');
+    // --, Pv.PedidoVolumeId');
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
+    vQry.Open;
+    if vQry.IsEmpty then
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
+        TuEvolutConst.QrySemDados)))
+    Else
+      Result := vQry.ToJsonArray;
+  Except
+    ON E: Exception do
+    Begin
+      raise Exception.Create('Processo: Etiqueta Por Rua - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
+  end;
 end;
 
 function TServicePedidoVolume.FinalizarSeparacao(pJsonObject: TJsonObject)
@@ -506,129 +488,122 @@ var
   vQry: TFdQuery;
   vVolumeSeparacaoId: Integer;
 begin
-  vQry := FConexao.GetQuery;
   try
-
+    vQry := FConexao.GetQuery;
     vQry.connection.StartTransaction;
     vQry.connection.TxOptions.Isolation := xiReadCommitted;
-    try
-      if pJsonObject.GetValue<Integer>('volumeseparacaoid') = 0 then
-      Begin
-        vQry.Sql.Add
-          ('Insert Into PedidoVolumeSeparacao (CaixaEmbalagemId, PedidoVolumeId, Operacao, EnderecoId, ');
-        vQry.Sql.Add
-          ('        Usuarioid, DtInicio, HrInicio, Divergencia) Values (');
-        vQry.Sql.Add(pJsonObject.GetValue<String>('caixaembalagemid') + ', ' +
-          pJsonObject.GetValue<String>('pedidovolumeid') + ', ' +
-          pJsonObject.GetValue<String>('operacao') + ', ' +
-          pJsonObject.GetValue<String>('enderecoid') + ', ' +
-          IfThen(pJsonObject.GetValue<Integer>('usuarioid') = 0, 'Null',
-          pJsonObject.GetValue<String>('usuarioid')) + ', ' +
-          TuEvolutConst.SqlDataAtual + ', ' + TuEvolutConst.SqlHoraAtual
-          + ', 0)');
-        vQry.Sql.Add
-          ('Select Coalesce(VolumeSeparacaoId, 0) VolumeSeparacaoId From PedidoVolumeSeparacao ');
-        vQry.Sql.Add('Where CaixaEmbalagemId = ' + pJsonObject.GetValue<string>
-          ('caixaembalagemid'));
-        vQry.Sql.Add('  and PedidoVolumeId   = ' + pJsonObject.GetValue<string>
-          ('pedidovolumeid'));
-        vQry.Sql.Add('  and UsuarioId        = ' + pJsonObject.GetValue<string>
-          ('usuarioid'));
-        vQry.Sql.Add('  and Operacao         = 0');
-        if pJsonObject.GetValue<Integer>('caixaembalagemid') <> 0 then
-        Begin
-          vQry.Sql.Add('Update PedidoVolumes Set CaixaEmbalagemId = ' +
-            pJsonObject.GetValue<string>('caixaembalagemid'));
-          vQry.Sql.Add('Where PedidoVolumeId = ' + pJsonObject.GetValue<string>
-            ('pedidovolumeid'));
-        End;
-      End
-      Else
-      Begin
-        vQry.Sql.Add('-- Operacao  = ' + pJsonObject.GetValue<String>
-          ('operacao') + '   UsuarioId = ' + pJsonObject.GetValue<String>
-          ('usuarioid') + '  EnderecoId  = ' + pJsonObject.GetValue<String>
-          ('enderecoid'));
-        vQry.Sql.Add(' Update PedidoVolumeSeparacao ');
-        vQry.Sql.Add('   Set Operacao  = ' + pJsonObject.GetValue<String>
-          ('operacao'));
-        vQry.Sql.Add('   , EnderecoId  = ' + pJsonObject.GetValue<String>
-          ('enderecoid'));
-        vQry.Sql.Add('   , UsuarioId   = ' +
-          IfThen(pJsonObject.GetValue<Integer>('operacao') = 0,
-          IfThen(pJsonObject.GetValue<Integer>('usuarioid') = 0, 'Null',
-          pJsonObject.GetValue<String>('usuarioid')), 'Null'));
-        vQry.Sql.Add(IfThen(pJsonObject.GetValue<Integer>('operacao') = 1,
-          '   , DtFinalizacao  = ' + TuEvolutConst.SqlDataAtual, ''));
-        vQry.Sql.Add(IfThen(pJsonObject.GetValue<Integer>('operacao') = 1,
-          '   , HrFinalizacao  = ' + TuEvolutConst.SqlHoraAtual, ''));
-        vQry.Sql.Add(' where VolumeSeparacaoId = ' +
-          pJsonObject.GetValue<String>('volumeseparacaoid'));
-        vQry.Sql.Add('Select ' + pJsonObject.GetValue<String>
-          ('volumeseparacaoid') + ' as VolumeSeparacaoId');
-      End;
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('RegistrarSeparacao.Sql');
-      vQry.Open;
-      Result := TJsonObject.Create.AddPair('volumeseparacaoid',
-        vQry.FieldByName('VolumeSeparacaoId').AsString)
-        .AddPair('Resultado', 'Registro salvo com Sucesso!');
-      vQry.Close;
-
-      // Status do Volume
-      vQry.Sql.Clear;
+    if pJsonObject.GetValue<Integer>('volumeseparacaoid') = 0 then
+    Begin
       vQry.Sql.Add
-        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-        + 'PedidoVolumeId = ' + pJsonObject.GetValue<String>
-        ('pedidovolumeid') + ')');
-      vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-      if pJsonObject.GetValue<Integer>('operacao') = 1 then
+        ('Insert Into PedidoVolumeSeparacao (CaixaEmbalagemId, PedidoVolumeId, Operacao, EnderecoId, ');
+      vQry.Sql.Add
+        ('        Usuarioid, DtInicio, HrInicio, Divergencia) Values (');
+      vQry.Sql.Add(pJsonObject.GetValue<String>('caixaembalagemid') + ', ' +
+        pJsonObject.GetValue<String>('pedidovolumeid') + ', ' +
+        pJsonObject.GetValue<String>('operacao') + ', ' +
+        pJsonObject.GetValue<String>('enderecoid') + ', ' +
+        IfThen(pJsonObject.GetValue<Integer>('usuarioid') = 0, 'Null',
+        pJsonObject.GetValue<String>('usuarioid')) + ', ' +
+        TuEvolutConst.SqlDataAtual + ', ' + TuEvolutConst.SqlHoraAtual
+        + ', 0)');
+      vQry.Sql.Add
+        ('Select Coalesce(VolumeSeparacaoId, 0) VolumeSeparacaoId From PedidoVolumeSeparacao ');
+      vQry.Sql.Add('Where CaixaEmbalagemId = ' + pJsonObject.GetValue<string>
+        ('caixaembalagemid'));
+      vQry.Sql.Add('  and PedidoVolumeId   = ' + pJsonObject.GetValue<string>
+        ('pedidovolumeid'));
+      vQry.Sql.Add('  and UsuarioId        = ' + pJsonObject.GetValue<string>
+        ('usuarioid'));
+      vQry.Sql.Add('  and Operacao         = 0');
+      if pJsonObject.GetValue<Integer>('caixaembalagemid') <> 0 then
       Begin
-        if pJsonObject.GetValue<Integer>('consolidado') = 1 then
-          vQry.ParamByName('pProcessoId').Value := 10
-        Else
-          vQry.ParamByName('pProcessoId').Value := 8;
-      End
-      Else
-        vQry.ParamByName('pProcessoId').Value := 7;
-      vQry.Sql.Add('--Processoid = ' + vQry.ParamByName('pProcessoId')
-        .AsString);
-      vQry.ParamByName('pUsuarioId').Value := pJsonObject.GetValue<Integer>
-        ('usuarioid');
-      vQry.ParamByName('pTerminal').Value := pJsonObject.GetValue<String>
-        ('estacao');
-      If DebugHook <> 0 then
-        vQry.Sql.SaveToFile('RegistrarProcessoSeparacao.Sql ');
-      if pJsonObject.GetValue<Integer>('usuarioid') > 0 then
-        vQry.ExecSQL;
-
-      vQry.Close;
-      vQry.Sql.Clear;
-      vQry.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-      vQry.ParamByName('pPedidoVolumeId').Value := pJsonObject.GetValue<Integer>
-        ('pedidovolumeid');
-      vQry.ParamByName('pUsuarioId').Value := pJsonObject.GetValue<Integer>
-        ('usuarioid');
-      vQry.ParamByName('pTerminal').Value := pJsonObject.GetValue<String>
-        ('estacao');
-      if pJsonObject.GetValue<Integer>('usuarioid') > 0 then
-        vQry.ExecSQL;
-
-    Except
-      ON E: Exception do
-      Begin
-        vQry.Close;
-        vQry.connection.Rollback;
-
-        FConexao.DB.Connected := False;
-        raise Exception.Create('Processo: FinalizarSeparacao - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
+        vQry.Sql.Add('Update PedidoVolumes Set CaixaEmbalagemId = ' +
+          pJsonObject.GetValue<string>('caixaembalagemid'));
+        vQry.Sql.Add('Where PedidoVolumeId = ' + pJsonObject.GetValue<string>
+          ('pedidovolumeid'));
       End;
-    end;
-  finally
+    End
+    Else
+    Begin
+      vQry.Sql.Add('-- Operacao  = ' + pJsonObject.GetValue<String>('operacao')
+        + '   UsuarioId = ' + pJsonObject.GetValue<String>('usuarioid') +
+        '  EnderecoId  = ' + pJsonObject.GetValue<String>('enderecoid'));
+      vQry.Sql.Add(' Update PedidoVolumeSeparacao ');
+      vQry.Sql.Add('   Set Operacao  = ' + pJsonObject.GetValue<String>
+        ('operacao'));
+      vQry.Sql.Add('   , EnderecoId  = ' + pJsonObject.GetValue<String>
+        ('enderecoid'));
+      vQry.Sql.Add('   , UsuarioId   = ' +
+        IfThen(pJsonObject.GetValue<Integer>('operacao') = 0,
+        IfThen(pJsonObject.GetValue<Integer>('usuarioid') = 0, 'Null',
+        pJsonObject.GetValue<String>('usuarioid')), 'Null'));
+      vQry.Sql.Add(IfThen(pJsonObject.GetValue<Integer>('operacao') = 1,
+        '   , DtFinalizacao  = ' + TuEvolutConst.SqlDataAtual, ''));
+      vQry.Sql.Add(IfThen(pJsonObject.GetValue<Integer>('operacao') = 1,
+        '   , HrFinalizacao  = ' + TuEvolutConst.SqlHoraAtual, ''));
+      vQry.Sql.Add(' where VolumeSeparacaoId = ' + pJsonObject.GetValue<String>
+        ('volumeseparacaoid'));
+      vQry.Sql.Add('Select ' + pJsonObject.GetValue<String>('volumeseparacaoid')
+        + ' as VolumeSeparacaoId');
+    End;
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('RegistrarSeparacao.Sql');
+    vQry.Open;
+    Result := TJsonObject.Create.AddPair('volumeseparacaoid',
+      vQry.FieldByName('VolumeSeparacaoId').AsString)
+      .AddPair('Resultado', 'Registro salvo com Sucesso!');
     vQry.Close;
+
+    // Status do Volume
+    vQry.Sql.Clear;
+    vQry.Sql.Add
+      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
+      + 'PedidoVolumeId = ' + pJsonObject.GetValue<String>
+      ('pedidovolumeid') + ')');
+    vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+    if pJsonObject.GetValue<Integer>('operacao') = 1 then
+    Begin
+      if pJsonObject.GetValue<Integer>('consolidado') = 1 then
+        vQry.ParamByName('pProcessoId').Value := 10
+      Else
+        vQry.ParamByName('pProcessoId').Value := 8;
+    End
+    Else
+      vQry.ParamByName('pProcessoId').Value := 7;
+    vQry.Sql.Add('--Processoid = ' + vQry.ParamByName('pProcessoId').AsString);
+    vQry.ParamByName('pUsuarioId').Value := pJsonObject.GetValue<Integer>
+      ('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonObject.GetValue<String>
+      ('estacao');
+    If DebugHook <> 0 then
+      vQry.Sql.SaveToFile('RegistrarProcessoSeparacao.Sql ');
+    if pJsonObject.GetValue<Integer>('usuarioid') > 0 then
+      vQry.ExecSQL;
+
+    vQry.Close;
+    vQry.Sql.Clear;
+    vQry.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+    vQry.ParamByName('pPedidoVolumeId').Value := pJsonObject.GetValue<Integer>
+      ('pedidovolumeid');
+    vQry.ParamByName('pUsuarioId').Value := pJsonObject.GetValue<Integer>
+      ('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonObject.GetValue<String>
+      ('estacao');
+    if pJsonObject.GetValue<Integer>('usuarioid') > 0 then
+      vQry.ExecSQL;
+
+  Except
+    ON E: Exception do
+    Begin
+      vQry.Close;
+      vQry.connection.Rollback;
+
+      FConexao.DB.Connected := False;
+      raise Exception.Create('Processo: FinalizarSeparacao - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -639,46 +614,41 @@ var
   JsonVolume: TJsonObject;
   xProd: Integer;
 begin
-  vQry := FConexao.GetQuery;
   try
-
+    vQry := FConexao.GetQuery;
     vQry.connection.StartTransaction;
     vQry.connection.TxOptions.Isolation := xiReadCommitted;
-    try
-      vQry.Close;
-      vQry.Sql.Clear;
-      vQry.Sql.Add(TuEvolutConst.SqlGerarVolumeExtra);
-      vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-      vQry.ParamByName('pUsuarioId').Value := pUsuarioId;
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('VolumeExtra.Sql');
-      vQry.Open;
-      if vQry.IsEmpty then
-      Begin
-        Result := TJsonArray.Create();
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-          TuEvolutConst.QrySemDados)))
-      End
-      Else
-        Result := vQry.ToJsonArray;
-      vQry.Close;
-      vQry.connection.Commit;
-
-      FConexao.DB.Connected := False;
-    Except
-      ON E: Exception do
-      Begin
-
-        vQry.connection.Rollback;
-
-        raise Exception.Create('Processo: GerarVolumeExtra - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
     vQry.Close;
+    vQry.Sql.Clear;
+    vQry.Sql.Add(TuEvolutConst.SqlGerarVolumeExtra);
+    vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+    vQry.ParamByName('pUsuarioId').Value := pUsuarioId;
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('VolumeExtra.Sql');
+    vQry.Open;
+    if vQry.IsEmpty then
+    Begin
+      Result := TJsonArray.Create();
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
+        TuEvolutConst.QrySemDados)))
+    End
+    Else
+      Result := vQry.ToJsonArray;
+    vQry.Close;
+    vQry.connection.Commit;
+
+    FConexao.DB.Connected := False;
+  Except
+    ON E: Exception do
+    Begin
+
+      vQry.connection.Rollback;
+
+      raise Exception.Create('Processo: GerarVolumeExtra - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -692,8 +662,9 @@ Var
 
   vQry: TFdQuery;
 begin
-  Result := TJsonArray.Create;
+
   Try
+    Result := TJsonArray.Create;
     pDataInicial := 0;
     pDataFinal := 0;
     pRotaId := 0;
@@ -768,7 +739,7 @@ begin
         '', [rfReplaceAll]));
     End;
   end;
-  vQry.Close
+
 end;
 
 function TServicePedidoVolume.GetAuditoriaVolumes(const AParams
@@ -782,8 +753,9 @@ Var
 
   vQry: TFdQuery;
 begin
-  Result := TJsonArray.Create;
+
   Try
+    Result := TJsonArray.Create;
     pDataInicial := 0;
     pDataFinal := 0;
     pRotaId := 0;
@@ -859,7 +831,6 @@ begin
         '', [rfReplaceAll]));
     End;
   end;
-  FConexao.Query.Close;
 end;
 
 function TServicePedidoVolume.Getdshvolumeevolucao_quantidade
@@ -891,7 +862,7 @@ begin
         '', [rfReplaceAll]));
     End;
   end;
-  FConexao.Query.Close;
+
 end;
 
 function TServicePedidoVolume.Getdshvolumeevolucao_Unidades(pDataIni: TDateTime;
@@ -899,10 +870,9 @@ function TServicePedidoVolume.Getdshvolumeevolucao_Unidades(pDataIni: TDateTime;
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-
-  Result := TJsonArray.Create;
   try
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
     vQry.Sql.Add(TuEvolutConst.SqlGetdshvolumeevolucao_Unidades);
     vQry.ParamByName('pData').Value := pDataIni;
     vQry.ParamByName('pRotaId').Value := pRotaId;
@@ -916,7 +886,6 @@ begin
         TuEvolutConst.QrySemDados)))
     Else
       Result := vQry.ToJsonArray;
-
   Except
     ON E: Exception do
     Begin
@@ -937,11 +906,11 @@ var
   MsgErro: String;
   vVolumeSeparacaoId: Integer;
 begin
-  MsgErro := '';
-  if (pCaixaId = 0) and (pPedidoVolumeId = 0) and (pUsuarioId = 0) then
-    raise Exception.Create('Par�metro inv�lidos para a pesquisa!');
-  // Informe a Amanda
   try
+    MsgErro := '';
+    if (pCaixaId = 0) and (pPedidoVolumeId = 0) and (pUsuarioId = 0) then
+      raise Exception.Create('Par�metro inv�lidos para a pesquisa!');
+    // Informe a Amanda
     vQry := FConexao.GetQuery;
     if (pCaixaId > 0) and (pPedidoVolumeId = 0) then
     Begin
@@ -1120,12 +1089,6 @@ begin
         '', [rfReplaceAll]));
     End;
   end;
-
-  if Assigned(vQrySeparacao) then
-    vQrySeparacao.Close;
-  if Assigned(vQry) then
-    vQry.Close;
-
 end;
 
 function TServicePedidoVolume.GetPedidoCxaFechadaCheckOut(pPedidoVolumeId
@@ -1201,46 +1164,40 @@ Begin
         '', [rfReplaceAll]));
     End;
   end;
-  FConexao.Query.Close;
 end;
 
 function TServicePedidoVolume.GetPedidoVolumeProdutoLote(pPedidoId,
   pCodProduto: Integer): TJsonArray;
-
+var
+  vQry: TFdQuery;
 begin
   if (pPedidoId = 0) and (pCodProduto = 0) then
     raise Exception.Create('Identifica��o de Pedido/volume n�o informado!');
-
-  var
-  vQry := FConexao.GetQuery;
   try
+    vQry := FConexao.GetQuery;
     Result := TJsonArray.Create;
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlPedidoVolumeProdutoLote);
-      vQry.ParamByName('pPedidoid').Value := pPedidoId;
-      vQry.ParamByName('pCodProduto').Value := pCodProduto;
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('PedidoVolumeProdutoLote.Sql');
-      vQry.Open;
-      if vQry.IsEmpty then
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-          TuEvolutConst.QrySemDados)))
-      Else
-        Result := vQry.ToJsonArray;
+    vQry.Sql.Add(TuEvolutConst.SqlPedidoVolumeProdutoLote);
+    vQry.ParamByName('pPedidoid').Value := pPedidoId;
+    vQry.ParamByName('pCodProduto').Value := pCodProduto;
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('PedidoVolumeProdutoLote.Sql');
+    vQry.Open;
+    if vQry.IsEmpty then
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
+        TuEvolutConst.QrySemDados)))
+    Else
+      Result := vQry.ToJsonArray;
 
-    Except
-      ON E: Exception do
-      Begin;
-        raise Exception.Create('Processo: Getdshvolumeevolucao_Unidades - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
-
+  Except
+    ON E: Exception do
+    Begin;
+      raise Exception.Create('Processo: Getdshvolumeevolucao_Unidades - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.GetVolume(pPedidoId, pPedidoVolumeId, pSequencia,
@@ -1249,9 +1206,10 @@ var
   vQry: TFdQuery;
   JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
-  vQry := FConexao.GetQuery;
-  Result := TJsonArray.Create;
+
   try
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
     vQry.Sql.Add(TuEvolutConst.SqlVolume);
     vQry.ParamByName('pPedidoId').Value := pPedidoId;
     vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
@@ -1293,9 +1251,8 @@ function TServicePedidoVolume.GetVolumeComDivergencia(pPedidoVolumeId: Integer)
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;;
-
   try
+    vQry := FConexao.GetQuery;;
     vQry.Sql.Add('-- PedidoVOlumeId = ' + pPedidoVolumeId.ToString);
     vQry.Sql.Add(TuEvolutConst.SqlVolumeComDivergencia);
     vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
@@ -1311,7 +1268,6 @@ begin
     End
     Else
       Result := vQry.ToJsonArray();
-
   Except
     ON E: Exception do
     Begin
@@ -1330,9 +1286,10 @@ var
   vQry: TFdQuery;
   JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
-  vQry := FConexao.GetQuery;
-  Result := TJsonArray.Create;
+
   try
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
     vQry.Sql.Add(TuEvolutConst.SqlGetVolumeEAN);
     vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
     if DebugHook <> 0 then
@@ -1347,12 +1304,10 @@ begin
   Except
     ON E: Exception do
     Begin
-
       Try
         If Assigned(JsonVolume) Then
           JsonVolume.Free; // Model.Connection.Disconnected(FIndexConnExact);
       Except
-
       End;
       FConexao.DB.Connected := False;
       raise Exception.Create('Processo: VolumeEAN - ' + StringReplace(E.Message,
@@ -1368,48 +1323,36 @@ var
   vQry: TFdQuery;
   JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
-  vQry := FConexao.GetQuery;;
   try
-
+    vQry := FConexao.GetQuery;
     Result := TJsonArray.Create;
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlVolumePrintTag);
-      vQry.ParamByName('pPedidoId').Value := pPedidoId;
-      vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-      vQry.ParamByName('pSequencia').Value := pSequencia;
-      vQry.ParamByName('pOrdem').Value := pOrdem;
-      vQry.ParamByName('pZonaId').Value := pZonaId;
-      vQry.ParamByName('pPrintTag').Value := pPrintTag;
-      vQry.ParamByName('pEmbalagem').Value := pEmbalagem;
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('VolumePrintTag.Sql');
-      vQry.Open;
-      if (vQry.IsEmpty) then
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-          TuEvolutConst.QrySemDados)))
-      Else
-        Result := vQry.ToJsonArray;
-
-    Except
-      ON E: Exception do
-      Begin
-
-        Try
-          If Assigned(JsonVolume) Then
-            JsonVolume.Free; // Model.Connection.Disconnected(FIndexConnExact);]
-        Except
-
-        End;
-        FConexao.DB.Connected := False;
-        raise Exception.Create('Processo: GetVolumePrintTag - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+    vQry.Sql.Add(TuEvolutConst.SqlVolumePrintTag);
+    vQry.ParamByName('pPedidoId').Value := pPedidoId;
+    vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+    vQry.ParamByName('pSequencia').Value := pSequencia;
+    vQry.ParamByName('pOrdem').Value := pOrdem;
+    vQry.ParamByName('pZonaId').Value := pZonaId;
+    vQry.ParamByName('pPrintTag').Value := pPrintTag;
+    vQry.ParamByName('pEmbalagem').Value := pEmbalagem;
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('VolumePrintTag.Sql');
+    vQry.Open;
+    if (vQry.IsEmpty) then
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
+        TuEvolutConst.QrySemDados)))
+    Else
+      Result := vQry.ToJsonArray;
+  Except
+    ON E: Exception do
+    Begin
+      FConexao.DB.Connected := False;
+      raise Exception.Create('Processo: GetVolumePrintTag - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.RegistrarDocumentoEtapa(pJsonDocumentoEtapa
@@ -1417,52 +1360,48 @@ function TServicePedidoVolume.RegistrarDocumentoEtapa(pJsonDocumentoEtapa
 var
   vQry, vQryPedStatus: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;;
   try
+    vQry := FConexao.GetQuery;
     vQryPedStatus := FConexao.GetQuery;;
     vQryPedStatus.connection := FConexao.DB;;
-    try
-      vQry.Sql.Add
-        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-        + 'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
-        ('pedidovolumeid').ToString() + ')');
-      vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-      vQry.ParamByName('pProcessoId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('processoid');
-      vQry.ParamByName('pUsuarioId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-      vQry.ParamByName('pTerminal').Value :=
-        pJsonDocumentoEtapa.GetValue<String>('estacao');
-      vQry.ExecSQL;
-      vQry.Close;
-      vQryPedStatus.Close;
-      vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-      vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
-      vQryPedStatus.ParamByName('pUsuarioId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-      vQryPedStatus.ParamByName('pTerminal').Value :=
-        pJsonDocumentoEtapa.GetValue<String>('estacao');
-      vQryPedStatus.ExecSQL;
-
-      Result := TJsonArray.Create();
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Processo registrado com sucesso!'));
-      FConexao.DB.Connected := False;
-    Except
-      ON E: Exception do
-      Begin
-
-        FConexao.DB.Connected := False;
-        raise Exception.Create('Processo: Volumes para Etiquetas - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
+    vQry.Sql.Add
+      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
+      + 'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
+      ('pedidovolumeid').ToString() + ')');
+    vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+    vQry.ParamByName('pProcessoId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('processoid');
+    vQry.ParamByName('pUsuarioId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>
+      ('estacao');
+    vQry.ExecSQL;
     vQry.Close;
+    vQryPedStatus.Close;
+    vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+    vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
+    vQryPedStatus.ParamByName('pUsuarioId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQryPedStatus.ParamByName('pTerminal').Value :=
+      pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQryPedStatus.ExecSQL;
+
+    Result := TJsonArray.Create();
+    Result.AddElement(TJsonObject.Create.AddPair('Ok',
+      'Processo registrado com sucesso!'));
+    FConexao.DB.Connected := False;
+  Except
+    ON E: Exception do
+    Begin
+      FConexao.DB.Connected := False;
+      raise Exception.Create('Processo: Volumes para Etiquetas - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.RegistrarDocumentoEtapaComBaixaEstoque
@@ -1471,18 +1410,19 @@ Var
   vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
   vEstoqueInicial: Integer;
 begin
-  Result := TJsonArray.Create;
-  vQry := FConexao.GetQuery;
-  vQryEstoque := FConexao.GetQuery;
-  vQryVolumeLotes := FConexao.GetQuery;
-  vQryPedStatus := FConexao.GetQuery;
-  vQryKardex := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
-  vQryEstoque.connection := vQry.connection;
-  vQryVolumeLotes.connection := vQry.connection;
-  vQryPedStatus.connection := vQry.connection;
-  vQryKardex.connection := vQry.connection;
   try
+    Result := TJsonArray.Create;
+    vQry := FConexao.GetQuery;
+    vQryEstoque := FConexao.GetQuery;
+    vQryVolumeLotes := FConexao.GetQuery;
+    vQryPedStatus := FConexao.GetQuery;
+    vQryKardex := FConexao.GetQuery;
+    vQry.connection := FConexao.DB;
+    vQryEstoque.connection := vQry.connection;
+    vQryVolumeLotes.connection := vQry.connection;
+    vQryPedStatus.connection := vQry.connection;
+    vQryKardex.connection := vQry.connection;
+
     vQry.connection.StartTransaction;
     try
       vQry.Sql.Add
@@ -1607,11 +1547,14 @@ begin
       End;
     end;
   finally
-    vQry.Close;
-    vQryVolumeLotes.Close;
-    vQryEstoque.Close;
-    vQryPedStatus.Close;
-    vQryKardex.Close;
+    try
+      vQry.Close;
+      vQryVolumeLotes.Close;
+      vQryEstoque.Close;
+      vQryPedStatus.Close;
+      vQryKardex.Close;
+    except
+    end;
   end;
 end;
 
@@ -1621,54 +1564,51 @@ Var
   vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
   vEstoqueInicial: Integer;
 begin
-  Result := TJsonArray.Create;
-  vQry := FConexao.GetQuery;
-  vQryPedStatus := FConexao.GetQuery;
-  vQryPedStatus.connection := vQry.connection;
+
   try
+    Result := TJsonArray.Create;
+    vQry := FConexao.GetQuery;
+    vQryPedStatus := FConexao.GetQuery;
+    vQryPedStatus.connection := vQry.connection;
     vQry.connection.StartTransaction;
-    try
-      vQry.Sql.Add
-        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
-      vQry.Sql.Add('                                  where ' +
-        'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
-        ('pedidovolumeid').ToString() + ')');
-      vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-      vQry.ParamByName('pProcessoId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('processoid');
-      vQry.ParamByName('pUsuarioId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-      vQry.ParamByName('pTerminal').Value :=
-        pJsonDocumentoEtapa.GetValue<String>('estacao');
-      vQry.ExecSQL;
-      vQryPedStatus.Close;
-      vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-      vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
-      vQryPedStatus.ParamByName('pUsuarioId').Value :=
-        pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-      vQryPedStatus.ParamByName('pTerminal').Value :=
-        pJsonDocumentoEtapa.GetValue<String>('estacao');
-      vQryPedStatus.ExecSQL;
-      vQry.connection.Commit;
-      Result.AddElement(TJsonObject.Create.AddPair('pedidovolumeid',
-        TJsonNumber.Create(pJsonDocumentoEtapa.GetValue<Integer>
-        ('pedidovolumeid'))));
-    Except
-      ON E: Exception do
-      Begin
-        vQry.connection.Rollback;
-        raise Exception.Create
-          ('Tabela_Service: RegistrarDocumentoEtapaSemBaixaEstoque - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+    vQry.Sql.Add
+      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
+    vQry.Sql.Add('                                  where ' +
+      'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
+      ('pedidovolumeid').ToString() + ')');
+    vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+    vQry.ParamByName('pProcessoId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('processoid');
+    vQry.ParamByName('pUsuarioId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>
+      ('estacao');
+    vQry.ExecSQL;
     vQryPedStatus.Close;
+    vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+    vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
+    vQryPedStatus.ParamByName('pUsuarioId').Value :=
+      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQryPedStatus.ParamByName('pTerminal').Value :=
+      pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQryPedStatus.ExecSQL;
+    vQry.connection.Commit;
+    Result.AddElement(TJsonObject.Create.AddPair('pedidovolumeid',
+      TJsonNumber.Create(pJsonDocumentoEtapa.GetValue<Integer>
+      ('pedidovolumeid'))));
+  Except
+    ON E: Exception do
+    Begin
+      vQry.connection.Rollback;
+      raise Exception.Create
+        ('Tabela_Service: RegistrarDocumentoEtapaSemBaixaEstoque - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.ResetSeparacao(pPedidoVolumeId: Integer)
@@ -1676,44 +1616,39 @@ function TServicePedidoVolume.ResetSeparacao(pPedidoVolumeId: Integer)
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-  Result := TJsonArray.Create;
   try
-    try
-      vQry.Sql.Add('Update PedidoVolumeLotes');
-      vQry.Sql.Add('  Set QtdSuprida = Quantidade');
-      vQry.Sql.Add('    --, usuarioId  = Null');
-      vQry.Sql.Add('where PedidoVolumeid = ' + pPedidoVolumeId.ToString);
-      vQry.Sql.Add
-        ('Update PedidoVolumes Set CaixaEmbalagemId = Null where PedidoVolumeid = '
-        + pPedidoVolumeId.ToString);
-      vQry.Sql.Add('Delete PedidoVolumeSeparacao where PedidoVolumeid = ' +
-        pPedidoVolumeId.ToString);
-      vQry.Sql.Add('Delete pedidooperacao where PedidoVolumeid = ' +
-        pPedidoVolumeId.ToString);
-      vQry.Sql.Add('Delete De');
-      vQry.Sql.Add('From DocumentoEtapas De');
-      vQry.Sql.Add('Inner Join PedidoVolumes Pv On Pv.Uuid = De.Documento');
-      vQry.Sql.Add('where PedidoVolumeid = ' + pPedidoVolumeId.ToString +
-        ' and De.Processoid > 3');
-      If DebugHook <> 0 Then
-        vQry.Sql.SaveToFile('ResetVolume.Sql');
-      vQry.ExecSQL;
-      Result.Add(TJsonObject.Create.AddPair('Ok',
-        'Opera��o conclu�da com sucesso!'));
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
+    vQry.Sql.Add('Update PedidoVolumeLotes');
+    vQry.Sql.Add('  Set QtdSuprida = Quantidade');
+    vQry.Sql.Add('    --, usuarioId  = Null');
+    vQry.Sql.Add('where PedidoVolumeid = ' + pPedidoVolumeId.ToString);
+    vQry.Sql.Add
+      ('Update PedidoVolumes Set CaixaEmbalagemId = Null where PedidoVolumeid = '
+      + pPedidoVolumeId.ToString);
+    vQry.Sql.Add('Delete PedidoVolumeSeparacao where PedidoVolumeid = ' +
+      pPedidoVolumeId.ToString);
+    vQry.Sql.Add('Delete pedidooperacao where PedidoVolumeid = ' +
+      pPedidoVolumeId.ToString);
+    vQry.Sql.Add('Delete De');
+    vQry.Sql.Add('From DocumentoEtapas De');
+    vQry.Sql.Add('Inner Join PedidoVolumes Pv On Pv.Uuid = De.Documento');
+    vQry.Sql.Add('where PedidoVolumeid = ' + pPedidoVolumeId.ToString +
+      ' and De.Processoid > 3');
+    If DebugHook <> 0 Then
+      vQry.Sql.SaveToFile('ResetVolume.Sql');
+    vQry.ExecSQL;
+    Result.Add(TJsonObject.Create.AddPair('Ok',
+      'Opera��o conclu�da com sucesso!'));
+  Except
+    ON E: Exception do
+    Begin
 
-    Except
-      ON E: Exception do
-      Begin
-
-        raise Exception.Create('Processo: Reset Volume - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+      raise Exception.Create('Processo: Reset Volume - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 
 end;
@@ -1723,33 +1658,29 @@ function TServicePedidoVolume.salvarultimoenderecocoletado(pPedidoVolumeId,
 Var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-  Result := TJsonArray.Create;
-  try
-    Try
-      vQry.Close;
-      vQry.Sql.Clear;
-      vQry.Sql.Add('Update PedidoVOlumeSeparacao ');
-      vQry.Sql.Add('  Set EnderecoId = ' + pEnderecoId.ToString());
-      vQry.Sql.Add('Where PedidoVolumeId = ' + pPedidoVolumeId.ToString());
-      vQry.ExecSQL;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Endereco salvo com sucesso!'));
-
-    Except
-      ON E: Exception do
-      Begin
-
-        vQry.connection.Rollback;
-
-        raise Exception.Create(StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
+  Try
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
     vQry.Close;
+    vQry.Sql.Clear;
+    vQry.Sql.Add('Update PedidoVOlumeSeparacao ');
+    vQry.Sql.Add('  Set EnderecoId = ' + pEnderecoId.ToString());
+    vQry.Sql.Add('Where PedidoVolumeId = ' + pPedidoVolumeId.ToString());
+    vQry.ExecSQL;
+    Result.AddElement(TJsonObject.Create.AddPair('Ok',
+      'Endereco salvo com sucesso!'));
+  Except
+    ON E: Exception do
+    Begin
+
+      vQry.connection.Rollback;
+
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.SalvarColetaComRegistro(pJsonColetaRegistro
@@ -1761,200 +1692,193 @@ Var
   JsonVolumeExtra: TJsonArray;
   pVolumeExtra: Integer;
 begin
-  vQry := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
-  vQryAtualiza := FConexao.GetQuery;
-  vQryAtualiza.connection := vQry.connection;
-  vQry.connection.StartTransaction;
-  vQry.connection.TxOptions.Isolation := xiReadCommitted;
-  try
+  Try
+    vQry := FConexao.GetQuery;
+    vQry.connection := FConexao.DB;
+    vQryAtualiza := FConexao.GetQuery;
+    vQryAtualiza.connection := vQry.connection;
+    vQry.connection.StartTransaction;
+    vQry.connection.TxOptions.Isolation := xiReadCommitted;
     pVolumeExtra := 0;
-    Try
-      vQry.Sql.Add
-        ('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
-      vQry.Sql.Add('From PedidoVolumeLotes VL');
-      vQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
-      vQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
-      vQry.Sql.Add
-        ('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
-      vQryAtualiza.Sql.Add('Update PedidoVolumeLotes ');
-      vQryAtualiza.Sql.Add('   Set QtdSuprida  = :pQtdSuprida');
-      vQryAtualiza.Sql.Add
-        ('      , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
-      vQryAtualiza.Sql.Add
-        ('      , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
-      vQryAtualiza.Sql.Add('      , UsuarioId  = :pUsuarioid');
-      vQryAtualiza.Sql.Add('      , Terminal   = :pTerminal');
-      vQryAtualiza.Sql.Add
-        ('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
-      vQryAtualiza.Sql.Add
-        ('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
-      vQryAtualiza.Sql.Add
-        ('                           	data,	hora,	usuarioid,	estacao) Values ');
-      vQryAtualiza.Sql.Add
-        ('                           (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
-      vQryAtualiza.Sql.Add
-        ('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
-      pJsonArrayColeta := pJsonColetaRegistro.GetValue<TJsonArray>('coleta');
-      For xColeta := 0 to Pred(pJsonArrayColeta.Count) do
-      Begin
-        vQry.Close();
-        vQry.ParamByName('pCodProduto').Value := pJsonArrayColeta.Items[xColeta]
-          .GetValue<Integer>('codproduto');
-        vQry.ParamByName('pPedidoVolumeId').Value := pJsonArrayColeta.Items
-          [xColeta].GetValue<Integer>('pedidovolumeid');
-        vQry.Open;
-        vQtdConferida := pJsonArrayColeta.Items[xColeta].GetValue<Integer>
-          ('qtdsuprida');
-        // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');  //Quantidade Suprida
-        While (Not vQry.Eof) do
-        Begin // and (vQtdConferida>0)
-          vQryAtualiza.Close;
-          vQryAtualiza.ParamByName('pPedidoVolumeId').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('pLoteid').Value := pJsonArrayColeta.Items
-            [xColeta].GetValue<Integer>('loteid');
-          vQryAtualiza.ParamByName('pUsuarioId').Value := pJsonArrayColeta.Items
-            [xColeta].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pDtSeparacao').Value :=
-            FormatDatetime('YYYY-MM-DD',
-            StrToDate(pJsonArrayColeta.Items[xColeta].GetValue<String>
-            ('data')));
-          vQryAtualiza.ParamByName('pHrSeparacao').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('pTerminal').Value := pJsonArrayColeta.Items
-            [xColeta].GetValue<String>('terminal');
-          vQryAtualiza.ParamByName('pQtdSuprida').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQtdConferida := 0;
-          // Gravar acompanhamento da operacao para an�lise de resultados
-          vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('poperLoteid').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('poperEnderecoid').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('enderecoid');
-          // vQry.FieldByName('EnderecoId').AsInteger;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('demanda');
-          // vQry.FieldByName('Quantidade').AsInteger;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
-          vQryAtualiza.ParamByName('poperUsuarioId').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pOperData').Value :=
-            FormatDatetime('YYYY-MM-DD',
-            StrToDate(pJsonArrayColeta.Items[xColeta].GetValue<String>
-            ('data')));
-          // pJsonArray.Items[xProd].GetValue<String>('data'); //
-          vQryAtualiza.ParamByName('pOperHora').Value := pJsonArrayColeta.Items
-            [xColeta].GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('poperestacao').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<String>('terminal');
-          vQryAtualiza.ParamByName('poperprocessoetapa').Value :=
-            pJsonArrayColeta.Items[xColeta].GetValue<String>('processoetapa');
-          If DebugHook <> 0 then
-            vQryAtualiza.Sql.SaveToFile('AtualizacaoReservar.Sql');
-          vQryAtualiza.ExecSQL;
-          vQry.Next
-        End;
+    vQry.Sql.Add
+      ('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
+    vQry.Sql.Add('From PedidoVolumeLotes VL');
+    vQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
+    vQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
+    vQry.Sql.Add
+      ('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
+    vQryAtualiza.Sql.Add('Update PedidoVolumeLotes ');
+    vQryAtualiza.Sql.Add('   Set QtdSuprida  = :pQtdSuprida');
+    vQryAtualiza.Sql.Add
+      ('      , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
+    vQryAtualiza.Sql.Add
+      ('      , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
+    vQryAtualiza.Sql.Add('      , UsuarioId  = :pUsuarioid');
+    vQryAtualiza.Sql.Add('      , Terminal   = :pTerminal');
+    vQryAtualiza.Sql.Add
+      ('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
+    vQryAtualiza.Sql.Add
+      ('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
+    vQryAtualiza.Sql.Add
+      ('                           	data,	hora,	usuarioid,	estacao) Values ');
+    vQryAtualiza.Sql.Add
+      ('                           (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
+    vQryAtualiza.Sql.Add
+      ('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
+    pJsonArrayColeta := pJsonColetaRegistro.GetValue<TJsonArray>('coleta');
+    For xColeta := 0 to Pred(pJsonArrayColeta.Count) do
+    Begin
+      vQry.Close();
+      vQry.ParamByName('pCodProduto').Value := pJsonArrayColeta.Items[xColeta]
+        .GetValue<Integer>('codproduto');
+      vQry.ParamByName('pPedidoVolumeId').Value := pJsonArrayColeta.Items
+        [xColeta].GetValue<Integer>('pedidovolumeid');
+      vQry.Open;
+      vQtdConferida := pJsonArrayColeta.Items[xColeta].GetValue<Integer>
+        ('qtdsuprida');
+      // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');  //Quantidade Suprida
+      While (Not vQry.Eof) do
+      Begin // and (vQtdConferida>0)
+        vQryAtualiza.Close;
+        vQryAtualiza.ParamByName('pPedidoVolumeId').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('pedidovolumeid');
+        vQryAtualiza.ParamByName('pLoteid').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<Integer>('loteid');
+        vQryAtualiza.ParamByName('pUsuarioId').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<Integer>('usuarioid');
+        vQryAtualiza.ParamByName('pDtSeparacao').Value :=
+          FormatDatetime('YYYY-MM-DD',
+          StrToDate(pJsonArrayColeta.Items[xColeta].GetValue<String>('data')));
+        vQryAtualiza.ParamByName('pHrSeparacao').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<String>('horariotermino');
+        vQryAtualiza.ParamByName('pTerminal').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<String>('terminal');
+        vQryAtualiza.ParamByName('pQtdSuprida').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
+        vQryAtualiza.ParamByName('poperquantidade').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
+        vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
+        vQtdConferida := 0;
+        // Gravar acompanhamento da operacao para an�lise de resultados
+        vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('pedidovolumeid');
+        vQryAtualiza.ParamByName('poperLoteid').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<Integer>('loteid');
+        // vQry.FieldByName('LoteId').AsInteger;
+        vQryAtualiza.ParamByName('poperEnderecoid').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('enderecoid');
+        // vQry.FieldByName('EnderecoId').AsInteger;
+        vQryAtualiza.ParamByName('poperquantidade').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('demanda');
+        // vQry.FieldByName('Quantidade').AsInteger;
+        vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
+        vQryAtualiza.ParamByName('poperUsuarioId').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<Integer>('usuarioid');
+        vQryAtualiza.ParamByName('pOperData').Value :=
+          FormatDatetime('YYYY-MM-DD',
+          StrToDate(pJsonArrayColeta.Items[xColeta].GetValue<String>('data')));
+        // pJsonArray.Items[xProd].GetValue<String>('data'); //
+        vQryAtualiza.ParamByName('pOperHora').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<String>('horariotermino');
+        vQryAtualiza.ParamByName('poperestacao').Value := pJsonArrayColeta.Items
+          [xColeta].GetValue<String>('terminal');
+        vQryAtualiza.ParamByName('poperprocessoetapa').Value :=
+          pJsonArrayColeta.Items[xColeta].GetValue<String>('processoetapa');
+        If DebugHook <> 0 then
+          vQryAtualiza.Sql.SaveToFile('AtualizacaoReservar.Sql');
+        vQryAtualiza.ExecSQL;
+        vQry.Next
       End;
+    End;
+    vQry.Close;
+    vQry.Sql.Clear;
+    vQry.Sql.Add('Update PedidoVolumeSeparacao Set');
+    vQry.Sql.Add('    UsuarioId = Null');
+    vQry.Sql.Add('  , Operacao = ' + pJsonColetaRegistro.GetValue<Integer>
+      ('operacao').ToString());
+    if pJsonColetaRegistro.GetValue<Integer>('operacao') = 1 then
+    Begin
+      vQry.Sql.Add('  , EnderecoId = 0');
+      vQry.Sql.Add('  , DtFinalizacao = ' + TuEvolutConst.SqlDataAtual);
+      vQry.Sql.Add('  , HrFinalizacao = ' + TuEvolutConst.SqlHoraAtual);
+    End
+    Else
+    Begin
+      vQry.Sql.Add('  , EnderecoId = ' + pJsonColetaRegistro.GetValue<Integer>
+        ('enderecoid').ToString());
+    End;
+    vQry.Sql.Add('Where VolumeSeparacaoId = ' +
+      pJsonColetaRegistro.GetValue<Integer>('volumeseparacaoid').ToString());
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('ColetaSeparacaoRegistro.Sql');
+    vQry.ExecSQL;
+    if pJsonColetaRegistro.GetValue<Integer>('operacao') = 1 then
+    Begin
+      // Status do Volume
+      vQry.Sql.Clear;
+      vQry.Sql.Add
+        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
+        + 'PedidoVolumeId = ' + pJsonColetaRegistro.GetValue<Integer>
+        ('pedidovolumeid').ToString() + ')');
+      vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+      if pJsonColetaRegistro.GetValue<Integer>('consolidado') = 1 then
+        vQry.ParamByName('pProcessoId').Value := 10
+      Else
+        vQry.ParamByName('pProcessoId').Value := 8;
+      vQry.ParamByName('pUsuarioId').Value :=
+        pJsonColetaRegistro.GetValue<Integer>('usuarioid');
+      vQry.ParamByName('pTerminal').Value :=
+        pJsonColetaRegistro.GetValue<String>('terminal');
+      If DebugHook <> 0 then
+        vQry.Sql.SaveToFile('RegSeparacaoOpenSeparacao.Sql ');
+      vQry.ExecSQL;
       vQry.Close;
       vQry.Sql.Clear;
-      vQry.Sql.Add('Update PedidoVolumeSeparacao Set');
-      vQry.Sql.Add('    UsuarioId = Null');
-      vQry.Sql.Add('  , Operacao = ' + pJsonColetaRegistro.GetValue<Integer>
-        ('operacao').ToString());
-      if pJsonColetaRegistro.GetValue<Integer>('operacao') = 1 then
-      Begin
-        vQry.Sql.Add('  , EnderecoId = 0');
-        vQry.Sql.Add('  , DtFinalizacao = ' + TuEvolutConst.SqlDataAtual);
-        vQry.Sql.Add('  , HrFinalizacao = ' + TuEvolutConst.SqlHoraAtual);
-      End
-      Else
-      Begin
-        vQry.Sql.Add('  , EnderecoId = ' + pJsonColetaRegistro.GetValue<Integer>
-          ('enderecoid').ToString());
-      End;
-      vQry.Sql.Add('Where VolumeSeparacaoId = ' +
-        pJsonColetaRegistro.GetValue<Integer>('volumeseparacaoid').ToString());
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('ColetaSeparacaoRegistro.Sql');
+      vQry.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+      vQry.ParamByName('pPedidoVolumeId').Value :=
+        pJsonColetaRegistro.GetValue<Integer>('pedidovolumeid');
+      vQry.ParamByName('pUsuarioId').Value :=
+        pJsonColetaRegistro.GetValue<Integer>('usuarioid');
+      vQry.ParamByName('pTerminal').Value :=
+        pJsonColetaRegistro.GetValue<String>('terminal');
       vQry.ExecSQL;
-      if pJsonColetaRegistro.GetValue<Integer>('operacao') = 1 then
+      If pJsonColetaRegistro.GetValue<String>('volumeextra') = 'YES' then
       Begin
-        // Status do Volume
-        vQry.Sql.Clear;
-        vQry.Sql.Add
-          ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-          + 'PedidoVolumeId = ' + pJsonColetaRegistro.GetValue<Integer>
-          ('pedidovolumeid').ToString() + ')');
-        vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-        if pJsonColetaRegistro.GetValue<Integer>('consolidado') = 1 then
-          vQry.ParamByName('pProcessoId').Value := 10
-        Else
-          vQry.ParamByName('pProcessoId').Value := 8;
-        vQry.ParamByName('pUsuarioId').Value :=
-          pJsonColetaRegistro.GetValue<Integer>('usuarioid');
-        vQry.ParamByName('pTerminal').Value :=
-          pJsonColetaRegistro.GetValue<String>('terminal');
-        If DebugHook <> 0 then
-          vQry.Sql.SaveToFile('RegSeparacaoOpenSeparacao.Sql ');
-        vQry.ExecSQL;
         vQry.Close;
         vQry.Sql.Clear;
-        vQry.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+        vQry.Sql.Add(TuEvolutConst.SqlGerarVolumeExtra);
         vQry.ParamByName('pPedidoVolumeId').Value :=
           pJsonColetaRegistro.GetValue<Integer>('pedidovolumeid');
         vQry.ParamByName('pUsuarioId').Value :=
           pJsonColetaRegistro.GetValue<Integer>('usuarioid');
-        vQry.ParamByName('pTerminal').Value :=
-          pJsonColetaRegistro.GetValue<String>('terminal');
-        vQry.ExecSQL;
-        If pJsonColetaRegistro.GetValue<String>('volumeextra') = 'YES' then
-        Begin
-          vQry.Close;
-          vQry.Sql.Clear;
-          vQry.Sql.Add(TuEvolutConst.SqlGerarVolumeExtra);
-          vQry.ParamByName('pPedidoVolumeId').Value :=
-            pJsonColetaRegistro.GetValue<Integer>('pedidovolumeid');
-          vQry.ParamByName('pUsuarioId').Value :=
-            pJsonColetaRegistro.GetValue<Integer>('usuarioid');
-          vQry.Open;
-          if Not vQry.IsEmpty then
-            pVolumeExtra := vQry.FieldByName('PedidoVolumeId').AsInteger;
-          vQry.Close;
-        End;
+        vQry.Open;
+        if Not vQry.IsEmpty then
+          pVolumeExtra := vQry.FieldByName('PedidoVolumeId').AsInteger;
+        vQry.Close;
       End;
-      vQry.connection.Commit;
-      Result := TJsonArray.Create;
-      if pVolumeExtra = 0 then
-        Result.AddElement(TJsonObject.Create.AddPair('Ok',
-          'Coleta Salva com sucesso!'))
-      Else
-        Result.AddElement(TJsonObject.Create.AddPair('volumeextra',
-          TJsonNumber.Create(pVolumeExtra)));
-    Except
-      ON E: Exception do
-      Begin
-        vQry.connection.Rollback;
-        raise Exception.Create(StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
-    vQryAtualiza.Close;
+    End;
+    vQry.connection.Commit;
+    Result := TJsonArray.Create;
+    if pVolumeExtra = 0 then
+      Result.AddElement(TJsonObject.Create.AddPair('Ok',
+        'Coleta Salva com sucesso!'))
+    Else
+      Result.AddElement(TJsonObject.Create.AddPair('volumeextra',
+        TJsonNumber.Create(pVolumeExtra)));
+  Except
+    ON E: Exception do
+    Begin
+      vQry.connection.Rollback;
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -1964,140 +1888,135 @@ Var
   vQry, vQryAtualiza: TFdQuery;
   xColeta, vQtdConferida: Integer;
 begin
-  vQry := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
-  vQry.connection.StartTransaction;
-  vQry.connection.TxOptions.Isolation := xiReadCommitted;
-  vQryAtualiza := FConexao.GetQuery;
-  vQryAtualiza.connection := vQry.connection;
-  try
-    Try
-      vQry.Sql.Add
-        ('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
-      vQry.Sql.Add('From PedidoVolumeLotes VL');
-      vQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
-      vQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
-      vQry.Sql.Add
-        ('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
 
-      vQryAtualiza.Sql.Add('Update PedidoVolumeLotes ');
-      vQryAtualiza.Sql.Add('   Set QtdSuprida  = :pQtdSuprida');
-      vQryAtualiza.Sql.Add
-        ('      , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
-      vQryAtualiza.Sql.Add
-        ('      , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
-      vQryAtualiza.Sql.Add('      , UsuarioId  = :pUsuarioid');
-      vQryAtualiza.Sql.Add('      , Terminal   = :pTerminal');
-      vQryAtualiza.Sql.Add
-        ('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
+  Try
+    vQry := FConexao.GetQuery;
+    vQry.connection := FConexao.DB;
+    vQry.connection.StartTransaction;
+    vQry.connection.TxOptions.Isolation := xiReadCommitted;
+    vQryAtualiza := FConexao.GetQuery;
+    vQryAtualiza.connection := vQry.connection;
+    vQry.Sql.Add
+      ('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
+    vQry.Sql.Add('From PedidoVolumeLotes VL');
+    vQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
+    vQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
+    vQry.Sql.Add
+      ('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
 
-      vQryAtualiza.Sql.Add
-        ('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
-      vQryAtualiza.Sql.Add
-        ('                           	data,	hora,	usuarioid,	estacao) Values ');
-      vQryAtualiza.Sql.Add
-        ('                           (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
-      vQryAtualiza.Sql.Add
-        ('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
+    vQryAtualiza.Sql.Add('Update PedidoVolumeLotes ');
+    vQryAtualiza.Sql.Add('   Set QtdSuprida  = :pQtdSuprida');
+    vQryAtualiza.Sql.Add
+      ('      , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
+    vQryAtualiza.Sql.Add
+      ('      , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
+    vQryAtualiza.Sql.Add('      , UsuarioId  = :pUsuarioid');
+    vQryAtualiza.Sql.Add('      , Terminal   = :pTerminal');
+    vQryAtualiza.Sql.Add
+      ('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
 
-      For xColeta := 0 to Pred(pJsonArray.Count) do
-      Begin
-        vQry.Close();
-        vQry.ParamByName('pCodProduto').Value := pJsonArray.Items[xColeta]
-          .GetValue<Integer>('codproduto');
-        vQry.ParamByName('pPedidoVolumeId').Value := pJsonArray.Items[xColeta]
-          .GetValue<Integer>('pedidovolumeid');
-        vQry.Open;
-        vQtdConferida := pJsonArray.Items[xColeta].GetValue<Integer>
-          ('qtdsuprida');
-        // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');  //Quantidade Suprida
-        While (Not vQry.Eof) do
-        Begin // and (vQtdConferida>0)
-          vQryAtualiza.Close;
-          // vQryAtualiza.ParamByName('pLoteIdRes').Value         := pJsonArray.Items[xProd].GetValue<Integer>('loteid'); //vQry.FieldByName('LoteId').AsInteger;
-          // vQryAtualiza.ParamByName('pPedidoVolumeIdRes').Value := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
-          // vQryAtualiza.ParamByName('pLoteIdEst').Value         := pJsonArray.Items[xProd].GetValue<Integer>('loteid'); //vQry.FieldByName('LoteId').AsInteger;
+    vQryAtualiza.Sql.Add
+      ('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
+    vQryAtualiza.Sql.Add
+      ('                           	data,	hora,	usuarioid,	estacao) Values ');
+    vQryAtualiza.Sql.Add
+      ('                           (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
+    vQryAtualiza.Sql.Add
+      ('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
 
-          vQryAtualiza.ParamByName('pPedidoVolumeId').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('pLoteid').Value := pJsonArray.Items[xColeta]
-            .GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('pUsuarioId').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pDtSeparacao').Value :=
-            FormatDatetime('YYYY-MM-DD',
-            StrToDate(pJsonArray.Items[xColeta].GetValue<String>('data')));
-          // pJsonArray.Items[xProd].GetValue<String>('data'); //
-          vQryAtualiza.ParamByName('pHrSeparacao').Value :=
-            pJsonArray.Items[xColeta].GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('pTerminal').Value :=
-            pJsonArray.Items[xColeta].GetValue<String>('terminal');
+    For xColeta := 0 to Pred(pJsonArray.Count) do
+    Begin
+      vQry.Close();
+      vQry.ParamByName('pCodProduto').Value := pJsonArray.Items[xColeta]
+        .GetValue<Integer>('codproduto');
+      vQry.ParamByName('pPedidoVolumeId').Value := pJsonArray.Items[xColeta]
+        .GetValue<Integer>('pedidovolumeid');
+      vQry.Open;
+      vQtdConferida := pJsonArray.Items[xColeta].GetValue<Integer>
+        ('qtdsuprida');
+      // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');  //Quantidade Suprida
+      While (Not vQry.Eof) do
+      Begin // and (vQtdConferida>0)
+        vQryAtualiza.Close;
+        // vQryAtualiza.ParamByName('pLoteIdRes').Value         := pJsonArray.Items[xProd].GetValue<Integer>('loteid'); //vQry.FieldByName('LoteId').AsInteger;
+        // vQryAtualiza.ParamByName('pPedidoVolumeIdRes').Value := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
+        // vQryAtualiza.ParamByName('pLoteIdEst').Value         := pJsonArray.Items[xProd].GetValue<Integer>('loteid'); //vQry.FieldByName('LoteId').AsInteger;
 
-          // vQryAtualiza.ParamByName('pQtdeRes').Value        := pJsonArray.Items[xColeta].GetValue<Integer>('demanda'); //vQtdConferida;
-          vQryAtualiza.ParamByName('pQtdSuprida').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
+        vQryAtualiza.ParamByName('pPedidoVolumeId').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('pedidovolumeid');
+        vQryAtualiza.ParamByName('pLoteid').Value := pJsonArray.Items[xColeta]
+          .GetValue<Integer>('loteid');
+        // vQry.FieldByName('LoteId').AsInteger;
+        vQryAtualiza.ParamByName('pUsuarioId').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('usuarioid');
+        vQryAtualiza.ParamByName('pDtSeparacao').Value :=
+          FormatDatetime('YYYY-MM-DD',
+          StrToDate(pJsonArray.Items[xColeta].GetValue<String>('data')));
+        // pJsonArray.Items[xProd].GetValue<String>('data'); //
+        vQryAtualiza.ParamByName('pHrSeparacao').Value :=
+          pJsonArray.Items[xColeta].GetValue<String>('horariotermino');
+        vQryAtualiza.ParamByName('pTerminal').Value := pJsonArray.Items[xColeta]
+          .GetValue<String>('terminal');
 
-          vQtdConferida := 0;
-          // End;
-          // Gravar acompanhamento da operacao para an�lise de resultados
-          vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('poperLoteid').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('poperEnderecoid').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('enderecoid');
-          // vQry.FieldByName('EnderecoId').AsInteger;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('demanda');
-          // vQry.FieldByName('Quantidade').AsInteger;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
-          // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
-          vQryAtualiza.ParamByName('poperUsuarioId').Value :=
-            pJsonArray.Items[xColeta].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pOperData').Value :=
-            FormatDatetime('YYYY-MM-DD',
-            StrToDate(pJsonArray.Items[xColeta].GetValue<String>('data')));
-          // pJsonArray.Items[xProd].GetValue<String>('data'); //
-          vQryAtualiza.ParamByName('pOperHora').Value :=
-            pJsonArray.Items[xColeta].GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('poperestacao').Value :=
-            pJsonArray.Items[xColeta].GetValue<String>('terminal');
-          vQryAtualiza.ParamByName('poperprocessoetapa').Value :=
-            pJsonArray.Items[xColeta].GetValue<String>('processoetapa');
+        // vQryAtualiza.ParamByName('pQtdeRes').Value        := pJsonArray.Items[xColeta].GetValue<Integer>('demanda'); //vQtdConferida;
+        vQryAtualiza.ParamByName('pQtdSuprida').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
+        vQryAtualiza.ParamByName('poperquantidade').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
+        vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // vQtdConferida;
 
-          If DebugHook <> 0 then
-            vQryAtualiza.Sql.SaveToFile('AtualizacaoReservar.Sql');
-          vQryAtualiza.ExecSQL;
-          vQry.Next
-        End;
+        vQtdConferida := 0;
+        // End;
+        // Gravar acompanhamento da operacao para an�lise de resultados
+        vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('pedidovolumeid');
+        vQryAtualiza.ParamByName('poperLoteid').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('loteid');
+        // vQry.FieldByName('LoteId').AsInteger;
+        vQryAtualiza.ParamByName('poperEnderecoid').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('enderecoid');
+        // vQry.FieldByName('EnderecoId').AsInteger;
+        vQryAtualiza.ParamByName('poperquantidade').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('demanda');
+        // vQry.FieldByName('Quantidade').AsInteger;
+        vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('qtdsuprida');
+        // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
+        vQryAtualiza.ParamByName('poperUsuarioId').Value :=
+          pJsonArray.Items[xColeta].GetValue<Integer>('usuarioid');
+        vQryAtualiza.ParamByName('pOperData').Value :=
+          FormatDatetime('YYYY-MM-DD',
+          StrToDate(pJsonArray.Items[xColeta].GetValue<String>('data')));
+        // pJsonArray.Items[xProd].GetValue<String>('data'); //
+        vQryAtualiza.ParamByName('pOperHora').Value := pJsonArray.Items[xColeta]
+          .GetValue<String>('horariotermino');
+        vQryAtualiza.ParamByName('poperestacao').Value :=
+          pJsonArray.Items[xColeta].GetValue<String>('terminal');
+        vQryAtualiza.ParamByName('poperprocessoetapa').Value :=
+          pJsonArray.Items[xColeta].GetValue<String>('processoetapa');
+
+        If DebugHook <> 0 then
+          vQryAtualiza.Sql.SaveToFile('AtualizacaoReservar.Sql');
+        vQryAtualiza.ExecSQL;
+        vQry.Next
       End;
-      Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Coleta Salva com sucesso!'));
+    End;
+    Result := TJsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Ok',
+      'Coleta Salva com sucesso!'));
 
-    Except
-      ON E: Exception do
-      Begin
-
-        vQry.connection.Rollback;
-
-        raise Exception.Create(StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+  Except
+    ON E: Exception do
+    Begin
+      vQry.connection.Rollback;
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -2106,59 +2025,54 @@ var
   vQry: TFdQuery;
   JsonVolume: TJsonObject;
 begin
-  vQry := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
-  Result := TJsonArray.Create;
   try
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlVolumeEmExpedicao);
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('ExpedicaoVOlume');
-      vQry.Open();
-      if vQry.IsEmpty() then
-        Result.AddElement(TJsonObject.Create.AddPair('Erro',
-          TuEvolutConst.QrySemDados))
-      Else
-        While Not vQry.Eof do
-        Begin
-          JsonVolume := TJsonObject.Create;
-          JsonVolume.AddPair('pedidoid',
-            TJsonNumber.Create(vQry.FieldByName('PedidoId').AsInteger));
-          JsonVolume.AddPair('pedidovolumeid',
-            TJsonNumber.Create(vQry.FieldByName('PedidoVolumeId').AsInteger));
-          JsonVolume.AddPair('volumetipo',
-            TJsonNumber.Create(vQry.FieldByName('VolumeTipo').AsInteger));
-          JsonVolume.AddPair('embalagem', vQry.FieldByName('Embalagem')
-            .AsString);
-          JsonVolume.AddPair('processo', vQry.FieldByName('Processo').AsString);
-          JsonVolume.AddPair('razao', vQry.FieldByName('Razao').AsString);
-          JsonVolume.AddPair('documentodata', vQry.FieldByName('data')
-            .AsString);
-          JsonVolume.AddPair('rotaid', vQry.FieldByName('rotaid').AsString);
-          Result.AddElement(JsonVolume);
-          vQry.Next();
-        End;
-
-    Except
-      ON E: Exception do
+    vQry := FConexao.GetQuery;
+    vQry.connection := FConexao.DB;
+    Result := TJsonArray.Create;
+    vQry.Sql.Add(TuEvolutConst.SqlVolumeEmExpedicao);
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('ExpedicaoVOlume');
+    vQry.Open();
+    if vQry.IsEmpty() then
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        TuEvolutConst.QrySemDados))
+    Else
+      While Not vQry.Eof do
       Begin
-
-        Try
-          if Assigned(JsonVolume) then
-            JsonVolume.Free;
-        Except
-
-        End;
-
-        raise Exception.Create('Processo: VolumeExpedicao - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
+        JsonVolume := TJsonObject.Create;
+        JsonVolume.AddPair('pedidoid',
+          TJsonNumber.Create(vQry.FieldByName('PedidoId').AsInteger));
+        JsonVolume.AddPair('pedidovolumeid',
+          TJsonNumber.Create(vQry.FieldByName('PedidoVolumeId').AsInteger));
+        JsonVolume.AddPair('volumetipo',
+          TJsonNumber.Create(vQry.FieldByName('VolumeTipo').AsInteger));
+        JsonVolume.AddPair('embalagem', vQry.FieldByName('Embalagem').AsString);
+        JsonVolume.AddPair('processo', vQry.FieldByName('Processo').AsString);
+        JsonVolume.AddPair('razao', vQry.FieldByName('Razao').AsString);
+        JsonVolume.AddPair('documentodata', vQry.FieldByName('data').AsString);
+        JsonVolume.AddPair('rotaid', vQry.FieldByName('rotaid').AsString);
+        Result.AddElement(JsonVolume);
+        vQry.Next();
       End;
-    end;
-  finally
-    vQry.Close;
+
+  Except
+    ON E: Exception do
+    Begin
+
+      Try
+        if Assigned(JsonVolume) then
+          JsonVolume.Free;
+      Except
+
+      End;
+
+      raise Exception.Create('Processo: VolumeExpedicao - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.VolumeExpedido: TJsonArray;
@@ -2166,45 +2080,41 @@ var
   vQry: TFdQuery;
   JsonVolume: TJsonObject;
 begin
-  vQry := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
   try
+    vQry := FConexao.GetQuery;
     Result := TJsonArray.Create;
-    try
-      vQry.Open(TuEvolutConst.SqlVolumemExpedido);
-      if vQry.IsEmpty() then
-        Result.AddElement(TJsonObject.Create.AddPair('Erro',
-          TuEvolutConst.QrySemDados))
-      Else
-        While Not vQry.Eof do
-        Begin
-          JsonVolume := TJsonObject.Create;
-          JsonVolume.AddPair('pedidoid',
-            TJsonNumber.Create(vQry.FieldByName('PedidoId').AsInteger));
-          JsonVolume.AddPair('pedidovolumeid',
-            TJsonNumber.Create(vQry.FieldByName('PedidoVolumeId').AsInteger));
-          JsonVolume.AddPair('volumetipo',
-            TJsonNumber.Create(vQry.FieldByName('VolumeTipo').AsInteger));
-          JsonVolume.AddPair('embalagem', vQry.FieldByName('Embalagem')
-            .AsString);
-          JsonVolume.AddPair('processo', vQry.FieldByName('Processo').AsString);
-          Result.AddElement(JsonVolume);
-          vQry.Next();
-        End;
-
-    Except
-      ON E: Exception do
+    vQry.connection := FConexao.DB;
+    vQry.Open(TuEvolutConst.SqlVolumemExpedido);
+    if vQry.IsEmpty() then
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        TuEvolutConst.QrySemDados))
+    Else
+      While Not vQry.Eof do
       Begin
-
-        raise Exception.Create('Processo: VolumeExpedido - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
+        JsonVolume := TJsonObject.Create;
+        JsonVolume.AddPair('pedidoid',
+          TJsonNumber.Create(vQry.FieldByName('PedidoId').AsInteger));
+        JsonVolume.AddPair('pedidovolumeid',
+          TJsonNumber.Create(vQry.FieldByName('PedidoVolumeId').AsInteger));
+        JsonVolume.AddPair('volumetipo',
+          TJsonNumber.Create(vQry.FieldByName('VolumeTipo').AsInteger));
+        JsonVolume.AddPair('embalagem', vQry.FieldByName('Embalagem').AsString);
+        JsonVolume.AddPair('processo', vQry.FieldByName('Processo').AsString);
+        Result.AddElement(JsonVolume);
+        vQry.Next();
       End;
-    end;
-  finally
-    vQry.Close;
+
+  Except
+    ON E: Exception do
+    Begin
+
+      raise Exception.Create('Processo: VolumeExpedido - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.VolumeLoteSubstituicao(pJsonObjectLotes
@@ -2214,142 +2124,138 @@ var
   xLotes: Integer;
   JsonArrayLotes: TJsonArray;
 begin
-  vQryLoteSubstituicao := FConexao.GetQuery;
   try
+    vQryLoteSubstituicao := FConexao.GetQuery;
     vQryLoteSubstituicao.connection.StartTransaction;
-    try
-      vQryLoteSubstituicao.Close;
-      vQryLoteSubstituicao.Sql.Clear;
-      vQryLoteSubstituicao.Sql.Add('UPdate Est');
-      vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde - Vl.Quantidade');
-      vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-      vQryLoteSubstituicao.Sql.Add
-        ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-      vQryLoteSubstituicao.Sql.Add
-        ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
-      vQryLoteSubstituicao.Sql.Add
-        ('Where Vl.PedidoVolumeId = :pPedidoVolumeID And Pl.ProdutoId = :pProdutoId');
-      vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-      vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('produtoid');
-      vQryLoteSubstituicao.ExecSQL;
+    vQryLoteSubstituicao.Close;
+    vQryLoteSubstituicao.Sql.Clear;
+    vQryLoteSubstituicao.Sql.Add('UPdate Est');
+    vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde - Vl.Quantidade');
+    vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add
+      ('Where Vl.PedidoVolumeId = :pPedidoVolumeID And Pl.ProdutoId = :pProdutoId');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.ExecSQL;
 
-      vQryLoteSubstituicao.Close;
-      vQryLoteSubstituicao.Sql.Clear;
-      vQryLoteSubstituicao.Sql.Add('Delete Vl');
-      vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-      vQryLoteSubstituicao.Sql.Add
-        ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-      vQryLoteSubstituicao.Sql.Add
-        ('Where Vl.PedidoVolumeId = :pPedidoVolumeId And');
-      vQryLoteSubstituicao.Sql.Add('      Pl.ProdutoId = :pProdutoId');
-      vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-      vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('produtoid');
-      vQryLoteSubstituicao.ExecSQL;
-      JsonArrayLotes := pJsonObjectLotes.GetValue<TJsonArray>('lotes');
-      for xLotes := 0 to Pred(JsonArrayLotes.Count) do
-      Begin
-        vQryLoteSubstituicao.Close;
-        vQryLoteSubstituicao.Sql.Clear;
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
-        vQryLoteSubstituicao.Sql.Add('Declare @LoteId Integer = :pLoteId');
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @EnderecoId Integer = :pEnderecoId');
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @quantidade Integer  = :pQuantidade');
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @EmbalagemPadrao Integer = :pEmbalagemPadrao');
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @UsuarioId Integer = :pUsuarioId');
-        vQryLoteSubstituicao.Sql.Add
-          ('Declare @terminal Varchar(50) = :pTerminal');
-        vQryLoteSubstituicao.Sql.Add
-          ('Insert Into PedidoVolumeLotes (PedidoVolumeId, LoteId,');
-        vQryLoteSubstituicao.Sql.Add
-          ('       EnderecoId, EstoqueTipoId, Quantidade, EmbalagemPadrao,');
-        vQryLoteSubstituicao.Sql.Add
-          ('       QtdSuprida, DtInclusao, HrInclusao, Terminal, UsuarioId) Values (');
-        vQryLoteSubstituicao.Sql.Add
-          ('  @PedidoVolumeId, @LoteId, @EnderecoId, 4,');
-        vQryLoteSubstituicao.Sql.Add
-          ('  @Quantidade, @EmbalagemPadrao, @quantidade,');
-        vQryLoteSubstituicao.Sql.Add
-          ('  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-        vQryLoteSubstituicao.Sql.Add
-          ('  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
-        vQryLoteSubstituicao.Sql.Add('  @Terminal, @usuarioId)');
-        vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-          JsonArrayLotes.Items[xLotes].GetValue<Integer>('pedidovolumeid');
-        vQryLoteSubstituicao.ParamByName('pLoteId').Value :=
-          JsonArrayLotes.Items[xLotes].GetValue<Integer>('loteid');
-        vQryLoteSubstituicao.ParamByName('pEnderecoId').Value :=
-          JsonArrayLotes.Items[xLotes].GetValue<Integer>('enderecoid');
-        vQryLoteSubstituicao.ParamByName('pQuantidade').Value :=
-          JsonArrayLotes.Items[xLotes].GetValue<Integer>('quantidade');
-        vQryLoteSubstituicao.ParamByName('pEmbalagemPadrao').Value :=
-          JsonArrayLotes.Items[xLotes].GetValue<Integer>('embalagempadrao');
-        vQryLoteSubstituicao.ParamByName('pUsuarioId').Value :=
-          pJsonObjectLotes.GetValue<Integer>('usuarioid');
-        vQryLoteSubstituicao.ParamByName('pTerminal').Value :=
-          pJsonObjectLotes.GetValue<String>('terminal');
-        if DebugHook <> 0 then
-          vQryLoteSubstituicao.Sql.SaveToFile('PutSubstituirLote.Sql');
-        vQryLoteSubstituicao.ExecSQL;
-      End;
+    vQryLoteSubstituicao.Close;
+    vQryLoteSubstituicao.Sql.Clear;
+    vQryLoteSubstituicao.Sql.Add('Delete Vl');
+    vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add
+      ('Where Vl.PedidoVolumeId = :pPedidoVolumeId And');
+    vQryLoteSubstituicao.Sql.Add('      Pl.ProdutoId = :pProdutoId');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.ExecSQL;
+    JsonArrayLotes := pJsonObjectLotes.GetValue<TJsonArray>('lotes');
+    for xLotes := 0 to Pred(JsonArrayLotes.Count) do
+    Begin
       vQryLoteSubstituicao.Close;
       vQryLoteSubstituicao.Sql.Clear;
       vQryLoteSubstituicao.Sql.Add
         ('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
-      vQryLoteSubstituicao.Sql.Add('Declare @ProdutoId Integer = :pProdutoId');
-      vQryLoteSubstituicao.Sql.Add('UPdate Est');
-      vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde + Vl.Quantidade');
-      vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+      vQryLoteSubstituicao.Sql.Add('Declare @LoteId Integer = :pLoteId');
       vQryLoteSubstituicao.Sql.Add
-        ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+        ('Declare @EnderecoId Integer = :pEnderecoId');
       vQryLoteSubstituicao.Sql.Add
-        ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+        ('Declare @quantidade Integer  = :pQuantidade');
       vQryLoteSubstituicao.Sql.Add
-        ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId');
-      vQryLoteSubstituicao.Sql.Add('');
+        ('Declare @EmbalagemPadrao Integer = :pEmbalagemPadrao');
+      vQryLoteSubstituicao.Sql.Add('Declare @UsuarioId Integer = :pUsuarioId');
       vQryLoteSubstituicao.Sql.Add
-        ('Insert Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc)');
+        ('Declare @terminal Varchar(50) = :pTerminal');
       vQryLoteSubstituicao.Sql.Add
-        ('Select Vl.LoteId, Vl.EnderecoId, 6, Vl.Quantidade, Vl.DtInclusao, Vl.HrInclusao, Vl.UsuarioId');
-      vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+        ('Insert Into PedidoVolumeLotes (PedidoVolumeId, LoteId,');
       vQryLoteSubstituicao.Sql.Add
-        ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+        ('       EnderecoId, EstoqueTipoId, Quantidade, EmbalagemPadrao,');
       vQryLoteSubstituicao.Sql.Add
-        ('Left join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+        ('       QtdSuprida, DtInclusao, HrInclusao, Terminal, UsuarioId) Values (');
       vQryLoteSubstituicao.Sql.Add
-        ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId and Est.LoteId Is Null');
+        ('  @PedidoVolumeId, @LoteId, @EnderecoId, 4,');
+      vQryLoteSubstituicao.Sql.Add
+        ('  @Quantidade, @EmbalagemPadrao, @quantidade,');
+      vQryLoteSubstituicao.Sql.Add
+        ('  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      vQryLoteSubstituicao.Sql.Add
+        ('  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
+      vQryLoteSubstituicao.Sql.Add('  @Terminal, @usuarioId)');
       vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-      vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('produtoid');
+        JsonArrayLotes.Items[xLotes].GetValue<Integer>('pedidovolumeid');
+      vQryLoteSubstituicao.ParamByName('pLoteId').Value := JsonArrayLotes.Items
+        [xLotes].GetValue<Integer>('loteid');
+      vQryLoteSubstituicao.ParamByName('pEnderecoId').Value :=
+        JsonArrayLotes.Items[xLotes].GetValue<Integer>('enderecoid');
+      vQryLoteSubstituicao.ParamByName('pQuantidade').Value :=
+        JsonArrayLotes.Items[xLotes].GetValue<Integer>('quantidade');
+      vQryLoteSubstituicao.ParamByName('pEmbalagemPadrao').Value :=
+        JsonArrayLotes.Items[xLotes].GetValue<Integer>('embalagempadrao');
+      vQryLoteSubstituicao.ParamByName('pUsuarioId').Value :=
+        pJsonObjectLotes.GetValue<Integer>('usuarioid');
+      vQryLoteSubstituicao.ParamByName('pTerminal').Value :=
+        pJsonObjectLotes.GetValue<String>('terminal');
+      if DebugHook <> 0 then
+        vQryLoteSubstituicao.Sql.SaveToFile('PutSubstituirLote.Sql');
       vQryLoteSubstituicao.ExecSQL;
-      vQryLoteSubstituicao.connection.Commit;
-      Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Substituicao com sucesso!'));
-    Except
-      ON E: Exception do
-      Begin
-        vQryLoteSubstituicao.connection.Rollback;
-        vQryLoteSubstituicao.Close;
-
-        raise Exception.Create('Processo: Volumes Lotes Substitui��o - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
+    End;
     vQryLoteSubstituicao.Close;
+    vQryLoteSubstituicao.Sql.Clear;
+    vQryLoteSubstituicao.Sql.Add
+      ('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
+    vQryLoteSubstituicao.Sql.Add('Declare @ProdutoId Integer = :pProdutoId');
+    vQryLoteSubstituicao.Sql.Add('UPdate Est');
+    vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde + Vl.Quantidade');
+    vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add
+      ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId');
+    vQryLoteSubstituicao.Sql.Add('');
+    vQryLoteSubstituicao.Sql.Add
+      ('Insert Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc)');
+    vQryLoteSubstituicao.Sql.Add
+      ('Select Vl.LoteId, Vl.EnderecoId, 6, Vl.Quantidade, Vl.DtInclusao, Vl.HrInclusao, Vl.UsuarioId');
+    vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
+    vQryLoteSubstituicao.Sql.Add
+      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add
+      ('Left join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add
+      ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId and Est.LoteId Is Null');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
+      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.ExecSQL;
+    vQryLoteSubstituicao.connection.Commit;
+    Result := TJsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Ok',
+      'Substituicao com sucesso!'));
+  Except
+    ON E: Exception do
+    Begin
+      vQryLoteSubstituicao.connection.Rollback;
+      vQryLoteSubstituicao.Close;
+
+      raise Exception.Create('Processo: Volumes Lotes Substitui��o - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
+
 end;
 
 function TServicePedidoVolume.VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId,
@@ -2357,31 +2263,26 @@ function TServicePedidoVolume.VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId,
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-  vQry.connection := FConexao.DB;
   try
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlVolumeParaEtiquetas);
-      vQry.ParamByName('pPedidoId').Value := pPedidoId;
-      vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-      vQry.ParamByName('pZonaId').Value := pZonaId;
-      vQry.ParamByName('pPrintTag').Value := pZonaId;
-      vQry.ParamByName('pEmbalagem').Value := pZonaId;
-      vQry.Open;
-      Result := vQry.ToJsonArray();
+    vQry := FConexao.GetQuery;
+    vQry.connection := FConexao.DB;
+    vQry.Sql.Add(TuEvolutConst.SqlVolumeParaEtiquetas);
+    vQry.ParamByName('pPedidoId').Value := pPedidoId;
+    vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+    vQry.ParamByName('pZonaId').Value := pZonaId;
+    vQry.ParamByName('pPrintTag').Value := pZonaId;
+    vQry.ParamByName('pEmbalagem').Value := pZonaId;
+    vQry.Open;
+    Result := vQry.ToJsonArray();
+  Except
+    ON E: Exception do
+    Begin
 
-    Except
-      ON E: Exception do
-      Begin
-
-        raise Exception.Create('Processo: Volumes para Etiquetas - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+      raise Exception.Create('Processo: Volumes para Etiquetas - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 
@@ -2390,31 +2291,27 @@ function TServicePedidoVolume.GetVolumeRegistrarExpedicao(pPedidoVolumeId
 var
   vQry: TFdQuery;
 begin
-  vQry := FConexao.GetQuery;
-  Result := TJsonArray.Create;
   try
-    try
-      vQry.Sql.Add(TuEvolutConst.SqlVolumeRegistrarExpedicao);
-      vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-      if DebugHook <> 0 then
-        vQry.Sql.SaveToFile('VolumeRegistrarExpedicao.Sql');
-      vQry.Open;
-      if (vQry.IsEmpty) then
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-          TuEvolutConst.QrySemDados)))
-      Else
-        Result := vQry.ToJsonArray;
-    Except
-      ON E: Exception do
-      Begin
-        raise Exception.Create('Processo: GetVolumeRegistrarExpedicao - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
-      End;
-    end;
-  finally
-    vQry.Close;
+    vQry := FConexao.GetQuery;
+    Result := TJsonArray.Create;
+    vQry.Sql.Add(TuEvolutConst.SqlVolumeRegistrarExpedicao);
+    vQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+    if DebugHook <> 0 then
+      vQry.Sql.SaveToFile('VolumeRegistrarExpedicao.Sql');
+    vQry.Open;
+    if (vQry.IsEmpty) then
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
+        TuEvolutConst.QrySemDados)))
+    Else
+      Result := vQry.ToJsonArray;
+  Except
+    ON E: Exception do
+    Begin
+      raise Exception.Create('Processo: GetVolumeRegistrarExpedicao - ' +
+        StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
+    End;
   end;
 end;
 

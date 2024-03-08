@@ -19,6 +19,7 @@ Type
   Private
     // Funções de Validação
     FPedidoVolume: TPedidoVolume;
+
   Public
     // Rotinas Pública (CRUD)
     constructor Create;
@@ -53,44 +54,74 @@ procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MapaSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure VolumeParaEtiquetas(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
-Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 // Identificacao para Etiqueta volume Caixa Fracionada
-Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 // Identificacao para Etiqueta volume Caixa Fechada
-Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
 Procedure VolumeExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure VolumeExpedido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure SaveApanheProdutos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarConferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarConferenciaSemLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure FinalizarConferenciaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GerarVolumeExtra(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GerarVolumeExtra2(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetPedidoVolumeEtapas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure MapaSeparacaoLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure SaveApanheProdutos(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure AtualizarConferencia(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure AtualizarConferenciaSemLotes(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure FinalizarConferenciaComRegistro(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure GerarVolumeExtra(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GerarVolumeExtra2(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetPedidoVolumeEtapas(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure MapaSeparacaoLista(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure DshCheckout(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetAuditoriaVolumes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetAuditoriaCorteAnalitico(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure VolumeLoteSubstituicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAuditoriaVolumes(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetAuditoriaCorteAnalitico(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure VolumeLoteSubstituicao(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure CaixaSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure Getdshvolumeevolucao_quantidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure Getdshvolumeevolucao_Unidades(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure Getdshvolumeevolucao_quantidade(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+Procedure Getdshvolumeevolucao_Unidades(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure ResetSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeComDivergencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetPedidoVolumeProdutoLote(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetProducaoDiariaPorLoja(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetProducaoDiariaPorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetProducaoDiariaPorSetor(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetProducaoDiariaPorRota(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeConsulta(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetVolumeComDivergencia(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetPedidoVolumeProdutoLote(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetProducaoDiariaPorLoja(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetProducaoDiariaPorRua(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetProducaoDiariaPorSetor(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetProducaoDiariaPorRota(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetVolumeConsulta(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure GetVolumeEAN(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure salvarultimoenderecocoletado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeRegistrarExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure salvarultimoenderecocoletado(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetVolumeRegistrarExpedicao(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 
 implementation
 
@@ -100,60 +131,74 @@ uses MService.PedidoVolumeDAO, uFuncoes, Services.PedidoVolume;
 
 procedure Registry;
 begin
-  THorse.Group
-  .Prefix('v1')
-    .Get('/pedidovolume', Get)
-    .Get('/pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal', GetOpenVolumeParaSeparacao)
-    .Get('/pedidovolumeseparacao/:pedidovolumeid', GetVolumeSeparacao)
-    .Get('/pedidovolumeseparacao/:pedidoid/:pedidovolumeid', GetPedidoVolumeSeparacao)
-    .Get('/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid', GetVolumeRegistrarExpedicao)
-    .Get('/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid', GetVolume)
-    .Get('/volumeprinttag/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:zonaid/:printtag/:embalagem', GetVolumePrintTag)
-    .Get('/pedidovolume/produto/:pedidovolumeid', GetVolumeProduto)
-    .Get('/pedidovolume/produto/reconferencia/:pedidovolumeid', GetVolumeProdutoReconferencia)
-    .Get('/pedidovolume/produtolote/:pedidoid/:codproduto', GetPedidoVolumeProdutoLote)
-    .Get('/pedidovolume/produtoseparacao/:pedidovolumeid', GetVolumeProdutoSeparacao) // GENILSON
+  THorse.Group.Prefix('v1').Get('/pedidovolume', Get)
+    .Get('/pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
+    GetOpenVolumeParaSeparacao).Get('/pedidovolumeseparacao/:pedidovolumeid',
+    GetVolumeSeparacao).Get('/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
+    GetPedidoVolumeSeparacao)
+    .Get('/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',
+    GetVolumeRegistrarExpedicao)
+    .Get('/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
+    GetVolume)
+    .Get('/volumeprinttag/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:zonaid/:printtag/:embalagem',
+    GetVolumePrintTag).Get('/pedidovolume/produto/:pedidovolumeid',
+    GetVolumeProduto).Get('/pedidovolume/produto/reconferencia/:pedidovolumeid',
+    GetVolumeProdutoReconferencia)
+    .Get('/pedidovolume/produtolote/:pedidoid/:codproduto',
+    GetPedidoVolumeProdutoLote)
+    .Get('/pedidovolume/produtoseparacao/:pedidovolumeid',
+    GetVolumeProdutoSeparacao) // GENILSON
     .Get('/pedidovolume/lotes/:pedidovolumeid', GetVolumeLote)
-    .Get('/pedidovolume/produtolotes/:pedidovolumeid/:produtoid', GetVolumeProdutoLotes)
-    .Get('/pedidovolume/etapas/:pedidovolumeid', GetPedidoVolumeEtapas)
-    .Post('/pedidovolume/registrardocumentoetapa', RegistrarDocumentoEtapa)
-    .Post('/pedidovolume/registrardocumentoetapacombaixaestoque', RegistrarDocumentoEtapaComBaixaEstoque)
-    .Post('/pedidovolume/registrardocumentoetapasembaixaestoque', RegistrarDocumentoEtapaSemBaixaEstoque)
-    .Put('/pedidovolume/:pedidovolumeid', Update)
-    .Put('/pedidovolume/cancelar/:pedidovolumeid', Cancelar)
+    .Get('/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
+    GetVolumeProdutoLotes).Get('/pedidovolume/etapas/:pedidovolumeid',
+    GetPedidoVolumeEtapas).Post('/pedidovolume/registrardocumentoetapa',
+    RegistrarDocumentoEtapa)
+    .Post('/pedidovolume/registrardocumentoetapacombaixaestoque',
+    RegistrarDocumentoEtapaComBaixaEstoque)
+    .Post('/pedidovolume/registrardocumentoetapasembaixaestoque',
+    RegistrarDocumentoEtapaSemBaixaEstoque).Put('/pedidovolume/:pedidovolumeid',
+    Update).Put('/pedidovolume/cancelar/:pedidovolumeid', Cancelar)
     .Delete('/pedidovolume/:pedidovolumeid', Delete)
     .Get('/mapaseparacao/:pedidoid/:pedidovolumeid', MapaSeparacao)
-    .Get('/volumeparaetiquetas/:pedidoid/:pedidovolumeid/:zonaid/:printtag/:embalagem', VolumeParaEtiquetas)
-    .Get('/etiquetaporvolume/:pedidovolumeid', EtiquetaPorVolume) // Identificação Etiqueta Volume Caixa Fracionada
+    .Get('/volumeparaetiquetas/:pedidoid/:pedidovolumeid/:zonaid/:printtag/:embalagem',
+    VolumeParaEtiquetas).Get('/etiquetaporvolume/:pedidovolumeid',
+    EtiquetaPorVolume) // Identificação Etiqueta Volume Caixa Fracionada
     .Get('pedidovolume/etiquetaporrua', EtiquetaVolumePorRua)
-    .Get('/identificavolumecxafechada/:pedidovolumeid', identificavolumecxafechada) // Identificação Etiqueta Volume Caixa Fechada
+    .Get('/identificavolumecxafechada/:pedidovolumeid',
+    identificavolumecxafechada) // Identificação Etiqueta Volume Caixa Fechada
     .Get('/pedidovolume/expedicao', VolumeExpedicao)
     .Get('/pedidovolume/expedido', VolumeExpedido)
     .Put('/pedidovolume/saveapanheprodutos', SaveApanheProdutos)
     .Put('/pedidovolume/salvarcoletacomregistro', SalvarColetaComRegistro)
     .Put('/pedidovolume/atualizarconferencia', AtualizarConferencia)
-    .Put('/pedidovolume/atualizarconferenciasemlotes', AtualizarConferenciaSemLotes)
-    .Put('/pedidovolume/finalizarconferenciacomregistro', FinalizarConferenciaComRegistro)
+    .Put('/pedidovolume/atualizarconferenciasemlotes',
+    AtualizarConferenciaSemLotes)
+    .Put('/pedidovolume/finalizarconferenciacomregistro',
+    FinalizarConferenciaComRegistro)
     .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid', GerarVolumeExtra)
-    .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid', GerarVolumeExtra2)
-    .Get('/pedidovolume/mapaseparacaolista', MapaSeparacaoLista)
-    .Get('/pedidovolume/dshcheckout', DshCheckout)
+    .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
+    GerarVolumeExtra2).Get('/pedidovolume/mapaseparacaolista',
+    MapaSeparacaoLista).Get('/pedidovolume/dshcheckout', DshCheckout)
     .Get('/pedidovolume/auditoriariavolume', GetAuditoriaVolumes)
     .Get('/pedidovolume/auditoriacorte/analitico', GetAuditoriaCorteAnalitico)
     .Put('/pedidovolume/lotesubstituicao', VolumeLoteSubstituicao)
     .Post('/caixaembalagem/:pedidovolumeid/:caixaembalagemid', CaixaSeparacao)
-    .Get('/pedidovolume/dshvolumeevolucao_quantidade', Getdshvolumeevolucao_quantidade)
-    .Get('/pedidovolume/dshvolumeevolucao_Unidades', Getdshvolumeevolucao_Unidades)
+    .Get('/pedidovolume/dshvolumeevolucao_quantidade',
+    Getdshvolumeevolucao_quantidade)
+    .Get('/pedidovolume/dshvolumeevolucao_Unidades',
+    Getdshvolumeevolucao_Unidades)
     .Put('/pedidovolume/resetseparacao/:pedidovolumeid', ResetSeparacao)
-    .Get('/pedidovolume/volumecomdivergencia/:pedidovolumeid', GetVolumeComDivergencia)
-    .Get('/pedidovolume/producaodiariaporloja', GetProducaoDiariaPorLoja)
-    .Get('/pedidovolume/producaodiariaporrua', GetProducaoDiariaPorRua)
-    .Get('/pedidovolume/producaodiariaporsetor', GetProducaoDiariaPorSetor)
-    .Get('/pedidovolume/producaodiariaporrota', GetProducaoDiariaPorRota)
-    .Get('/pedidovolume/consulta', GetVolumeConsulta)
+    .Get('/pedidovolume/volumecomdivergencia/:pedidovolumeid',
+    GetVolumeComDivergencia).Get('/pedidovolume/producaodiariaporloja',
+    GetProducaoDiariaPorLoja).Get('/pedidovolume/producaodiariaporrua',
+    GetProducaoDiariaPorRua).Get('/pedidovolume/producaodiariaporsetor',
+    GetProducaoDiariaPorSetor).Get('/pedidovolume/producaodiariaporrota',
+    GetProducaoDiariaPorRota).Get('/pedidovolume/consulta', GetVolumeConsulta)
     .Get('/pedidovolume/ean/:pedidovolumeid', GetVolumeEAN)
-    .Get('/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid', salvarultimoenderecocoletado)
-    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', GetPedidoCxaFechadaCheckOut)
+    .Get('/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid',
+    salvarultimoenderecocoletado)
+    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
+    GetPedidoCxaFechadaCheckOut)
 
 end;
 
@@ -168,6 +213,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[216 - AtualizarConferencia] executando ');
     Try
       JsonArrayRetorno := TJsonArray.Create;; // Req.Body<TJsonArray>;
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
@@ -176,26 +222,26 @@ begin
         (TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0)
         as TJsonArray, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/pedidovolume/atualizarconferencia',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/atualizarconferencia', Trim(Req.Params.Content.Text),
+        Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+        [rfReplaceAll]), 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[AtualizarConferencia] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/pedidovolume/atualizarconferencia',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/atualizarconferencia',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -214,15 +260,15 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[263- AtualizarConferenciaSemLotes] executando');
     Try
       JsonArrayRetorno := TJsonArray.Create;; // Req.Body<TJsonArray>;
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.AtualizarConferenciaSemLotes
         (Req.Body<TJsonArray>, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/atualizarconferenciasemlotes',
         Trim(Req.Params.Content.Text), Req.Body, '',
         StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
@@ -231,17 +277,17 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[AtualizarConferenciaSemLotes] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/atualizarconferenciasemlotes',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -260,15 +306,15 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[309-FinalizarConferenciaComRegistro] executando');
     Try
       JsonArrayRetorno := TJsonArray.Create;; // Req.Body<TJsonArray>;
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.FinalizarConferenciaComRegistro
         (Req.Body<TJSONObject>, Nil);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Ok);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/finalizarconferenciacomregistro',
         Trim(Req.Params.Content.Text), Req.Body, '',
         StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
@@ -277,17 +323,17 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[FinalizarConferenciaComRegistro] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/finalizarconferenciacomregistro',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -305,6 +351,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[354-GerarVolumeExtra] executando');
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.GerarVolumeExtra
@@ -322,16 +369,17 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[GerarVolumeExtra] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -350,6 +398,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[401 GerarVolumeExtra2] executando');
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.GerarVolumeExtra
@@ -368,16 +417,17 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[GerarVolumeExtra2] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -395,6 +445,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[448-ResetSeparacao] executando');
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.ResetSeparacao
@@ -410,16 +461,17 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[ResetSeparacao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/resetseparacao/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -428,28 +480,44 @@ begin
   End;
 End;
 
-Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var JsonArrayRetorno: TJsonArray;
-    LService: TServicePedidoVolume;
-    PedidoVolumeDAO: TPedidoVolumeDAO;
-    HrInicioLog: Ttime;
+Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+var
+  JsonArrayRetorno: TJsonArray;
+  LService: TServicePedidoVolume;
+  PedidoVolumeDAO: TPedidoVolumeDAO;
+  HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[493-SalvarColetaComRegistro] executando ');
     Try
       LService := TServicePedidoVolume.Create;
-      JsonArrayRetorno := LService.SalvarColetaComRegistro(Req.Body<TJSONObject>);
+      JsonArrayRetorno := LService.SalvarColetaComRegistro
+        (Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/pedidovolume/salvarcoletacomregistro',
-                      Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-                      200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-    Except On E: Exception do Begin
-      JsonArrayRetorno := TJsonArray.Create;
-      JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-      Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/pedidovolume/salvarcoletacomregistro',
-                      Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-                      ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/salvarcoletacomregistro',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
+    Except
+      On E: Exception do
+      Begin
+        Tutil.Gravalog('[SalvarColetaComRegistro] ' + E.Message);
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
+        Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/salvarcoletacomregistro',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -464,34 +532,36 @@ var
   LService: TServicePedidoVolume;
   PedidoVolumeDAO: TPedidoVolumeDAO;
   HrInicioLog: Ttime;
+
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[539 - SaveApanheProdutos] executando ');
     Try
       LService := TServicePedidoVolume.Create;
       JsonArrayRetorno := LService.SaveApanheProdutos(Req.Body<TJsonArray>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/saveapanheprodutos',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+        '/v1/pedidovolume/saveapanheprodutos', Trim(Req.Params.Content.Text),
+        Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+        [rfReplaceAll]), 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[SaveApanheProdutos] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/saveapanheprodutos',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/saveapanheprodutos', Trim(Req.Params.Content.Text),
+          Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+          [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -499,7 +569,8 @@ begin
   End;
 End;
 
-Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 var
   JsonArrayRetorno: TJsonArray;
   LService: TServicePedidoVolume;
@@ -509,23 +580,31 @@ begin
   Try
     HrInicioLog := Time;
     LService := TServicePedidoVolume.Create;
+    Tutil.Gravalog('[583 EtiquetaVolumePorRua] executando');
     Try
       JsonArrayRetorno := LService.EtiquetaVolumePorRua
-        (TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSONObject);
+        (TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0)
+        as TJSONObject);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req),
-                      THorse.Port, '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text), Req.Body, '',
-                      'Retorno: ' + JsonArrayRetorno.Count.ToString +' Registros.', 200, ((Time - HrInicioLog) / 1000),
-                      Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[EtiquetaVolumePorRua] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req),
-                        THorse.Port, '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text), Req.Body, '',
-                        E.Message, 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text),
+          Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -543,6 +622,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[625-VolumeParaEtiquetas] executando');
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.VolumeParaEtiquetas
@@ -562,12 +642,13 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[VolumeParaEtiquetas] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/volumeparaetiquetas/:pedidoid/:pedidovolumeid/:zonaid/:printtag/:embalagem',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -590,30 +671,30 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[674- VolumeExpedicao] executando');
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.VolumeExpedicao;
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/expedicao',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        '/v1/pedidovolume/expedicao', Trim(Req.Params.Content.Text), Req.Body,
+        '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[VolumeExpedicao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/expedicao',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/expedicao', Trim(Req.Params.Content.Text), Req.Body,
+          '', StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -632,30 +713,30 @@ begin
   Try
     HrInicioLog := Time;
     LService := TServicePedidoVolume.Create;
+    Tutil.Gravalog('[VolumeExpedido] terminal ' + ClientIP(Req));
     Try
       JsonArrayRetorno := LService.VolumeExpedido;
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/expedido',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        '/v1/pedidovolume/expedido', Trim(Req.Params.Content.Text), Req.Body,
+        '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+        201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
       JsonArrayRetorno := Nil;
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[VolumeExpedido] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/expedido',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/expedido', Trim(Req.Params.Content.Text), Req.Body,
+          '', StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
         JsonArrayErro := Nil;
       End;
@@ -675,31 +756,34 @@ var
 begin
   Try
     HrInicioLog := Time;
+
+    Tutil.Gravalog('[VolumeLoteSubstituicao] terminal ' + ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
-      JsonArrayRetorno := LService.VolumeLoteSubstituicao(Req.Body<TJSONObject>);
+      JsonArrayRetorno := LService.VolumeLoteSubstituicao
+        (Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/lotesubstituicao',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString +' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+        '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 201, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[VolumeLoteSubstituicao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/lotesubstituicao',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THTTPStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text),
+          Req.Body, '', StringReplace(JsonArrayErro.ToString, #39, '',
+          [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -716,6 +800,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[EtiquetaPorVolume] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.EtiquetaPorVolume
@@ -723,23 +808,23 @@ begin
       PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
         Req.Params.Items['pedidovolumeid'].ToInteger();
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/etiquetaporvolume/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/etiquetaporvolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 201, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[EtiquetaPorVolume] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/etiquetaporvolume/:pedidovolumeid',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/etiquetaporvolume/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
           'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 500,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
@@ -760,6 +845,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[identificavolumecxafechada] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.identificavolumecxafechada
@@ -767,9 +853,9 @@ begin
       PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
         Req.Params.Items['pedidovolumeid'].ToInteger();
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/identificavolumecxafechada/:pedidovolumeid',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/identificavolumecxafechada/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
@@ -777,16 +863,17 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[identificavolumecxafechada] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/identificavolumecxafechada/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString,
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/identificavolumecxafechada/:pedidovolumeid',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -803,24 +890,34 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[CaixaSeparacao] terminal ' + ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
-      JsonArrayRetorno := LService.CaixaSeparacao(StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
-                                                  StrToIntDef(Req.Params.Items['caixaembalagemid'], 0));
+      JsonArrayRetorno := LService.CaixaSeparacao
+        (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
+        StrToIntDef(Req.Params.Items['caixaembalagemid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/caixaembalagem/:pedidovolumeid/:caixaembalagemid', Trim(Req.Params.Content.Text), Req.Body, '',
-                      StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/caixaembalagem/:pedidovolumeid/:caixaembalagemid',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 201,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[CaixaSeparacao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.BadRequest);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/caixaembalagem/:pedidovolumeid/:caixaembalagemid', Trim(Req.Params.Content.Text), Req.Body, '',
-                        E.Message, 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/caixaembalagem/:pedidovolumeid/:caixaembalagemid',
+          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -837,6 +934,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[Cancelar] terminal ' + ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.Cancelar(Nil, Req.Body<TJSONObject>);
@@ -845,18 +943,19 @@ begin
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/cancelar/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString+' Reg.Cancelado(s).', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Reg.Cancelado(s).',
+        201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[Cancelar] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.BadRequest);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/cancelar/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -877,13 +976,13 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[ControlPedidoVolumeGet] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetPedidoVolumeSeparacao(0, 0);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/pedidovolume',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/pedidovolume',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
@@ -891,16 +990,16 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[ControlPedidoVolumeGet] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/pedidovolume',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume', Trim(Req.Params.Content.Text), Req.Body, '',
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -918,28 +1017,38 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[GetVolume] terminal ' + ClientIP(Req));
     Try
       LService := TServicePedidoVolume.Create;
       JsonArrayRetorno := LService.GetVolume
         (StrToIntDef(Req.Params.Items['pedidoid'], 0),
         StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
         StrToIntDef(Req.Params.Items['sequencia'], 0),
-        StrToIntDef(Req.Params.Items['ordem'], 0), Req.Params.Items['embalagem'],
+        StrToIntDef(Req.Params.Items['ordem'], 0),
+        Req.Params.Items['embalagem'],
         StrToIntDef(Req.Params.Items['zonaid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid', Trim(Req.Params.Content.Text), Req.Body, '',
-                      'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-                      ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
     Except
-      on E: Exception do Begin
+      on E: Exception do
+      Begin
+        Tutil.Gravalog('[GetVolume] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
-                        Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
+          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -954,10 +1063,12 @@ Var
   LService: TServicePedidoVolume;
   JsonArrayRetorno: TJsonArray;
   HrInicioLog: Ttime;
-  Erro : Boolean;
-  nTentativa : Integer;
+  Erro: Boolean;
+  nTentativa: Integer;
 begin
   HrInicioLog := Time;
+  Tutil.Gravalog('[1070-GetOpenVolumeParaSeparacao] terminal: ' +
+    ClientIP(Req));
   Repeat
     nTentativa := 0;
     Erro := True;
@@ -970,31 +1081,38 @@ begin
           StrToIntDef(Req.Params.Items['usuarioid'], 0),
           Req.Params.Items['terminal']);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal', Trim(Req.Params.Content.Text), Req.Body, '',
-                        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-                        Req.Headers['versao']);
-          Erro := False;
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
+        Erro := False;
       Except
         on E: Exception do
         Begin
           Inc(nTentativa);
-          if nTentativa > 3 then Begin
-             JsonArrayRetorno := TJsonArray.Create;
-             JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-               E.Message)));
-             Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-             Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-              Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-               '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
-               Trim(Req.Params.Content.Text), Req.Body, '',
-               StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-               ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-               Req.Headers['versao']);
-               Erro := False;
+          if nTentativa > 3 then
+          Begin
+            Tutil.Gravalog('[GetOpenVolumeParaSeparacao] ' + E.Message);
+            JsonArrayRetorno := TJsonArray.Create;
+            JsonArrayRetorno.AddElement
+              (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+            Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+            Tutil.SalvarLog(Req.MethodType,
+              StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
+              ClientIP(Req), THorse.Port,
+              '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
+              Trim(Req.Params.Content.Text), Req.Body, '',
+              StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+              500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] +
+              '_V: ' + Req.Headers['versao']);
+            Erro := False;
           End
-          Else Begin
-             Sleep(500);
+          Else
+          Begin
+            Sleep(500);
           End;
         End;
       End;
@@ -1014,25 +1132,34 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1134-GetVolumeRegistrarExpedicao] terminal: ' +
+      ClientIP(Req));
     Try
       LService := TServicePedidoVolume.Create;
       JsonArrayRetorno := LService.GetVolumeRegistrarExpedicao
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
-                      'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-                      ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[GetVolumeRegistrarExpedicao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',
-                        Trim(Req.Params.Content.Text), Req.Body, '', e.Message, 500, ((Time - HrInicioLog) / 1000),
-                        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',
+          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1049,6 +1176,7 @@ Var
   HrInicioLog: Ttime;
 begin
   Try
+    Tutil.Gravalog('[1199-GetVolumePrintTag] ' + ClientIP(Req));
     HrInicioLog := Time;
     Try
       LService := TServicePedidoVolume.Create;
@@ -1071,12 +1199,13 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1199-GetVolumePrintTag] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/volumeprinttag/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:zonaid/:printtag/:embalagem',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -1098,6 +1227,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[GetAuditoriaCorteAnalitico] terminal: ' + ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
       JsonArrayRetorno := LService.GetAuditoriaCorteAnalitico
@@ -1113,16 +1243,17 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[GetAuditoriaCorteAnalitico] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/auditoriacorte/analitico',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1141,30 +1272,30 @@ begin
   Try
     HrInicioLog := Time;
     LService := TServicePedidoVolume.Create;
+    Tutil.Gravalog('[1273 -GetAuditoriaVolumes] terminal  ' + ClientIP(Req));
     Try
       JsonArrayRetorno := LService.GetAuditoriaVolumes(Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/auditoriariavolume',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+        '/v1/pedidovolume/auditoriariavolume', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[GetAuditoriaVolumes] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/auditoriariavolume',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/auditoriariavolume', Trim(Req.Params.Content.Text),
+          Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+          [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1181,15 +1312,15 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('1313 GetPedidoVolumeEtapas] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetPedidoVolumeEtapas
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/etapas/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1198,17 +1329,17 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('GetPedidoVolumeEtapas] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/etapas/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1225,34 +1356,33 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('1357-GetVolumeLote] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeLote
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/lotes/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/lotes/:pedidovolumeid', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('GetVolumeLote] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/lotes/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1270,6 +1400,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1401- GetVolumeProdutoLotes] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeProdutoLotes
@@ -1277,9 +1408,8 @@ begin
         StrToIntDef(Req.Params.Items['produtoid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1288,17 +1418,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1419- GetVolumeProdutoLotes] ' + E.Message +
+          ' Terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1316,15 +1447,16 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1447-GetVolumeProduto] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeProduto
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1/pedidovolume/produto/:pedidovolumeid',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/produto/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
@@ -1332,16 +1464,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1464 -GetVolumeProduto] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1/pedidovolume/produto/:pedidovolumeid',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/produto/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1359,15 +1493,16 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1492- GetVolumeProdutoReconferencia] terminal ' +
+      ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeProdutoReconferencia
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produto/reconferencia/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1376,17 +1511,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1509-GetVolumeProdutoReconferencia] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produto/reconferencia/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1405,6 +1541,8 @@ begin
   Try
     HrInicioLog := Time;
     LService := TServicePedidoVolume.Create;
+    Tutil.Gravalog('[1538-GetPedidoVolumeProdutoLote] terminal ' +
+      ClientIP(Req));
     Try
       JsonArrayRetorno := LService.GetPedidoVolumeProdutoLote
         (Req.Params.Items['pedidoid'].ToInteger(),
@@ -1420,16 +1558,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1554-GetPedidoVolumeProdutoLote] ' + E.Message +
+          ' terminal: ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produtolote/:pedidoid/:codproduto',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1447,33 +1587,36 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1582- GetProducaoDiariaPorLoja] terminal ' +
+      ClientIP(Req));
     PedidoVolumeDAO := TPedidoVolumeDAO.Create;
     Try
       JsonRetorno := PedidoVolumeDAO.GetProducaoDiariaPorLoja
         (Req.Query.Dictionary);
-      Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
+      Res.Status(200).Send<TJSONObject>(JsonRetorno)
+        .Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/producaodiariaporloja',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/producaodiariaporloja', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.',
+        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1599-GetProducaoDiariaPorLoja] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporloja',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-          .ToString, #39, '', [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString, #39, '', [rfReplaceAll]), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1490,33 +1633,35 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1626-GetProducaoDiariaPorRua] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       // Ver Retorno e pegar total do Header
       JsonRetorno := PedidoVolumeDAO.GetProducaoDiariaPorRua
         (Req.Query.Dictionary);
-      Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/producaodiariaporrua',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+      Res.Status(200).Send<TJSONObject>(JsonRetorno)
+        .Status(THTTPStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/producaodiariaporrua', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.',
+        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1643-GetProducaoDiariaPorRua] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         Res.Status(500).Send<TJSONObject>
           ((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))));
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporrua',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-          .ToString, #39, '', [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString, #39, '', [rfReplaceAll]), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1533,33 +1678,35 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1670- GetProducaoDiariaPorRua] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonRetorno := PedidoVolumeDAO.GetProducaoDiariaPorRota
         (Req.Query.Dictionary);
-      Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
+      Res.Status(200).Send<TJSONObject>(JsonRetorno)
+        .Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/producaodiariaporrota',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/producaodiariaporrota', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.',
+        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1687-GetProducaoDiariaPorRua] ' + E.Message +
+          ' terminal' + ClientIP(Req));
         Res.Status(500).Send<TJSONObject>
           ((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))));
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporrota',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-          .ToString, #39, '', [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString, #39, '', [rfReplaceAll]), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1576,15 +1723,17 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1714-GetProducaoDiariaPorSetor] termonal ' +
+      ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonRetorno := PedidoVolumeDAO.GetProducaoDiariaPorSetor
         (Req.Query.Dictionary);
-      Res.Status(200).Send<TJSONObject>(JsonRetorno).Status(THTTPStatus.Created);
+      Res.Status(200).Send<TJSONObject>(JsonRetorno)
+        .Status(THTTPStatus.Created);
       // Ver Retorno e pegar total do Header
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/producaodiariaporsetor',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonRetorno.Count.ToString + ' Registros.', 200,
@@ -1592,17 +1741,19 @@ begin
         Req.Headers['versao']);
     Except
       on E: Exception do
-      Begin
+      begin
+        Tutil.Gravalog('[1732-GetProducaoDiariaPorSetor] ' + E.Message +
+          ' terminal:' + ClientIP(Req));
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/producaodiariaporsetor',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-          .ToString, #39, '', [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString, #39, '', [rfReplaceAll]), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1619,33 +1770,33 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1770-GetVolumeConsulta]  terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
-      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeConsulta(Req.Query.Dictionary);
+      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeConsulta
+        (Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/consulta',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body,
+        '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1770-GetVolumeConsulta] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/consulta',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body,
+          '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1654,28 +1805,43 @@ begin
   End;
 End;
 
-Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Var
-  JsonObjectRetorno, JsonArrayErro: TJsonObject;
+  JsonObjectRetorno, JsonArrayErro: TJSONObject;
   LService: TServicePedidoVolume;
   HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] terminal ' +
+      ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
-      JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut(Req.Params.Items['pedidovolumeid'].ToInteger());
-      Res.Status(200).Send<TJsonObject>(JsonObjectRetorno);
-     Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
-                      'Retorno: ' + JsonObjectRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
-    Except on E: Exception do Begin
-      JsonObjectRetorno := TJsonObject.Create;
-      JsonObjectRetorno.AddPair('Erro', E.Message);
-      Res.Status(500).Send<TJsonObject>(JsonObjectRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
-                      E.Message, 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+      JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut
+        (Req.Params.Items['pedidovolumeid'].ToInteger());
+      Res.Status(200).Send<TJSONObject>(JsonObjectRetorno);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonObjectRetorno.Count.ToString + ' Registros.', 200,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
+    Except
+      on E: Exception do
+      Begin
+        Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] ' + E.Message +
+          'terminal ' + ClientIP(Req));
+        JsonObjectRetorno := TJSONObject.Create;
+        JsonObjectRetorno.AddPair('Erro', E.Message);
+        Res.Status(500).Send<TJSONObject>(JsonObjectRetorno);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
+          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 200,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1691,32 +1857,33 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1853-GetVolumeEAN]  terminal' + ClientIP(Req));
     Try
       LService := TServicePedidoVolume.Create;
-      JsonArrayRetorno := LService.GetVolumeEAN(Req.Params.Items['pedidovolumeid']
-        .ToInteger());
+      JsonArrayRetorno := LService.GetVolumeEAN
+        (Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/ean/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+        '/v1/pedidovolume/ean/:pedidovolumeid', Trim(Req.Params.Content.Text),
+        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1853-GetVolumeEAN] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/ean/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/ean/:pedidovolumeid', Trim(Req.Params.Content.Text),
+          Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+          [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1733,14 +1900,15 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1889-GetVolumeProdutoSeparacao] terminal ' +
+      ClientIP(Req));
     PedidoVolumeDAO := TPedidoVolumeDAO.Create;
     Try
       JsonArrayRetorno := PedidoVolumeDAO.GetVolumeProdutoSeparacao
         (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/produtoseparacao/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1749,17 +1917,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1889-GetVolumeProdutoSeparacao] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/produtoseparacao/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1777,6 +1946,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1942-GetVolumeSeparacao] terminal ' + ClientIP(Req));
     try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := TJsonArray.Create;
@@ -1784,9 +1954,9 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port, '/v1//pedidovolumeseparacao/:pedidovolumeid',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1//pedidovolumeseparacao/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
@@ -1794,16 +1964,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1942-GetVolumeSeparacao] ' + E.Message + ' terminal' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port, '/v1//pedidovolumeseparacao/:pedidovolumeid',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1//pedidovolumeseparacao/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1821,6 +1993,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[1989-GetPedidoVolumeSeparacao] terminal ' + ClientIP(Req));
     try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := TJsonArray.Create;
@@ -1829,9 +2002,8 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1840,17 +2012,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[1989-GetPedidoVolumeSeparacao] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1867,6 +2040,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2035-MapaSeparacao] iterminal ' + ClientIP(Req));
     try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := TJsonArray.Create;
@@ -1875,9 +2049,8 @@ begin
         Req.Params.Items['pedidovolumeid'].ToInteger());
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/mapaseparacao/:pedidoid/:pedidovolumeid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1886,17 +2059,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2035-MapaSeparacao] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/mapaseparacao/:pedidoid/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
@@ -1914,6 +2088,7 @@ var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2081-MapaSeparacaoLista]  terminal ' + ClientIP(Req));
     try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       JsonArrayRetorno := TJsonArray.Create;
@@ -1921,9 +2096,8 @@ begin
         (Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
         Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
@@ -1932,17 +2106,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2081-MapaSeparacaoLista] ' + E.Message + ' terminal' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -1961,10 +2136,12 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2127-RegistrarDocumentoEtapa] terminal ' + ClientIP(Req));
     Try
       JsonArrayRetorno := TJsonArray.Create;
       LService := TServicePedidoVolume.Create;
-      JsonArrayRetorno := LService.RegistrarDocumentoEtapa(Req.Body<TJSONObject>);
+      JsonArrayRetorno := LService.RegistrarDocumentoEtapa
+        (Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
@@ -1976,16 +2153,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2127-RegistrarDocumentoEtapa] ' + E.Message +
+          ' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/registrardocumentoetapa',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -2001,42 +2180,54 @@ Var
   LService: TServicePedidoVolume;
   JsonArrayErro: TJsonArray;
   HrInicioLog: Ttime;
-  Erro : Boolean;
-  nTentativa : Integer;
+  Erro: Boolean;
+  nTentativa: Integer;
 begin
   HrInicioLog := Time;
   Repeat
     nTentativa := 0;
+    Tutil.Gravalog('[2181-RegistrarDocumentoEtapaComBaixaEstoque] terminal ' +
+      ClientIP(Req));
     Erro := True;
     Try
       Try
         LService := TServicePedidoVolume.Create;
-        JsonArrayRetorno := LService.RegistrarDocumentoEtapaComBaixaEstoque(Req.Body<TJSONObject>);
+        JsonArrayRetorno := LService.RegistrarDocumentoEtapaComBaixaEstoque
+          (Req.Body<TJSONObject>);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
-                        Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
-                        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-          Erro := False;
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
+        Erro := False;
       Except
         on E: Exception do
         Begin
           Inc(nTentativa);
-          if nTentativa > 3 then Begin
-             JsonArrayRetorno := TJsonArray.Create;
-             JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-               E.Message)));
-             Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-             Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-               Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-               '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
-               Trim(Req.Params.Content.Text), Req.Body, '',
-               StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-               ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-               Req.Headers['versao']);
-               Erro := False;
+          if nTentativa > 3 then
+          Begin
+            Tutil.Gravalog('[2181-RegistrarDocumentoEtapaComBaixaEstoque] ' +
+              E.Message + ' terminal ' + ClientIP(Req));
+            JsonArrayRetorno := TJsonArray.Create;
+            JsonArrayRetorno.AddElement
+              (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+            Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+            Tutil.SalvarLog(Req.MethodType,
+              StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
+              ClientIP(Req), THorse.Port,
+              '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
+              Trim(Req.Params.Content.Text), Req.Body, '',
+              StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+              500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] +
+              '_V: ' + Req.Headers['versao']);
+            Erro := False;
           End
-          Else Begin
-             Sleep(500);
+          Else
+          Begin
+            Sleep(500);
           End;
         End;
       End;
@@ -2053,36 +2244,54 @@ Var
   LService: TServicePedidoVolume;
   JsonArrayErro: TJsonArray;
   HrInicioLog: Ttime;
-  Erro : Boolean;
-  nTentativa : Integer;
+  Erro: Boolean;
+  nTentativa: Integer;
 begin
   HrInicioLog := Time;
   Repeat
     nTentativa := 0;
     Erro := True;
+    Tutil.Gravalog('[2240-RegistrarDocumentoEtapaSemBaixaEstoque] terminal ' +
+      ClientIP(Req));
     Try
       Try
         LService := TServicePedidoVolume.Create;
-        JsonArrayRetorno := LService.RegistrarDocumentoEtapaSemBaixaEstoque(Req.Body<TJSONObject>);
+        JsonArrayRetorno := LService.RegistrarDocumentoEtapaSemBaixaEstoque
+          (Req.Body<TJSONObject>);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
-                        Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
-                        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-          Erro := False;
-      Except on E: Exception do Begin
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
+          Trim(Req.Params.Content.Text), Req.Body, '',
+          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
+        Erro := False;
+      Except
+        on E: Exception do
+        Begin
           Inc(nTentativa);
-          if nTentativa > 3 then Begin
-             JsonArrayRetorno := TJsonArray.Create;
-             JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-             Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-             Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                             '/v1/pedidovolume/registrardocumentoetapacombaixaestoque', Trim(Req.Params.Content.Text), Req.Body, '',
-                             E.Message, 500,((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
-             Erro := False;
+          if nTentativa > 3 then
+          Begin
+            Tutil.Gravalog('[2240-RegistrarDocumentoEtapaSemBaixaEstoque] ' +
+              E.Message + ' terminal ' + ClientIP(Req));
+            JsonArrayRetorno := TJsonArray.Create;
+            JsonArrayRetorno.AddElement
+              (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+            Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+            Tutil.SalvarLog(Req.MethodType,
+              StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
+              ClientIP(Req), THorse.Port,
+              '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
+              Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+              ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+              Req.Headers['versao']);
+            Erro := False;
           End
-          Else Begin
-             Inc(nTentativa);
-             Sleep(300);
+          Else
+          Begin
+            Inc(nTentativa);
+            Sleep(300);
           End;
         End;
       End;
@@ -2100,6 +2309,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2316-Update] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       PedidoVolumeDAO.ObjPedidoVolume :=
@@ -2110,27 +2320,24 @@ begin
         Res.Status(200).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Resultado',
           'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (TJSONObject.Create(TJSONPair.Create('Resultado',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
+          Req.Body, '', (TJSONObject.Create(TJSONPair.Create('Resultado',
           'Registro salvo com Sucesso!'))).ToString(), 200,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End
       else
       Begin
+
         Res.Status(200).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro',
           'Ocorreu um erro desconhecido!'))).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          (TJSONObject.Create(TJSONPair.Create('Erro',
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
+          Req.Body, '', (TJSONObject.Create(TJSONPair.Create('Erro',
           'Erro desconhecido! Não foi possível salvar os dados'))).ToString(),
           500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
@@ -2138,17 +2345,18 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2316-Update] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
           Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
       End;
     End;
@@ -2164,6 +2372,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2361-Update] ' + ' terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
       PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
@@ -2172,28 +2381,28 @@ begin
       Res.Status(200).Send<TJSONObject>
         (TJSONObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        (TJSONObject.Create(TJSONPair.Create('Resultado',
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
+        Req.Body, '', (TJSONObject.Create(TJSONPair.Create('Resultado',
         'Registro excluído com Sucesso!'))).ToString(), 200,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2361-Update] ' + E.Message + ' terminal ' +
+          ClientIP(Req));
         Res.Status(500).Send<TJSONObject>
           (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-          .ToString, #39, '', [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
+          Req.Body, '',
+          StringReplace((TJSONObject.Create(TJSONPair.Create('Erro', E.Message))
+          ).ToString, #39, '', [rfReplaceAll]), 500,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
       End;
     End;
   Finally
@@ -2217,6 +2426,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2489-Getdshvolumeevolucao] terminal '+ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
       vDataIni := 0;
@@ -2226,12 +2436,13 @@ begin
       AQueryParam := Req.Query.Dictionary;
       If AQueryParam.Count <= 0 then
       Begin
+
         JsonArrayErro := TJsonArray.Create();
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta não definidos!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_quantidade',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 403,
@@ -2241,6 +2452,7 @@ begin
         Exit;
       End;
       vParamsOk := 0;
+
       if AQueryParam.ContainsKey('datainicio') then
       Begin
         Try
@@ -2283,8 +2495,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta definidos incorretamente!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_quantidade',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 403,
@@ -2306,12 +2518,13 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2489-Getdshvolumeevolucao] ' + E.Message +' terminal '+ClientIP(Req));
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_quantidade',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -2340,6 +2553,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2611-Getdshvolumeevolucao_Unidades] terminal '+ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
       vDataIni := 0;
@@ -2353,8 +2567,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta não definidos!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_Unidades',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 403,
@@ -2406,8 +2620,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta definidos incorretamente!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_Unidades',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 403,
@@ -2429,12 +2643,13 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2611-Getdshvolumeevolucao_Unidades] ' + E.Message +' terminal '+ClientIP(Req));
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/dshvolumeevolucao_Unidades',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -2456,6 +2671,7 @@ Var
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2669-DshCheckout] terminal '+ClientIP(Req));
     PedidoVolumeDAO := TPedidoVolumeDAO.Create;
     Try
       If Req.Query.Dictionary.Count <= 0 then
@@ -2464,38 +2680,34 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           'Parâmetros da consulta não definidos!')));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.Created);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/dshcheckout',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 403,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/pedidovolume/dshcheckout', Trim(Req.Params.Content.Text),
+          Req.Body, '', StringReplace(JsonArrayErro.ToString, #39, '',
+          [rfReplaceAll]), 403, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
         FreeAndNil(PedidoVolumeDAO);
         Exit;
       End;
       JsonArrayRetorno := PedidoVolumeDAO.DshCheckout(Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
         .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType,
-        StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-        ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/dshcheckout',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]), 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/dshcheckout', Trim(Req.Params.Content.Text), Req.Body,
+        '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+        200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2669-DshCheckout] ' + E.Message+ ' terminal '+ClientIP(Req));
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType,
-          StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-          ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
@@ -2515,10 +2727,12 @@ Var
   JsonArrayErro: TJsonArray;
   LService: TServicePedidoVolume;
   HrInicioLog: Ttime;
+
 begin
   Try
     HrInicioLog := Time;
     LService := TServicePedidoVolume.Create;
+    Tutil.Gravalog('[2714-GetVolumeComDivergencia] terminal '+ClientIP(Req));
     Try
       JsonArrayRetorno := LService.GetVolumeComDivergencia
         (Req.Params.Items['pedidovolumeid'].ToInteger());
@@ -2533,12 +2747,13 @@ begin
     Except
       on E: Exception do
       Begin
+        Tutil.Gravalog('[2714-GetVolumeComDivergencia] ' + E.Message +' terminal '+ClientIP(Req));
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/volumecomdivergencia/:pedidovolumeid',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 200,
@@ -2558,9 +2773,11 @@ var
   JsonArrayRetorno: TJsonArray;
   JsonArrayErro: TJsonArray;
   HrInicioLog: Ttime;
+
 begin
   Try
     HrInicioLog := Time;
+    Tutil.Gravalog('[2761-salvarultimoenderecocoletado] terminal '+ClientIP(Req));
     Try
       LService := TServicePedidoVolume.Create;
       JsonArrayRetorno := LService.salvarultimoenderecocoletado
@@ -2577,11 +2794,13 @@ begin
     Except
       On E: Exception do
       Begin
+        Tutil.Gravalog('[2761-salvarultimoenderecocoletado] ' + E.Message +' terminal '+ClientIP(Req));
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THTTPStatus.ExpectationFailed);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid',
           Trim(Req.Params.Content.Text), Req.Body, '',
           StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 200,
