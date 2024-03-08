@@ -18,7 +18,7 @@ Type
       ', RESEED, 0)';
 
   Const
-    QrySemDados = 'Não foram encontrados dados na pesquisa!';
+    QrySemDados = 'Nï¿½o foram encontrados dados na pesquisa!';
 
     // https://dbasqlserverbr.com.br/descobrir-ip-do-servidor-sql-server/
   Const
@@ -505,7 +505,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       '           ) as PCub ON PCub.PedidoId = Ped.PedidoId' + sLineBreak +
       '--Left Join vPedidoNotaFiscalPrincipal PNF On PNF.PedidoId = Ped.PedidoId' + sLineBreak +
       'Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.OperacaoTipoId = 2 And De.ProcessoId <> 31' + sLineBreak +
-    // Documentos Excluídos
+    // Documentos Excluï¿½dos
       '  and (@ProcessoId = 0  or De.ProcessoId = @ProcessoId or (@ProcessoId=13 and De.ProcessoId>13 and De.processoId<>15))'+ sLineBreak +
       '  and ((@MontarCarga=0 and (Ped.CargaId Is Null or Ped.cargaid = @CargaId)) or (@MontarCarga=1 and Ped.CargaId Is Not Null) or @MontarCarga=2)' + sLineBreak + // 0 Sem Carga 1 Com Carga 2 Todos
       '  and (@CodProduto = 0 or Exists (select ProdutoId from PedidoProdutos PP' + sLineBreak +
@@ -513,7 +513,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       '                                  where Pp.PedidoId = Ped.PedidoId and Prd.CodProduto = @CodProduto))' + sLineBreak +
       '  and (@PedidoPendente=0 or De.ProcessoId<13)' + sLineBreak + 'Order by Ped.DocumentoData, Ped.PedidoId';
 
-  Const
+ Const
     SqlPedidoParaProcessamento = 'Declare @PedidoId Integer    = :pPedidoId' +
       sLineBreak + 'Declare @DataIni DateTime    = :pDataIni' + sLineBreak +
       'Declare @DataFin DateTime    = :pDataFin' + sLineBreak +
@@ -581,7 +581,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       'Declare @RotaId Integer = :pRotaId' + sLineBreak +
       'Declare @RotaIdFinal Integer = :pRotaIdFinal' + sLineBreak +
       'Declare @ZonaId Integer = :pZonaId' + sLineBreak +
-      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Não impresso   1 Reimpresso   2 Todos'+sLineBreak +
+      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Nï¿½o impresso   1 Reimpresso   2 Todos'+sLineBreak +
       'Declare @Embalagem Integer = :pEmbalagem -- 0 Cxa Fechada    1 Fracioandos  2 Todos'+sLineBreak +
       'select Ped.PedidoId, Ped.OperacaoTipoId, Ped.OperacaoNome as OperacaoTipo, Ped.Pessoaid, Ped.CodPessoaERP, Ped.Razao,'+sLineBreak +
       '       Ped.Fantasia, Ped.Rotaid, Ped.Rota, FORMAT(Ped.DocumentoData, '+#39+'dd/MM/yyyy'+#39+') as DocumentoData,'+sLineBreak +
@@ -626,7 +626,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       'Declare @Recebido Integer = :pRecebido' + sLineBreak +
       'Declare @Cubagem Integer = :pCubagem' + sLineBreak +
       'Declare @Etiqueta Integer  = :pEtiqueta' + sLineBreak +
-      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Não impresso   1 Reimpresso   2 Todos'
+      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Nï¿½o impresso   1 Reimpresso   2 Todos'
       + sLineBreak +
       'Declare @Embalagem Integer = :pEmbalagem -- 0 Cxa Fechada    1 Fracioandos  2 Todos'
       + sLineBreak + ';With ' + sLineBreak +
@@ -877,7 +877,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       sLineBreak +
       '														Group by Vl.EnderecoId, Vl.LoteId) Res';
 
-    // Cubagem de Pedidos - Estoque Disponível para atender pedido Caixa Fechada
+    // Cubagem de Pedidos - Estoque Disponï¿½vel para atender pedido Caixa Fechada
   Const
     SqlEstoqueCubagemCxaFechada = 'Declare @PedidoId Integer = :pPedidoId' +
       sLineBreak +
@@ -968,11 +968,11 @@ Const PedidoAllResto =      '' + sLineBreak +
       + sLineBreak +
       '       VE.EmbalagemId, VE.Descricao, VE.Identificacao, VE.Tipo,' +
       sLineBreak + '   (Case When Tipo = ' + #39 + 'R' + #39 + ' then ' + #39 +
-      'Retornável' + #39 + sLineBreak + '          When Tipo = ' + #39 + 'P' +
-      #39 + ' then '#39 + 'Própria' + #39 + sLineBreak +
+      'Retornï¿½vel' + #39 + sLineBreak + '          When Tipo = ' + #39 + 'P' +
+      #39 + ' then '#39 + 'Prï¿½pria' + #39 + sLineBreak +
       '           When Tipo = ' + #39 + 'C' + #39 + ' then '#39 + 'Pacote' + #39
       + sLineBreak + '           WHen Tipo = ' + #39 + 'U' + #39 + ' then '#39 +
-      'Reutilizável' + #39 + sLineBreak +
+      'Reutilizï¿½vel' + #39 + sLineBreak +
       '    End) as TipoDescricao, VE.Altura, VE.Largura, VE.Comprimento,' +
       sLineBreak +
       '	   (VE.Altura*VE.Largura*VE.Comprimento) Volume, VE.Aproveitamento,' +
@@ -996,15 +996,15 @@ Const PedidoAllResto =      '' + sLineBreak +
       'Select (Select Ce.caixaembalagemid,  Ce.numsequencia, coalesce(Ce.observacao, '
       + #39 + #39 + ') observacao, Ce.status, ' + sLineBreak +
       '        Coalesce(Ce.disponivel, 0) disponivel, (Case When Ce.Disponivel = 1 Then '
-      + #39 + 'Disponível' + #39 + ' Else ' + #39 + 'Em Uso' + #39 +
+      + #39 + 'Disponï¿½vel' + #39 + ' Else ' + #39 + 'Em Uso' + #39 +
       ' End) situacao,' + sLineBreak +
       '       VolumeEmbalagem.embalagemid, VolumeEmbalagem.descricao, VolumeEmbalagem.identificacao, VolumeEmbalagem.tipo,'
       + sLineBreak + '       (Case When Tipo = ' + #39 + 'R' + #39 + ' then ' +
-      #39 + 'Retornável' + #39 + sLineBreak + '             When Tipo = ' + #39
-      + 'P' + #39 + ' then ' + #39 + 'Própria' + #39 + sLineBreak +
+      #39 + 'Retornï¿½vel' + #39 + sLineBreak + '             When Tipo = ' + #39
+      + 'P' + #39 + ' then ' + #39 + 'Prï¿½pria' + #39 + sLineBreak +
       '             When Tipo = ' + #39 + 'C' + #39 + ' then ' + #39 + 'Pacote'
       + #39 + sLineBreak + '             WHen Tipo = ' + #39 + 'U' + #39 +
-      ' then ' + #39 + 'Reutilizável' + #39 + sLineBreak +
+      ' then ' + #39 + 'Reutilizï¿½vel' + #39 + sLineBreak +
       '        End) as tipodescricao, Cast(VolumeEmbalagem.altura as Decimal(15,2)) as altura,'
       + sLineBreak +
       '	    Cast(VolumeEmbalagem.Largura as Decimal(15,2)) as largura,' +
@@ -1036,18 +1036,18 @@ Const PedidoAllResto =      '' + sLineBreak +
     SqlVolumeEmbalagem = 'Declare @EmbalagemId Integer = :pEmbalagemId' +
       sLineBreak + 'Declare @Descricao VarChar(30) = :pDescricao' + sLineBreak +
       'Select *, ' + sLineBreak + ' (Case' + sLineBreak + '     When Tipo = ' +
-      #39 + 'R' + #39 + ' then ' + #39 + 'Retornável' + #39 + sLineBreak +
-      '     When Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Própria' + #39 +
+      #39 + 'R' + #39 + ' then ' + #39 + 'Retornï¿½vel' + #39 + sLineBreak +
+      '     When Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Prï¿½pria' + #39 +
       sLineBreak + '     When Tipo = ' + #39 + 'C' + #39 + ' then ' + #39 +
       'Pacote' + #39 + sLineBreak + '     WHen Tipo = ' + #39 + 'U' + #39 +
-      ' then ' + #39 + 'Reutilizável' + #39 + sLineBreak +
+      ' then ' + #39 + 'Reutilizï¿½vel' + #39 + sLineBreak +
       '		End) as TipoDescricao' + sLineBreak + 'From VolumeEmbalagem' +
       sLineBreak + 'Where (@EmbalagemId = 0 or @EmbalagemId = EmbalagemID) and '
       + sLineBreak + '      (@Descricao = ' + #39 + #39 +
       ' or Descricao like @Descricao)';
 
   Const
-    SqlRegistrarDocumentoEtapa = '--Adicionar a instrução conforme abaixo' +
+    SqlRegistrarDocumentoEtapa = '--Adicionar a instruï¿½ï¿½o conforme abaixo' +
       sLineBreak +
       '--declare @uuid UNIQUEIDENTIFIER = (Select uuid From PEdido where PedidoId = :pPedidoId)   '
       + sLineBreak + 'Declare @ProcessoId Integer = :pProcessoId' + sLineBreak +
@@ -1160,7 +1160,7 @@ Const SqlEstoqueVolumeCaixaFracionadaOLD = 'Declare @PedidoId Integer = :pPedido
       '            where Ep.Qtde >= PP.EmbalagemPadrao and Vencimento > Cast(getdate()+(COALESCE (MesSaidaMinima, 0)*30) as date)'
       + sLineBreak +
       '		         Group by Ep.ProdutoId, EP.LoteId, Ep.EnderecoId, EP.Ordem, Ep.PickingFixo, EP.Distribuicao, EP.Vencimento, Ep.EstoqueTipoId, Ep.DtEntrada, Ep.HrEntrada'
-      + sLineBreak + '            Union --Reserva Reposição' + sLineBreak +
+      + sLineBreak + '            Union --Reserva Reposiï¿½ï¿½o' + sLineBreak +
       '			       Select Rc.ProdutoId, Rc.LoteId, Pl.EnderecoId EnderecoOrigem, 1 As Ordem, 1 PickingFixo, 1 Distribuicao,'
       + sLineBreak +
       '			              Pl.Vencimento, 4 As EstoqueTipoId, FORMAT(Est.DtEntrada, '
@@ -1662,7 +1662,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       'Where 1 = 1';
 
   Const
-    SqlRelEstoqueSaldo = '--Inicio do Código Enviando pela Chamada' + sLineBreak
+    SqlRelEstoqueSaldo = '--Inicio do Cï¿½digo Enviando pela Chamada' + sLineBreak
       + 'Left Join (select CodProduto, Max(Data) Data' + sLineBreak +
       '           From (select Pl.CodProduto, Max(Rd.Data) Data' + sLineBreak +
       '                 from PedidoItensCheckIn Pc' + sLineBreak +
@@ -1711,7 +1711,7 @@ Const SqlRelEstoquePreOrVencido = 'Declare @CodProduto Integer   = :pCodProduto'
                                   '		      And (@PreVencido = 0 or (Vencimento > GetDate() and Vencimento <= GetDate()+(Select MesesParaPreVencido*30 From Configuracao)))'+sLineBreak+
                                   '        And (@Vencido=0 or (Vencimento >= @DataInicial and Vencimento <= @DataFinal))'+sLineBreak+
                                   '      Group by CodigoERP, Produto, Month(Vencimento), year(Vencimento)) Est'+sLineBreak+
-                                  '--Inicio do Código Enviando pela Chamada'+sLineBreak+
+                                  '--Inicio do Cï¿½digo Enviando pela Chamada'+sLineBreak+
                                   'Left Join (select CodProduto, Max(Data) Data'+sLineBreak+
                                   '           From (select Pl.CodProduto, Max(Rd.Data) Data'+sLineBreak+
                                   '                 from PedidoItensCheckIn Pc'+sLineBreak+
@@ -1924,7 +1924,7 @@ Const SqlCancelarCubagemPedidoOLD = 'Declare @PedidoId Integer = :pPedido' +sLin
       'Declare @Sequencia Int = :pSequencia' + sLineBreak +
       'Declare @Ordem Int = :pOrdem' + sLineBreak +
       'Declare @ZonaId Integer = :pZonaId' + sLineBreak +
-      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Não impresso   1 Reimpresso   2 Todos'
+      'Declare @PrintTag Integer  = :pPrintTag  -- 0 Nï¿½o impresso   1 Reimpresso   2 Todos'
       + sLineBreak +
       'Declare @Embalagem Integer = :pEmbalagem -- 0 Cxa Fechada    1 Fracioandos  2 Todos'
       + sLineBreak +
@@ -2250,11 +2250,11 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Fracionado' + #39 + ' End) VolumeEmbalgem, ' + sLineBreak +
       '       VE.Descricao, VE.Identificacao, Ve.Tipo, ' + sLineBreak +
       '       (Case' + sLineBreak + '          When Ve.Tipo = ' + #39 + 'R' +
-      #39 + ' then ' + #39 + 'Retornável' + #39 + sLineBreak +
-      '          When Ve.Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Própria'
+      #39 + ' then ' + #39 + 'Retornï¿½vel' + #39 + sLineBreak +
+      '          When Ve.Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Prï¿½pria'
       + #39 + sLineBreak + '          When Ve.Tipo = ' + #39 + 'C' + #39 +
       ' then ' + #39 + 'Pacote' + #39 + sLineBreak + '          WHen Ve.Tipo = '
-      + #39 + 'U' + #39 + ' then ' + #39 + 'Reutilizável' + #39 + sLineBreak +
+      + #39 + 'U' + #39 + ' then ' + #39 + 'Reutilizï¿½vel' + #39 + sLineBreak +
       '		     End) as TipoDescricao, ' + sLineBreak +
       '   	   VE.Altura, VE.Largura, VE.Comprimento, (VE.Altura*VE.Largura*VE.Comprimento) As Volume, VE.Aproveitamento,'
       + sLineBreak +
@@ -2590,8 +2590,8 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       + sLineBreak + // De.ProcessoId <> 6 and
       'Order by PD.Data, Ped.PedidoId ' + sLineBreak +
       'For Json Path, INCLUDE_NULL_VALUES) as ConsultaRetorno';
-    // , INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER  opções na geração de Json
-    // Está sendo usado processoid = 10 para integrar após conferencia
+    // , INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER  opï¿½ï¿½es na geraï¿½ï¿½o de Json
+    // Estï¿½ sendo usado processoid = 10 para integrar apï¿½s conferencia
     // For Json Auto inclue subjsonarray no return quando usando Join
 
   Const
@@ -2669,7 +2669,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       '             When DoctoEt.ProcessoId = 15 then ' + #39 + 'Cancelada' +
       #39 + sLineBreak + '             When DoctoEt.ProcessoId = 31 then ' + #39
       + 'Documento Excluido' + #39 + sLineBreak + '             Else ' + #39 +
-      'Não Indentificado' + #39 + ' End) as Situacao,' + sLineBreak +
+      'Nï¿½o Indentificado' + #39 + ' End) as Situacao,' + sLineBreak +
       '	   P.RegistroERP, Pes.CodPessoaERP as DestinatarioId, Pes.Razao, ' +
       sLineBreak +
       '	   pes.Fantasia, Pes.CnpjCpf as cnpj, Pes.email, p.DocumentoOriginal' +
@@ -2957,7 +2957,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'where (@UsuarioId = 0 or K.Usuarioid = @Usuarioid) and' + sLineBreak +
       '      (@DataInicial = 0 or @DataInicial = Rd.Data) and' + sLineBreak +
       '	  (@DataFinal = 0 or @DataFinal = Rd.Data) and' + sLineBreak +
-      '	  (ObservacaoOrigem like ' + #39 + 'Movimentação interna%' + #39 +
+      '	  (ObservacaoOrigem like ' + #39 + 'Movimentaï¿½ï¿½o interna%' + #39 +
       ') and ' + sLineBreak +
       '   (@CodigoERP = 0 or P.CodProduto = @CodigoERP) and ' + sLineBreak +
       '   (@NomeEstacao = ' + #39 + #39 +
@@ -3841,7 +3841,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       + sLineBreak +
       '     		                              --And Est.Qtde >= Dem.EmbalagemPadrao'
       + sLineBreak +
-    // Incluir Estoque já reservado para Reposição
+    // Incluir Estoque jï¿½ reservado para Reposiï¿½ï¿½o
       '      Left Join (Select ProdutoId, Sum(Rc.Qtde) Qtde --Reserva para Coleta'
       + sLineBreak + '                 From ReposicaoEnderecoColeta Rc' +
       sLineBreak +
@@ -4408,7 +4408,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       + sLineBreak +
       'Left join Usuarios U On U.UsuarioId = Pic.UsuarioId --Conferente' +
       sLineBreak +
-      'Left join Usuarios UR On UR.UsuarioId = Pic.RespAltLote --Responsável pela Entrada do Lote'
+      'Left join Usuarios UR On UR.UsuarioId = Pic.RespAltLote --Responsï¿½vel pela Entrada do Lote'
       + sLineBreak +
       'Left Join Rhema_Data Dc On Dc.IdData = Pic.CheckInDtInicio' + sLineBreak
       + 'Left Join Rhema_Hora Hc On Hc.IdHora = Pic.CheckInHrInicio' +
@@ -4465,13 +4465,13 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       '       (Select ProcessoId From ProcessoEtapas where Descricao = ' + #39 +
       'Inventario - Gerado' + #39 + ') and Status = 1) DataCriacao,' +
       sLineBreak + '        (Case When InventarioTipo = 1 then ' + #39 +
-      'Por Endereço' + #39 + sLineBreak +
-      '         When inventarioTipo = 2 then ' + #39 + 'Prioritário' + #39 +
+      'Por Endereï¿½o' + #39 + sLineBreak +
+      '         When inventarioTipo = 2 then ' + #39 + 'Prioritï¿½rio' + #39 +
       sLineBreak + '         When InventarioTipo = 3 then ' + #39 + 'Ciclico' +
       #39 + ' End) Tipo, ' + sLineBreak +
       '       De.ProcessoId, De.Descricao Processo, De.Data, De.Hora, De.Horario, De.UsuarioId, U.Nome USuario, De.Terminal'
       + sLineBreak + '       , (Case When TipoAjuste=0 then ' + #39 +
-      'Definitivo' + #39 + ' Else ' + #39 + 'Temporário' + #39 + ' End) Ajuste'
+      'Definitivo' + #39 + ' Else ' + #39 + 'Temporï¿½rio' + #39 + ' End) Ajuste'
       + sLineBreak + 'From Inventarios I' + sLineBreak +
       'Left Join vDocumentoEtapas DE On De.Documento = I.uuid' + sLineBreak +
       'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'
@@ -4489,8 +4489,8 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Select I.*, (Select Data From vDocumentoEtapas Where Documento = I.Uuid and ProcessoId = (Select ProcessoId From ProcessoEtapas where Descricao = '
       + #39 + 'Inventario - Gerado' + #39 + ') and Status = 1) DataCriacao,' +
       sLineBreak + '        (Case When InventarioTipo = 1 then ' + #39 +
-      'Por Endereço' + #39 + sLineBreak +
-      '         When inventarioTipo = 2 then ' + #39 + 'Prioritário' + #39 +
+      'Por Endereï¿½o' + #39 + sLineBreak +
+      '         When inventarioTipo = 2 then ' + #39 + 'Prioritï¿½rio' + #39 +
       sLineBreak + '         When InventarioTipo = 3 then ' + #39 + 'Ciclico' +
       #39 + ' End) Tipo,' + sLineBreak +
       '        De.ProcessoId, De.Descricao Processo, De.Data, De.Hora, De.Horario, De.UsuarioId, U.Nome USuario, De.Terminal'
@@ -5019,7 +5019,7 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       + sLineBreak + 'If @ReposicaoId = 0 Begin' + sLineBreak +
       '   Insert Into Reposicao Values ( @DtProducao, ' + #39 + 'A' + #39 +
       ', (select ProcessoId from ProcessoEtapas Where Descricao = ' + #39 +
-      'Reposição - Criada' + #39 + '),' + sLineBreak +
+      'Reposiï¿½ï¿½o - Criada' + #39 + '),' + sLineBreak +
       '               @UsuarioId, @Terminal, GETDATE(), (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)), NEWID() )'
       + sLineBreak + '   Set @ReposicaoId = SCOPE_IDENTITY()' + sLineBreak +
 
@@ -5122,7 +5122,7 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       sLineBreak + 'Where est.Distribuicao = 1' + sLineBreak +
       'Order by Est.ProdutoId, Est.Vencimento, Est.DtEntrada, Est.HrEntrada';
 
-    // Gerar Reposição Automática
+    // Gerar Reposiï¿½ï¿½o Automï¿½tica
   Const
     SqlGerarPedidoReposicao = 'Declare @PedidoId Integer = :pPedidoId' +
       sLineBreak + 'Declare @LoteId Integer = :pLoteId' + sLineBreak +
@@ -5155,7 +5155,7 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       'Select Rep.*, (Case When ReposicaoTipo = 1 then ' + #39 + 'Demanda' + #39
       + sLineBreak + '                    When ReposicaoTipo = 2 then ' + #39 +
       'Capacidade' + #39 + sLineBreak + '					When ReposicaoTipo = 3 then '
-      + #39 + 'Automatíca' + #39 + sLineBreak +
+      + #39 + 'Automatï¿½ca' + #39 + sLineBreak +
       '					When ReposicaoTipo = 4 then ' + #39 + 'Corretiva' + #39 +
       ' End) Tipo, URep.Nome UsuarioReposicao, Pe.Descricao Processo, Zn.Descricao Zona'
       + sLineBreak +
@@ -5446,7 +5446,7 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       sLineBreak +
       'Where (Cp.CargaId = @CargaId) and (@PessoaId=0 or @PessoaId = Pes.PessoaId)';
 
-    // Relatório Mapa de Cargas - Exibir volumes de cada pedido para CheckList em Carga
+    // Relatï¿½rio Mapa de Cargas - Exibir volumes de cada pedido para CheckList em Carga
   Const
     SqlGetCargaPedidoVolumes = 'Declare @CargaId Integer  = :pCargaId' +
       sLineBreak + 'Declare @Processo Char(2) = :pProcesso' + sLineBreak +
@@ -6696,7 +6696,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       'Declare @DataFInal   DateTime      = :pDataFinal' + sLineBreak +
       'Declare @DocumentoNr Varchar(50)   = :pDocumentoNr' + sLineBreak +
       'Declare @EnderecoDestinoId Integer = :pEnderecoDestinoId' + sLineBreak +
-      'Declare @TipoMovimentacao Integer  = :pTipoMovimentacao -- 0-Todas 1-Interna 2-Recebimentos 3-Saídas 4-Entrada/Saída'
+      'Declare @TipoMovimentacao Integer  = :pTipoMovimentacao -- 0-Todas 1-Interna 2-Recebimentos 3-Saï¿½das 4-Entrada/Saï¿½da'
       + sLineBreak + 'Declare @UsuarioId Integer         = :pUsuarioId' +
       sLineBreak + 'select Rd.Data, Rh.Hora, --K.*,' + sLineBreak +
       '       Pl.CodProduto, Pl.Descricao Produto, Pl.Lote, vEndD.Endereco EnderecoDestino, Qtde,'
@@ -7021,7 +7021,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       sLineBreak + 'Declare @DataProducaoFinal DateTime   = :pDataProducaoFinal'
       + sLineBreak + 'Declare @UsuarioId Integer            = :pUsuarioId' +
       sLineBreak +
-      'Declare @Analise Integer              = :pAnalise --  0 - Data Pedido   1 - DataProdução'
+      'Declare @Analise Integer              = :pAnalise --  0 - Data Pedido   1 - DataProduï¿½ï¿½o'
       + sLineBreak + 'Declare @EmbalagemId Integer          = :pEmbalagemId' +
       sLineBreak + 'Select *' + sLineBreak +
       'From (SELECT(Case When @Analise = 0 then Rd.Data --AS DataPedido,' +
@@ -7172,7 +7172,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
     SqlRelAtendimentoZona = 'Declare @DataInicial DateTime = :pDataInicial' +
       sLineBreak + 'Declare @DataFinal   DateTime = :pDataFinal' + sLineBreak +
       'select Prd.ZonaId, (Case When Prd.ZonaId is Null then ' + #39 +
-      'Não Definida' + #39 + ' Else Prd.ZonaDescricao End) Zona,' + sLineBreak +
+      'Nï¿½o Definida' + #39 + ' Else Prd.ZonaDescricao End) Zona,' + sLineBreak +
       '       Sum(case When Pv.EmbalagemId Is Null then 1 Else 0 End) CxaFechada,'
       + sLineBreak +
       '       Sum(case When Pv.EmbalagemId Is Not Null then 1 Else 0 End) Fracionado,'
@@ -7261,7 +7261,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       '      And (@EnderecoDestino = '' or ED.Descricao = @EnderecoDestino)' +
       sLineBreak + '      And (@CodProduto = 0 or Pl.CodProduto = @CodProduto)'
       + sLineBreak + '   	  And K.ObservacaoOrigem Like ' + #39 +
-      'Movimentação interna%' + #39;
+      'Movimentaï¿½ï¿½o interna%' + #39;
 
   Const
     SqlGetdshvolumeevolucao_quantidade = 'Declare @DataPedido Date = :pData' +
@@ -7319,7 +7319,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       + '  And (@CodigoERP = 0 or @CodigoERP = Prd.CodProduto)' + sLineBreak +
       'Order by Prd.Descricao, Pl.Vencimento';
 
-    // SqlGetRelReposicaoResumoSintetico Não Usado
+    // SqlGetRelReposicaoResumoSintetico Nï¿½o Usado
   Const
     SqlGetRelReposicaoResumoSintetico =
       'Declare @ReposicaoId  Integer  = :pReposicaoId' + sLineBreak +
@@ -7334,7 +7334,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       '	                                   When ReposicaoTipo = 2 Then ' + #39 +
       'Capacidade' + #39 + sLineBreak +
       '									                           When ReposicaoTipo = 3 Then '
-      + #39 + 'Automática' + #39 + ' End) Tipo,' + sLineBreak +
+      + #39 + 'Automï¿½tica' + #39 + ' End) Tipo,' + sLineBreak +
       '       Z.Descricao Zona, Rep.EnderecoInicial, Rep.EnderecoFinal,' +
       sLineBreak + '	      Rep.UsuarioId, U.Nome, Rep.Terminal' + sLineBreak +
       'From reposicao Rep' + sLineBreak +
@@ -7348,7 +7348,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       + '  And (@ProcessoId = 0 or Rep.ProcessoId = @ReposicaoId)' + sLineBreak
       + '  And (@Pendente = 0 or Rep.ProcessoId in (27, 28))';
 
-    // SqlGetRelReposicaoResumoAnalitico Não Usado
+    // SqlGetRelReposicaoResumoAnalitico Nï¿½o Usado
   Const
     SqlGetRelReposicaoResumoAnalitico =
       'Declare @ReposicaoId  Integer  = :pReposicaoId' + sLineBreak +

@@ -169,20 +169,23 @@ end;
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryAfterExecute(DataSet: TFDDataSet);
 begin
-  Tutil.Gravalog('  ' + GetSender + ' Comando executado ' +
-    FormatDateTime('HH:mm:ss:zzz', Time - FtimeExecute));
+  // Tutil.Gravalog('  ' + GetSender + ' Comando executado ' +
+  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeExecute));
 end;
 
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryAfterOpen(DataSet: TDataSet);
+var
+  NomeSender: string;
 begin
-  Tutil.Gravalog('   ' + GetSender + ' - Consulta executada: ' +
-    FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
-    inttostr(DataSet.RecordCount));
+  NomeSender := GetSender;
+  // Tutil.Gravalog('   ' + GetSender + ' - Consulta executada: ' +
+  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
+  // inttostr(DataSet.RecordCount));
 
-//  if DataSet.RecordCount > 500 then
-//    Tutil.Gravalog('   ' + GetSender + '< Warning > Limit Records  ! ' +
-//      copy(TFDQuery(Sender).sql.text, 0, 100));
+  // if DataSet.RecordCount > 500 then
+  // Tutil.Gravalog('   ' + Nomesender + '< Warning > Limit Records  ! ' +
+  // copy(TFDQuery(Dataset).sql.text, 0, 100));
 
   DataSet.First;
 end;
@@ -190,18 +193,21 @@ end;
 
 procedure TConnection.FDQueryBeforeExecute(DataSet: TFDDataSet);
 begin
-  if (DataSet is TFDQuery) then
-    Tutil.Gravalog('  ' + GetSender + ' Executando comando ' +
-      copy(TFDQuery(DataSet).sql.text, 0, 100));
+  // if (DataSet is TFDQuery) then
+  // Tutil.Gravalog('  ' + GetSender + ' Executando comando ' +
+  // copy(TFDQuery(DataSet).sql.text, 0, 100));
 end;
 
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryBeforeOpen(DataSet: TDataSet);
 begin
   FtimeOpen := Time;
-  // Tutil.Gravalog('Executando consulta ');
-  Tutil.Gravalog('  ' + GetSender + ' Executando consulta ' +
-    copy(TFDQuery(DataSet).sql.text, 0, 100));
+  try
+    Tutil.Gravalog('Executando consulta ');
+    Tutil.Gravalog('  ' + GetSender + ' Executando consulta ' +
+      copy(trim(TFDQuery(DataSet).sql.text), 0, 400));
+  Except
+  end;
 end;
 
 function TConnection.GetQuery: TFDQuery;
