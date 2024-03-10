@@ -453,14 +453,13 @@ begin
     End;
     if pJsonObject.Count > 0 then
       vQry.Sql.Add(vListaPedido + ' )');
-    vQry.ParamByName('pProcessoId').Value := pJsonObject.GetValue<Integer>
-      ('processoid');
-    vQry.ParamByName('pEmbalagemId').Value := pJsonObject.GetValue<Integer>
-      ('embalagemid');
-    vQry.ParamByName('pZonaId').Value := pJsonObject.GetValue<Integer>
-      ('zonaid');
-    vQry.Sql.Add('order by VL.Inicio, vCxaFechada.CodProduto');
-    // --, Pv.PedidoVolumeId');
+    vQry.ParamByName('pProcessoId').Value := pJsonObject.GetValue<Integer>('processoid');
+    vQry.ParamByName('pEmbalagemId').Value := pJsonObject.GetValue<Integer>('embalagemid');
+    vQry.ParamByName('pZonaId').Value := pJsonObject.GetValue<Integer>('zonaid');
+    if pJsonObject.GetValue<Integer>('tagvolumeordem', 1) = 1 then
+       vQry.Sql.Add('order by VL.Inicio, Ro.RotaId, Pe.CodPessoaERP')
+    Else
+       vQry.Sql.Add('order by VL.Inicio, Ro.RotaId, vCxaFechada.CodProduto');
     if DebugHook <> 0 then
       vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
     vQry.Open;

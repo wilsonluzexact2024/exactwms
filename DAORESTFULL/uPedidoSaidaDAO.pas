@@ -45,7 +45,7 @@ Type
 
     Function GetRelRupturaAbastecimento(pDataIni, pDataFin : TDateTime) : TJsonArray;
 
-    Function GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
+    Function GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId, pZonaId : Integer) : TJsonArray;
 
     Function GetRelApanhePicking(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
 
@@ -503,28 +503,30 @@ begin
     raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
 end;
 
-function TPedidoSaidaDao.GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
+function TPedidoSaidaDao.GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId, pZonaId : Integer) : TJsonArray;
 Var vResource : String;
 begin
-  //Result := TJsonArray.Create;
-  DmeXactWMS.ResetRest('R');
-  vResource := 'v1/pedido/coletapulmao?';
-  if pDataInicio <> 0 then
-     vResource :=  vResource+'&dataini='+DateToStr(pDataInicio);
-  if pDataFinal <> 0 then
-     vResource :=  vResource+'&datafin='+DateToStr(pDataFinal);
-  if pCodPessoaERP <> 0 then
-     vResource :=  vResource+'&codpessoaerp='+pCodPessoaERP.ToString();
-  if pRotaId <> 0 then
-     vResource :=  vResource+'&rotaid='+pRotaId.ToString();
-  vResource := StringReplace(vResource, '?&', '?', [rfReplaceAll]);
-  DmeXactWMS.RequestReport.Resource := vResource;
-  DmeXactWMS.RequestReport.Method   := RmGet;
-  DmeXactWMS.RequestReport.Execute;
-  if (DmeXactWMS.ResponseReport.StatusCode = 200) or (DmeXactWMS.ResponseReport.StatusCode = 201) Then
-     Result := DmeXactWMS.ResponseReport.JSONValue as TJSONArray
-  Else
-     raise Exception.Create('Erro: '+DmeXactWMS.ResponseReport.StatusText);
+  Try
+    DmeXactWMS.ResetRest('R');
+    vResource := 'v1/pedido/coletapulmao?';
+    if pDataInicio <> 0 then
+       vResource :=  vResource+'&dataini='+DateToStr(pDataInicio);
+    if pDataFinal <> 0 then
+       vResource :=  vResource+'&datafin='+DateToStr(pDataFinal);
+    if pCodPessoaERP <> 0 then
+       vResource :=  vResource+'&codpessoaerp='+pCodPessoaERP.ToString();
+    if pRotaId <> 0 then
+       vResource :=  vResource+'&rotaid='+pRotaId.ToString();
+    if pZonaId <> 0 then
+       vResource :=  vResource+'&zonaid='+pZonaId.ToString();
+    vResource := StringReplace(vResource, '?&', '?', [rfReplaceAll]);
+    DmeXactWMS.RequestReport.Resource := vResource;
+    DmeXactWMS.RequestReport.Method   := RmGet;
+    DmeXactWMS.RequestReport.Execute;
+    Result := DmeXactWMS.ResponseReport.JSONValue as TJSONArray;
+  Except On E: Exception Do
+    raise Exception.Create(E.Message);
+  End;
 end;
 
 function TPedidoSaidaDao.GetRelHistoricoTransferenciaPicking(pDataInicial,

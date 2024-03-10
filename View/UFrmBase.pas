@@ -893,6 +893,7 @@ begin
   BtnExportarStand.Grayed := True;
   FdMemPesqGeral.Filter   := '';
   FdmemPesqGeral.Filtered := False;
+  ImprimirExportar(False);
 end;
 
 procedure TFrmBase.LstCadastroClick(Sender: TObject);

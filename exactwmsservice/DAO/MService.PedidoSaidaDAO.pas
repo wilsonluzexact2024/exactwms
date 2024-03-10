@@ -1962,48 +1962,43 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetRelColetaPulmao(Const AParams
-  : TDictionary<string, string>): TjSonArray;
+function TPedidoSaidaDao.GetRelColetaPulmao(Const AParams : TDictionary<string, string>): TjSonArray;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlRelColetaPulmao);
     if AParams.ContainsKey('dataini') then
-      FConexao.Query.ParamByName('pDataIni').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
+       FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
     Else
-      FConexao.Query.ParamByName('pDataIni').Value := 0;
+       FConexao.Query.ParamByName('pDataIni').Value := 0;
     if AParams.ContainsKey('datafin') then
-      FConexao.Query.ParamByName('pDataFin').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
+       FConexao.Query.ParamByName('pDataFin').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
     Else
-      FConexao.Query.ParamByName('pDataFin').Value := 0;
+       FConexao.Query.ParamByName('pDataFin').Value := 0;
     if AParams.ContainsKey('codpessoaerp') then
-      FConexao.Query.ParamByName('pCodPessoaERP').Value :=
-        StrToIntDef(AParams.Items['codpessoaerp'], 0)
+       FConexao.Query.ParamByName('pCodPessoaERP').Value := StrToIntDef(AParams.Items['codpessoaerp'], 0)
     Else
-      FConexao.Query.ParamByName('pCodPessoaERP').Value := 0;
+       FConexao.Query.ParamByName('pCodPessoaERP').Value := 0;
     if AParams.ContainsKey('rotaid') then
-      FConexao.Query.ParamByName('pRotaId').Value :=
-        StrToIntDef(AParams.Items['rotaid'], 0)
+       FConexao.Query.ParamByName('pRotaId').Value := StrToIntDef(AParams.Items['rotaid'], 0)
     Else
-      FConexao.Query.ParamByName('pRotaId').Value := 0;
+       FConexao.Query.ParamByName('pRotaId').Value := 0;
+    if AParams.ContainsKey('zonaid') then
+       FConexao.Query.ParamByName('pzonaid').Value := StrToIntDef(AParams.Items['zonaid'], 0)
+    Else
+      FConexao.Query.ParamByName('pzonaid').Value := 0;
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('ColetaPulmao.Sql');
     FConexao.Query.Open();
     if FConexao.Query.IsEmpty then
     Begin
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        TuEvolutConst.QrySemDados));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
     End
     Else
       Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
-    Begin
-      raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+  Except ON E: Exception do Begin
+    raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

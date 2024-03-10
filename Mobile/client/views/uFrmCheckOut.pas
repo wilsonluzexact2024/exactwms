@@ -233,7 +233,7 @@ Var pQtdCheckOut   : Integer;
     vErro : String;
 begin
   vCodDigitado := EdtProduto.Text;
-  if (StrToInt64Def(EdtProduto.Text, 0) <> FDMemProdutoCodBarras.FieldByName('CodProduto').AsLargeInt) then Begin
+  if (StrToInt64Def(EdtProduto.Text, 0) <> vCodProduto) then Begin
 {     JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
      if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
         SetCampoDefault('EdtProduto');
@@ -730,7 +730,6 @@ begin
     ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create();
     Result := False;
     Try
-      //JsonArrayVolume := DmClient.GetVolumeeXact(StrTointDef(EdtVolumeId.Text, 0));   //Substituido pelo trecho abaixo, Indiana 050324
       vCodProduto := 0;
       JsonObjectVolume := ObjPedidoVolumeCtrl.GetPedidoCxaFechadaCheckOut(StrTointDef(EdtVolumeId.Text, 0));
       if JsonObjectVolume.TryGetValue('Erro', vErro) then Begin

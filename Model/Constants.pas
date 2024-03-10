@@ -4009,36 +4009,34 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       + sLineBreak + 'Group by IdProduto, CodProduto, Descricao, Embalagem' +
       sLineBreak + 'Order by Descricao';
 
-  Const
-    SqlRelColetaPulmao = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
+Const SqlRelColetaPulmao = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
       'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
-      'Declare @PessoaId Integer = Coalesce((Select Pessoaid From Pessoa Where CodPessoaERP = :pCodPessoaERP and PessoaTipoId = 1), 0)'
-      + sLineBreak + 'Declare @RotaId Integer = :pRotaId' + sLineBreak +
-      'select Prd.idProduto ProdutoID, Prd.CodProduto, Prd.Descricao, ' +
-      sLineBreak +
-      '       Prd.FatorConversao, Tend.EnderecoId, Tend.Descricao Endereco, ' +
-      sLineBreak + '       (Case When EmbalagemPadrao>1 then ' + #39 + 'Cxa.C/'
-      + #39'+Cast(EmbalagemPadrao As Char) else Cast(EmbalagemPadrao as Char) End) Embalagem, Est.Mascara, Count(*) As Demanda'
-      + sLineBreak + 'From PedidoVolumeLotes Vl ' + sLineBreak +
-      'Inner Join PedidoVolumes Vlm On Vlm.PedidoVolumeId = Vl.PedidoVolumeId' +
-      sLineBreak + 'Inner Join Pedido Ped on Ped.PedidoId = Vlm.PedidoId' +
-      sLineBreak + 'Inner Join RotaPessoas RP On Rp.PessoaId = Ped.PessoaId' +
-      sLineBreak + 'Inner join Rhema_Data RD on Rd.IdData = Ped.DocumentoData' +
-      sLineBreak + 'Inner Join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId' +
-      sLineBreak + 'Inner Join vProduto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      'Inner join Enderecamentos TEnd On Tend.EnderecoId = Vl.EnderecoId' +
-      sLineBreak +
-      'Inner Join EnderecamentoEstruturas Est On Est.EstruturaId = Tend.EstruturaID'
-      + sLineBreak + 'Inner Join vDocumentoEtapas DE On De.Documento = Vlm.Uuid'
-      + sLineBreak + 'Where Vlm.EmbalagemId Is Null' + sLineBreak +
-      '      And De.ProcessoId in (1, 2, 3) and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1)'
-      + sLineBreak +
-      '      And (@DataIni = 0 or Rd.Data >= @DataIni) and (@DataFin = 0 or Rd.Data <= @DataFin)'
-      + sLineBreak + '      And (@PessoaId = 0 or Ped.Pessoaid = @Pessoaid)' +
-      sLineBreak + '      And (@RotaId = 0 or Rp.RotaId = @RotaId)' + sLineBreak
-      + 'Group by Prd.idProduto, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao, Tend.EnderecoId, Tend.Descricao, EmbalagemPadrao, Est.Mascara'
-      + sLineBreak + 'Order by Tend.Descricao';
+      'Declare @CodPessoaERP Integer = :pCodPessoaERP;' + sLineBreak +
+      'Declare @PessoaId Integer = 0;' + sLineBreak +
+      'If @CodPessoaERP <> 0' + sLineBreak +
+      '   Set @PessoaId = (Select Pessoaid From Pessoa Where PessoaTipoId = 1 and CodPessoaERP = @CodPessoaERP)'+sLineBreak +
+      'Declare @RotaId Integer = :pRotaId'+sLineBreak +
+      'Declare @ZonaId Integer = :pZonaId'+sLineBreaK+
+      'select Prd.idProduto ProdutoID, Prd.CodProduto, Prd.Descricao, '+sLineBreak +
+      '       Prd.FatorConversao, Tend.EnderecoId, Tend.Endereco, Prd.ZonaId, Prd.ZonaDescricao Zona,'+sLineBreak+
+      '       (Case When EmbalagemPadrao>1 then ' + #39 + 'Cxa.C/'+#39'+Cast(EmbalagemPadrao As Char) else Cast(EmbalagemPadrao as Char) End) Embalagem, '+sLineBreak+
+      '       TEnd.Mascara, Count(*) As Demanda, Sum(Vl.Quantidade) Unidade'+sLineBreak+
+      'From PedidoVolumeLotes Vl ' + sLineBreak +
+      'Inner Join PedidoVolumes Vlm On Vlm.PedidoVolumeId = Vl.PedidoVolumeId'+sLineBreak +
+      'Inner Join vPedidos Ped on Ped.PedidoId = Vlm.PedidoId'+sLineBreak +
+      'Inner Join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId'+sLineBreak +
+      'Inner Join vProduto Prd On Prd.IdProduto = Pl.ProdutoId'+sLineBreak +
+      'Inner join vEnderecamentos TEnd On Tend.EnderecoId = Vl.EnderecoId'+sLineBreak +
+      'Inner Join vDocumentoEtapas DE On De.Documento = Vlm.Uuid'+sLineBreak +
+      'Where Vlm.EmbalagemId Is Null' + sLineBreak +
+      '  And De.ProcessoId in (1, 2, 3) and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1)'+sLineBreak+
+      '  And (@DataIni = 0 or Ped.DocumentoData >= @DataIni) and (@DataFin = 0 or Ped.DocumentoData <= @DataFin)'+sLineBreak+
+      '  And (@PessoaId = 0 or Ped.Pessoaid = @Pessoaid)'+sLineBreak +
+      '  And (@RotaId = 0 or Ped.RotaId = @RotaId)' + sLineBreak+
+      '	 And (@ZonaId = 0 or Prd.ZonaId = @ZonaId)'+sLineBreak+
+	     '  And (De.ProcessoId Not in (15, 31))'+sLineBreak+
+      'Group by Prd.idProduto, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao, Tend.EnderecoId, Tend.Endereco, Prd.ZonaId, Prd.ZonaDescricao, EmbalagemPadrao, TEnd.Mascara'+sLineBreak +
+      'Order by Tend.Endereco Asc, Prd.CodProduto Asc';
 
   Const
     SqlRelApahaPicking = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +

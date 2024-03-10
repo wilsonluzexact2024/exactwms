@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uFrmReportBase, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, dxBarBuiltInMenu, AdvUtil,
+  cxLookAndFeels, cxLookAndFeelPainters, dxBarBuiltInMenu, AdvUtil, Vcl.DialogMessage,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, DataSet.Serialize,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   frxExportXLS, frxClass, frxExportPDF, frxExportMail, frxExportImage,
@@ -44,6 +44,18 @@ type
     EdtRotaId: TEdit;
     BtnPesqRota: TBitBtn;
     FdMemPesqGeralEmbalagem: TStringField;
+    GroupBox8: TGroupBox;
+    LblZona: TLabel;
+    Label29: TLabel;
+    EdtZonaId: TEdit;
+    BtnPesqSetor: TBitBtn;
+    LblTotCaixa: TLabel;
+    Label5: TLabel;
+    LblTotUnidade: TLabel;
+    LblUnid: TLabel;
+    FdMemPesqGeralZonaid: TIntegerField;
+    FdMemPesqGeralZona: TStringField;
+    FdMemPesqGeralUnidade: TIntegerField;
     procedure BtnImprimirStandClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FdMemPesqGeralCalcFields(DataSet: TDataSet);
@@ -55,6 +67,8 @@ type
     procedure EdtDestinatarioExit(Sender: TObject);
     procedure EdtDestinatarioChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure EdtZonaIdExit(Sender: TObject);
+    procedure BtnPesqSetorClick(Sender: TObject);
   private
     { Private declarations }
     Procedure MontaListaColeta;
@@ -70,7 +84,8 @@ implementation
 
 {$R *.dfm}
 
-uses PedidoSaidaCtrl, uFuncoes, RotaCtrl, PessoaCtrl, Views.Pequisa.Pessoas, Views.Pequisa.Rotas, Views.Pequisa.Processos;
+uses PedidoSaidaCtrl, uFuncoes, RotaCtrl, PessoaCtrl, Views.Pequisa.Pessoas, Views.Pequisa.Rotas, Views.Pequisa.Processos,
+  EnderecamentoZonaCtrl, Views.Pequisa.EnderecamentoZonas;
 
 procedure TFrmRelColetaPulmao.BtnImprimirStandClick(Sender: TObject);
 Var ObjPedidoCtrl    : TPedidoSaidaCtrl;
@@ -125,6 +140,24 @@ begin
   end;
 end;
 
+procedure TFrmRelColetaPulmao.BtnPesqSetorClick(Sender: TObject);
+Var ReturnJsonArray : TJsonArray;
+    ObjPessoaCtrl   : TPessoaCtrl;
+    vErro           : String;
+begin
+  inherited;
+  if TEdit(Sender).ReadOnly then Exit;
+  FrmPesquisaEnderecamentoZonas := TFrmPesquisaEnderecamentoZonas.Create(Application);
+  try
+    if (FrmPesquisaEnderecamentoZonas.ShowModal = mrOk) then Begin
+       EdtZonaId.Text := FrmPesquisaEnderecamentoZonas.Tag.ToString;
+       EdtZonaIdExit(EdtZonaId);
+    End;
+  finally
+    FreeAndNil(FrmPesquisaEnderecamentoZonas);
+  end;
+end;
+
 procedure TFrmRelColetaPulmao.BtnPesquisarStandClick(Sender: TObject);
 Var ObjPedidoCtrl      : TPedidoSaidaCtrl;
     JsonArrayRetorno   : TJsonArray;
@@ -150,27 +183,32 @@ begin
 //  if StrToIntDef(EdtCodProduto.Text, 0) < 0 then
 //     raise Exception.Create('Código do produto inválido!');
   inherited;
-  BtnImprimirStand.Grayed := True;
+  ImprimirExportar(False);
   ObjPedidoCtrl := TPedidoSaidaCtrl.Create();
-  jsonArrayRetorno := ObjPedidoCtrl.GetRelColetaPulmao(pDataIni, pDataFin, StrToIntDef(EdtDestinatario.Text, 0), StrToIntDef(EdtRotaId.Text, 0)); //, StrToIntDef(EdtPedidoId.Text, 0), StrToIntDef(EdtCodProduto.Text, 0));
-  if JsonArrayRetorno.Items[0].TryGetValue<string>('Erro', vErro) then Begin
-     ShowErro(verro);
-     JsonArrayRetorno := Nil;
-     ObjPedidoCtrl.Free;
-     Exit;
-  End;
-  If FdMemPesqGeral.Active then
-     FdmemPesqGeral.EmptyDataSet;
-  FdMemPesqGeral.Close;
-  FdMemPesqGeral.LoadFromJSON(JsonArrayRetorno, False);
-  BtnImprimirStand.Grayed := FdMemPesqGeral.IsEmpty;
-  BtnExportarStand.Grayed := FdMemPesqGeral.IsEmpty;
-  BtnImprimirStand.Enabled := True;
-  BtnExportarStand.Enabled := True;
-  If Not FdMemPesqGeral.IsEmpty then
-     MontaListaColeta
-  Else ShowErro('Não foi encontrado dados na consulta.');
-  JsonArrayRetorno := Nil;
+  TDialogMessage.ShowWaitMessage('Buscando Dados, conectado com servidor...',
+    procedure
+    begin
+      jsonArrayRetorno := ObjPedidoCtrl.GetRelColetaPulmao(pDataIni, pDataFin, StrToIntDef(EdtDestinatario.Text, 0),
+                          StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtZonaId.Text, 0));
+      if JsonArrayRetorno.Items[0].TryGetValue<string>('Erro', vErro) then Begin
+         ShowErro(verro);
+         JsonArrayRetorno := Nil;
+         ObjPedidoCtrl.Free;
+         Exit;
+      End;
+      If FdMemPesqGeral.Active then
+         FdmemPesqGeral.EmptyDataSet;
+      FdMemPesqGeral.Close;
+      FdMemPesqGeral.LoadFromJSON(JsonArrayRetorno, False);
+      BtnImprimirStand.Grayed := FdMemPesqGeral.IsEmpty;
+      BtnExportarStand.Grayed := FdMemPesqGeral.IsEmpty;
+      BtnImprimirStand.Enabled := True;
+      BtnExportarStand.Enabled := True;
+      If Not FdMemPesqGeral.IsEmpty then
+         MontaListaColeta
+      Else ShowErro('Não foi encontrado dados na consulta.');
+      JsonArrayRetorno := Nil;
+  End);
   ObjPedidoCtrl.Free;
 end;
 
@@ -249,6 +287,37 @@ begin
   ExitFocus(Sender);
 end;
 
+procedure TFrmRelColetaPulmao.EdtZonaIdExit(Sender: TObject);
+Var JsonArrayZona : TJsonArray;
+    vErro : String;
+    ObjEnderecamentoZonaCtrl : TEnderecamentoZonaCtrl;
+begin
+  inherited;
+  if TEdit(Sender).Text = '' then Begin
+     LblZona.Caption := '';
+     Exit;
+  End;
+  if StrToIntDef(TEdit(Sender).Text, 0) <= 0 then Begin
+     LblZona.Caption := '';
+     ShowErro( '😢Código de Zona('+TEdit(Sender).Text+') inválido!' );
+     TEdit(Sender).Clear;
+     TEdit(Sender).SetFocus;
+     Exit;
+  end;
+  ObjEnderecamentoZonaCtrl := TEnderecamentoZonaCtrl.Create;
+  JsonArrayZona := ObjEnderecamentoZonaCtrl.FindEnderecamentoZona(StrToIntDef(TEdit(Sender).Text, 0), '', 0);
+  if JsonArrayZona.Items[0].TryGetValue('Erro', vErro) then Begin
+     ShowErro('😢Código de Zona('+EdtZonaId.Text+') não encontrado!');
+     TEdit(Sender).Clear;
+     TEdit(Sender).SetFocus;
+  End
+  Else
+     LblZona.Caption := JsonArrayZona.Items[0].GetValue<String>('descricao');
+  ExitFocus(Sender);
+  JsonArrayZona := Nil;
+  ObjEnderecamentoZonaCtrl.Free;
+end;
+
 procedure TFrmRelColetaPulmao.FdMemPesqGeralCalcFields(DataSet: TDataSet);
 begin
   inherited;
@@ -261,15 +330,16 @@ procedure TFrmRelColetaPulmao.FormCreate(Sender: TObject);
 begin
   inherited;
   LstReport.ColWidths[0]  := 100;
-  LstReport.ColWidths[1]  := 250;
-  LstReport.ColWidths[2]  := 120;
-  LstReport.ColWidths[3]  := 70;
-  LstReport.ColWidths[4]  := 120;
+  LstReport.ColWidths[1]  := 450;
+  LstReport.ColWidths[2]  := 110;
+  LstReport.ColWidths[3]  := 250;
+  LstReport.ColWidths[4]  :=  70;
+  LstReport.ColWidths[5]  := 120;
   LstReport.RowCount      := 1;
   LstReport.Alignments[0, 0]  := taRightJustify;
   LstReport.FontStyles[0, 0]  := [FsBold];
   LstReport.Alignments[2, 0]  := taCenter;
-  LstReport.Alignments[3, 0]  := taRightJustify;
+  LstReport.Alignments[4, 0]  := taRightJustify;
 end;
 
 procedure TFrmRelColetaPulmao.FormDestroy(Sender: TObject);
@@ -286,28 +356,40 @@ begin
   LstReport.RowCount      := 1;
   FdMemPesqGeral.Filter   := '';
   FdmemPesqGeral.Filtered := False;
+  LblTotRegistro.Caption  := '0';
+  LblTotCaixa.Caption     := '0';
+  LblTotUnidade.Caption   := '0';
 end;
 
 procedure TFrmRelColetaPulmao.MontaListaColeta;
-Var xCorte, xItens, xDemanda, xPerda : Integer;
+Var xItens, xDemanda, xUnidade : Integer;
+
 begin
   LstReport.RowCount := FdMempesqGeral.RecordCount+1;
   If LstReport.RowCount > 1 Then LstReport.FixedRows := 1;
 //  LblRegistro.Caption := FormatFloat('#0', FdMemPesqGeral.RecordCount);
-  xCorte := 1;
+  xItens   := 1;
+  xDemanda := 0;
+  xUnidade := 0;
   While Not FdMemPesqGeral.Eof do Begin
-    LstReport.Cells[0, xCorte] := FdMemPesqGeral.FieldByName('CodProduto').AsString;
-    LstReport.Cells[1, xCorte] := FdMemPesqGeral.FieldByName('Descricao').AsString;
-    LstReport.Cells[2, xCorte] := FdMemPesqGeral.FieldByName('EnderecoFormatado').AsString;
-    LstReport.Cells[3, xCorte] := FdMemPesqGeral.FieldByName('Demanda').AsString;
-    LstReport.Cells[4, xCorte] := FdMemPesqGeral.FieldByName('Embalagem').AsString;
-    LstReport.Alignments[0, xCorte] := taRightJustify;
-    LstReport.FontStyles[0, xCorte] := [FsBold];
-    LstReport.Alignments[2, xCorte]  := taCenter;
-    LstReport.Alignments[3, xCorte] := taRightJustify;
-    Inc(xCorte);
+    LstReport.Cells[0, xItens] := FdMemPesqGeral.FieldByName('CodProduto').AsString;
+    LstReport.Cells[1, xItens] := FdMemPesqGeral.FieldByName('Descricao').AsString;
+    LstReport.Cells[2, xItens] := FdMemPesqGeral.FieldByName('EnderecoFormatado').AsString;
+    LstReport.Cells[3, xItens] := FdMemPesqGeral.FieldByName('Zona').AsString;
+    LstReport.Cells[4, xItens] := FdMemPesqGeral.FieldByName('Demanda').AsString;
+    LstReport.Cells[5, xItens] := FdMemPesqGeral.FieldByName('Embalagem').AsString;
+    xDemanda := xDemanda + FdMemPesqGeral.FieldByName('Demanda').AsInteger;
+    xUnidade := xUnidade + FdMemPesqGeral.FieldByName('Unidade').AsInteger;
+    LstReport.Alignments[0, xItens] := taRightJustify;
+    LstReport.FontStyles[0, xItens] := [FsBold];
+    LstReport.Alignments[2, xItens]  := taCenter;
+    LstReport.Alignments[4, xItens] := taRightJustify;
+    Inc(xItens);
     FdMemPesqGeral.Next;
   End;
+  LblTotRegistro.Caption := FdMemPesqGeral.RecordCount.ToString();
+  LblTotCaixa.Caption    := xDemanda.ToString();
+  LblTotUnidade.Caption  := xUnidade.ToString();
 end;
 
 end.

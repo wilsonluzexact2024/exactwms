@@ -1,29 +1,109 @@
 inherited FrmRelColetaPulmao: TFrmRelColetaPulmao
   Caption = 'FrmRelColetaPulmao'
+  ClientHeight = 714
   OnDestroy = FormDestroy
+  ExplicitHeight = 716
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Height = 659
+    ClientRectBottom = 659
+    inherited TabListagem: TcxTabSheet
+      inherited LstCadastro: TAdvStringGrid
+        Height = 597
+      end
+      inherited AdvGridLookupBar1: TAdvGridLookupBar
+        Height = 597
+      end
+    end
     inherited TabPrincipal: TcxTabSheet
-      ExplicitTop = 24
+      ExplicitTop = 26
       ExplicitWidth = 1157
-      ExplicitHeight = 524
+      ExplicitHeight = 635
+      inherited LblTotRegCaption: TLabel
+        Left = 8
+        Top = 136
+        Width = 72
+        Caption = 'Endere'#231'o(s):'
+        ExplicitLeft = 8
+        ExplicitTop = 136
+        ExplicitWidth = 72
+      end
+      inherited LblTotRegistro: TLabel
+        Left = 92
+        Top = 136
+        ExplicitLeft = 92
+        ExplicitTop = 136
+      end
+      object LblTotCaixa: TLabel [3]
+        Left = 355
+        Top = 136
+        Width = 54
+        Height = 17
+        CustomHint = BalloonHint1
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = '0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label5: TLabel [4]
+        Left = 296
+        Top = 136
+        Width = 48
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = 'Caixa(s):'
+      end
+      object LblTotUnidade: TLabel [5]
+        Left = 637
+        Top = 136
+        Width = 64
+        Height = 17
+        CustomHint = BalloonHint1
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = '0'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object LblUnid: TLabel [6]
+        Left = 555
+        Top = 136
+        Width = 72
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = 'Unidades(s):'
+      end
+      inherited PnlInfo: TPanel
+        Top = 449
+      end
       inherited LstReport: TAdvStringGrid
-        Top = 140
-        Height = 384
-        ColCount = 5
+        Top = 159
+        Height = 476
+        ColCount = 6
         ColumnHeaders.Strings = (
           'C'#243'digo ERP'
           'Descri'#231#227'o'
           'Endereco'
+          'Zona/Setor'
           'Demanda'
           'Embalagem'
           '')
-        ExplicitTop = 140
-        ExplicitHeight = 384
+        ExplicitTop = 159
+        ExplicitHeight = 476
         ColWidths = (
           74
           118
+          74
           74
           74
           74)
@@ -320,9 +400,166 @@ inherited FrmRelColetaPulmao: TFrmRelColetaPulmao
           OnClick = BtnPesqRotaClick
         end
       end
+      object GroupBox8: TGroupBox
+        Left = 773
+        Top = 12
+        Width = 365
+        Height = 55
+        CustomHint = BalloonHint1
+        Caption = '[ Zona / Setor ]'
+        TabOrder = 6
+        TabStop = True
+        object LblZona: TLabel
+          Left = 109
+          Top = 22
+          Width = 12
+          Height = 16
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object Label29: TLabel
+          Left = 15
+          Top = 23
+          Width = 11
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Id'
+        end
+        object EdtZonaId: TEdit
+          Left = 32
+          Top = 20
+          Width = 46
+          Height = 24
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          ReadOnly = True
+          TabOrder = 0
+          OnExit = EdtZonaIdExit
+        end
+        object BtnPesqSetor: TBitBtn
+          Left = 79
+          Top = 20
+          Width = 24
+          Height = 24
+          CustomHint = BalloonHint1
+          Glyph.Data = {
+            36090000424D3609000000000000360000002800000018000000180000000100
+            2000000000000009000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000004390FFE24390FFE20000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+            0000000000000000000000000000000000000000000000000000000000004792
+            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000000000000000000000000004792FFDB277F
+            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+            FF40000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+            FF42000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+            FF3B00000000000000004390FFE200000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000}
+          TabOrder = 1
+          TabStop = False
+          OnClick = BtnPesqSetorClick
+        end
+      end
+    end
+    inherited TabimportacaoCSV: TcxTabSheet
+      inherited DbgImporta: TDBGrid
+        Height = 431
+      end
     end
   end
+  inherited PnHeader: TPanel
+    inherited PanWin8: TPanel
+      inherited BtnPesquisarStand: TsImage
+        Top = 6
+        ExplicitTop = 6
+      end
+      inherited BtnImprimirStand: TsImage
+        Top = 6
+        ExplicitTop = 6
+      end
+    end
+  end
+  inherited PnlImgObjeto: TPanel
+    Left = 974
+    Top = 242
+    ExplicitLeft = 974
+    ExplicitTop = 242
+  end
   inherited PnlErro: TPanel
+    Top = 692
     inherited LblMensShowErro: TLabel
       Width = 1156
       Height = 22
@@ -342,6 +579,7 @@ inherited FrmRelColetaPulmao: TFrmRelColetaPulmao
   inherited FdMemPesqGeral: TFDMemTable
     OnCalcFields = FdMemPesqGeralCalcFields
     Left = 385
+    Top = 279
     object FdMemPesqGeralProdutoId: TIntegerField
       FieldName = 'ProdutoId'
     end
@@ -362,8 +600,18 @@ inherited FrmRelColetaPulmao: TFrmRelColetaPulmao
       FieldName = 'Endereco'
       Size = 11
     end
+    object FdMemPesqGeralZonaid: TIntegerField
+      FieldName = 'Zonaid'
+    end
+    object FdMemPesqGeralZona: TStringField
+      FieldName = 'Zona'
+      Size = 30
+    end
     object FdMemPesqGeralDemanda: TIntegerField
       FieldName = 'Demanda'
+    end
+    object FdMemPesqGeralUnidade: TIntegerField
+      FieldName = 'Unidade'
     end
     object FdMemPesqGeralEmbalagem: TStringField
       FieldName = 'Embalagem'

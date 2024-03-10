@@ -230,7 +230,7 @@ type
     Procedure MontaListaPedido(pFiltro : Boolean = False);
     Procedure ImprimirVolumes;
     Procedure GetVolumeParaEtiquetas(pPedidoid : Integer);
-    Procedure PrintEtiquetaPorRua;
+    Procedure PrintEtiquetaPorRua(TagVolumeOrdem : Integer);
     Procedure LimparLstAdvReport;
     Procedure PesqDados_EtqArmazenamgem;
     Procedure MontaListaEtqArmazenagem;
@@ -1308,8 +1308,9 @@ Var xPedido, xVolumes, xEtiquetas, xEtiquetaPrint: Integer;
     vPrintTag   : Integer;
     vEmbalagem  : Integer;
 Begin
-  If (EdtPedidoVolumeId.Text = '') and (FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem = 1) then Begin
-     PrintEtiquetaPorRua;
+  If (EdtPedidoVolumeId.Text = '') and ((FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem = 1) or
+                                        (FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem = 2))then Begin
+     PrintEtiquetaPorRua(FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem);
      Exit
   End;
   if EdtPedidoVolumeId.Text <> '' then
@@ -1824,7 +1825,7 @@ begin
   End);
 end;
 
-procedure TFrmPrintTag.PrintEtiquetaPorRua;
+procedure TFrmPrintTag.PrintEtiquetaPorRua(TagVolumeOrdem : Integer);
 Var xPedido, xEtiquetas, xEtiquetaPrint : Integer;
     vProcessoId, vEmbalagemId : Integer;
     pJsonEtiqueta, pJsonPedido : TJsonObject;
@@ -1852,6 +1853,7 @@ begin
   pJsonEtiqueta.AddPair('processoid', TJsonNumber.Create(vProcessoId));
   pJsonEtiqueta.AddPair('embalagemid', TJsonNumber.Create(vEmbalagemId));
   pJsonEtiqueta.AddPair('zonaid', TJsonNumber.Create(StrToIntDef(EdtZonaIdVolume.Text, 0)));
+  pJsonEtiqueta.AddPair('tagvolumeordem', TJsonNumber.Create(TagVolumeOrdem));
   For xPedido := 1 to Pred(LstPedidosAdv.RowCount) do  Begin
     if LstPedidosAdv.Cells[7, xPedido] = '1' then Begin
        pJsonPedido := TJsonObject.Create;

@@ -595,7 +595,7 @@ begin
     Except
       On E: Exception do
       Begin
-        Tutil.Gravalog('[EtiquetaVolumePorRua] ' + E.Message);
+        Tutil.Gravalog('[598 - EtiquetaVolumePorRua] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));

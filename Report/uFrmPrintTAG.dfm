@@ -30370,7 +30370,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagArmazenagem
+        Properties.ActivePage = TbTagVolume
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -33616,7 +33616,7 @@ inherited FrmPrintTag: TFrmPrintTag
             end
             object BtnPesqSetorVolume: TBitBtn
               Left = 79
-              Top = 20
+              Top = 22
               Width = 24
               Height = 24
               CustomHint = BalloonHint1

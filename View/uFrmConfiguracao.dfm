@@ -1,6 +1,7 @@
 inherited FrmConfiguracao: TFrmConfiguracao
   Caption = 'FrmConfiguracao'
   ClientHeight = 681
+  ExplicitLeft = -274
   ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 17
@@ -1281,7 +1282,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbTagVolumeOrdem: TComboBox
           Left = 142
-          Top = 26
+          Top = 28
           Width = 139
           Height = 22
           CustomHint = BalloonHint1
@@ -1296,7 +1297,8 @@ inherited FrmConfiguracao: TFrmConfiguracao
           TabStop = False
           Items.Strings = (
             'Pedido'
-            'Endere'#231'o')
+            'Endere'#231'o + Loja'
+            'Endere'#231'o + Produto')
         end
         object ComboBox2: TComboBox
           Left = 412
@@ -1433,9 +1435,6 @@ inherited FrmConfiguracao: TFrmConfiguracao
       Caption = 'Impressora'
       ImageIndex = 2
       OnShow = TabImpressoraShow
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 22
         Top = 14

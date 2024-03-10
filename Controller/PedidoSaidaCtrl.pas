@@ -49,7 +49,7 @@ Type
     Function MontarPaginacao : Integer;
     Function GetProdutoReposicao(pData : TDateTime; pShowErro : Integer) : TJsonArray;
     Function GetRelRupturaAbastecimento(pDataInicial, pDataFinal : TDateTime) : TJsonArray;
-    Function GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
+    Function GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId, pZonaId : Integer) : TJsonArray;
     Function GetRelApanhePicking(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
     Function GetRelAnaliseRessuprimento(aParams : TDictionary<String, String>; pVolume : Boolean) : TJsonArray;
     Function GetReposicaoGerar(pData :  TDateTime; pZonaId : Integer; pEnderecoInicial, pEnderecoFinal : String) : TJsonArray;
@@ -521,12 +521,12 @@ begin
   End;
 end;
 
-function TPedidoSaidaCtrl.GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId : Integer) : TJsonArray;
+function TPedidoSaidaCtrl.GetRelColetaPulmao(pDataInicio, pDataFinal : TDateTime; pCodPessoaERP : Integer; pRotaId,pZonaId : Integer) : TJsonArray;
 Var ObjPedidoSaidaDAO : TPedidoSaidaDAO;
 begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
-    Result := ObjPedidoSaidaDAO.GetRelColetaPulmao(pDataInicio, pDataFinal, pCodPessoaERP, pRotaId);
+    Result := ObjPedidoSaidaDAO.GetRelColetaPulmao(pDataInicio, pDataFinal, pCodPessoaERP, pRotaId, pZonaId);
     ObjPedidoSaidaDAO.Free;
   Except ON E: Exception do Begin
     Result := TJsonArray.Create;
