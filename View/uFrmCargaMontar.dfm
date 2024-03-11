@@ -1,20 +1,20 @@
 inherited FrmCargaMontar: TFrmCargaMontar
   Caption = 'FrmCargaMontar'
-  ClientHeight = 683
+  ClientHeight = 690
   OnDestroy = FormDestroy
-  ExplicitHeight = 685
+  ExplicitHeight = 692
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Height = 628
-    ExplicitHeight = 633
-    ClientRectBottom = 628
+    Height = 635
+    ExplicitHeight = 628
+    ClientRectBottom = 635
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
-      ExplicitHeight = 609
+      ExplicitHeight = 604
       inherited LstCadastro: TAdvStringGrid
-        Height = 566
+        Height = 573
         ColCount = 6
         ColumnHeaders.Strings = (
           'Id'
@@ -33,8 +33,8 @@ inherited FrmCargaMontar: TFrmCargaMontar
           74)
       end
       inherited AdvGridLookupBar1: TAdvGridLookupBar
-        Height = 566
-        ExplicitHeight = 571
+        Height = 573
+        ExplicitHeight = 566
       end
       inherited PnlPesquisaCadastro: TPanel
         inherited CbCampoPesq: TComboBox
@@ -50,7 +50,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
     end
     inherited TabPrincipal: TcxTabSheet
       ParentColor = False
-      ExplicitHeight = 609
+      ExplicitHeight = 604
       inherited ShCadastro: TShape
         Left = 762
         Top = 5
@@ -104,7 +104,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object Label8: TLabel [5]
         Left = 29
-        Top = 579
+        Top = 586
         Width = 53
         Height = 17
         CustomHint = BalloonHint1
@@ -120,7 +120,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object TotPedidos: TLabel [6]
         Left = 90
-        Top = 579
+        Top = 586
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -136,7 +136,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object Label11: TLabel [7]
         Left = 311
-        Top = 579
+        Top = 586
         Width = 33
         Height = 17
         CustomHint = BalloonHint1
@@ -152,7 +152,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object TotPeso: TLabel [8]
         Left = 354
-        Top = 579
+        Top = 586
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -168,7 +168,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object TotVolume: TLabel [9]
         Left = 628
-        Top = 579
+        Top = 586
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -184,7 +184,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object Label15: TLabel [10]
         Left = 569
-        Top = 579
+        Top = 586
         Width = 51
         Height = 17
         CustomHint = BalloonHint1
@@ -200,9 +200,9 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       inherited PnlInfo: TPanel
         Left = 622
-        Top = 140
+        Top = 147
         ExplicitLeft = 622
-        ExplicitTop = 145
+        ExplicitTop = 140
       end
       inherited ChkCadastro: TCheckBox
         Left = 709
@@ -739,6 +739,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Width = 1126
         Height = 430
         CustomHint = BalloonHint1
+        Anchors = [akLeft, akTop, akRight, akBottom]
         BevelOuter = bvNone
         Caption = 'PnlListaCliPedidos'
         TabOrder = 7
@@ -1126,8 +1127,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
             BevelOuter = bvNone
             ParentBackground = False
             TabOrder = 4
-            ExplicitLeft = 855
-            ExplicitTop = 2
+            ExplicitHeight = 155
             DesignSize = (
               247
               172)
@@ -1384,25 +1384,25 @@ inherited FrmCargaMontar: TFrmCargaMontar
     inherited TbFrameWeb: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
-      ExplicitHeight = 609
+      ExplicitHeight = 604
     end
     inherited TabimportacaoCSV: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
-      ExplicitHeight = 609
+      ExplicitHeight = 604
       inherited DbgImporta: TDBGrid
         Top = 289
-        Height = 315
+        Height = 322
       end
     end
     object TabAcompanhamentoCarga: TcxTabSheet
       CustomHint = BalloonHint1
       Caption = 'Acompanhamento de Cargas'
       ImageIndex = 4
-      ExplicitHeight = 609
+      ExplicitHeight = 604
       DesignSize = (
         1157
-        604)
+        611)
       object LblTotRegCaption: TLabel
         Left = 8
         Top = 142
@@ -2041,8 +2041,8 @@ inherited FrmCargaMontar: TFrmCargaMontar
     ExplicitTop = -12
   end
   inherited PnlErro: TPanel
-    Top = 661
-    ExplicitTop = 666
+    Top = 668
+    ExplicitTop = 661
     inherited LblMensShowErro: TLabel
       Width = 1156
       Height = 22

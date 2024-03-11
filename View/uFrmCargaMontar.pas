@@ -1216,7 +1216,7 @@ begin
           End;
           for xPed := 1 to Pred(LstAdvPedidos.RowCount) do
             if StrToInt(LstAdvPedidos.Cells[3, xPed]) = vCodigoERP then
-               LstAdvPedidos.Cells[10, xCliente] := LstAdvClientesRota.Cells[9, xCliente];
+               LstAdvPedidos.Cells[10, xPed] := LstAdvClientesRota.Cells[9, xCliente];
         End;
         SelClienteRota := Not SelClienteRota;
         CalculaPesoVolume;
