@@ -1,20 +1,20 @@
 inherited FrmCargaMontar: TFrmCargaMontar
   Caption = 'FrmCargaMontar'
-  ClientHeight = 688
+  ClientHeight = 683
   OnDestroy = FormDestroy
-  ExplicitHeight = 690
+  ExplicitHeight = 685
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Height = 633
+    Height = 628
     ExplicitHeight = 633
-    ClientRectBottom = 633
+    ClientRectBottom = 628
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
       ExplicitHeight = 609
       inherited LstCadastro: TAdvStringGrid
-        Height = 571
+        Height = 566
         ColCount = 6
         ColumnHeaders.Strings = (
           'Id'
@@ -33,7 +33,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
           74)
       end
       inherited AdvGridLookupBar1: TAdvGridLookupBar
-        Height = 571
+        Height = 566
         ExplicitHeight = 571
       end
       inherited PnlPesquisaCadastro: TPanel
@@ -104,7 +104,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
       object Label8: TLabel [5]
         Left = 29
-        Top = 584
+        Top = 579
         Width = 53
         Height = 17
         CustomHint = BalloonHint1
@@ -116,10 +116,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       object TotPedidos: TLabel [6]
         Left = 90
-        Top = 584
+        Top = 579
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -131,10 +132,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       object Label11: TLabel [7]
         Left = 311
-        Top = 584
+        Top = 579
         Width = 33
         Height = 17
         CustomHint = BalloonHint1
@@ -146,10 +148,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       object TotPeso: TLabel [8]
         Left = 354
-        Top = 584
+        Top = 579
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -161,10 +164,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       object TotVolume: TLabel [9]
         Left = 628
-        Top = 584
+        Top = 579
         Width = 7
         Height = 17
         CustomHint = BalloonHint1
@@ -176,10 +180,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       object Label15: TLabel [10]
         Left = 569
-        Top = 584
+        Top = 579
         Width = 51
         Height = 17
         CustomHint = BalloonHint1
@@ -191,10 +196,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
         Font.Name = 'Segoe UI'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitTop = 584
       end
       inherited PnlInfo: TPanel
         Left = 622
-        Top = 145
+        Top = 140
         ExplicitLeft = 622
         ExplicitTop = 145
       end
@@ -1110,9 +1116,9 @@ inherited FrmCargaMontar: TFrmCargaMontar
             25
             25)
           object PnlResumoCarga: TPanel
-            Left = 868
+            Left = 858
             Top = 0
-            Width = 237
+            Width = 247
             Height = 172
             CustomHint = BalloonHint1
             Align = alRight
@@ -1120,14 +1126,15 @@ inherited FrmCargaMontar: TFrmCargaMontar
             BevelOuter = bvNone
             ParentBackground = False
             TabOrder = 4
-            ExplicitHeight = 155
+            ExplicitLeft = 855
+            ExplicitTop = 2
             DesignSize = (
-              237
+              247
               172)
             object Label9: TLabel
-              Left = 6
+              Left = 20
               Top = 4
-              Width = 98
+              Width = 110
               Height = 16
               CustomHint = BalloonHint1
               Caption = 'Dados do Ve'#237'culo'
@@ -1135,11 +1142,11 @@ inherited FrmCargaMontar: TFrmCargaMontar
               Font.Color = 4227327
               Font.Height = -13
               Font.Name = 'Tahoma'
-              Font.Style = []
+              Font.Style = [fsBold, fsUnderline]
               ParentFont = False
             end
             object Label12: TLabel
-              Left = 6
+              Left = 24
               Top = 26
               Width = 71
               Height = 16
@@ -1153,7 +1160,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object Label14: TLabel
-              Left = 33
+              Left = 47
               Top = 48
               Width = 48
               Height = 16
@@ -1167,7 +1174,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object LblVolumeVeiculo: TLabel
-              Left = 186
+              Left = 194
               Top = 48
               Width = 31
               Height = 16
@@ -1183,7 +1190,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object LblPesoVeiculo: TLabel
-              Left = 187
+              Left = 197
               Top = 26
               Width = 28
               Height = 16
@@ -1197,11 +1204,12 @@ inherited FrmCargaMontar: TFrmCargaMontar
               Font.Name = 'Tahoma'
               Font.Style = [fsBold]
               ParentFont = False
+              ExplicitLeft = 187
             end
             object Label16: TLabel
               Left = 6
-              Top = 88
-              Width = 91
+              Top = 74
+              Width = 102
               Height = 16
               CustomHint = BalloonHint1
               Caption = 'Dados da Carga'
@@ -1209,12 +1217,12 @@ inherited FrmCargaMontar: TFrmCargaMontar
               Font.Color = 4227327
               Font.Height = -13
               Font.Name = 'Tahoma'
-              Font.Style = []
+              Font.Style = [fsBold, fsUnderline]
               ParentFont = False
             end
             object Label17: TLabel
-              Left = 49
-              Top = 110
+              Left = 59
+              Top = 96
               Width = 32
               Height = 16
               CustomHint = BalloonHint1
@@ -1227,12 +1235,12 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object Label18: TLabel
-              Left = 33
-              Top = 132
-              Width = 48
+              Left = 4
+              Top = 121
+              Width = 87
               Height = 16
               CustomHint = BalloonHint1
-              Caption = 'Volume:'
+              Caption = 'Cubagem(m3):'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = 4227327
               Font.Height = -13
@@ -1241,8 +1249,8 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object LblPesoCarga: TLabel
-              Left = 187
-              Top = 110
+              Left = 197
+              Top = 98
               Width = 28
               Height = 16
               CustomHint = BalloonHint1
@@ -1257,14 +1265,44 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object LblVolumeCarga: TLabel
-              Left = 186
-              Top = 132
+              Left = 194
+              Top = 122
               Width = 31
               Height = 16
               CustomHint = BalloonHint1
               Alignment = taRightJustify
               Anchors = [akTop, akRight]
               Caption = '0 m3'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+            end
+            object Label21: TLabel
+              Left = 19
+              Top = 148
+              Width = 72
+              Height = 16
+              CustomHint = BalloonHint1
+              Caption = 'Qtd.Volume:'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = 4227327
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+            end
+            object LblQtdVolumeCarga: TLabel
+              Left = 217
+              Top = 144
+              Width = 8
+              Height = 16
+              CustomHint = BalloonHint1
+              Alignment = taRightJustify
+              Anchors = [akTop, akRight]
+              Caption = '0'
               Font.Charset = DEFAULT_CHARSET
               Font.Color = clBlack
               Font.Height = -13
@@ -1344,24 +1382,27 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 609
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 609
       inherited DbgImporta: TDBGrid
         Top = 289
+        Height = 315
       end
     end
     object TabAcompanhamentoCarga: TcxTabSheet
       CustomHint = BalloonHint1
       Caption = 'Acompanhamento de Cargas'
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 609
       DesignSize = (
         1157
-        609)
+        604)
       object LblTotRegCaption: TLabel
         Left = 8
         Top = 142
@@ -1994,13 +2035,13 @@ inherited FrmCargaMontar: TFrmCargaMontar
     end
   end
   inherited PnlImgObjeto: TPanel
-    Left = 683
-    Top = 305
-    ExplicitLeft = 683
-    ExplicitTop = 305
+    Left = 510
+    Top = -12
+    ExplicitLeft = 510
+    ExplicitTop = -12
   end
   inherited PnlErro: TPanel
-    Top = 666
+    Top = 661
     ExplicitTop = 666
     inherited LblMensShowErro: TLabel
       Width = 1156
@@ -2008,10 +2049,10 @@ inherited FrmCargaMontar: TFrmCargaMontar
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 941
-    Top = 312
-    ExplicitLeft = 941
-    ExplicitTop = 312
+    Left = 991
+    Top = 20
+    ExplicitLeft = 991
+    ExplicitTop = 20
     inherited Panel7: TPanel
       inherited LblTitConfigPrinter: TLabel
         Width = 313

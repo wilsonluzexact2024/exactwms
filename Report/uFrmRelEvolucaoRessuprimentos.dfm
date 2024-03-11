@@ -6,12 +6,9 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
   TextHeight = 17
   inherited PgcBase: TcxPageControl
     Height = 647
-    Properties.ActivePage = TabPrincipal
     ExplicitHeight = 647
     ClientRectBottom = 647
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 623
       inherited LstCadastro: TAdvStringGrid
         Height = 585
@@ -7181,13 +7178,9 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 623
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 623
       inherited DbgImporta: TDBGrid
         Height = 419

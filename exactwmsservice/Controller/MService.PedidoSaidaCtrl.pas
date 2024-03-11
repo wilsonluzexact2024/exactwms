@@ -214,9 +214,9 @@ begin
     .Get('/pedido/dsboard/evolucaoatendimentoped', GetEvolucaoAtendimentoPed)
     .Get('/pedido/dsboard/evolucaoatendimentovol', GetEvolucaoAtendimentoVol)
     .Get('/pedido/dsboard/evolucaoatendimentounid', GetEvolucaoAtendimentoUnid)
-    .Get('/pedido/dsboard/evolucaoatendimentounidembalagem',
-    GetEvolucaoAtendimentoUnidEmbalagem).Delete('/pedido/reservacorrecao',
-    DeleteReservaCorrecao).Get('/pedido/processo/:pedidoid', GetPedidoProcesso)
+    .Get('/pedido/dsboard/evolucaoatendimentounidembalagem', GetEvolucaoAtendimentoUnidEmbalagem)
+    .Delete('/pedido/reservacorrecao', DeleteReservaCorrecao)
+    .Get('/pedido/processo/:pedidoid', GetPedidoProcesso)
     .Get('/pedido/ReposicaoAutomatica', GetReposicaoAutomatica)
     .Get('/pedido/ReposicaoAutomaticacoleta', GetReposicaoAutomaticaColeta)
     .Get('/reposicao/consulta', GetConsultaReposicao)

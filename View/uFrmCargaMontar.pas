@@ -129,6 +129,8 @@ type
     EdtRotaIdFinal: TEdit;
     BtnPesqRotaFinal: TBitBtn;
     FDMemResumoCarga: TFDMemTable;
+    Label21: TLabel;
+    LblQtdVolumeCarga: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure EdtCargaIdEnter(Sender: TObject);
     procedure EdtCargaIdExit(Sender: TObject);
@@ -399,25 +401,29 @@ end;
 
 procedure TFrmCargaMontar.CalculaPesoVolume;
 Var vPesoGeral, vVolumeGeral, vPesoSel, vVolumeSel : Real;
-    xPed : Integer;
+    xPed, vQtdVolumes : Integer;
 begin
   vPesoGeral   := 0;
   vVolumeGeral := 0;
   vPesoSel     := 0;
   vVolumeSel   := 0;
+  vQtdVolumes  := 0;
   for xPed := 1 to Pred(LstAdvPedidos.RowCount) do Begin
     if LstAdvPedidos.Cells[10, xPed] = '1' then Begin
        vPesoSel     := vPesoSel   + StrToFloat(LstAdvPedidos.Cells[8, xPed]);
        vVolumeSel   := vVolumeSel + StrToFloat(LstAdvPedidos.Cells[9, xPed]);
+       vQtdVolumes  := vQtdVolumes  + (StrToInt(LstAdvPedidos.Cells[5, xPed])+StrToInt(LstAdvPedidos.Cells[6, xPed]));
     End;
     vPesoGeral   := vPesoGeral   + StrToFloat(LstAdvPedidos.Cells[8, xPed]);
     vVolumeGeral := vVolumeGeral + StrToFloat(LstAdvPedidos.Cells[9, xPed]);
   End;
-  TotPedidos.Caption     := FormatFloat('####0',     LstAdvPedidos.Rowcount-1);
-  TotPeso.Caption        := FormatFloat('####0.000', vPesoGeral)+' Kg';
-  TotVolume.Caption      := FormatFloat('####0.000', vVolumeGeral)+' m3';
-  LblPesoCarga.Caption   := FormatFloat('####0.000', vPesoSel)+' Kg';
-  LblVolumeCarga.Caption := FormatFloat('####0.000', vVolumeSel)+' m3';
+  TotPedidos.Caption        := FormatFloat('####0',     LstAdvPedidos.Rowcount-1);
+  TotPeso.Caption           := FormatFloat('####0.000', vPesoGeral)+' Kg';
+  TotVolume.Caption         := FormatFloat('####0.000', vVolumeGeral)+' m3';
+  LblPesoCarga.Caption      := FormatFloat('####0.000', vPesoSel)+' Kg';
+  LblVolumeCarga.Caption    := FormatFloat('####0.000', vVolumeSel)+' m3';
+  LblQtdVolumeCarga.Caption := FormatFloat('0', vQtdVolumes);
+
   if vPesoSel > ObjCargaCtrl.ObjCargas.veiculo.CapacidadeKg then
      LblPesoCarga.Font.Color := ClRed
   Else LblPesoCarga.Font.Color := ClBlack;
@@ -1191,6 +1197,11 @@ procedure TFrmCargaMontar.LstAdvClientesRotaClickCell(Sender: TObject; ARow,
 Var xCliente, xPed : Integer;
     vCodigoERP : Integer;
 begin
+  if (aRow = 0) and (aCol<>9) then Begin
+     TAdvStringGrid(Sender).SortSettings.Column := aCol;
+     TAdvStringGrid(Sender).QSort;
+     Exit;
+  End;
   inherited;
   if (LstAdvClientesRota.RowCount <= 1) or (BtnSalvar.Grayed) then Exit;
   if (aCol = 9) then Begin
@@ -1203,9 +1214,9 @@ begin
           Else Begin
              LstAdvClientesRota.Cells[9, xCliente] := '1';
           End;
-          for xPed := 0 to Pred(LstAdvPedidos.RowCount) do
-            if StrToInt(LstAdvPedidos.Cells[3, xCliente]) = vCodigoERP then
-               LstAdvPedidos.Cells[3, xCliente] := LstAdvClientesRota.Cells[9, xCliente];
+          for xPed := 1 to Pred(LstAdvPedidos.RowCount) do
+            if StrToInt(LstAdvPedidos.Cells[3, xPed]) = vCodigoERP then
+               LstAdvPedidos.Cells[10, xCliente] := LstAdvClientesRota.Cells[9, xCliente];
         End;
         SelClienteRota := Not SelClienteRota;
         CalculaPesoVolume;
@@ -1232,6 +1243,11 @@ procedure TFrmCargaMontar.LstAdvPedidosClickCell(Sender: TObject; ARow,
   ACol: Integer);
 Var xPed : Integer;
 begin
+  if (aRow = 0) and (aCol<>10) then Begin
+     TAdvStringGrid(Sender).SortSettings.Column := aCol;
+     TAdvStringGrid(Sender).QSort;
+     Exit;
+  End;
   inherited;
   if (LstAdvPedidos.RowCount <= 1) or (BtnSalvar.Grayed) then Exit;
   if (aCol = 10) then Begin

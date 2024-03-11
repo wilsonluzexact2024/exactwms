@@ -356,20 +356,16 @@ Const SqlPedido = //'SET STATISTICS IO OFF' + sLineBreak +
       'Declare @CargaId Integer = :pCargaId' + sLineBreak +
       'Declare @NotaFiscalERP Varchar(50) = :pNotaFiscalERP' + sLineBreak +
       'Select Ped.PedidoId,	Ped.OperacaoTipoId,	Ped.OperacaoTipo,	Ped.Operacao,	Ped.Pessoaid,	Ped.CodPessoaERP,	Ped.Razao,	Ped.Fantasia,	Ped.DocumentoOriginal,	'+sLineBreak+
-      '       Ped.DocumentoNr, Ped.DocumentoData,	Ped.RegistroERP,	Ped.DtProcesso,	Ped.DtInclusao, Ped.HrInclusao,	Ped.RotaId,	Ped.Rota,	Ped.ArmazemId,	Ped.Status,	'+sLineBreak+
-      '       Ped.uuid,	Ped.ProcessoId,	Ped.processo, PNF.NotaFiscal as NotaFiscalERP, Ped.ProcessoId, Ped.Processo Etapa, Ped.DtProcesso,' + sLineBreak +
+      '       Ped.DocumentoNr, Ped.DocumentoData,	Ped.RegistroERP,	Ped.DtInclusao, Ped.HrInclusao,	Ped.RotaId,	Ped.Rota,	Ped.ArmazemId,	Ped.Status,	'+sLineBreak+
+      '       Ped.uuid,	PNF.NotaFiscal as NotaFiscalERP, Ped.ProcessoId, Ped.processo, Ped.Processo Etapa, Ped.DtProcesso,' + sLineBreak +
       '       Pp.Itens, PP.Demanda, Coalesce(Vl.QtdSuprida, 0) QtdSuprida,' + sLineBreak +
       '       Coalesce(Etapa.TCxaFechada, 0) as TVolCxaFechada, Coalesce(Etapa.TCxaFracionada, 0) TVolFracionado,' + sLineBreak +
       '       Coalesce(Etapa.TCxaFechada, 0)+Coalesce(Etapa.TCxaFracionada, 0)+Coalesce(Etapa.Cancelado, 0) as TVolumes,'+sLineBreak+
-//      '       (Case When Exists (Select Prd.EnderecoId From PedidoProdutos PP' + sLineBreak +
-//      '                   Inner join Produto Prd On Prd.IdProduto = PP.Produtoid' + sLineBreak +
-//      '                   Left Join vEstoque Est ON Est.CodigoERP = Prd.CodProduto' + sLineBreak +
-//      '				               Where PP.PedidoId = Ped.PedidoId and Prd.EnderecoId Is Null and Est.CodigoERP is Not Null) then 0 Else 1' + sLineBreak +
-//      ' End) As Picking,'+sLineBreak+
       '       (Case When PPick.QtdeProducao > 0 then 0 Else 1 End) Picking,'+sLineBreak+
       '       Coalesce(Etapa.Cancelado, 0) as Cancelado' + sLineBreak +
       '     , Coalesce(VL.Peso, 0) Peso, Coalesce(VL.VolCm3, 0) VolCm3, Coalesce(VL.Volm3, 0) Volm3, Coalesce(VL.Processado, 0) Processado, Coalesce(VL.Concluido, 0) Concluido' + sLineBreak +
       '     ,  Coalesce(Cp.CargaId, 0) CargaId, Coalesce(Cp.CarregamentoId, 0) Carregamentoid, Coalesce(Cp.ProcessoId, 0) ProcessoIdCarga, Cp.Processo ProcessoCarga' + sLineBreak +
+      'Into #Pedidos'+sLineBreak+
       'From (select Ped.PedidoId, Ped.OperacaoTipoId, Ped.OperacaoNome as OperacaoTipo, Ped.OperacaoNome Operacao, Ped.Pessoaid, Ped.CodPessoaERP,' + sLineBreak +
       '      Ped.Razao, Ped.Fantasia, ped.DocumentoOriginal, Ped.DocumentoNr, FORMAT(Ped.DocumentoData, '+#39+'dd/MM/yyyy'+#39+') as DocumentoData,' + sLineBreak +
       '	     Ped.RegistroERP' + sLineBreak +
@@ -432,6 +428,7 @@ Const SqlPedido = //'SET STATISTICS IO OFF' + sLineBreak +
       'Left Join vPedidoNotaFiscalPrincipal PNF On PNF.PedidoID = Ped.PedidoId' + sLineBreak +
       'Where ((@MontarCarga=0 and (Cp.CargaId Is Null or Cp.cargaid = @CargaId)) or (@MontarCarga=1 and Cp.CargaId Is Not Null) or @MontarCarga=2)' + sLineBreak +
       '  and (@CodProduto = 0 or Pp.Itens > 0)' + sLineBreak +
+      'select * From  #Pedidos Ped'+sLineBreak+
       'Order by Ped.DocumentoData, Ped.PedidoId';
 
 Const PedidoAllResto =      '' + sLineBreak +

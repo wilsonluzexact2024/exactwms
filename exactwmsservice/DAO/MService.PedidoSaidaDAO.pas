@@ -759,7 +759,7 @@ begin
     Begin
       Result := TjSonArray.Create;
       Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Sem Dados da Estrutura da Tabela.'))
+        'Sem Evolução do Ressuprimento(Detalhes).'))
     End
     Else
       Result := FConexao.Query.ToJSONArray;
