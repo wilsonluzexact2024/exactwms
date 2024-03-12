@@ -255,8 +255,8 @@ begin
   MService.SegregadoCausaCtrl.Registry;
   MService.MonitorLogCtrl.Registry;
 
-  THorse.MaxConnections := 150;
-  THorse.ListenQueue := 150;
+  THorse.MaxConnections := 15;
+  THorse.ListenQueue := 15;
   PortaServer := 8200;
 
   try
@@ -282,7 +282,7 @@ begin
   except
 
   end;
-  TSistemaControl.GetInstance();
+ // TSistemaControl.GetInstance();
   Tutil.SetConectionsDef();
   THorse.Get('/eXactWMS',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)

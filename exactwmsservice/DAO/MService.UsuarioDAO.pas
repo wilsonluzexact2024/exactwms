@@ -5,7 +5,8 @@ interface
 uses
   FireDAC.Comp.Client, UsuarioClass, System.SysUtils, DataSet.Serialize,
   FireDAC.Stan.Option, System.JSON, REST.JSON, Web.HTTPApp,
-  Generics.Collections, exactwmsservice.lib.connection,exactwmsservice.dao.base;
+  Generics.Collections, exactwmsservice.lib.connection,
+  exactwmsservice.dao.base;
 
 Const
   SqlUsuario =
@@ -32,10 +33,10 @@ Const
     '		   Where OnOff = 1) Ul On Ul.UsuarioId = U.UsuarioId';
 
 type
-  TUsuarioDao =class(TBasicDao)
+  TUsuarioDao = class(TBasicDao)
   private
     // FIndexConn : Integer;
-    
+
   public
     constructor Create; overload;
     Destructor Destroy; override;
@@ -59,7 +60,7 @@ type
       pStatus: Integer): TjSonArray;
     Function GetUsuario4D(const AParams: TDictionary<string, string>)
       : TJsonObject;
-    Function ImportCSV(pJsonArray : TJsonArray) : TJsonArray;
+    Function ImportCSV(pJsonArray: TjSonArray): TjSonArray;
 
   end;
 
@@ -77,35 +78,43 @@ Begin
     FConexao.Query.ParamByName('pUsuarioId').Value := pUsuarioId;
     FConexao.Query.ParamByName('PFuncionalidade').Value := pFuncionalidade;
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Acesso não permitido a Funcionalidade!'));
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        'Acesso não permitido a Funcionalidade!'));
     End
     Else
       Result := FConexao.Query.toJsonArray;
   Except
     on E: Exception do
     Begin
+      if not assigned(Result) then
+        Result := TjSonArray.Create;
       Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
     End;
   end;
 end;
 
-function TUsuarioDao.AcessoTopico(pUsuarioId: Integer; pTopico: String) : TjSonArray;
+function TUsuarioDao.AcessoTopico(pUsuarioId: Integer; pTopico: String)
+  : TjSonArray;
 Begin
   try
     FConexao.Query.Sql.Add(tuEvolutConst.SqlGetUsuarioAcessoTopico);
     FConexao.Query.ParamByName('pUsuarioId').Value := pUsuarioId;
     FConexao.Query.ParamByName('pTopico').Value := pTopico;
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Acesso não permitido ao Tópico!'));
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        'Acesso não permitido ao Tópico!'));
     End
     Else
       Result := FConexao.Query.toJsonArray;
-  Except on E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    on E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
@@ -123,13 +132,15 @@ begin
       ('usuarioId'));
     FConexao.Query.ExecSQL;
     Result := True;
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
 function TUsuarioDao.ControleAcesso(pUsuarioId: Integer): TJsonObject;
-var JsonArrayModulos, JsonArrayFuncionalidades: TjSonArray;
+var
+  JsonArrayModulos, JsonArrayFuncionalidades: TjSonArray;
 Begin
   Result := TJsonObject.Create;
   try
@@ -180,15 +191,17 @@ begin
 end;
 
 function TUsuarioDao.Delete(pUsuarioId: Integer): Boolean;
-var vSql: String;
+var
+  vSql: String;
 begin
   Result := False;
   try
     vSql := 'Delete from Usuarios where UsuarioId = ' + pUsuarioId.ToString;
     FConexao.Query.ExecSQL(vSql);
     Result := True;
-  Except on E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    on E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
@@ -198,15 +211,18 @@ begin
 end;
 
 function TUsuarioDao.FindLoginNome(pLogin, pNome: String): TjSonArray;
-var vSql: String;
+var
+  vSql: String;
 begin
   try
     FConexao.Query.Sql.Add(SqlUsuario);
     FConexao.Query.Sql.Add('Where (1=1)');
     if pLogin <> '*' then
-      FConexao.Query.Sql.Add(' And U.Login like ' + QuotedStr('%' + pLogin + '%'));
+      FConexao.Query.Sql.Add(' And U.Login like ' +
+        QuotedStr('%' + pLogin + '%'));
     if pNome <> '*' then
-      FConexao.Query.Sql.Add(' And U.Nome like ' + QuotedStr('%' + pNome + '%'));
+      FConexao.Query.Sql.Add(' And U.Nome like ' +
+        QuotedStr('%' + pNome + '%'));
     If DebugHook <> 0 Then
       FConexao.Query.Sql.SaveToFile('GetFindLoginNome.Sql');
     FConexao.Query.Open;
@@ -228,7 +244,8 @@ begin
 end;
 
 function TUsuarioDao.GetId(pUsuarioId: String): TjSonArray;
-var vSql: String;
+var
+  vSql: String;
 begin
   try
     FConexao.Query.Sql.Add(SqlUsuario);
@@ -243,12 +260,15 @@ begin
     If DebugHook <> 0 Then
       FConexao.Query.Sql.SaveToFile('GetUsuario.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Dados não encontrado na pesquisa!'));
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        'Dados não encontrado na pesquisa!'));
     End
-    Else Begin
-       Result := FConexao.Query.toJsonArray;
+    Else
+    Begin
+      Result := FConexao.Query.toJsonArray;
     End;
   Except
     on E: Exception do
@@ -270,9 +290,11 @@ Begin
     if DebugHook <> 0 then
       FConexao.Query.Sql.SaveToFile('UsuarioLista.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', tuEvolutConst.QrySemDados));
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        tuEvolutConst.QrySemDados));
     End
     Else
       Result := FConexao.Query.toJsonArray;
@@ -297,7 +319,7 @@ begin
   Result := TJsonObject.Create();
   try
     QryPesquisa := FConexao.GetQuery;
-    QryPesquisa.connection := Fconexao.DB;
+    QryPesquisa.connection := FConexao.DB;
     QryPesquisa.Sql.Add(vSql);
     QryRecordCount := FConexao.GetQuery;
     QryRecordCount.connection := QryPesquisa.connection;
@@ -338,49 +360,63 @@ begin
       QryPesquisa.Sql.SaveToFile('UsuarioLista.Sql');
     QryRecordCount.Open();
     Result.AddPair('records',
-       TJSONNumber.Create(QryRecordCount.FieldByName('cReg').AsInteger));
+      TJSONNumber.Create(QryRecordCount.FieldByName('cReg').AsInteger));
     QryPesquisa.Close;
     QryRecordCount.Close;
-    
-    
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
-function TUsuarioDao.ImportCSV(pJsonArray: TJsonArray): TJsonArray;
-Var xUsuario  : Integer;
-    vPerfilId : Integer;
+function TUsuarioDao.ImportCSV(pJsonArray: TjSonArray): TjSonArray;
+Var
+  xUsuario: Integer;
+  vPerfilId: Integer;
 begin
-  Result := TJsonArray.Create;
-  for xUsuario := 0 to Pred(pJsonArray.Count) do Begin
+  Result := TjSonArray.Create;
+  for xUsuario := 0 to Pred(pJsonArray.Count) do
+  Begin
     Try
       FConexao.Query.Close;
       FConexao.Query.Sql.Clear;
-      FConexao.Query.Sql.Add('Select PerfilId From Perfil Where Descricao = '+QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('perfil')));
+      FConexao.Query.Sql.Add('Select PerfilId From Perfil Where Descricao = ' +
+        QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('perfil')));
       FConexao.Query.Open();
-      vPerfilid := StrToIntDef(FConexao.Query.FieldByName('PerfilId').AsString, 1);
+      vPerfilId := StrToIntDef(FConexao.Query.FieldByName('PerfilId')
+        .AsString, 1);
       FConexao.Query.Close;
       FConexao.Query.Sql.Clear;
-      FConexao.Query.Sql.Add('Insert Into Usuarios (login, nome, senha,	senhapadrao,	diassenhavalida, email, ');
-      FConexao.Query.Sql.Add('                      PerfilId, dtultimaalteracaosenha,	hrultimaalteracaosenha,	');
-      FConexao.Query.Sql.Add('                      dtinclusao,	hrinclusao,	status,	uuid) Values(');
-      FConexao.Query.SQL.Add(QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('login'))+', '+
-                             QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('nome'))+', '+
-                             QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('senha'))+', 0, 30, '+
-                             QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('email'))+', '+vPerfilId.ToString+', '+
-                             TuEvolutConst.SqlDataAtual+', '+TuEvolutConst.SqlHoraAtual+', '+
-                             TuEvolutConst.SqlDataAtual+', '+TuEvolutConst.SqlHoraAtual+', 1, NewId()' );
+      FConexao.Query.Sql.Add
+        ('Insert Into Usuarios (login, nome, senha,	senhapadrao,	diassenhavalida, email, ');
+      FConexao.Query.Sql.Add
+        ('                      PerfilId, dtultimaalteracaosenha,	hrultimaalteracaosenha,	');
+      FConexao.Query.Sql.Add
+        ('                      dtinclusao,	hrinclusao,	status,	uuid) Values(');
+      FConexao.Query.Sql.Add
+        (QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('login')) + ', '
+        + QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('nome')) + ', '
+        + QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>('senha')) +
+        ', 0, 30, ' + QuotedStr(pJsonArray.Items[xUsuario].GetValue<String>
+        ('email')) + ', ' + vPerfilId.ToString + ', ' +
+        tuEvolutConst.SqlDataAtual + ', ' + tuEvolutConst.SqlHoraAtual + ', ' +
+        tuEvolutConst.SqlDataAtual + ', ' + tuEvolutConst.SqlHoraAtual +
+        ', 1, NewId()');
       FConexao.Query.Sql.Add(')');
       if DebugHook <> 0 then
-         FConexao.Query.SQL.SaveToFile('UsuarioImport.csv');
+        FConexao.Query.Sql.SaveToFile('UsuarioImport.csv');
       FConexao.Query.ExecSQL;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',  pJsonArray.Items[xUsuario].GetValue<String>('login'))
-                                          .AddPair('nome',pJsonArray.Items[xUsuario].GetValue<String>('nome')));
-    Except On E: Exception do Begin
-      Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message)
-                                          .AddPair('login', pJsonArray.Items[xUsuario].GetValue<String>('login'))
-                                          .AddPair('nome',pJsonArray.Items[xUsuario].GetValue<String>('nome')));
+      Result.AddElement(TJsonObject.Create.AddPair('Ok',
+        pJsonArray.Items[xUsuario].GetValue<String>('login')).AddPair('nome',
+        pJsonArray.Items[xUsuario].GetValue<String>('nome')));
+    Except
+      On E: Exception do
+      Begin
+        Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message)
+          .AddPair('login', pJsonArray.Items[xUsuario].GetValue<String>('login')
+          ).AddPair('nome', pJsonArray.Items[xUsuario].GetValue<String>
+          ('nome')));
       End;
     End;
   End;
@@ -389,7 +425,8 @@ end;
 function TUsuarioDao.InsertUpdate(pUsuarioId: Integer;
   pLogin, pNome, pSenha: String; pSenhaPadrao, pDiasSenhaValida: Integer;
   pEmail: String; pPerfilId, pStatus: Integer): TjSonArray;
-var vSql: String;
+var
+  vSql: String;
 begin
   try
     if pUsuarioId = 0 then
@@ -419,7 +456,9 @@ begin
       FConexao.Query.Sql.SaveToFile('UsuarioIns.Sql');
     FConexao.Query.ExecSQL;
     Result := FConexao.Query.toJsonArray;
-  Except On E: Exception do Begin
+  Except
+    On E: Exception do
+    Begin
       raise Exception.Create(E.Message);
     End;
   end;
@@ -431,14 +470,17 @@ Begin
     FConexao.Query.Sql.Add(tuEvolutConst.SqlGetUsuarioListaFuncionalidade);
     FConexao.Query.ParamByName('pUsuarioId').Value := pUsuarioId;
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro', tuEvolutConst.QrySemDados))
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        tuEvolutConst.QrySemDados))
     End
     Else
       Result := FConexao.Query.toJsonArray;
-  Except on E: Exception do
-    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+  Except
+    on E: Exception do
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
   end;
 end;
 
@@ -449,10 +491,13 @@ Begin
     if pJsonObject.GetValue<Integer>('logonoff') = 1 then
     Begin
       FConexao.Query.Sql.Add('Select IdLogOn From UsuarioLogOnOff');
-      FConexao.Query.Sql.Add('Where UsuarioId = ' + pJsonObject.GetValue<Integer>('usuarioid').ToString());
-      FConexao.Query.Sql.Add('  And OnOff = 1 and Terminal = ' + #39 +pJsonObject.GetValue<String>('terminal') + #39);
+      FConexao.Query.Sql.Add('Where UsuarioId = ' +
+        pJsonObject.GetValue<Integer>('usuarioid').ToString());
+      FConexao.Query.Sql.Add('  And OnOff = 1 and Terminal = ' + #39 +
+        pJsonObject.GetValue<String>('terminal') + #39);
       FConexao.Query.Open;
-      if FConexao.Query.IsEmpty then Begin
+      if FConexao.Query.IsEmpty then
+      Begin
         FConexao.Query.Close;
         FConexao.Query.Sql.Clear;
         FConexao.Query.Sql.Add('Declare @IdLogOn Integer = 0');
@@ -475,35 +520,37 @@ Begin
       FConexao.Query.Sql.Add('  Set OnOff = 0,');
       FConexao.Query.Sql.Add('      DataTermino = GetDate(),');
       FConexao.Query.Sql.Add('      HoraTermino = GetDate()');
-      FConexao.Query.Sql.Add('Where IdLogOn = ' + pJsonObject.GetValue<Integer>('idlogon')
-        .ToString());
-      FConexao.Query.Sql.Add('Select ' + pJsonObject.GetValue<Integer>('idlogon')
-        .ToString() + ' As IdLogOn');
+      FConexao.Query.Sql.Add('Where IdLogOn = ' + pJsonObject.GetValue<Integer>
+        ('idlogon').ToString());
+      FConexao.Query.Sql.Add('Select ' + pJsonObject.GetValue<Integer>
+        ('idlogon').ToString() + ' As IdLogOn');
       FConexao.Query.Open;
     End;
     if DebugHook <> 0 then
-       FConexao.Query.Sql.SaveToFile('UsuarioLogOnOff.Sql');
+      FConexao.Query.Sql.SaveToFile('UsuarioLogOnOff.Sql');
     Result.AddElement(TJsonObject.Create.AddPair('idlogon',
-       FConexao.Query.FieldByName('IdLogOn').AsString));
-  Except on E: Exception do
+      FConexao.Query.FieldByName('IdLogOn').AsString));
+  Except
+    on E: Exception do
       raise Exception.Create(E.Message);
   end;
 end;
 
-function TUsuarioDao.SalvarAcesso(pUsuarioId: Integer; pJsonObject: TJsonObject) : TjSonArray;
+function TUsuarioDao.SalvarAcesso(pUsuarioId: Integer; pJsonObject: TJsonObject)
+  : TjSonArray;
 Var
   pJsonArrayTopicos, pJsonArrayFuncionalidades: TjSonArray;
   vQryTopico, vQryFuncionalidade: TFDQuery;
   xTopico, xFuncionalidade: Integer;
 begin
-{
-   vQryTopico := FConexao.GetQuery;
-   vQryTopico.connection := Fconexao.DB;
-   vQryFuncionalidade := FConexao.GetQuery;
-   vQryFuncionalidade.connection := Fconexao.DB;
-}
-   vQryTopico := FConexao.GetQuery;
-   vQryFuncionalidade := FConexao.GetQuery;
+  {
+    vQryTopico := FConexao.GetQuery;
+    vQryTopico.connection := Fconexao.DB;
+    vQryFuncionalidade := FConexao.GetQuery;
+    vQryFuncionalidade.connection := Fconexao.DB;
+  }
+  vQryTopico := FConexao.GetQuery;
+  vQryFuncionalidade := FConexao.GetQuery;
   Try
     pJsonArrayTopicos := TjSonArray.Create;
     pJsonArrayFuncionalidades := TjSonArray.Create;
@@ -566,20 +613,21 @@ begin
 
 end;
 
-
 function TUsuarioDao.UsuarioConectado: TjSonArray;
 Begin
   try
-    FConexao.Query.Sql.Add('select Ul.*, U.Nome, iif(onoff=1, ' + #39 + 'Logado' + #39 +
-      ', ' + #39 + 'LogOf' + #39 + ') As LogOn');
+    FConexao.Query.Sql.Add('select Ul.*, U.Nome, iif(onoff=1, ' + #39 + 'Logado'
+      + #39 + ', ' + #39 + 'LogOf' + #39 + ') As LogOn');
     FConexao.Query.Sql.Add('from usuariologonoff UL');
-    FConexao.Query.Sql.Add('Inner join Usuarios U On U.UsuarioId = Ul.UsuarioId');
+    FConexao.Query.Sql.Add
+      ('Inner join Usuarios U On U.UsuarioId = Ul.UsuarioId');
     FConexao.Query.Sql.Add('Where OnOff = 1');
     FConexao.Query.Sql.Add('Order by U.Nome, DataInicio');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then Begin
-       Result := TjSonArray.Create;
-       Result.AddElement(TJsonObject.Create.AddPair('Erro',
+    if FConexao.Query.IsEmpty then
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
         'Não há usuários conectado!'));
     End
     Else

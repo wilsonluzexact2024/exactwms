@@ -82,6 +82,8 @@ type
     FfatalMsg: Boolean;
     FExecPath: TExecPath;
     FtheadsCount: Integer;
+    FcountFinalized: Integer;
+
     procedure DoConsulta(Url: string);
     function GetInfoAcount: string;
     procedure ProcessConsulta(Sender: TObject);
@@ -105,29 +107,48 @@ procedure TFmain.ProcessConsulta(Sender: TObject);
 begin
   try
     try
-      if FtheadsCount >= pred(memoUrls.Lines.Count) then
+      if FcountFinalized >= pred(FtheadsCount) then
       begin
-        Application.ProcessMessages;
-        bt_executar.Enabled := true;
-        AniIndicator1.Visible := false;
-        AniIndicator1.Enabled := false;
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            Application.ProcessMessages;
+            bt_executar.Enabled := true;
+            AniIndicator1.Visible := false;
+            AniIndicator1.Enabled := false;
+          end);
+
       end;
       Application.ProcessMessages;
       if (Sender as TExecPath).returnCod <> 200 then
       begin
-        MemoResults.Lines.Add('ERRO  ' + (Sender as TExecPath).Lurl + ' - ' +
-          copy((Sender as TExecPath).Retorno, 0, 200));
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            MemoResults.Lines.Add('ERRO  ' + (Sender as TExecPath).Lurl + ' - '
+              + copy((Sender as TExecPath).Retorno, 0, 200));
+          end);
+
       end
       else
-        MemoResults.Lines.Add('SUCESSO  ' + (Sender as TExecPath).Lurl + ' - ' +
-          copy((Sender as TExecPath).Retorno, 0, 200));
+      begin
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            MemoResults.Lines.Add('SUCESSO  ' + (Sender as TExecPath).Lurl +
+              ' - ' + copy((Sender as TExecPath).Retorno, 0, 200));
+          end);
+
+      end;
 
     except
       on e: exception do
-        ShowMessage(e.Message);
+      begin
+        // ShowMessage(e.Message);
+      end;
     end;
   finally
-    inc(FtheadsCount);
+    inc(FcountFinalized);
   end;
 
 end;
@@ -141,24 +162,29 @@ end;
 procedure TFmain.DoConsulta(Url: string);
 begin
   try
-    Application.ProcessMessages;
+
     FExecPath := TExecPath.Create(true);
     FExecPath.Lurl := Url;
     FExecPath.FreeOnTerminate := true;
     FExecPath.OnTerminate := ProcessConsulta;
     if chethreads.IsChecked then
-      FExecPath.Resume
+    Begin
+
+      FExecPath.Resume;
+    End
     else
     begin
       FExecPath.Execute;
       sleep(200);
-      Application.ProcessMessages;
+
       ProcessConsulta(FExecPath);
 
     end;
   except
     on e: exception do
-      ShowMessage(e.Message);
+    begin
+
+    end;
   end;
 
 end;
@@ -190,7 +216,7 @@ begin
 end;
 
 procedure TFmain.netreqRequestCompleted(const Sender: TObject;
-  const AResponse: IHTTPResponse);
+const AResponse: IHTTPResponse);
 begin
   AResponse.ContentStream;
 end;
@@ -203,9 +229,12 @@ end;
 
 procedure TFmain.onfinalizethd(Sender: TObject);
 begin
-
-  AniIndicator1.Visible := false;
-  AniIndicator1.Enabled := false;
+  TThread.Synchronize(TThread.CurrentThread,
+    procedure()
+    begin
+      AniIndicator1.Visible := false;
+      AniIndicator1.Enabled := false;
+    end);
 
 end;
 
@@ -248,30 +277,50 @@ begin
   bt_executar.Enabled := false;
   AniIndicator1.Visible := true;
   AniIndicator1.Enabled := true;
-  FtheadsCount:=0;
+  FtheadsCount := 0;
+  FcountFinalized := 0;
   myThread := TThread.CreateAnonymousThread(
     procedure
     begin
       var
         i: Integer;
-
       MemoResults.Lines.Clear;
-      for i := 0 to memoUrls.Lines.Count - 1 do
+      for i := 0 to 300 do
       begin
-        Application.ProcessMessages;
+        sleep(30);
         try
 
-          caption := memoUrls.Lines[i];
+          TThread.Synchronize(TThread.CurrentThread,
+            procedure()
+            begin
+              caption := memoUrls.Lines[i];
+            end);
+
+          inc(FtheadsCount);
           DoConsulta(memoUrls.Lines[i]);
 
         except
           on e: exception do
           begin
             Application.ProcessMessages;
-            caption := e.Message;
-          end;
 
+            TThread.Synchronize(TThread.CurrentThread,
+              procedure()
+              begin
+                caption := memoUrls.Lines[i] + ' eror ' + e.Message;
+              end);
+
+          end;
         end;
+        TThread.Synchronize(TThread.CurrentThread,
+          procedure()
+          begin
+            Application.ProcessMessages;
+            bt_executar.Enabled := true;
+            AniIndicator1.Visible := false;
+            AniIndicator1.Enabled := false;
+          end);
+
       end;
 
     end);

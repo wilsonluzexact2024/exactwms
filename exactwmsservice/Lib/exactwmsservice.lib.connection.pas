@@ -58,6 +58,7 @@ type
 
     procedure QueryError(ASender, AInitiator: TObject;
       var AException: Exception);
+    function FormatQuery(value: string): string;
   end;
 
 const
@@ -70,7 +71,15 @@ implementation
 procedure TConnection.ConnectionError(ASender, AInitiator: TObject;
   var AException: Exception);
 begin
-  Tutil.Gravalog(GetSender + ' Erro na conexao ' + AException.Message);
+  try
+    var
+    Lmessage := AException.Message;
+    var
+    Lsender := GetSender;
+    Tutil.Gravalog('               ->' + Lsender + ' Erro na conexao ' +
+      Lmessage);
+  except
+  end;
 end;
 
 constructor TConnection.Create(TypeConnecion: Integer = 0);
@@ -87,12 +96,13 @@ begin
   DB.BeforeConnect := DConnectionBeforeConnect;
   DB.AfterConnect := DAfterforeConnect;
   // criando sem pool - n�o funcina no modelo atual
-  // Tutil.SetConection(DB, TypeConnecion);
-  if TypeConnecion = 1 then
+  Tutil.SetConection(DB, TypeConnecion);
+  {
+    if TypeConnecion = 1 then
     DB.ConnectionDefName := _CTCONEXAOLOG
-  else
+    else
     DB.ConnectionDefName := _CTCONEXAO;
-
+  }
   Query := TFDQuery.Create(nil);
   Query.connection := DB;
   SetupQuery(Query);
@@ -101,8 +111,6 @@ end;
 { ------------------------------------------------------------------------------- }
 procedure TConnection.DAfterforeConnect(Sender: TObject);
 begin
-  // Tutil.Gravalog('  ' + GetSender + '  Conectado ao banco delay conexao: ' +
-  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeConnect));
 
 end;
 
@@ -120,16 +128,6 @@ var
 begin;
 
   // 'sysctl -w vm.drop_caches=3'
-
-  DB.Connected := False;
-  { while FListQuerys.Count > 0 do
-    begin
-    FListQuerys[0].close;
-    FreeAndNil(FListQuerys[0]);
-    FListQuerys.de
-
-    end; }
-
   for I := 0 to pred(FListQuerys.Count) do
   begin
     try
@@ -137,7 +135,12 @@ begin;
       FreeAndNil(FListQuerys[I]);
     except
       on e: Exception do
-        Tutil.Gravalog('  ' + GetSender + ' Querry foi previamente liberada !');
+      begin
+        var
+        Lsender := GetSender;
+        Tutil.Gravalog('          ->' + Lsender +
+          ' Querry foi previamente liberada !');
+      end;
     end;
   end;
   try
@@ -169,33 +172,46 @@ end;
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryAfterExecute(DataSet: TFDDataSet);
 begin
-  // Tutil.Gravalog('  ' + GetSender + ' Comando executado ' +
-  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeExecute));
+
 end;
 
 { ------------------------------------------------------------------------------- }
 procedure TConnection.FDQueryAfterOpen(DataSet: TDataSet);
-var
-  NomeSender: string;
+
 begin
-  NomeSender := GetSender;
-  // Tutil.Gravalog('   ' + GetSender + ' - Consulta executada: ' +
-  // FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
-  // inttostr(DataSet.RecordCount));
+  var
+  Lsender := GetSender;
+  try
 
-  // if DataSet.RecordCount > 500 then
-  // Tutil.Gravalog('   ' + Nomesender + '< Warning > Limit Records  ! ' +
-  // copy(TFDQuery(Dataset).sql.text, 0, 100));
+    // var Ltext := TFDQuery(DataSet).sql.text;
+    var
+    Lrecords := DataSet.RecordCount;
+    Tutil.Gravalog('          -> ' + Lsender + ' - Consulta executada: ' +
+      FormatDateTime('HH:mm:ss:zzz', Time - FtimeOpen) + ' Registros: ' +
+      inttostr(Lrecords));
 
-  DataSet.First;
+    if DataSet.RecordCount > 500 then
+      Tutil.Gravalog('          ->' + Lsender +
+        '< Warning > Limit Records  ! ');
+
+    DataSet.First;
+  except
+  end;
 end;
 { ------------------------------------------------------------------------------- }
 
 procedure TConnection.FDQueryBeforeExecute(DataSet: TFDDataSet);
 begin
-  // if (DataSet is TFDQuery) then
-  // Tutil.Gravalog('  ' + GetSender + ' Executando comando ' +
-  // copy(TFDQuery(DataSet).sql.text, 0, 100));
+  try
+    var
+    Lsender := GetSender;
+    var
+    Ltext := TFDQuery(DataSet).sql.text;
+    if (DataSet is TFDQuery) then
+      Tutil.Gravalog('          ' + Lsender + ' Executando comando ' + #13#10 +
+        FormatQuery(Ltext));
+  except
+  end;
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -203,25 +219,49 @@ procedure TConnection.FDQueryBeforeOpen(DataSet: TDataSet);
 begin
   FtimeOpen := Time;
   try
-    Tutil.Gravalog('Executando consulta ');
-    Tutil.Gravalog('  ' + GetSender + ' Executando consulta ' +
-      copy(trim(TFDQuery(DataSet).sql.text), 0, 400));
+    var
+    Lsender := GetSender;
+    var
+    Ltext := TFDQuery(DataSet).sql.text;
+    Tutil.Gravalog('          ->' + Lsender + ' Executando consulta ' + #13#10 +
+      FormatQuery(trim(Ltext)));
   Except
+  end;
+end;
+
+function TConnection.FormatQuery(value: string): string;
+var
+  I: Integer;
+begin
+  var
+  Lts := TStringList.Create;
+  try
+    Lts.text := value;
+    for I := 0 to pred(Lts.Count) do
+    begin
+      Lts[I] := '     ' + LowerCase(Lts[I]);
+    end;
+    Result := Lts.text;
+  finally
+    FreeAndNil(Lts);
   end;
 end;
 
 function TConnection.GetQuery: TFDQuery;
 begin
-  result := TFDQuery.Create(Self);
-  SetupQuery(result);
-  FListQuerys.Add(result);
+  Result := TFDQuery.Create(Self);
+  SetupQuery(Result);
+  FListQuerys.Add(Result);
 end;
 
 function TConnection.GetSender: String;
 begin
-  result := '[SQLConexao]';
-  if assigned(FSender) then
-    result := '[SQLConexao]Sender-> ' + (FSender).ClassName;
+  Result := '[SQLConexao]';
+  Try
+    if assigned(FSender) then
+      Result := '[SQLConexao]Sender-> ' + (FSender).ClassName;
+  except
+  End;
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -234,8 +274,16 @@ end;
 procedure TConnection.QueryError(ASender, AInitiator: TObject;
   var AException: Exception);
 begin
-  Tutil.Gravalog('  ' + GetSender + ' Erro na execucao da query ->  ' +
-    AException.Message);
+  var
+  Lsender := GetSender;
+  var
+  Lmessage := AException.Message;
+  try
+    Tutil.Gravalog('          ->' + Lsender + ' Erro na execucao da query ->  '
+      + Lmessage);
+  except
+
+  end;
 end;
 
 { ------------------------------------------------------------------------------- }

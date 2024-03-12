@@ -84,7 +84,7 @@ begin
         OParams.Clear;
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
-        OParams.add('ApplicationName=EVOLUTIONSERVICE_API');
+        OParams.add('ApplicationName=EVOLUTIONSERVICE_API2');
         OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
         OParams.add('POOL_MaximumItems=200');
@@ -100,7 +100,7 @@ begin
       begin
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_LOG_HOST'));
-        OParams.add('ApplicationName=EVOLUTIONSERVICE_API');
+        OParams.add('ApplicationName=EVOLUTIONSERVICE_API2');
         OParams.add('Database=' + GetEnvironmentVariable
           ('RHEMA_DB_LOG_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_LOG_USER'));
@@ -182,7 +182,7 @@ begin
       OParams.Clear;
       OParams.add('DriverID=MSSQL');
       OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE');
+      OParams.add('ApplicationName=EVOLUTIONSERVICE_api2');
       OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
       OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
       OParams.add('POOL_MaximumItems=200');
@@ -240,7 +240,7 @@ begin
       OParams.Clear;
       OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BD', 'Server', 'locahost'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE');
+      OParams.add('ApplicationName=EVOLUTIONSERVICE_api2');
       OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
         'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
@@ -403,7 +403,7 @@ begin
                 with TStringList.Create do
                 begin
                   Text := Lconnection.Query.SQL.Text;
-                  //SaveToFile('c:\teste.sql');
+                  // SaveToFile('c:\teste.sql');
                 end;
               end;
             end;
@@ -478,42 +478,54 @@ begin
 end;
 
 class procedure Tutil.Gravalog(mensagem: string);
+var
+  p: string;
+  F: TextFile;
+  LSaida: string;
+
 begin
-  Try
-    TTask.Create(
-      procedure()
-      var
-        p: string;
-        F: TextFile;
-        LSaida: string;
-      begin
-        LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
-
-        Writeln(LSaida);
-
+  { Try
+    { TTask.Create(
+    procedure()
+    var
+    p: string;
+    F: TextFile;
+    LSaida: string; }
+  begin
+    try
+      try
         try
-          try
-            p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
-            ForceDirectories(p);
-            p := p + FormatDateTime('yyyymmdd', now) + '_' +
-              ChangeFileExt(ExtractFileName(ParamStr(0)), '') + '.log';
-            AssignFile(F, p);
-            if not fileexists(p) then
-              Rewrite(F)
-            else
-              Append(F);
-            Writeln(F, LSaida);
-          except
-          end;
-        finally
-          Closefile(F);
+          LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
+          Writeln(LSaida);
+          p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
+          ForceDirectories(p);
+          p := p + FormatDateTime('yyyymmdd', now) + '_' +
+            ChangeFileExt(ExtractFileName(ParamStr(0)), '') + '.log';
+          AssignFile(F, p);
+          if not fileexists(p) then
+            Rewrite(F)
+          else
+            Append(F);
+          Writeln(F, LSaida);
+        except
         end;
-        LSaida := '';
+      finally
+        try
+          Closefile(F);
+        except
+        end;
+      end;
+    except
+    end;
+  end;
+  LSaida := '';
 
-      End).Start;
+
+{
+  End).Start;
 
   except
-  end;
+  end; }
 end;
 
 { ----------------------------------------------------------------------------- }

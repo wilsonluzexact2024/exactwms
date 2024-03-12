@@ -214,9 +214,9 @@ begin
     .Get('/pedido/dsboard/evolucaoatendimentoped', GetEvolucaoAtendimentoPed)
     .Get('/pedido/dsboard/evolucaoatendimentovol', GetEvolucaoAtendimentoVol)
     .Get('/pedido/dsboard/evolucaoatendimentounid', GetEvolucaoAtendimentoUnid)
-    .Get('/pedido/dsboard/evolucaoatendimentounidembalagem', GetEvolucaoAtendimentoUnidEmbalagem)
-    .Delete('/pedido/reservacorrecao', DeleteReservaCorrecao)
-    .Get('/pedido/processo/:pedidoid', GetPedidoProcesso)
+    .Get('/pedido/dsboard/evolucaoatendimentounidembalagem',
+    GetEvolucaoAtendimentoUnidEmbalagem).Delete('/pedido/reservacorrecao',
+    DeleteReservaCorrecao).Get('/pedido/processo/:pedidoid', GetPedidoProcesso)
     .Get('/pedido/ReposicaoAutomatica', GetReposicaoAutomatica)
     .Get('/pedido/ReposicaoAutomaticacoleta', GetReposicaoAutomaticaColeta)
     .Get('/reposicao/consulta', GetConsultaReposicao)
@@ -246,7 +246,7 @@ Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   PedidoSaidaDAO: TPedidoSaidaDAO;
 Begin
-   PedidoSaidaDAO := TPedidoSaidaDAO.Create;
+  PedidoSaidaDAO := TPedidoSaidaDAO.Create;
   Try
     Try
 
@@ -546,7 +546,7 @@ var
   JsonArrayRetorno: TJSonArray;
   HrInicioLog: TTime;
 begin
-   PedidoSaidaDAO := TPedidoSaidaDAO.Create;
+  PedidoSaidaDAO := TPedidoSaidaDAO.Create;
   Try
     Try
       HrInicioLog := Time;
@@ -3504,39 +3504,46 @@ begin
           vData := StrToDate(AQueryParam.Items['data']);
         Except
           Begin
-            JsonArrayRetorno := TJSonArray.Create;
-            JsonArrayRetorno.AddElement
-              (TJSONObject.Create(TJSONPair.Create('Erro',
-              'Data Inicial dos Pedidos é inválida!')));
-            Res.Send<TJSonArray>(JsonArrayRetorno)
-              .Status(THttpStatus.InternalServerError);
-            Tutil.SalvarLog(Req.MethodType,
-              StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-              ClientIP(Req), THorse.Port, '/v1/reposicao/demanda',
-              Trim(Req.Params.Content.Text), Req.Body, '',
-              StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-              403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] +
-              '_V: ' + Req.Headers['versao']);
-            FreeAndNil(LService);
-            Exit;
+            try
+              JsonArrayRetorno := TJSonArray.Create;
+              JsonArrayRetorno.AddElement
+                (TJSONObject.Create(TJSONPair.Create('Erro',
+                'Data Inicial dos Pedidos é inválida!')));
+              Res.Send<TJSonArray>(JsonArrayRetorno)
+                .Status(THttpStatus.InternalServerError);
+              Tutil.SalvarLog(Req.MethodType,
+                StrToIntDef(Req.Headers['usuarioid'], 0),
+                Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                '/v1/reposicao/demanda', Trim(Req.Params.Content.Text),
+                Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+                [rfReplaceAll]), 403, ((Time - HrInicioLog) / 1000),
+                Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+
+            except
+
+            end;
           End;
         End;
       End
       Else
       Begin
-        JsonArrayRetorno := TJSonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          'Parâmetros da consulta não definidos corretamente!')));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/reposicao/demanda', Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-          403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
-        FreeAndNil(LService);
-        Exit;
+        try
+          JsonArrayRetorno := TJSonArray.Create;
+          JsonArrayRetorno.AddElement
+            (TJSONObject.Create(TJSONPair.Create('Erro',
+            'Parâmetros da consulta não definidos corretamente!')));
+          Res.Send<TJSonArray>(JsonArrayRetorno)
+            .Status(THttpStatus.InternalServerError);
+          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+            0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+            '/v1/reposicao/demanda', Trim(Req.Params.Content.Text), Req.Body,
+            '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]
+            ), 403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] +
+            '_V: ' + Req.Headers['versao']);
+
+        except
+
+        end;
       End;
       JsonArrayRetorno := LService.GetReposicaoDemanda(vData, vZonaId,
         vEnderecoInicial, vEnderecoFinal, vTipoGeracao);

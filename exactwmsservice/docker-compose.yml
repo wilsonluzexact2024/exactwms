@@ -1,7 +1,8 @@
 version: '3'
 services:
   exactwmsserver:    
-    image : rhemasyssolucoes/exactwmsservice:07_03_2024_d3e386e
+    image : rhemasyssolucoes/exactwmsservice:11_03_2024_1a6ef7391bdf69e9aa511924f7d431bd72ba3beb
+
     environment :
       RHEMA_DB_HOST : "exactwms.ddns.net"
       RHEMA_DB_DATABASE : "eXactWMS_DC"
@@ -15,10 +16,6 @@ services:
     container_name: dockerexactwmsservice
     networks:
      - exactwmsservice-net
-    deploy:
-      resources:
-        limits:          
-          memory: 15M       
     ports:
      - '8200:8200'
 networks :

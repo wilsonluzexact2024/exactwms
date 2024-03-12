@@ -36,6 +36,7 @@ WORKDIR /root
 COPY bin bin
 # Comandos no container
 
-CMD cd bin;chmod +x ./exactwmsservice ; ./exactwmsservice
+CMD cd bin;chmod +x ./exactwmsservice ; MemoryMax=1G ./exactwmsservice
+#CMD  systemd-run --scope -p MemoryMax=1G ./exactwmsservice
 # portas
 EXPOSE 8200
