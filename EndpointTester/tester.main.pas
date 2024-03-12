@@ -285,7 +285,7 @@ begin
       var
         i: Integer;
       MemoResults.Lines.Clear;
-      for i := 0 to 300 do
+      for i := 0 to 500 do
       begin
         sleep(30);
         try

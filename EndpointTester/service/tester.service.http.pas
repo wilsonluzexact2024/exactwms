@@ -91,7 +91,7 @@ type
   end;
 
 const
-  _rest_host = 'http://localhost:8200/';
+  _rest_host = 'http://192.168.1.28:8200/';
 
 implementation
 
