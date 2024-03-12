@@ -173,44 +173,48 @@ begin
   THorse.Group.Prefix('v1').Get('/saida', Get).Get('/saida/:pedidoid', GetID)
     .Get('/saida/pendente', GetPendente)
     .Get('/saida/pedidocubagem_caixafechada/:pedidoid', GetEstoqueCaixaFechada)
-    .Get('/saida/loteparavolumefracionado/:pedidoid',
-    GetLoteParaVolumeFracionado)
-    .Get('/saida/pedidocubagem_caixafracionada/:pedidoid',
-    GetEstoqueCaixaFracionada).Get('/saida/documento/:documentonr/:pessoaid',
-    GetDocumento).Get('/saida/estrutura', Estrutura).Get('/saida/pedido',
-    GetPedidoAll)
-    .Get('/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal',
-    GetPedidoResumoAtendimento).Get('/saida/clientesrotacarga',
-    GetClientesRotaCarga).Post('/saida', Insert).Put('/saida/:pedidoid', Update)
-    .Put('/saida/processo', RegistrarProcesso).Delete('/saida/:pedidoid',
-    Delete).Delete('/saida', DeletePedido)
+    .Get('/saida/loteparavolumefracionado/:pedidoid', GetLoteParaVolumeFracionado)
+    .Get('/saida/pedidocubagem_caixafracionada/:pedidoid', GetEstoqueCaixaFracionada)
+    .Get('/saida/documento/:documentonr/:pessoaid', GetDocumento)
+    .Get('/saida/estrutura', Estrutura)
+    .Get('/saida/pedido', GetPedidoAll)
+    .Get('/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal', GetPedidoResumoAtendimento)
+    .Get('/saida/clientesrotacarga', GetClientesRotaCarga)
+    .Post('/saida', Insert)
+    .Put('/saida/:pedidoid', Update)
+    .Put('/saida/processo', RegistrarProcesso)
+    .Delete('/saida/:pedidoid', Delete).Delete('/saida', DeletePedido)
     .Delete('/saida/cancelarcubagem/:pedidoid', CancelarCubagem)
-    .Patch('/saida/cancelar', Cancelar).Get('/saida/cubagem', PedidoProcessar)
-    .Get('/saida/printtag', PedidoPrintTag).Get('/saida/processamento',
-    Processamento) // Pegar pedidos para Processamento
+    .Patch('/saida/cancelar', Cancelar)
+    .Get('/saida/cubagem', PedidoProcessar)
+    .Get('/saida/printtag', PedidoPrintTag)
+    .Get('/saida/processamento', Processamento) // Pegar pedidos para Processamento
     .Post('/saida/gerarvolumecaixafechada', CreateVolumeCaixaFechada)
     .Post('/saida/gerarvolumecaixafracionada', CreateVolumeCaixaFracionada)
     .Get('/reposicao/produtos', GetProdutoReposicao)
     .Get('/saida/produtosempicking', GetProdutoSemPicking)
     .Get('/pedido/rupturaabastecimento', GetRelRupturaAbastecimento)
     .Get('/pedido/coletapulmao', GetRelColetaPulmao)
-    .Get('/pedido/apanhepicking', GetRelApanhePicking).Get('/reposicao/gerar',
-    GetReposicaoGerar).Get('/reposicao/demanda', GetReposicaoDemanda)
+    .Get('/pedido/apanhepicking', GetRelApanhePicking)
+    .Get('/reposicao/gerar', GetReposicaoGerar)
+    .Get('/reposicao/demanda', GetReposicaoDemanda)
     .Get('/reposicao/demandacapacidade', GetReposicaoDemandaCapacidade)
     .Get('/reposicao/demanda/coleta/:tipogeracao', GetReposicaoDemandaColeta)
     .Get('/reposicao/enderecocoleta', GetReposicaoEnderecoColeta)
-    .Post('reposicao/salvar', ReposicaoSalvar).Put('reposicao/salvar',
-    ReposicaoSalvar).Get('/reposicao/modelo/:modeloid', GetReposicaoModelo)
+    .Post('reposicao/salvar', ReposicaoSalvar)
+    .Put('reposicao/salvar', ReposicaoSalvar)
+    .Get('/reposicao/modelo/:modeloid', GetReposicaoModelo)
     .Post('reposicao/modelo', PostReposicaoModelo)
     .Delete('/reposicao/modelo/:modeloid', DeleteReposicaoModelo)
     .Get('/pedido/analiseressuprimento', GetRelAnaliseRessuprimento)
     .Get('/pedido/analiseressuprimentovolume', GetRelAnaliseRessuprimentoVolume)
-    .Get('/pedido/cortes', GetCortes).Get('/pedido/dashboard0102',
-    GetDashBoard0102) //
+    .Get('/pedido/cortes', GetCortes)
+    .Get('/pedido/dashboard0102', GetDashBoard0102) //
     .Get('/pedido/dashboard030405', GetDashBoard030405)
     .Get('/pedido/producaopendente', GetProducaoPendente)
-    .Get('/pedido/dashboard06', GetDashBoard06).Get('/pedido/resumoproducao',
-    GetResumoProducao).Get('/pedido/movimentacao', GetMovimentacao)
+    .Get('/pedido/dashboard06', GetDashBoard06)
+    .Get('/pedido/resumoproducao', GetResumoProducao)
+    .Get('/pedido/movimentacao', GetMovimentacao)
     .Get('/pedido/dsboard/evolucaoatendimentoped', GetEvolucaoAtendimentoPed)
     .Get('/pedido/dsboard/evolucaoatendimentovol', GetEvolucaoAtendimentoVol)
     .Get('/pedido/dsboard/evolucaoatendimentounid', GetEvolucaoAtendimentoUnid)
@@ -222,24 +226,23 @@ begin
     .Get('/reposicao/consulta', GetConsultaReposicao)
     .Get('/reposicao/consulta/:reposicaoid', GetConsultaReposicaoProduto)
     .Put('/reposicao/salvaritemcoletado', PutReposicaoSalvarItemColetado)
-    .Put('/reposicao/ReposicaoTransferenciaPicking',
-    PutReposicaoTransferenciaPicking).Put('/reposicao/finalizar',
-    PutReposicaoFinalizar).Get('/pedido/saidaporproduto',
-    GetAuditoriaSaidaPorProduto).Get('/pedido/atedimento/rota',
-    GetRelAtendimentoRota).Get('/pedido/atedimento/destinatario',
-    GetRelAtendimentoDestinatario).Get('/pedido/atedimento/zona',
-    GetRelAtendimentoZona).Put('/pedido/nfeerp', PutAtualizarNFPedido)
+    .Put('/reposicao/ReposicaoTransferenciaPicking', PutReposicaoTransferenciaPicking)
+    .Put('/reposicao/finalizar', PutReposicaoFinalizar)
+    .Get('/pedido/saidaporproduto', GetAuditoriaSaidaPorProduto)
+    .Get('/pedido/atedimento/rota', GetRelAtendimentoRota)
+    .Get('/pedido/atedimento/destinatario', GetRelAtendimentoDestinatario)
+    .Get('/pedido/atedimento/zona', GetRelAtendimentoZona)
+    .Put('/pedido/nfeerp', PutAtualizarNFPedido)
     .Get('/reposicao/historico', GetReposicaoHistorico)
     .Get('/reposicao/transferencia', GetRelReposicaoTransfPicking)
     .Get('/reposicao/analisecoleta', GetAnaliseColeta)
-    .Get('/reposicao/historicotransferencia',
-    GetRelHistoricoTransferenciaPicking).Delete('/reposicao/cancelar',
-    ReposicaoCancelar).Delete('/reposicao/delete', ReposicaoExcluir)
-    .Put('reposicao/registrarinuse/:reposicaoid/:usuarioid/:terminal',
-    ReposicaoRegistrarInUse).Put('pedido/registrarprocesso',
-    PutRegistrarProcesso).Prefix('v2').Put('/pedido/nfeerp',
-    PutAtualizarNFPedidoV2)
-
+    .Get('/reposicao/historicotransferencia', GetRelHistoricoTransferenciaPicking)
+    .Delete('/reposicao/cancelar', ReposicaoCancelar)
+    .Delete('/reposicao/delete', ReposicaoExcluir)
+    .Put('reposicao/registrarinuse/:reposicaoid/:usuarioid/:terminal', ReposicaoRegistrarInUse)
+    .Put('pedido/registrarprocesso', PutRegistrarProcesso)
+    .Prefix('v2')
+    .Put('/pedido/nfeerp', PutAtualizarNFPedidoV2)
 end;
 
 Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -1344,8 +1347,7 @@ begin
       End
       Else
       Begin;
-        JsonArrayRetorno := PedidoSaidaDAO.GetClientesRotaCarga
-          (Req.Query.Dictionary);
+        JsonArrayRetorno := PedidoSaidaDAO.GetClientesRotaCarga(Req.Query.Dictionary);
         Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,

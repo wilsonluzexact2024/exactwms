@@ -1901,15 +1901,18 @@ begin
                                                          FDMemEtiquetaVolumePorRua.FieldByName('mascara').AsString, True), 1, 5);
                  vItens             := FDMemEtiquetaVolumePorRua.FieldByName('itens').AsInteger;
                  vTotUnid           := FDMemEtiquetaVolumePorRua.FieldByName('qtdsuprida').AsInteger;
-                 //if (pProcessoId < 13) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) <> 0) then
-                    TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
-                                                   FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
-                                                   vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId);
+                 TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
+                                                FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
+                                                vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId);
               End
-              Else Begin //If (vCaixaEmbalagemId = 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [0, 2])) then Begin
-                //Buscar os dados para o VOlume
-                //TagVolumeCaixaFechada8x10etqEpl2(vPedidoVolumeId);
-                PrintTagVolumeCxaFechada8x10etqEpl2;
+              Else Begin
+                if FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then //Padrão eXactWMS
+                   TagVolumeCaixaFechada8x10etqEpl2(FDMemEtiquetaVolumePorRua.FieldByName('pedidovolumeid').AsInteger)
+                Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then //Padrão eXactWMS com Endereço
+                   TagVolumeCaixaFechada_Address_8x10etqEpl2(FDMemEtiquetaVolumePorRua.FieldByName('pedidovolumeid').AsInteger)
+                Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then //Destaque para Cliente e Rota
+                   TagVolumeCaixaFechada_RotaClienteDestaque_8x10etqEpl2(FDMemEtiquetaVolumePorRua.FieldByName('pedidovolumeid').AsInteger);
+                //PrintTagVolumeCxaFechada8x10etqEpl2;
               End;
               Inc(xEtiquetaPrint);
               LblEtiquetas.Caption := 'Imprimindo: '+xEtiquetaPrint.ToString()+' de '+xEtiquetas.ToString;
@@ -2745,16 +2748,19 @@ begin
         if (JsonArrayIdentVolume.Items[0].GetValue<String>('zona') <> 'PULMAO') and
            (JsonArrayIdentVolume.Items[0].GetValue<String>('zona') <> 'ARMAZENAGEM') then
            ImprimirTexto(orNormal, 3, 1, 1, Lin, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+4, 2,  'Pedido', 0, False);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+4, 20,  'Volume', 0, False);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+4, 40,  'Data', 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+4, 28,  JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia'), 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+4, 46,  JsonArrayIdentVolume.Items[0].GetValue<String>('dtpedido'), 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+7,  2,  JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
 
-        ImprimirCaixa(Lin+10,  2, 25,  9, 0, 0);
-        ImprimirCaixa(Lin+8,  30, 37, 10, 0, 0);
-        ImprimirTexto(orNormal, 2,  1, 1, Lin+11,  4, 'Rota', 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin,   40, 'Pedido', 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin,   60, 'Volume', 0, False);
+        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 40, JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
+        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 57, Repl(' ', 4 - Length(JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')))+JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia'), 0, False);
+
+
+        ImprimirTexto(orNormal, 3, 1, 1, Lin+4, 2,  'Data', 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, Lin+4, 8,  JsonArrayIdentVolume.Items[0].GetValue<String>('dtpedido'), 0, False);
+
+        ImprimirCaixa(Lin+8,  2, 25, 10, 0, 0); //Rota
+        ImprimirCaixa(Lin+8, 30, 37, 10, 0, 0);
+        ImprimirTexto(orNormal, 2,  1, 1, Lin+9,  4, 'Rota', 0, False);
         ImprimirTexto(orNormal, 2,  1, 1, Lin+9, 30, 'Destino', 0, False);
         vRota := JsonArrayIdentVolume.Items[0].GetValue<String>('rotaid');
         vRota := Repl(' ', 4-Length(vRota))+vRota;
@@ -2768,7 +2774,7 @@ begin
            vDestino := Repl(' ', 8-Length(vDestino))+vDestino;
            ImprimirTexto(orNormal, 4,  3, 4, Lin+9, 36, vDestino, 0, False);
         End;
-        ImprimirTexto(orNormal, 2,  1, 1, Lin+20, 4, Copy(JsonArrayIdentVolume.Items[0].GetValue<String>('fantasia'), 1, 60)+' - '+
+        ImprimirTexto(orNormal, 3,  1, 1, Lin+19, 4, Copy(JsonArrayIdentVolume.Items[0].GetValue<String>('fantasia'), 1, 60)+' - '+
                                                      JsonArrayIdentVolume.Items[0].GetValue<String>('rotas'), 0, False);
         Lin := 24;
         ImprimirCaixa(Lin, 2, 65, 5, 0, 0);
@@ -2952,14 +2958,26 @@ begin
                 End;
              End
              Else if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then Begin
-                Lin := 1;                                //
+                Lin := 1;
                 ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+2, 'FRACIONADOS', 0, True);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+2,  'Pedido', 0, False);
+
+                ImprimirTexto(orNormal, 3, 1, 1, Lin,   65, 'Pedido', 0, False);
+                ImprimirTexto(orNormal, 3, 1, 1, Lin,   88, 'Volume', 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 65, pPedidoId.ToString, 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 87, Repl(' ', 4 - Length(psequencia.ToString()))+
+                                                            pSequencia.ToString(), 0, False);
+
+
+                ImprimirTexto(orNormal, 3, 1, 1, Lin+6,  5,  'Data', 0, False);
+                ImprimirTexto(orNormal, 2, 2, 2, Lin+5, 13,  pDtPedido, 0, False);
+
+{                ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+2,  'Pedido', 0, False);
                 ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+32, 'Volume', 0, False);
                 ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+60, 'Data', 0, False);
                 ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+43, pSequencia.ToString(), 0, False);
                 ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+68, pDtPedido, 0, False);
                 ImprimirTexto(orNormal, 2, 2, 2, Lin+8,  ColIni+2, pPedidoId.ToString, 0, False);
+}
                 Lin := Lin + 2;
                 ImprimirCaixa(Lin+10,  ColIni+2, 30, 11, 0, 0);
                 ImprimirCaixa(Lin+8,  ColIni+35, 50, 13, 0, 0);

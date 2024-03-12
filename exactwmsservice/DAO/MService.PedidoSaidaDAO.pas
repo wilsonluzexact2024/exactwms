@@ -1417,64 +1417,52 @@ begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedidoCarga);
     If AParams.ContainsKey('pedidoid') then
-      FConexao.Query.ParamByName('pPedidoId').AsLargeInt :=
-        AParams.Items['pedidoid'].ToInt64
+       FConexao.Query.ParamByName('pPedidoId').AsLargeInt := AParams.Items['pedidoid'].ToInt64
     Else
       FConexao.Query.ParamByName('pPedidoId').Value := 0;
     Try
       if AParams.ContainsKey('dataini') then
-        FConexao.Query.ParamByName('pDataIni').Value :=
-          StrToDate(AParams.Items['dataini'])
+        FConexao.Query.ParamByName('pDataIni').Value := StrToDate(AParams.Items['dataini'])
       Else
         FConexao.Query.ParamByName('pDataIni').Value := 0;
     Except
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        'Data Inicial dos Pedidos é inválida!')));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', 'Data Inicial dos Pedidos é inválida!')));
       Exit;
     End;
     Try
       if AParams.ContainsKey('datafin') then
-        FConexao.Query.ParamByName('pDataFin').Value :=
-          StrToDate(AParams.Items['datafin'])
+        FConexao.Query.ParamByName('pDataFin').Value := StrToDate(AParams.Items['datafin'])
       Else
         FConexao.Query.ParamByName('pDataFin').Value := 0;
     Except
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        'Data Final dos Pedidos é inválida!')));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', 'Data Final dos Pedidos é inválida!')));
       Exit;
     End;
     If AParams.ContainsKey('pessoaid') then
-      FConexao.Query.ParamByName('pPessoaId').AsLargeInt :=
-        AParams.Items['pessoaid'].ToInt64
+       FConexao.Query.ParamByName('pPessoaId').AsLargeInt := AParams.Items['pessoaid'].ToInt64
     Else
-      FConexao.Query.ParamByName('pPessoaId').Value := 0;
+       FConexao.Query.ParamByName('pPessoaId').Value := 0;
     If AParams.ContainsKey('razao') then
-      FConexao.Query.ParamByName('pRazao').AsString := AParams.Items['razao']
+       FConexao.Query.ParamByName('pRazao').AsString := AParams.Items['razao']
     Else
-      FConexao.Query.ParamByName('pRazao').AsString := '';
+       FConexao.Query.ParamByName('pRazao').AsString := '';
     If AParams.ContainsKey('rotaid') then
-      FConexao.Query.ParamByName('pRotaId').AsLargeInt :=
-        AParams.Items['rotaid'].ToInteger()
+       FConexao.Query.ParamByName('pRotaId').AsLargeInt := AParams.Items['rotaid'].ToInteger()
     Else
-      FConexao.Query.ParamByName('pRotaId').Value := 0;
+       FConexao.Query.ParamByName('pRotaId').Value := 0;
     FConexao.Query.ParamByName('pOperacaoTipoId').Asinteger := 2;
     If DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('PedidoCarga.Sql');
+       FConexao.Query.SQL.SaveToFile('PedidoCarga.Sql');
     FConexao.Query.Open();
     if FConexao.Query.IsEmpty then
     Begin
       Result := TjSonArray.Create();
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        'Não há dados para gerar o relatório')));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', 'Não há dados para gerar o relatório')));
     End
     Else
       Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
-    Begin
-      raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+  Except ON E: Exception do Begin
+    raise Exception.Create(StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

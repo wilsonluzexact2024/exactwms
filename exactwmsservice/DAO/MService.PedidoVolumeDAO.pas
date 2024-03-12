@@ -1101,74 +1101,61 @@ begin
   try
     Fconexao.Query.Sql.Add(TuEvolutConst.SqlGetVolumeConsulta);
     If AParams.ContainsKey('datainicial') then
-      Fconexao.Query.ParamByName('pDataInicial').Value :=
-        FormatdateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']))
+       Fconexao.Query.ParamByName('pDataInicial').Value := FormatdateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']))
     Else
-      Fconexao.Query.ParamByName('pDataInicial').Value := 0;
+       Fconexao.Query.ParamByName('pDataInicial').Value := 0;
     If AParams.ContainsKey('datafinal') then
-      Fconexao.Query.ParamByName('pDataFinal').Value :=
-        FormatdateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']))
+       Fconexao.Query.ParamByName('pDataFinal').Value := FormatdateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']))
     Else
-      Fconexao.Query.ParamByName('pDataFinal').Value := 0;
+       Fconexao.Query.ParamByName('pDataFinal').Value := 0;
     if AParams.ContainsKey('pedidoid') then
-      Fconexao.Query.ParamByName('pPedidoId').Value := AParams.Items['pedidoid']
-        .ToInteger()
+       Fconexao.Query.ParamByName('pPedidoId').Value := AParams.Items['pedidoid'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pPedidoId').Value := 0;
+       Fconexao.Query.ParamByName('pPedidoId').Value := 0;
     if AParams.ContainsKey('pedidovolumeid') then
-      Fconexao.Query.ParamByName('pPedidoVolumeId').Value :=
-        AParams.Items['pedidovolumeid'].ToInteger()
+       Fconexao.Query.ParamByName('pPedidoVolumeId').Value := AParams.Items['pedidovolumeid'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pPedidoVolumeId').Value := 0;
+       Fconexao.Query.ParamByName('pPedidoVolumeId').Value := 0;
     if AParams.ContainsKey('documentonr') then
-      Fconexao.Query.ParamByName('pDocumentoNr').Value :=
-        AParams.Items['documentonr']
+       Fconexao.Query.ParamByName('pDocumentoNr').Value := AParams.Items['documentonr']
     Else
-      Fconexao.Query.ParamByName('pDocumentoNr').Value := '';
+       Fconexao.Query.ParamByName('pDocumentoNr').Value := '';
     if AParams.ContainsKey('sequencia') then
-      Fconexao.Query.ParamByName('pSequencia').Value :=
-        AParams.Items['sequencia'].ToInteger()
+       Fconexao.Query.ParamByName('pSequencia').Value := AParams.Items['sequencia'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pSequencia').Value := 0;
+       Fconexao.Query.ParamByName('pSequencia').Value := 0;
     if AParams.ContainsKey('codpessoa') then
-      Fconexao.Query.ParamByName('pCodPessoa').Value :=
-        AParams.Items['codpessoa'].ToInteger()
+       Fconexao.Query.ParamByName('pCodPessoa').Value := AParams.Items['codpessoa'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pCodPessoa').Value := 0;
+       Fconexao.Query.ParamByName('pCodPessoa').Value := 0;
     if AParams.ContainsKey('processoid') then
-      Fconexao.Query.ParamByName('pProcessoId').Value :=
-        AParams.Items['processoid'].ToInteger()
+       Fconexao.Query.ParamByName('pProcessoId').Value := AParams.Items['processoid'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pProcessoId').Value := 0;
+       Fconexao.Query.ParamByName('pProcessoId').Value := 0;
     if AParams.ContainsKey('rotaid') then
-      Fconexao.Query.ParamByName('pRotaId').Value := AParams.Items['rotaid']
-        .ToInteger()
+       Fconexao.Query.ParamByName('pRotaId').Value := AParams.Items['rotaid'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pRotaId').Value := 0;
+       Fconexao.Query.ParamByName('pRotaId').Value := 0;
     if AParams.ContainsKey('codproduto') then
-      Fconexao.Query.ParamByName('pCodProduto').Value :=
-        AParams.Items['codproduto'].ToInteger()
+       Fconexao.Query.ParamByName('pCodProduto').Value := AParams.Items['codproduto'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pCodProduto').Value := 0;
+       Fconexao.Query.ParamByName('pCodProduto').Value := 0;
     if AParams.ContainsKey('zonaid') then
-      Fconexao.Query.ParamByName('pZonaId').Value := AParams.Items['zonaid']
-        .ToInteger()
+       Fconexao.Query.ParamByName('pZonaId').Value := AParams.Items['zonaid'].ToInteger()
     Else
-      Fconexao.Query.ParamByName('pZonaId').Value := 0;
+       Fconexao.Query.ParamByName('pZonaId').Value := 0;
     if AParams.ContainsKey('embalagem') then
-      Fconexao.Query.ParamByName('pEmbalagem').Value :=
-        AParams.Items['embalagem']
+       Fconexao.Query.ParamByName('pEmbalagem').Value := AParams.Items['embalagem']
     Else
-      Fconexao.Query.ParamByName('pEmbalagem').Value := 'T';
+       Fconexao.Query.ParamByName('pEmbalagem').Value := 'T';
     Fconexao.Query.ParamByName('pOrdem').Value := 0;
     if DebugHook <> 0 then
-      Fconexao.Query.Sql.SaveToFile('VolumeConsulta.Sql');
+       Fconexao.Query.Sql.SaveToFile('VolumeConsulta.Sql');
     Fconexao.Query.Open;
     if Fconexao.Query.Isempty then
     Begin
       Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        TuEvolutConst.QrySemDados))
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados))
     End
     Else
       Result := Fconexao.Query.ToJSONArray;
