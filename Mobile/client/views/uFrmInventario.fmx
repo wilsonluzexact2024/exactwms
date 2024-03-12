@@ -8,7 +8,6 @@ inherited FrmInventario: TFrmInventario
         Viewport.Width = 364.000000000000000000
         Viewport.Height = 505.000000000000000000
         inherited PgcPrincipal: TTabControl
-          TabIndex = 1
           Sizes = (
             364s
             505s
@@ -23,7 +22,6 @@ inherited FrmInventario: TFrmInventario
             364s
             505s)
           inherited TabLista: TTabItem
-            IsSelected = False
             ExplicitSize.cx = 67.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited GdSearch: TGrid
@@ -49,10 +47,6 @@ inherited FrmInventario: TFrmInventario
                   'Data Cria'#231#227'o')
                 ItemIndex = 0
                 Visible = False
-                inherited LnCampoPesq: TLine
-                  Position.Y = 28.000000000000000000
-                  Size.Width = 97.000000000000000000
-                end
               end
               inherited LblCbPesq: TLabel
                 Visible = False
@@ -209,7 +203,6 @@ inherited FrmInventario: TFrmInventario
             end
           end
           inherited TabDetalhes: TTabItem
-            IsSelected = True
             Text = 'TabDetalhes'
             ExplicitSize.cx = 320.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
@@ -218,7 +211,7 @@ inherited FrmInventario: TFrmInventario
               TabOrder = 8
             end
             inherited EdtCodigo: TEdit
-              TabOrder = 236
+              TabOrder = 238
               Visible = False
               OnKeyUp = EdtCodigoKeyUp
             end
@@ -227,7 +220,7 @@ inherited FrmInventario: TFrmInventario
             end
             inherited LblAtivo: TLabel
               Visible = False
-              TabOrder = 215
+              TabOrder = 217
             end
             object Label2: TLabel
               AutoSize = True
@@ -240,7 +233,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Localiza'#231#227'o'
-              TabOrder = 358
+              TabOrder = 361
             end
             object EdtEndereco: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -284,7 +277,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Produto'
-              TabOrder = 356
+              TabOrder = 359
             end
             object Label4: TLabel
               AutoSize = True
@@ -297,7 +290,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Lote'
-              TabOrder = 357
+              TabOrder = 360
             end
             object LblProduto: TLabel
               AutoSize = True
@@ -312,7 +305,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.FontColor = claChocolate
               TextSettings.WordWrap = False
               Text = '...'
-              TabOrder = 361
+              TabOrder = 364
             end
             object Label12: TLabel
               AutoSize = True
@@ -325,12 +318,12 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Lotes Pr'#233' Existentes'
-              TabOrder = 349
+              TabOrder = 352
             end
             object EdtLote: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               StyleLookup = 'editstyle'
-              TabOrder = 219
+              TabOrder = 221
               ReturnKeyType = Next
               MaxLength = 25
               TextSettings.Font.Family = 'Roboto Th'
@@ -360,7 +353,7 @@ inherited FrmInventario: TFrmInventario
               Size.Width = 142.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 223
+              TabOrder = 225
               TabStop = False
               OnChange = CbListaLoteChange
               OnKeyUp = EdtCodigoKeyUp
@@ -368,7 +361,7 @@ inherited FrmInventario: TFrmInventario
             object EdtDtFabricacao: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               StyleLookup = 'editstyle'
-              TabOrder = 227
+              TabOrder = 229
               ReturnKeyType = Next
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.VertAlign = Trailing
@@ -402,7 +395,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Data Fabrica'#231#227'o'
-              TabOrder = 353
+              TabOrder = 356
             end
             object Label6: TLabel
               AutoSize = True
@@ -415,12 +408,12 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Data Vencimento'
-              TabOrder = 355
+              TabOrder = 358
             end
             object EdtDtVencimento: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               StyleLookup = 'editstyle'
-              TabOrder = 231
+              TabOrder = 233
               ReturnKeyType = Next
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.VertAlign = Trailing
@@ -454,12 +447,12 @@ inherited FrmInventario: TFrmInventario
               TextSettings.Font.Family = 'Roboto Th'
               TextSettings.WordWrap = False
               Text = 'Quantidade'
-              TabOrder = 354
+              TabOrder = 357
             end
             object EdtQuant: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               StyleLookup = 'editstyle'
-              TabOrder = 235
+              TabOrder = 237
               KeyboardType = NumberPad
               ReturnKeyType = Next
               TextSettings.Font.Family = 'Roboto Th'
@@ -525,7 +518,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.FontColor = claChocolate
               TextSettings.WordWrap = False
               Text = 'Estrutura'
-              TabOrder = 134
+              TabOrder = 135
             end
             object LblZona: TLabel
               AutoSize = True
@@ -539,7 +532,7 @@ inherited FrmInventario: TFrmInventario
               TextSettings.FontColor = claChocolate
               TextSettings.WordWrap = False
               Text = 'Zona'
-              TabOrder = 125
+              TabOrder = 126
             end
             object SbSalvarContagem: TSpeedButton
               Position.X = 216.000000000000000000
@@ -928,9 +921,9 @@ inherited FrmInventario: TFrmInventario
                             PNG = {
                               89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
                               DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                              022049444154785EED9B3B4B03411485B31B14ECB4492DD82AA276692CACEC53
-                              FBA8ECACFD177656BE7AC5CECA3660A7A0365649932E622308711F9E9B1CC560
-                              919D6436B3CBDC0F96333381C9D92FBB211153511445F1998069449AA60B38F6
+                              022049444154785EED9B2B4F03411485BBDB408203534D82851040562050F86A
+                              1E0A87E65FE050BC3C04874256E020010CAA357525181292B20FCE6D0F8406D1
+                              9D76B6B39BB95FB23933D3647AF6EB6ED3125A511445F1998069449AA60B38F6
                               70AC633A37581D8F6AB5DAE0F09724490E111F41105CE04807AB0501E5B67BBD
                               5E07276F056E3B441CC7D7F218F20C1172D93D28B3D16AB5BEA49C2DB8F5103F
                               02048CCF11EE25A0441045D173BF9545B8FD107F0508794AC8BC290AACE17E5D
@@ -945,7 +938,7 @@ inherited FrmInventario: TFrmInventario
                               A20298DEA20298DE6222C0F8DF561C92B9AB898036B30C64EE9A594010048F71
                               1CBF705A58A4A374E574242602D2300C77DBED76C4A5C221DDA4A374E5927D12
                               CB3F99B18574926EAC9919E73F9AB2C0275EF1071C9738DEB9A6288AA28CA652
-                              F906E2368C8012E4F4100000000049454E44AE426082}
+                              F906E22A8C80FFA1B01D0000000049454E44AE426082}
                             FileName = 
                               'D:\99Coders\Posts\168 - Animando botao de download no Delphi ---' +
                               '---\Fontes\Images\pdf.png'
@@ -964,69 +957,69 @@ inherited FrmInventario: TFrmInventario
                             PNG = {
                               89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
                               DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                              07BD49444154785EED9B6B6C145514C7E7CE6E6977816289A8154B69A9206282
-                              8A68BBBBB01A538C1F8CD104151F88CF18134083D168C480604C5414E5938F10
-                              344A55C4F87E620476BAAD4482311010DA2ED2161F1F7804CAD2EDECBDFEEFEE
-                              A1B29DD9EDCCEC4E63577E49B9E79CD99DB9E7EC997BCF9DB92867F89FC3A875
-                              9DF68686998AC7334711A2844CE630965055F5EB9AAD5B7790C5558624006DA1
-                              D0BCA8A2BC17B278BDDF1585570931B7AEB9F96332B9864AADBB08B1D4AAF392
-                              6AF44B65EC29525D65480270ECF8F11A122DD3DBD73789445771FD16D81B0A8D
-                              F32ACADFA4DAA297F3F2A9D1E831525DC1F50C18C1581589B6F132368144D770
-                              3D005C519C074051867F0004E78E0320F2C81EAB0CC520E8FC5714627867402C
-                              1C9E88C20633A043189BDD1E0CBA1A044BB3404730381FCDDDE8D0117CE1CD89
-                              9AF62D5A913E6A24367BF654A4FEF213870EDDEC1F3BD6436647E01C49FF5967
-                              7D285475D9244DDB4B6603E80C6B0F04AE678C3D887E963321D6D53637BF4387
-                              B33268003A42A1BBD0649C28A928BFA942AC897BBD6F5FB265CB71322B3BC3E1
-                              513E5D7F8E75753DAC5455610C2B287D18505F1DA1EBCF4C686D8D934DD91D08
-                              8C2E55D5050AE70B513E5D48E614F8FCED759AD644AA2939034027DF07F1DCB4
-                              6500421CC5BF6B51BBAF415BC185F810ADAB054C2AF88A724B92F31E8FAA2E84
-                              03F7C05C9E3E9A09027070A4CF37B9F2FBEF7BC86420E71880397C291A73E725
-                              8C8DC1DFA33121DAE07C0B2CAE576FB89FA6B044625BB7AAEE85F38B6132755E
-                              02E7CE8F9F3891B3A4CE9A01FBEAEBEB3C5EEF2E8823D296E1C9D163C74E5694
-                              975F3C311289912983AC19C0BCDE556886B5F39231A3479771CE5F24D5806906
-                              60EA69C468FA1DA9450166856B6A9A9B3793DA8F21037E0C875182B357482D1A
-                              74C6568BB9730D53B221001374FD2134D3D25AF100CFA7EFEFEE7E80D47E3202
-                              208B09F034A945075755836F1901D81F0E97A2C93EED0D730E284AE5C0DB2023
-                              00355BB69C4445B589D482A321C9509C7C866BDC96C45ABF46D33CF24F08518D
-                              D1781EEC5FC8CFD0C70B4E35E75FB10D1B504BFD8B6116D8130E9FED4D26DF43
-                              64E690A93070FE2BA6D605833DED6D0B04AE4065B90E6261C721041795E3FC6A
-                              4D3B4C9614A6D3A01C0B62C1E0E34A57D7CA42D4F4F8D5BFF3C5E3378DDFBEFD
-                              049972F24763E3C8784FCFA7A8EDAF25533E2430053E81297035E91964AD0425
-                              B140A021A1AA4D25A907B50EC12F5FDADBDB60D5F953C8855599AE6F53199B4A
-                              2627B423F8B76241B49D74038669F0746AA2D1963245B90C4BDB4FC8640B793F
-                              CBB4B7EBBC44AE32315ADD4BAA6D90C51FE889C4E5B99C97E4CC80D3C1B27823
-                              9A9BD39A35E480870EDC48AA23DA82C16F9005D7916A95F5B59A7607C939C999
-                              0103C8FD4ACB0495F3F5243A061DB47F0E212CAF61EC04E03C6A2D93F478A224
-                              3A4617A29944CB20F3CE2171502C0700EBFD51245AA62E12E926D139E5E55D24
-                              5906A3BEE5BEDAC980A2C47200F041DBAFA83A82C10B48740C3B72C4F6BB01CC
-                              0096FB6A3D0318FB8B24CB60F40E90E8188FC71324D132A8242DBF8BB41C0044
-                              5527D132A81F2C4D453961CCF639B0B6C8A8F77331681D70A0BE7EACEEF5CADA
-                              FC86B4C53AB2100A707E655D34FA33996CD1160A05F10BE1340E1062A3F0F9EE
-                              9BB469937C729D959C01487520996C421EE6F38E6E97CFE7BB2AD7A36933528F
-                              E485F819D79E4C26DBF06432864AF4B64991C836321930BD05E462A83D187C52
-                              EDECDC9CA7F392697261236B7BD207453A8FAAEBF37C9C97A81E4F0DA6440DBE
-                              2C913E91390383516E684054DEC55F4197C3A82376CBDA1EABB25632994259B7
-                              365FE70D08F12596F9F327B4B61E224B0A43003A02814D055A869A82407C8BE0
-                              AE4F557854E4C8A92E35DAA707BC46697305CEBFA88D4633C6B28C00C4C2E132
-                              914CF6BF772B36E4EEB3AB2B2B479CFE54282300F23ED91B081C2C5155DB75FF
-                              B02099ECAC6D69C978DD9E3108221AC2ABAA2B482D3E3C9E9524F56398056A2B
-                              2B5F47B333AD150F5821FE52A3696F91DA8F2100F2FEC0871F21B5684059BE18
-                              190ED73231044052A7693FA09CFC94D4E18F101FD546225B49CBC0340092A410
-                              4BD024D2DAF045BE1EC7F4F718A906B206607234DA8E2C307D943C10B98F4749
-                              247A49751DE954EA9A1618336AD42A8CFC9801CDC91A00494288957D9CFF49AA
-                              01F4E01082F482AFA2A21635773D222DB7D3B80AAEB967B4DF3F73E4B87175B8
-                              A15FEAEDEB3B42870CE0F8419FDFFF3CA9A6182AC181986D920272E7C86BA5F1
-                              F8BBA73FF2EE9E31C3DF5B56B642E9EA5AE4C62629D4292FA3BE5F967A8547C8
-                              97283DF1F87C1C5B8452FB2232A78073F330F2BF4FAA2983064022838068DE09
-                              5146FB0D3948A60E6401E5F414C1D8B2F8E1C373F3DD26A77476EA7CFCF8265C
-                              7FB9BC2DC96A401671B159B3E6200BEFE78CC97D43EBD0CF9C3BC4249602E094
-                              7DB36655A9427C808B3490C91658376C2D11625E75347A904C0527E718902F17
-                              46229D588ECADD638E40E7226E3A2F713500C4016AEDC398F3EF5AC4F50020FD
-                              1D3B91CF77ADE27A0050507592681B3D8FEF5AC5FD5B4008C7BF2202E07A06B8
-                              3A0B9C62C7F4E971B96191544BC80267EA4F3F5590EA1A4331082AE57E7F0789
-                              96292D296923D1558624008CB167E5E32852072555E7733E240F6686E41690C4
-                              02814B85AACAFF3A9BFBDDBDAAF6725DFFBAAEA5A5E81ECA9CE1BF87A2FC03DC
-                              CAA94A627DED8F0000000049454E44AE426082}
+                              07BE49444154785EED9B6B6C145514C7E7CE6E6977814289A8154B69A9206282
+                              6FDBDD2DAB3160FC608C2428F8407CC698281A8C46A3060563A2A2289F7C84A0
+                              511010238A0F1E4660A7DB422018A301A1ED226DF1F1013050D66E67EFF57F77
+                              0F95EDCC6E6766771ABBF24BB6F79C33BB3BF79C3D73EFB933B7CA59FEE7306A
+                              5DA7ADA1E16AC5E399A90851422673184BA8AAFA4DCD8E1D7BC9E22A831280D6
+                              50686E93A27CDC68F17CBF2A0AAF1262765D53D36764720D955A7711E279ABCE
+                              4BAAD12F95B1674975954109C08993276B48B44C4F6FEF44125DC5F54BE04028
+                              34D6AB287F926A8B1ECECBA744A327487505D7336018635524DAC6CBD878125D
+                              C3F5007045711E004519FA01109C3B0E80C8237BAC321883A0F35F5188A19D01
+                              B17078020A9B10A9F6616C7A5B30E86A102CCD02EDC1E03C34F7A043C7F181F7
+                              2668DA26B4227DD4486CFAF42948FD174F1D3D3ACB3F668C87CC8EC07724FDA3
+                              47AF15AABA68A2A61D20B3017486B505023731C61E423FCB99102B6B9B9A3EA4
+                              C359193000EDA1D0DD6832BE28A928BFA8422C8F7BBD1F5CBA7DFB49322B3F85
+                              C3237CBAFE32EBEC7C44A9AAC21856507A31A0BE354CD75F18DFD212279BB22F
+                              101859AAAAF315CE1F45F974119953E0FD77D469DA6A524DC91900FAF28310CF
+                              4B5BFA21C45FF8BB02B5FB72B4155C88B5685D2D6052C15794DB929C777B54F5
+                              5138702FCCE5E9A39920004786FB7C932AB76CE92693819C6300E6F0E7D1983B
+                              2F616C145E4FC4846885F3CDB0B85EBDE17A9ACC12895D5DAA7A00CE2F80C9D4
+                              79099CBB207EEA54CE923A6B061CACAFAFF378BD3F431C96B60C4DFE3A71E2EF
+                              8AF2F24B26442231326590350398D7BB14CD90765E326AE4C832CEF96BA41A30
+                              CD004C3D33309A6E26B528C0AC707D4D53D33652FB3064C0F7E1304A70F626A9
+                              4583CED832317BB6614A360460BCAE3F8C666A5A2B1EE0F9B4435D5D0F92DA47
+                              46006431019E23B5E8E0AA6AF02D230087C2E15234D9A7BD21CE6145A9EC7F19
+                              6404A066FBF6BF51516D25B5E0449064284EBEC039E624B1D6AFD1348F7C0921
+                              AA311ACF857DA37C0FBDBDE05473FE355BB70EB5D4BF186681FDE1F039DE64F2
+                              63446626990A03E73F626A9D3FD0DDDED640E02A54962B2116761C42705139CE
+                              ABD6B4636449613A0DCAB120160C3EA574762E29444D8F5F7DB32F1EBF75DC9E
+                              3DA7C89493DF66CC181EEFEEDE80DAFE0632E5430253E0D3980297919E41D64A
+                              50120B041A12AABABA2475A3D621F8E54B7B7A1AAC3A7F1AB9B02AD3F55D2A63
+                              53C8E4843604FF762C88F6906EC0300D9E494D34DA5CA628976369FB39996C21
+                              AF6799F6769D97C8552646ABFB48B50DB2788D9E485C91CB7949CE0C38132C8B
+                              D7A39995D6AC21073C74E016521DD11A0C7E8B2CB89154ABACAAD5B43B49CE49
+                              CE0CE847EE475A26A89CAF22D131E8A0FDEF10C2F21AC64E00CEA7D632498F27
+                              4AA26374219A48B40C32EF5C1207C47200B0DE1F41A265EA22912E129D535EDE
+                              49926530EA5BEEAB9D0C284A2C07006FB4FD88AA3D18BC9044C7B0E3C76D3F1B
+                              C00C60B9AFD63380B13F48B20C46EF00898EF1783C41122D834AD2F2B348CB01
+                              405475122D83FAC1D2549413C66C7F07D61619F57E2E06AC030ED7D78FD1BD5E
+                              599BDF9CB65847164241CEAFA98B467793C916ADA15010BF9046AA3D84582F7C
+                              BEFB276EDD2AEF5C67256700521D482657230FF37946F7B3CFE7BB36D7AD6933
+                              52B7E485D88D734F22936D78321943253A676224B28B4C064C2F01B9186A0B06
+                              9F513B3AB6E5E9BC64AA5CD8C8DA9EF40191CEA3EAFA321FE725AAC753832951
+                              832F0BA54F64CEC060941B1A10958FF02AE8721875C43E59DB6355D642265328
+                              EB56E4EBBC0121BEC2327FDEF89696A364496108407B20B0B540CB505310884D
+                              08EEAA548547458E9CEA52A37D7AC09B216DAEC0F9C6DA6834632CCB08402C1C
+                              2E13C964DF73B76243EE3EBBAEB272D8997785320220AF930381C0911255B55D
+                              F70F0992C98EDAE6E68CC7ED198320A221BCAABA98D4E2C3E35942521F8659A0
+                              B6B2F21D343FA5B5E2012BC41F6A34ED7D52FB3004405E1F78F3E3A4160D28CB
+                              1720C3E15A26860048EA34ED3B94931B481DFA08F1696D24B283B40C4C032049
+                              0AB1104D22AD0D5DE4E3714C7F4F926A206B002645A36DC802D35BC9FD91FB78
+                              9444A28754D7914EA5CE69815123462CC5C88F19D09CAC0190248458D2CBF9EF
+                              A41A400F8E2248AFFA2A2A6A5173D723D2723B8DABE09CFB47FAFD570F1F3BB6
+                              0E17F4EB3DBDBDC7E990011C3FE2F3FB5F21D5144325D81FB34D5240EE1C79BB
+                              341EFFE8CC5BDE5D575EE9EF292B5BAC74763EE6C62629D4296FA0BE5F947A84
+                              47C88728DDF1F83C1C7B0CA5F6C5644E01E7E662E4FF845453060C80440601D1
+                              BC0BA28CF6BB72904C1DC802CAE9C982B145F163C766E7BB4D4EE9E8D0F9B871
+                              AB71FE17E565495603B2888B3536CE44163EC01993FB8656A29F397788492C05
+                              C029071B1BAB5421D6E0240D64B205D60D3B4A84985B1D8D1E2153C1C93906E4
+                              CB4591480796A372F79823D0B9889BCE4B5C0D0071985AFB30E6FCB316713D00
+                              487FC74EE4F359ABB81E0014541D24DA46CFE3B35671FF1210C2F1AF8800B89E
+                              01AECE02A7D93B6D5A5C6E5824D512B2C099B2736705A9AE311883A052EEF7B7
+                              936899D2929256125D655002C0187B49DE8E22754052753EE783726366502E01
+                              492C10B84CA8AAFCD7D9DCCFEE55B587EBFA3775CDCD457753E62CFF3D14E51F
+                              A279A948A40321050000000049454E44AE426082}
                             FileName = 
                               'D:\99Coders\Posts\168 - Animando botao de download no Delphi ---' +
                               '---\Fontes\Images\gear2.png'

@@ -5487,35 +5487,31 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       'Where (Cp.CargaId = @CargaId) and (@PessoaId=0 or @PessoaId = Pes.PessoaId)';
 
     // Relat�rio Mapa de Cargas - Exibir volumes de cada pedido para CheckList em Carga
-  Const
-    SqlGetCargaPedidoVolumes = 'Declare @CargaId Integer  = :pCargaId' +
-      sLineBreak + 'Declare @Processo Char(2) = :pProcesso' + sLineBreak +
-      'select Cp.CargaId, Ped.PessoaId, Pv.* --PedidoVolumeId, Pv.Conferido' +
-      sLineBreak + 'From Cargas C' + sLineBreak +
+  Const SqlGetCargaPedidoVolumes = 'Declare @CargaId Integer  = :pCargaId' + sLineBreak +
+      'Declare @Processo Char(2) = :pProcesso' + sLineBreak +
+      'select Cp.CargaId, Ped.PessoaId, Pv.* --PedidoVolumeId, Pv.Conferido' + sLineBreak +
+      'From Cargas C' + sLineBreak +
       'Inner Join CargaPedidos Cp On Cp.CargaId = C.CargaId' + sLineBreak +
       'Inner Join Pedido Ped On Ped.PedidoId = Cp.PedidoId' + sLineBreak +
-      'Left Join (select pv.PedidoId, Pv.PedidoVolumeId, CC.UsuarioId, U.Nome Usuario,'
-      + sLineBreak + '           Cc.Data, Cc.hora, Cc.Terminal,' + sLineBreak +
-      '           (Case When CC.PedidoVolumeId is Null then 0 Else 1 End) Conferido,'
-      + sLineBreak + '           Sum(Vl.QtdSuprida) QtdSuprida,' + sLineBreak +
-      '           (Case When Pv.EmbalagemId is Null then ' + #39 + 'Cxa.Fechada'
-      + #39 + ' Else ' + #39 + 'Fracionado' + #39 +
-      ' End) Embalagem, CC.Processo' + sLineBreak +
+      'Left Join (select pv.PedidoId, Pv.PedidoVolumeId, Pv.Sequencia, CC.UsuarioId, U.Nome Usuario,' + sLineBreak +
+      '           Cc.Data, Cc.hora, Cc.Terminal,' + sLineBreak +
+      '           (Case When CC.PedidoVolumeId is Null then 0 Else 1 End) Conferido, Prd.Zona,'+sLineBreak +
+      '           Sum(Vl.QtdSuprida) QtdSuprida,' + sLineBreak +
+      '           (Case When Pv.EmbalagemId is Null then ' + #39 + 'Cxa.Fechada'+#39+
+      '                 Else ' + #39 + 'Fracionado' + #39 + ' End) Embalagem, CC.Processo' + sLineBreak +
       '            From PedidoVolumes Pv' + sLineBreak +
-      '            Inner Join PedidoVolumeLotes Vl On Vl.PedidoVolumeid = Pv.PedidoVolumeId'
-      + sLineBreak +
-      '            Left Join vDocumentoEtapas De On De.Documento = Pv.uuid' +
-      sLineBreak +
-      '            Left join CargaCarregamento CC On CC.pedidovolumeid = Pv.PedidoVolumeId and Cc.Processo = @Processo'
-      + sLineBreak +
-      '            Left Join Usuarios U On U.Usuarioid = Cc.Usuarioid' +
-      sLineBreak +
-      '            where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)'
-      + sLineBreak + '            And De.ProcessoId <> 15' + sLineBreak +
-      '            Group by pv.PedidoId, Pv.PedidoVolumeId, CC.UsuarioId, U.Nome,'
-      + sLineBreak +
-      '                     Cc.Data, Cc.hora, Cc.Terminal, Pv.EmbalagemId, CC.PedidoVolumeId, CC.Processo) Pv ON Pv.PedidoId = Cp.PedidoId'
-      + sLineBreak + 'Where  Cp.CargaId = @CargaId ' + sLineBreak +
+      '            Inner Join PedidoVolumeLotes Vl On Vl.PedidoVolumeid = Pv.PedidoVolumeId'+ sLineBreak +
+      '            Left Join vDocumentoEtapas De On De.Documento = Pv.uuid' +sLineBreak +
+      '            Left join CargaCarregamento CC On CC.pedidovolumeid = Pv.PedidoVolumeId and Cc.Processo = @Processo'+ sLineBreak +
+      '            Left Join Usuarios U On U.Usuarioid = Cc.Usuarioid' + sLineBreak +
+      '            Left Join (Select distinct Vl.PedidoVolumeId, Pl.Zona' + sLineBreak +
+			   '                       From PedidoVolumeLotes Vl' + sLineBreak +
+					 '                       Inner Join vProdutoLotes Pl On Pl.LoteId = Vl.LoteId' + sLineBreak +
+					 '                       Where Pl.ZonaId Is Not Null) Prd On Prd.PedidoVolumeId = Pv.PedidoVOlumeId'+sLineBreak+
+      '            where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)'+ sLineBreak + '            And De.ProcessoId <> 15' + sLineBreak +
+      '            Group by pv.PedidoId, Pv.PedidoVolumeId, Pv.Sequencia, CC.UsuarioId, U.Nome,'+ sLineBreak +
+      '                     Cc.Data, Cc.hora, Cc.Terminal, Pv.EmbalagemId, CC.PedidoVolumeId, CC.Processo, Prd.Zona) Pv ON Pv.PedidoId = Cp.PedidoId'+sLineBreak +
+      'Where  Cp.CargaId = @CargaId ' + sLineBreak +
     // and Pv.Processo = @Processo
       'Order by Conferido, PedidoId, PedidoVolumeId';
 
