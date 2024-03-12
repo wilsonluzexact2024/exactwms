@@ -282,7 +282,7 @@ begin
   except
 
   end;
- // TSistemaControl.GetInstance();
+  TSistemaControl.GetInstance();
   Tutil.SetConectionsDef();
   THorse.Get('/eXactWMS',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
@@ -296,12 +296,12 @@ begin
       Res.Send(Tutil.ServerBd);
     end);
 
-  Tutil.gravalog('Inciando Servidor v2024-03-06');
+  Tutil.gravalog('Inciando Servidor v2024-03-13');
   THorse.Listen(PortaServer,
     Procedure(horse: THorse)
     Begin
       Writeln(Format
-        ('Servidor v2024-03-06  Ativo na Porta: %d Versão: V1  Ativo em: %s. Para testar use 127.0.0.1:%d/eXactWMS',
+        ('Servidor v2024-03-13  Ativo na Porta: %d Versão: V1  Ativo em: %s. Para testar use 127.0.0.1:%d/eXactWMS',
         [horse.Port, DateTimeToStr(Now()), horse.Port]));
     End);
 

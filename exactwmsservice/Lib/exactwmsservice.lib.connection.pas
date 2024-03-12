@@ -182,8 +182,6 @@ begin
   var
   Lsender := GetSender;
   try
-
-    // var Ltext := TFDQuery(DataSet).sql.text;
     var
     Lrecords := DataSet.RecordCount;
     Tutil.Gravalog('          -> ' + Lsender + ' - Consulta executada: ' +
