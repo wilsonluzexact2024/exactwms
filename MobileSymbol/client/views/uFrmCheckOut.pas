@@ -135,7 +135,8 @@ type
     StartSeparacao         : Boolean;
     F3Press : Boolean;
     Operacao : TOperacao;
-    vProdutoId : iNTEGER; //Id do Produto Digitado
+    vProdutoId  : iNTEGER; //Id do Produto Digitado
+    vCodProduto : Integer;
     Function ValidarVolume : Boolean;
     Procedure CabecalhoPedido(pPedidoId : Integer; pRazao, pDocumentoData : String; pRotaid : Integer);
     Procedure GetInicioCheckout;
@@ -232,7 +233,7 @@ Var pQtdCheckOut   : Integer;
     vErro : String;
 begin
   vCodDigitado := EdtProduto.Text;
-  if (StrToIntDef(EdtProduto.Text, 0) <> FDMemProdutoCodBarras.FieldByName('Produtoid').AsInteger) then Begin
+  if (StrToInt64Def(EdtProduto.Text, 0) <> vCodProduto) then Begin
 {     JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
      if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
         SetCampoDefault('EdtProduto');
@@ -242,35 +243,14 @@ begin
      End;
 }
      vProdutoId := 0;
-     if (FDMemProdutoCodBarras.Locate('CodBarras', EdtProduto.Text, [])) then
-        vProdutoId :=  JsonObjectRetorno.GetValue<Integer>('produtoid');
-     if (vProdutoId <= 0) Then Begin
+     if Not (FDMemProdutoCodBarras.Locate('CodBarras', EdtProduto.Text, [])) then Begin
+//        vProdutoId :=  JsonObjectRetorno.GetValue<Integer>('produtoid');
+//     if (vProdutoId <= 0) Then Begin
         SetCampoDefault('EdtProduto');
         MensagemStand('Código/Ean do produto inválido!');
         Exit;
      End;
-{     if (FrmeXactWMS.ConfigWMS.SeparacaoCodInterno = 0) and
-        (vProdutoId<>0) and (EdtProduto.Text <> JsonObjectRetorno.GetValue<String>('ean')) then Begin
-        SetCampoDefault('EdtProduto');
-        JsonObjectRetorno := Nil;
-        MensagemStand('Informe o Ean do produto!');
-        Exit;
-     End;
-     if vProdutoId <= 0 then Begin
-        EdtProduto.Text := '';
-        SetCampoDefault('EdtProduto');
-        MensagemStand('Produto('+vCodDigitado+') não encontrado!');
-        JsonObjectRetorno := Nil;
-        Exit;
-     End;
-     if Not (QryListaPadrao.Locate('ProdutoId', vProdutoId, [])) then Begin
-        EdtProduto.Text := '';
-        SetCampoDefault('EdtProduto');
-        MensagemStand('Produto('+vCodDigitado+') não faz parte deste volume!');
-        JsonObjectRetorno := Nil;
-        Exit;
-     End;
-}  End;
+  End;
   if F3Press then Begin
      if (Trunc(StrToIntDef(EdtQtdApanhe.Text, 0)) Mod QryListaPadrao.FieldByName('EmbalagemPadrao').AsInteger) <> 0 then Begin
         SetCampoDefault('EdtQtdApanhe');
@@ -742,6 +722,7 @@ end;
 function TFrmCheckOut.ValidarVolume: Boolean;
 Var JsonArrayVolume     : TJsonArray;
     JsonObjectVolume    : TJsonObject;
+    JsonCodBarras       : TJsonArray;
     vErro               : String;
     ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
 begin
@@ -749,7 +730,7 @@ begin
     ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create();
     Result := False;
     Try
-      //JsonArrayVolume := DmClient.GetVolumeeXact(StrTointDef(EdtVolumeId.Text, 0));   //Substituido pelo trecho abaixo, Indiana 050324
+      vCodProduto := 0;
       JsonObjectVolume := ObjPedidoVolumeCtrl.GetPedidoCxaFechadaCheckOut(StrTointDef(EdtVolumeId.Text, 0));
       if JsonObjectVolume.TryGetValue('Erro', vErro) then Begin
          SetCampoDefault('EdtVolumeId');
@@ -758,6 +739,8 @@ begin
       End
       Else Begin
          JsonArrayVolume := JsonObjectVolume.GetValue<TJsonArray>('volume');
+         JsonCodBarras   := JsonObjectVolume.GetValue<TJsonArray>('codbarras');
+         vCodProduto     := JsonObjectVolume.GetValue<TJsonArray>('produto').Items[0].GetValue<Integer>('codproduto');
          If FDMemProdutoCodBarras.Active then
             FDMemProdutoCodBarras.EmptyDataSet;
          FDMemProdutoCodBarras.Close;

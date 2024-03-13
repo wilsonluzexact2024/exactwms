@@ -1,15 +1,82 @@
 unit Repository.SqlScripts.PedidoVolume;
-
 interface
-
 Type
   TScriptRepository = class
   Class function ScriptBaixaEstoqueReposicao: string;
+  Class Function GetVolumeParaExpedicao : String;
+  Class Function GetLoteExistente   : String;
+  Class Function GetLoteInexistente : String;
+  Class Function GerarKardexReserva : String;
   end;
-
 implementation
-
 { TScriptRepository }
+
+class function TScriptRepository.GerarKardexReserva: String;
+begin
+  Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+            'Declare @UsuarioId Integer = :pUsuarioId'+sLineBreak+
+            '  SELECT 2, VL.LOTEID, VL.ENDERECOID, VL.ESTOQUETIPOID, VL.QTDSUPRIDA,'+sLineBreak+
+            '     (SELECT IsNull(QTDE, 0)'+sLineBreak+
+            '      FROM ESTOQUE'+sLineBreak+
+            '       WHERE  LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID ),'+sLineBreak+
+            '     (SELECT IsNull(QTDE, 0)-VL.QTDSUPRIDA'+sLineBreak+
+            '      FROM ESTOQUE'+sLineBreak+
+            '      WHERE LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID) ,'+sLineBreak+
+            '         '+#39+'BAIXA VOLUME:'+#39+'+ CAST(VL.PEDIDOVOLUMEID AS VARCHAR), NULL, 0, 0, '+#39+'TRANSFERENCIA PARA LOJA'+#39+', '+sLineBreak+
+            '     (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,'+sLineBreak+
+            '     (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),'+sLineBreak+
+            '     @USUARIOID, '+#39+'API EXP OFF'+#39+sLineBreak+
+            '  FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
+            '  WHERE VL.PEDIDOVOLUMEID =@PEDIDOVOLUMEID AND VL.QTDSUPRIDA > 0'+sLineBreak+
+            ' '+sLineBreak+
+            '          UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA'+sLineBreak+
+            '          FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
+            '          INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
+            '          AND EST.ENDERECOID = VL.ENDERECOID AND EST.ESTOQUETIPOID = 6'+sLineBreak+
+            '          WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID'+sLineBreak+
+            '		       UPDATE PEDIDOVOLUMES SET EXPEDIDO = 1'+sLineBreak+
+            '          WHERE PEDIDOVOLUMEID = @PEDIDOVOLUMEID    '+sLineBreak+
+            ' '+sLineBreak+
+            'DELETE FROM ESTOQUE WHERE QTDE <= 0 AND ESTOQUETIPOID = 6';
+end;
+
+class function TScriptRepository.GetLoteExistente: String;
+begin
+  Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+            '-- Baixa Estoque Existente'+sLineBreak+
+            'UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA'+sLineBreak+
+            'FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
+            'INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
+            '  AND EST.ENDERECOID = VL.ENDERECOID'+sLineBreak+
+            '  AND EST.ESTOQUETIPOID = VL.ESTOQUETIPOID'+sLineBreak+
+            'WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID    ';
+end;
+
+Class function TScriptRepository.GetLoteInexistente: String;
+begin
+  Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+            'Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,'+sLineBreak+
+  		        '   (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,'+sLineBreak+
+  		        '   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), NULL, NULL, NULL, Null'+sLineBreak+
+  		        '   FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
+  		        '   Left join Estoque Est On Est.Loteid = Vl.Loteid and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId'+sLineBreak+
+  		        '   WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID and Est.LoteId Is Null';
+end;
+
+Class function TScriptRepository.GetVolumeParaExpedicao: String;
+begin
+  Result := 'DECLARE @PROCESSOID INTEGER;'+sLineBreak+
+            'DECLARE @USUARIOID INTEGER;'+sLineBreak+
+            'SELECT TOP 100 PV.PEDIDOVOLUMEID, DE.PROCESSOID, DE.USUARIOID'+sLineBreak+
+            '      FROM PEDIDOVOLUMES PV'+sLineBreak+
+            '      INNER JOIN VDOCUMENTOETAPAS DE ON DE.DOCUMENTO = PV.UUID'+sLineBreak+
+            'WHERE DE.HORARIO = (SELECT MAX(HORARIO) FROM VDOCUMENTOETAPAS WHERE DOCUMENTO = PV.UUID AND STATUS = 1)'+sLineBreak+
+            '        AND DE.PROCESSOID >= 13'+sLineBreak+
+            '        AND DE.PROCESSOID NOT IN (15,31)'+sLineBreak+
+            '        AND EXPEDIDO = 0 '+sLineBreak+
+            '        AND (SELECT EXPEDICAOOFFLINE FROM CONFIGURACAO) = 1'+sLineBreak+
+            '        ORDER BY DE.PROCESSOID DESC';
+end;
 
 Class function TScriptRepository.ScriptBaixaEstoqueReposicao: string;
 begin
@@ -85,19 +152,10 @@ begin
     + '          WHERE                                                   ' +#13#10
     + '             VL.PEDIDOVOLUMEID =@PEDIDOVOLUMEID                   ' +#13#10
     + '          AND VL.QTDSUPRIDA > 0                                   ' +#13#10
-    + '                                                                  ' +#13#10
-    + '-- Baixa Estoque Existente                                        ' +#13#10
-
-    + '          UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA          ' +#13#10
-    + '          FROM PEDIDOVOLUMELOTES VL                               ' +#13#10
-    + '          INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID        ' +#13#10
-    + '          AND EST.ENDERECOID = VL.ENDERECOID                      ' +#13#10
-    + '          AND EST.ESTOQUETIPOID = VL.ESTOQUETIPOID                ' +#13#10
-    + '          WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID               ' +#13#10
-    + '                                                                 ' +#13#10
+    + ' '+sLineBreak
     + ' -- Inserir Estoque Negativo                                      ' +#13#10
     + '     Insert Into Estoque Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,'   +#13#10
-		+ '           	(SELECT IDDATA FROM RHEMA_DATA WHERE DATA =       ' +#13#10
+  		+ '           	(SELECT IDDATA FROM RHEMA_DATA WHERE DATA =       ' +#13#10
     + '           CAST(GETDATE() AS DATE)) ,                            ' +#13#10
     + '           (SELECT IDHORA FROM RHEMA_HORA WHERE HORA =         ' +#13#10
     + '         (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), ' +#13#10
@@ -105,6 +163,15 @@ begin
     + '       FROM PEDIDOVOLUMELOTES VL                                ' +#13#10
     + '       Left join Estoque Est On Est.Loteid = Vl.Loteid and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId ' +#13#10
     + '       WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID and Est.LoteId Is Null  ' +#13#10
+    + '                                                                  ' +#13#10
+    + '-- Baixa Estoque Existente                                        ' +#13#10
+    + '          UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA          ' +#13#10
+    + '          FROM PEDIDOVOLUMELOTES VL                               ' +#13#10
+    + '          INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID        ' +#13#10
+    + '          AND EST.ENDERECOID = VL.ENDERECOID                      ' +#13#10
+    + '          AND EST.ESTOQUETIPOID = VL.ESTOQUETIPOID                ' +#13#10
+    + '          WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID               ' +#13#10
+    + '                                                                 ' +#13#10
     + ' --Baixar Estoque em Reserva ' +#13#10
     + '          UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA          ' +#13#10
     + '          FROM PEDIDOVOLUMELOTES VL                               ' +#13#10
@@ -113,7 +180,6 @@ begin
     + '          WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID               ' +#13#10
     + '		       UPDATE PEDIDOVOLUMES SET EXPEDIDO = 1                   ' +#13#10
     + '          WHERE PEDIDOVOLUMEID = @PEDIDOVOLUMEID                  ' +#13#10
-
     + '  COMMIT TRAN -- Transaction Success!                             ' +#13#10
     + '  END TRY                                                         ' +#13#10
     + '  BEGIN CATCH                                                       ' +#13#10
@@ -131,13 +197,10 @@ begin
 		+ '		   @ErrorState -- State.                                      ' +#13#10
 		+ '		   );                                                         ' +#13#10
     + '  END CATCH                                                      ' +#13#10
-
     + '   FETCH NEXT FROM CVOLUMES INTO @PEDIDOVOLUMEID, @PROCESSOID,@USUARIOID  ' +#13#10
     + 'END                                                               ' +#13#10
     + 'CLOSE CVOLUMES                                                    ' +#13#10
     + 'DEALLOCATE CVOLUMES                                               ' +#13#10
     + 'DELETE FROM ESTOQUE WHERE QTDE < 0 AND ESTOQUETIPOID = 6                  ';
-
 end;
-
 end.

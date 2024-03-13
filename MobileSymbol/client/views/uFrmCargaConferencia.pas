@@ -129,6 +129,7 @@ type
     FDMemVolumeProdutosZona: TStringField;
     FDMemVolumeProdutosMascara: TStringField;
     FDMemVolumeProdutosQtdSuprida: TIntegerField;
+    QryCargaPedidodocumentodata: TDateField;
     procedure BtnSearchPesqClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LstPrincipalItemClick(const Sender: TObject;
@@ -170,6 +171,7 @@ type
     Procedure InserirDestinatarioSqlLite;
     Procedure GetCargaVolumes;
     Procedure GetVolumeProdutos(pPedidoVolumeId : Integer);
+    Procedure GetVolumeProdutosOLD(pPedidoVolumeId : Integer);
     Procedure FinalizarConferencia;
   public
     { Public declarations }
@@ -678,7 +680,6 @@ begin
             .GetValue<String>('motorista');
           ObjCargaCtrl.ObjCargas.ProcessoId := JsonArrayCarga.Items[0]
             .GetValue<Integer>('processoid');
-
           ShowDados;
         End);
     end);
@@ -731,11 +732,19 @@ end;
 procedure TFrmCargaConferencia.GetCargaVolumes;
 Var Th : TThread;
 begin
+  ShowLoading;
   Th := TThread.CreateAnonymousThread(procedure
      Var JsonArrayVolumes : TJsonArray;
          vErro : String;
      begin
+       Try
+       LstCargaVolumes.Items.Clear;
        JsonArrayVolumes := ObjCargaCtrl.GetCargaPedidoVolumes(ObjCargaCtrl.ObjCargas.cargaid, 'CO');
+       Except On E: Exception do Begin
+          JsonArrayVolumes := Nil;
+          raise Exception.Create('Erro: '+E.Message);
+         End;
+       End;
        if JsonArrayVolumes.Items[0].TryGetValue('Erro', vErro) then Begin
           JsonArrayVolumes := Nil;
           raise Exception.Create('Erro: Carregando volumes!');
@@ -786,14 +795,17 @@ begin
                txt.Text := FDMemCargaVolumesResumo.FieldByName('PedidoId').AsString;
 
                txt := TListItemText(Objects.FindDrawable('PedidoVolumeId'));
-               txt.Text := FDMemCargaVolumesResumo.FieldByName('PedidoVolumeId').AsString;
+               txt.Text := FDMemCargaVolumesResumo.FieldByName('PedidoVolumeId').AsString+'/'+
+                           FDMemCargaVolumesResumo.FieldByName('Sequencia').AsString;
 
                txt := TListItemText(Objects.FindDrawable('Embalagem'));
                txt.Text := FDMemCargaVolumesResumo.FieldByName('Embalagem').AsString;
 
                txt := TListItemText(Objects.FindDrawable('Conferencia'));
-               txt.Text := FDMemCargaVolumesResumo.FieldByName('Data').AsString+' '+
-                           FDMemCargaVolumesResumo.FieldByName('Hora').AsString;
+               txt.Text := FDMemCargaVolumesResumo.FieldByName('Zona').AsString;
+               //txt := TListItemText(Objects.FindDrawable('Conferencia'));
+               //txt.Text := FDMemCargaVolumesResumo.FieldByName('Data').AsString+' '+
+               //            FDMemCargaVolumesResumo.FieldByName('Hora').AsString;
              End;
              FDMemCargaVolumesResumo.Next;
            End;
@@ -850,15 +862,102 @@ begin
 end;
 
 procedure TFrmCargaConferencia.GetVolumeProdutos(pPedidoVolumeId : Integer);
+Var ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
+    JsonArrayVolumeLote : TJsonArray;
+    vErro : String;
+begin
+ TTask.Create(
+   procedure()
+   begin
+       Try
+         ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create;
+         JsonArrayVolumeLote := ObjPedidoVolumeCtrl.GetVolumeLotes(pPedidoVolumeId);
+       Except On E: Exception do
+         TThread.Synchronize(nil,
+           procedure()
+           begin
+             raise Exception.Create('Erro: '+E.Message);
+         End);
+       End;
+       if JsonArrayVolumeLote.Items[0].TryGetValue('Erro', vErro) then Begin
+          JsonArrayVolumeLote := Nil;
+          ObjPedidoVolumeCtrl.Free;
+          TThread.Synchronize(nil,
+            procedure()
+            begin
+              raise Exception.Create('Erro: Carregando dados do volume!');
+            End);
+       End
+       Else Begin
+         If FDMemVolumeProdutos.Active then
+            FDMemVolumeProdutos.EmptyDataSet;
+         FDMemVolumeProdutos.Close;
+         FDMemVolumeProdutos.LoadFromJSON(JsonArrayVolumeLote, False);
+         TThread.Synchronize(Nil, procedure
+         Var item : TListViewItem;
+             txt  : TListItemText;
+             img, Img3 : TListItemImage;
+         begin
+           LstVolumeProdutos.BeginUpdate;
+           LstVolumeProdutos.Items.Clear;
+           FDMemVolumeProdutos.First;
+           While Not FDMemVolumeProdutos.Eof do Begin
+             item := LstVolumeProdutos.Items.Add;
+             item.Objects.Clear;
+             item.Tag := FDMemVolumeProdutos.FieldByName('LoteId').AsLargeInt;
+             with item do begin
+               img := TListItemImage(Objects.FindDrawable('ImgBackGround'));
+               If FDMemCargaVolumesResumo.Recno mod 2 = 1 then
+                  img.Bitmap := ImgFdoGrid01.Bitmap
+               Else
+                  img.Bitmap := ImgFdoGrid02.Bitmap;
+
+               txt := TListItemText(Objects.FindDrawable('CodProduto'));
+               txt.Text := FDMemVolumeProdutos.FieldByName('CodProduto').AsString;
+
+               txt := TListItemText(Objects.FindDrawable('Descricao'));
+               txt.Text := FDMemVolumeProdutos.FieldByName('Descricao').AsString;
+
+               txt := TListItemText(Objects.FindDrawable('Endereco'));
+               txt.Text := EnderecoMask(FDMemVolumeProdutos.FieldByName('Endereco').AsString,
+                                        FDMemVolumeProdutos.FieldByName('Mascara').AsString, True);
+
+               txt := TListItemText(Objects.FindDrawable('Lote'));
+               txt.Text := FDMemVolumeProdutos.FieldByName('DescrLote').AsString;
+
+               //txt := TListItemText(Objects.FindDrawable('Vencimento'));
+               //txt.Text := FDMemVolumeProdutos.FieldByName('Vencimento').AsString;
+
+               txt := TListItemText(Objects.FindDrawable('Qtde'));
+               txt.Text := FDMemVolumeProdutos.FieldByName('QtdSuprida').AsString;
+             End;
+             FDMemVolumeProdutos.Next;
+           End;
+           LstVolumeProdutos.EndUpdate;
+           JsonArrayVolumeLote := Nil;
+           ObjPedidoVolumeCtrl.Free;
+         End);
+       End;
+
+   End).Start;
+End;
+
+procedure TFrmCargaConferencia.GetVolumeProdutosOLD(pPedidoVolumeId : Integer);
 Var Th : TThread;
 begin
+  ShowOk('Abrindo Volume');
+  ShowLoading;
   Th := TThread.CreateAnonymousThread(procedure
-     Var ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
+         Var ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
          JsonArrayVolumeLote : TJsonArray;
          vErro : String;
      begin
-       ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create;
-       JsonArrayVolumeLote := ObjPedidoVolumeCtrl.GetVolumeLotes(pPedidoVolumeId);
+       Try
+         ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create;
+         JsonArrayVolumeLote := ObjPedidoVolumeCtrl.GetVolumeLotes(pPedidoVolumeId);
+       Except On E: Exception do
+         raise Exception.Create('Erro: '+E.Message);
+       End;
        if JsonArrayVolumeLote.Items[0].TryGetValue('Erro', vErro) then Begin
           JsonArrayVolumeLote := Nil;
           ObjPedidoVolumeCtrl.Free;
@@ -883,7 +982,6 @@ begin
              item.Tag := FDMemVolumeProdutos.FieldByName('LoteId').AsLargeInt;
              with item do begin
                img := TListItemImage(Objects.FindDrawable('ImgBackGround'));
-               //img.ScalingMode := TImageScalingMode.Stretch;
                If FDMemCargaVolumesResumo.Recno mod 2 = 1 then
                   img.Bitmap := ImgFdoGrid01.Bitmap
                Else
@@ -902,8 +1000,8 @@ begin
                txt := TListItemText(Objects.FindDrawable('Lote'));
                txt.Text := FDMemVolumeProdutos.FieldByName('DescrLote').AsString;
 
-               txt := TListItemText(Objects.FindDrawable('Vencimento'));
-               txt.Text := FDMemVolumeProdutos.FieldByName('Vencimento').AsString;
+               //txt := TListItemText(Objects.FindDrawable('Vencimento'));
+               //txt.Text := FDMemVolumeProdutos.FieldByName('Vencimento').AsString;
 
                txt := TListItemText(Objects.FindDrawable('Qtde'));
                txt.Text := FDMemVolumeProdutos.FieldByName('QtdSuprida').AsString;
@@ -1124,6 +1222,8 @@ begin
 //        TListItemText(Objects.FindDrawable('PedidoId')).Text   := QryCargaPedido.FieldByName('PedidoId').AsString;
         txt := TListItemText(Objects.FindDrawable('PedidoId'));
         txt.Text := QryCargaPedido.FieldByName('PedidoId').AsString;
+        txt := TListItemText(Objects.FindDrawable('Data'));
+        txt.Text := QryCargaPedido.FieldByName('DocumentoData').AsString;
 //        TListItemText(Objects.FindDrawable('QtdVolumes')).Text := QryCargaPedido.FieldByName('QtdVolume').AsString;
         txt := TListItemText(Objects.FindDrawable('QtdVolumes'));
         txt.Text := QryCargaPedido.FieldByName('QtdVolume').AsString;

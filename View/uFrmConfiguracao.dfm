@@ -1,7 +1,6 @@
 inherited FrmConfiguracao: TFrmConfiguracao
   Caption = 'FrmConfiguracao'
   ClientHeight = 681
-  ExplicitLeft = -274
   ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 17
@@ -1257,7 +1256,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         Caption = ' [ Tag Volumes ] '
         TabOrder = 13
         object Label40: TLabel
-          Left = 11
+          Left = 7
           Top = 29
           Width = 125
           Height = 17
@@ -1281,9 +1280,9 @@ inherited FrmConfiguracao: TFrmConfiguracao
           Caption = 'mes(es)'
         end
         object CbTagVolumeOrdem: TComboBox
-          Left = 142
+          Left = 136
           Top = 28
-          Width = 139
+          Width = 182
           Height = 22
           CustomHint = BalloonHint1
           Style = csOwnerDrawFixed
@@ -1292,13 +1291,15 @@ inherited FrmConfiguracao: TFrmConfiguracao
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
+          ItemIndex = 2
           ParentFont = False
           TabOrder = 0
           TabStop = False
+          Text = 'Endere'#231'o + Rota +  Produto'
           Items.Strings = (
             'Pedido'
-            'Endere'#231'o + Loja'
-            'Endere'#231'o + Produto')
+            'Endere'#231'o + Rota + Loja'
+            'Endere'#231'o + Rota +  Produto')
         end
         object ComboBox2: TComboBox
           Left = 412

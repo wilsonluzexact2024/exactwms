@@ -4,7 +4,7 @@
         <ProjectVersion>19.5</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>131</TargetedPlatforms>
         <AppType>Console</AppType>
@@ -218,10 +218,8 @@
         <DCCReference Include="..\Common\Utils\Server.Utils.Criptografia.pas"/>
         <DCCReference Include="..\Common\Utils\Server.Utils.JsonSearchToWhere.pas"/>
         <DCCReference Include="..\Common\Utils\Server.Utils.SectionVariables.pas"/>
-        <DCCReference Include="..\Common\Utils\Server.Utils.SendMail2.pas"/>
         <DCCReference Include="..\Common\Utils\Server.Utils.SingletonPermisao.pas"/>
         <DCCReference Include="..\Common\Utils\Server.Utils.Strings.pas"/>
-        <DCCReference Include="..\Common\Utils\ServerMail.pas"/>
         <DCCReference Include="..\Common\JWT\JOSE.Builder.pas"/>
         <DCCReference Include="..\Common\JWT\JOSE.Consumer.pas"/>
         <DCCReference Include="..\Common\JWT\JOSE.Consumer.Validators.pas"/>
@@ -294,6 +292,18 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="C:\App\eXactWMS\Service\MicroservicesExpedicao.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>MicroservicesExpedicao.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Linux64\Release\MicroservicesExpedicao" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Linux64">
+                        <RemoteName>MicroservicesExpedicao</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
