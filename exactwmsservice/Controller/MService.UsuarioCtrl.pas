@@ -387,7 +387,7 @@ begin
   Try
     UsuarioDAO := TUsuarioDao.Create;
     Try
-        UsuarioDAO := TUsuarioDao.Create;
+
       If Req.Query.Dictionary.Count <= 0 then
         Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           'Defina os parâmetros para pesquisar os endereços.')))
@@ -546,9 +546,10 @@ begin
       End;
     End;
   Finally
+     FreeAndNil(UsuarioDAO);
     if Assigned(JsonUsuario) then
        FreeAndNil(JsonUsuario);
-    FreeAndNil(UsuarioDAO);
+
   End;
 end;
 

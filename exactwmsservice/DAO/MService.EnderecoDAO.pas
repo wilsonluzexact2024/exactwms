@@ -61,7 +61,6 @@ end;
 
 destructor TEnderecoDao.Destroy;
 begin
-  
   ObjEnderecoDAO.Free;
   inherited;
 end;

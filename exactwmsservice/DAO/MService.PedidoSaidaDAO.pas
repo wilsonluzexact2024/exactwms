@@ -289,6 +289,7 @@ destructor TPedidoSaidaDao.Destroy;
 begin
   PedidoSaida.ListProduto.Free;
   PedidoSaida.Free;
+
   inherited;
 end;
 
@@ -1075,13 +1076,13 @@ begin
   try
     // FConexao.Query.SQL.Add(TuEvolutConst.SqlGetLoteParaVolumeFracionado);
     // clipboard.AsText := FConexao.Query.SQL.Text;
+    Result := TjSonArray.Create;
     FConexao.Query.ParamByName('pPedidoid').Value := pPedidoId.ToString();
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('LoteParaVolumeFracionado.Sql');
     FConexao.Query.Open();
     if FConexao.Query.IsEmpty then
     Begin
-      Result := TjSonArray.Create;
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
         'Pedido(' + pPedidoId.ToString() + ') indisponível para Cubagem!')));
     End
@@ -1090,6 +1091,7 @@ begin
   Except
     ON E: Exception do
     Begin
+
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
         E.Message)));
     End;
@@ -1151,147 +1153,152 @@ var
 begin
   Result := TjSonArray.Create;
   try
-  try
-    FConexao.Query.SQL.Add(TuEvolutConst.SqlPedido);
-    FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
-    if pDataIni = 0 then
-      FConexao.Query.ParamByName('pDataIni').Value := pDataIni
-    Else
-      FConexao.Query.ParamByName('pDataIni').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataIni);
-    if pDataFin = 0 then
-      FConexao.Query.ParamByName('pDataFin').Value := pDataFin
-    Else
-      FConexao.Query.ParamByName('pDataFin').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataFin);
-    FConexao.Query.ParamByName('pCodigoERP').Value := pCodigoERP;
-    FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
-    FConexao.Query.ParamByName('pDocumentoNr').Value := pDocumentoNr;
-    FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
-    FConexao.Query.ParamByName('pRegistroERP').Value := pRegistroERP;
-    FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
-    FConexao.Query.ParamByName('pProcessoId').Value := pProcessoId;
-    FConexao.Query.ParamByName('pMontarCarga').Value := pMontarCarga;
-    FConexao.Query.ParamByName('pCodProduto').Value := pCodProduto;
-    FConexao.Query.ParamByName('pPedidoPendente').Value := pPedidoPendente;
-    if DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('PedidoAll.Sql');
-    FConexao.Query.ParamByName('pOperacaoTipoId').Value := 2;
-    // FConexao.Query.ResourceOptions.CmdExecMode := amAsync;
-    FConexao.Query.Open;
-    // while FConexao.Query.Command.State = csExecuting do begin
-    // do something while query is executing
-    // end;
-    // FConexao.Query.ResourceOptions.CmdExecMode := amBlocking;
-    if FConexao.Query.IsEmpty then
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        TuEvolutConst.QrySemDados)))
-    Else
-      while Not FConexao.Query.Eof do
+    try
+      FConexao.Query.SQL.Add(TuEvolutConst.SqlPedido);
+      FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
+      if pDataIni = 0 then
+        FConexao.Query.ParamByName('pDataIni').Value := pDataIni
+      Else
+        FConexao.Query.ParamByName('pDataIni').Value :=
+          FormatDateTime('YYYY-MM-DD', pDataIni);
+      if pDataFin = 0 then
+        FConexao.Query.ParamByName('pDataFin').Value := pDataFin
+      Else
+        FConexao.Query.ParamByName('pDataFin').Value :=
+          FormatDateTime('YYYY-MM-DD', pDataFin);
+      FConexao.Query.ParamByName('pCodigoERP').Value := pCodigoERP;
+      FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
+      FConexao.Query.ParamByName('pDocumentoNr').Value := pDocumentoNr;
+      FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
+      FConexao.Query.ParamByName('pRegistroERP').Value := pRegistroERP;
+      FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
+      FConexao.Query.ParamByName('pProcessoId').Value := pProcessoId;
+      FConexao.Query.ParamByName('pMontarCarga').Value := pMontarCarga;
+      FConexao.Query.ParamByName('pCodProduto').Value := pCodProduto;
+      FConexao.Query.ParamByName('pPedidoPendente').Value := pPedidoPendente;
+      if DebugHook <> 0 then
+        FConexao.Query.SQL.SaveToFile('PedidoAll.Sql');
+      FConexao.Query.ParamByName('pOperacaoTipoId').Value := 2;
+      // FConexao.Query.ResourceOptions.CmdExecMode := amAsync;
+      FConexao.Query.Open;
+      // while FConexao.Query.Command.State = csExecuting do begin
+      // do something while query is executing
+      // end;
+      // FConexao.Query.ResourceOptions.CmdExecMode := amBlocking;
+      if FConexao.Query.IsEmpty then
+        Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
+          TuEvolutConst.QrySemDados)))
+      Else
+        while Not FConexao.Query.Eof do
+        Begin
+          JsonRetorno := TJsonObject.Create();
+          JsonRetorno.AddPair('pedidoid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('PedidoId')
+            .Asinteger));
+          JsonRetorno.AddPair('operacaotipoid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('OperacaoTipoId')
+            .Asinteger));
+          JsonRetorno.AddPair('operacao',
+            FConexao.Query.FieldByName('OperacaoTipo').AsString);
+          JsonRetorno.AddPair('pessoaid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('PessoaId')
+            .Asinteger));
+          JsonRetorno.AddPair('codpessoaerp',
+            TJsonNumber.Create(FConexao.Query.FieldByName('CodPessoaErp')
+            .Asinteger));
+          JsonRetorno.AddPair('razao', FConexao.Query.FieldByName('Razao')
+            .AsString);
+          JsonRetorno.AddPair('documentooriginal',
+            FConexao.Query.FieldByName('DocumentoOriginal').AsString);
+          JsonRetorno.AddPair('documentonr',
+            FConexao.Query.FieldByName('DocumentoNr').AsString);
+          JsonRetorno.AddPair('documentodata',
+            DateToStr(FConexao.Query.FieldByName('DocumentoData').AsDateTime));
+          JsonRetorno.AddPair('dtinclusao',
+            DateToStr(FConexao.Query.FieldByName('DtInclusao').AsDateTime));
+          JsonRetorno.AddPair('hrinclusao',
+            TimeToStr(StrToTime(Copy(FConexao.Query.FieldByName('HrInclusao')
+            .AsString, 1, 8))));
+          JsonRetorno.AddPair('armazemid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('ArmazemId')
+            .Asinteger));
+          JsonRetorno.AddPair('status',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Status').Asinteger));
+          JsonRetorno.AddPair('rotaid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('RotaId').Asinteger));
+          JsonRetorno.AddPair('rota', FConexao.Query.FieldByName('Rota')
+            .AsString);
+          JsonRetorno.AddPair('processoid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('ProcessoId')
+            .Asinteger));
+          JsonRetorno.AddPair('dtprocesso',
+            FConexao.Query.FieldByName('DtProcesso').AsString);
+          JsonRetorno.AddPair('etapa', FConexao.Query.FieldByName('Etapa')
+            .AsString);
+          JsonRetorno.AddPair('cargaid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('CargaId')
+            .Asinteger));
+          JsonRetorno.AddPair('processoidcarga',
+            TJsonNumber.Create(FConexao.Query.FieldByName('ProcessoIdCarga')
+            .Asinteger));
+          JsonRetorno.AddPair('processocarga',
+            FConexao.Query.FieldByName('ProcessoCarga').AsString);
+          JsonRetorno.AddPair('carregamentoid',
+            TJsonNumber.Create(FConexao.Query.FieldByName('CarregamentoId')
+            .Asinteger));
+          JsonRetorno.AddPair('picking',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Picking')
+            .Asinteger));
+          JsonRetorno.AddPair('itens',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Itens').Asinteger));
+          JsonRetorno.AddPair('demanda',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Demanda')
+            .Asinteger));
+          JsonRetorno.AddPair('qtdsuprida',
+            TJsonNumber.Create(FConexao.Query.FieldByName('QtdSuprida')
+            .Asinteger));
+          JsonRetorno.AddPair('registroerp',
+            FConexao.Query.FieldByName('RegistroERP').AsString);
+          JsonRetorno.AddPair('uuid', FConexao.Query.FieldByName('uuid')
+            .AsString);
+          JsonRetorno.AddPair('tvolumes',
+            TJsonNumber.Create(FConexao.Query.FieldByName('TVolCxaFechada')
+            .Asinteger + FConexao.Query.FieldByName('TVOlFracionado').Asinteger
+            + FConexao.Query.FieldByName('Cancelado').Asinteger));
+          JsonRetorno.AddPair('tvolCxaFechada',
+            TJsonNumber.Create(FConexao.Query.FieldByName('TVolCxaFechada')
+            .Asinteger));
+          JsonRetorno.AddPair('tvolFracionado',
+            TJsonNumber.Create(FConexao.Query.FieldByName('TVOlFracionado')
+            .Asinteger));
+          JsonRetorno.AddPair('cancelado',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Cancelado')
+            .Asinteger));
+          JsonRetorno.AddPair('peso',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Peso').AsFloat));
+          JsonRetorno.AddPair('volcm3',
+            TJsonNumber.Create(FConexao.Query.FieldByName('VolCm3').AsFloat));
+          JsonRetorno.AddPair('volm3',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Volm3').AsFloat));
+          JsonRetorno.AddPair('processado',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Processado')
+            .Asinteger));
+          JsonRetorno.AddPair('concluido',
+            TJsonNumber.Create(FConexao.Query.FieldByName('Concluido')
+            .Asinteger));
+          Result.AddElement(JsonRetorno);
+          // tJson.ObjectToJsonObject(PedidoSaida, [joDateFormatISO8601]));
+          FConexao.Query.Next;
+        End;
+    Except
+      ON E: Exception do
       Begin
-        JsonRetorno := TJsonObject.Create();
-        JsonRetorno.AddPair('pedidoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('PedidoId').Asinteger));
-        JsonRetorno.AddPair('operacaotipoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('OperacaoTipoId')
-          .Asinteger));
-        JsonRetorno.AddPair('operacao',
-          FConexao.Query.FieldByName('OperacaoTipo').AsString);
-        JsonRetorno.AddPair('pessoaid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('PessoaId').Asinteger));
-        JsonRetorno.AddPair('codpessoaerp',
-          TJsonNumber.Create(FConexao.Query.FieldByName('CodPessoaErp')
-          .Asinteger));
-        JsonRetorno.AddPair('razao', FConexao.Query.FieldByName('Razao')
-          .AsString);
-        JsonRetorno.AddPair('documentooriginal',
-          FConexao.Query.FieldByName('DocumentoOriginal').AsString);
-        JsonRetorno.AddPair('documentonr',
-          FConexao.Query.FieldByName('DocumentoNr').AsString);
-        JsonRetorno.AddPair('documentodata',
-          DateToStr(FConexao.Query.FieldByName('DocumentoData').AsDateTime));
-        JsonRetorno.AddPair('dtinclusao',
-          DateToStr(FConexao.Query.FieldByName('DtInclusao').AsDateTime));
-        JsonRetorno.AddPair('hrinclusao',
-          TimeToStr(StrToTime(Copy(FConexao.Query.FieldByName('HrInclusao')
-          .AsString, 1, 8))));
-        JsonRetorno.AddPair('armazemid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('ArmazemId')
-          .Asinteger));
-        JsonRetorno.AddPair('status',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Status').Asinteger));
-        JsonRetorno.AddPair('rotaid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('RotaId').Asinteger));
-        JsonRetorno.AddPair('rota', FConexao.Query.FieldByName('Rota')
-          .AsString);
-        JsonRetorno.AddPair('processoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('ProcessoId')
-          .Asinteger));
-        JsonRetorno.AddPair('dtprocesso',
-          FConexao.Query.FieldByName('DtProcesso').AsString);
-        JsonRetorno.AddPair('etapa', FConexao.Query.FieldByName('Etapa')
-          .AsString);
-        JsonRetorno.AddPair('cargaid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('CargaId').Asinteger));
-        JsonRetorno.AddPair('processoidcarga',
-          TJsonNumber.Create(FConexao.Query.FieldByName('ProcessoIdCarga')
-          .Asinteger));
-        JsonRetorno.AddPair('processocarga',
-          FConexao.Query.FieldByName('ProcessoCarga').AsString);
-        JsonRetorno.AddPair('carregamentoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('CarregamentoId')
-          .Asinteger));
-        JsonRetorno.AddPair('picking',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Picking').Asinteger));
-        JsonRetorno.AddPair('itens',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Itens').Asinteger));
-        JsonRetorno.AddPair('demanda',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Demanda').Asinteger));
-        JsonRetorno.AddPair('qtdsuprida',
-          TJsonNumber.Create(FConexao.Query.FieldByName('QtdSuprida')
-          .Asinteger));
-        JsonRetorno.AddPair('registroerp',
-          FConexao.Query.FieldByName('RegistroERP').AsString);
-        JsonRetorno.AddPair('uuid', FConexao.Query.FieldByName('uuid')
-          .AsString);
-        JsonRetorno.AddPair('tvolumes',
-          TJsonNumber.Create(FConexao.Query.FieldByName('TVolCxaFechada')
-          .Asinteger + FConexao.Query.FieldByName('TVOlFracionado').Asinteger +
-          FConexao.Query.FieldByName('Cancelado').Asinteger));
-        JsonRetorno.AddPair('tvolCxaFechada',
-          TJsonNumber.Create(FConexao.Query.FieldByName('TVolCxaFechada')
-          .Asinteger));
-        JsonRetorno.AddPair('tvolFracionado',
-          TJsonNumber.Create(FConexao.Query.FieldByName('TVOlFracionado')
-          .Asinteger));
-        JsonRetorno.AddPair('cancelado',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Cancelado')
-          .Asinteger));
-        JsonRetorno.AddPair('peso',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Peso').AsFloat));
-        JsonRetorno.AddPair('volcm3',
-          TJsonNumber.Create(FConexao.Query.FieldByName('VolCm3').AsFloat));
-        JsonRetorno.AddPair('volm3',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Volm3').AsFloat));
-        JsonRetorno.AddPair('processado',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Processado')
-          .Asinteger));
-        JsonRetorno.AddPair('concluido',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Concluido')
-          .Asinteger));
-        Result.AddElement(JsonRetorno);
-        // tJson.ObjectToJsonObject(PedidoSaida, [joDateFormatISO8601]));
-        FConexao.Query.Next;
+        Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
+          StringReplace(E.Message,
+          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+          '', [rfReplaceAll]))));
       End;
-  Except
-    ON E: Exception do
-    Begin
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]))));
-    End;
-  end;
+    end;
   finally
     FConexao.Query.Close
   end;
@@ -1481,8 +1488,9 @@ end;
 
 function TPedidoSaidaDao.GetConsultaReposicao(Const AParams
   : TDictionary<string, string>): TjSonArray;
-var vQryBasico, vQry: TFDQuery;
-    vErroBody : TJsonArray;
+var
+  vQryBasico, vQry: TFDQuery;
+  vErroBody: TjSonArray;
 begin
   Try
     vQryBasico := FConexao.GetQuery;
@@ -1566,10 +1574,11 @@ begin
       if vQry.IsEmpty then
       Begin
         Result := TjSonArray.Create;
-        vErroBody := TJsonArray.Create;
-        vErroBody.AddElement(TJsonObject.Create.AddPair('Erro', 'Reposição sem itens para coleta.'));
-        Result.AddElement(TJsonObject.Create.AddPair('header', vQryBasico.ToJSONArray())
-        .AddPair('body', vErroBody ));
+        vErroBody := TjSonArray.Create;
+        vErroBody.AddElement(TJsonObject.Create.AddPair('Erro',
+          'Reposição sem itens para coleta.'));
+        Result.AddElement(TJsonObject.Create.AddPair('header',
+          vQryBasico.ToJSONArray()).AddPair('body', vErroBody));
       End
       Else
       Begin
@@ -1710,6 +1719,10 @@ begin
     FConexao.Query.ParamByName('pEmbalagem').Value := 2;
     // Todos os pedidos disponíveis para processamento
     // vSql := vSql + ' Where PedidoId = '+pPedidoId.ToString+' and Ped.OperacaoTipoId = 2';
+
+    if DebugHook > 0 then
+      FConexao.Query.SQL.SaveToFile(ExtractFilePath(GetModuleName(HInstance)) +
+        'PedidoPendente.sql');
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
@@ -1741,7 +1754,11 @@ begin
         PedidoSaida.uuid := FConexao.Query.FieldByName('uuid').AsString;
         // vQryProduto.Open('Declare @Pedido Integer = '+FConexao.Query.FieldByName('PedidoId').AsString+#13+#10+SqlPedidoProdutos);
         ObjPedidoSaidaItensDAO := TPedidoProdutoDAO.Create;
-        ArrayPedidoProdutoDAO := ObjPedidoSaidaItensDAO.GetId(0);
+        try
+          ArrayPedidoProdutoDAO := ObjPedidoSaidaItensDAO.GetId(0);
+        finally
+          FreeAndNil(ObjPedidoSaidaItensDAO);
+        end;
         // vQryProduto.FieldByName('PedidoId').AsInteger);
         for vItens := 0 to ArrayPedidoProdutoDAO.Count - 1 do
         Begin
@@ -1753,8 +1770,13 @@ begin
           [joDateFormatISO8601]));
         FConexao.Query.Next;
       End;
-    ObjPedidoProduto := Nil;
-    ArrayPedidoProdutoDAO := nil;
+    try
+      FreeAndNil(ObjPedidoProduto);
+      FreeAndNil(ArrayPedidoProdutoDAO);
+    except
+
+    end;
+
   Except
     ON E: Exception do
     Begin
@@ -1962,28 +1984,34 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetRelColetaPulmao(Const AParams : TDictionary<string, string>): TjSonArray;
+function TPedidoSaidaDao.GetRelColetaPulmao(Const AParams
+  : TDictionary<string, string>): TjSonArray;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlRelColetaPulmao);
     if AParams.ContainsKey('dataini') then
-       FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
+      FConexao.Query.ParamByName('pDataIni').Value :=
+        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
     Else
-       FConexao.Query.ParamByName('pDataIni').Value := 0;
+      FConexao.Query.ParamByName('pDataIni').Value := 0;
     if AParams.ContainsKey('datafin') then
-       FConexao.Query.ParamByName('pDataFin').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
+      FConexao.Query.ParamByName('pDataFin').Value :=
+        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
     Else
-       FConexao.Query.ParamByName('pDataFin').Value := 0;
+      FConexao.Query.ParamByName('pDataFin').Value := 0;
     if AParams.ContainsKey('codpessoaerp') then
-       FConexao.Query.ParamByName('pCodPessoaERP').Value := StrToIntDef(AParams.Items['codpessoaerp'], 0)
+      FConexao.Query.ParamByName('pCodPessoaERP').Value :=
+        StrToIntDef(AParams.Items['codpessoaerp'], 0)
     Else
-       FConexao.Query.ParamByName('pCodPessoaERP').Value := 0;
+      FConexao.Query.ParamByName('pCodPessoaERP').Value := 0;
     if AParams.ContainsKey('rotaid') then
-       FConexao.Query.ParamByName('pRotaId').Value := StrToIntDef(AParams.Items['rotaid'], 0)
+      FConexao.Query.ParamByName('pRotaId').Value :=
+        StrToIntDef(AParams.Items['rotaid'], 0)
     Else
-       FConexao.Query.ParamByName('pRotaId').Value := 0;
+      FConexao.Query.ParamByName('pRotaId').Value := 0;
     if AParams.ContainsKey('zonaid') then
-       FConexao.Query.ParamByName('pzonaid').Value := StrToIntDef(AParams.Items['zonaid'], 0)
+      FConexao.Query.ParamByName('pzonaid').Value :=
+        StrToIntDef(AParams.Items['zonaid'], 0)
     Else
       FConexao.Query.ParamByName('pzonaid').Value := 0;
     if DebugHook <> 0 then
@@ -1992,13 +2020,17 @@ begin
     if FConexao.Query.IsEmpty then
     Begin
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro',
+        TuEvolutConst.QrySemDados));
     End
     Else
       Result := FConexao.Query.ToJSONArray();
-  Except ON E: Exception do Begin
-    raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
+  Except
+    ON E: Exception do
+    Begin
+      raise Exception.Create(StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+        '', [rfReplaceAll]));
     End;
   end;
 end;

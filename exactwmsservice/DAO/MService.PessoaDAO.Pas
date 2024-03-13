@@ -11,13 +11,12 @@ interface
 uses
   FireDAC.Comp.Client, pessoaClass, System.SysUtils,
   DataSet.Serialize,
-  System.Generics.Collections, System.JSON, REST.JSON, exactwmsservice.lib.connection,exactwmsservice.dao.base;
+  System.Generics.Collections, System.JSON, REST.JSON,
+  exactwmsservice.lib.connection, exactwmsservice.dao.base;
 
 type
   TpessoaDao = class(TBasicDao)
   private
-    
-    
 
     FObjPessoaDAO: TPessoa;
     function IfThen(AValue: Boolean; const ATrue: String;
@@ -66,15 +65,18 @@ begin
       ' and PessoaTipoID = ' + pPessoaTipoID.ToString();
     FConexao.Query.ExecSQL(vSql);
     Result := True;
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
 destructor TpessoaDao.Destroy;
 begin
-  
-  ObjPessoaDAO.Free;
+  try
+    ObjPessoaDAO.Free;
+  except
+  end;
   inherited;
 end;
 
@@ -126,35 +128,40 @@ begin
     while Not FConexao.Query.Eof do
     Begin
       ObjPessoaDAO.pessoaid := FConexao.Query.FieldByName('PessoaId').AsInteger;
-      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP').AsInteger;
+      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP')
+        .AsInteger;
       ObjPessoaDAO.Razao := FConexao.Query.FieldByName('Razao').AsString;
       ObjPessoaDAO.Fantasia := FConexao.Query.FieldByName('Fantasia').AsString;
       // JSon PessoaTipo
-      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName('PessoaTipoId')
-        .AsInteger;
-      ObjPessoaDAO.PessoaTipo.Descricao :=
-        FConexao.Query.FieldByName('Descricao').AsString;
-      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName('PessoaTipoStatus')
-        .AsInteger;
+      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName
+        ('PessoaTipoId').AsInteger;
+      ObjPessoaDAO.PessoaTipo.Descricao := FConexao.Query.FieldByName
+        ('Descricao').AsString;
+      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName
+        ('PessoaTipoStatus').AsInteger;
       ObjPessoaDAO.Fone := FConexao.Query.FieldByName('Fone').AsString;
       ObjPessoaDAO.CnpjCpf := FConexao.Query.FieldByName('CnpjCpf').AsString;
       ObjPessoaDAO.Email := FConexao.Query.FieldByName('Email').AsString;
       ObjPessoaDAO.HomePage := FConexao.Query.FieldByName('HomePage').AsString;
-      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife').AsInteger;
+      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife')
+        .AsInteger;
       ObjPessoaDAO.Status := FConexao.Query.FieldByName('Status').AsInteger;
       ObjPessoaDAO.RotaId := FConexao.Query.FieldByName('RotaId').AsInteger;
-      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName('TransportadoraId')
-        .AsInteger;
-      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName('GoogleMaps').AsString;
+      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName
+        ('TransportadoraId').AsInteger;
+      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName
+        ('GoogleMaps').AsString;
       ObjPessoaDAO.Latitude := FConexao.Query.FieldByName('Latitude').AsString;
-      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude').AsString;
+      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude')
+        .AsString;
       Result.AddElement(tJson.ObjectToJsonObject(ObjPessoaDAO,
         [joDateFormatISO8601]));
       // (ObjPessoaDAO.ClassToJson(ObjPessoaDAO).ToString);
       FConexao.Query.Next;
     End;
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
@@ -168,41 +175,46 @@ begin
     vSql := 'Select P.*, T.PessoaTipoId, T.Descricao, T.Status as PessoaTipoStatus, Rp.RotaId '
       + 'From Pessoa P ' +
       'Inner join PessoaTipo T On T.PessoaTipoId= P.PessoaTipoId ' + sLineBreak
-      + 'Left Join RotaPessoas RP On Rp.Pessoaid = P.PessoaId '+sLineBreak;
+      + 'Left Join RotaPessoas RP On Rp.Pessoaid = P.PessoaId ' + sLineBreak;
     vSql := vSql + 'where  ' + '(Razao like ' + QuotedStr('%' + pNome + '%') +
       ') and P.PessoaTipoId = ' + pPessoaTipoID.ToString();
     FConexao.Query.Open(vSql);
     while Not FConexao.Query.Eof do
     Begin
       ObjPessoaDAO.pessoaid := FConexao.Query.FieldByName('PessoaId').AsInteger;
-      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP').AsInteger;
+      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP')
+        .AsInteger;
       ObjPessoaDAO.Razao := FConexao.Query.FieldByName('Razao').AsString;
       ObjPessoaDAO.Fantasia := FConexao.Query.FieldByName('Fantasia').AsString;
       // JSon PessoaTipo
-      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName('PessoaTipoId')
-        .AsInteger;
-      ObjPessoaDAO.PessoaTipo.Descricao :=
-        FConexao.Query.FieldByName('Descricao').AsString;
-      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName('PessoaTipoStatus')
-        .AsInteger;
+      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName
+        ('PessoaTipoId').AsInteger;
+      ObjPessoaDAO.PessoaTipo.Descricao := FConexao.Query.FieldByName
+        ('Descricao').AsString;
+      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName
+        ('PessoaTipoStatus').AsInteger;
       ObjPessoaDAO.Fone := FConexao.Query.FieldByName('Fone').AsString;
       ObjPessoaDAO.CnpjCpf := FConexao.Query.FieldByName('CnpjCpf').AsString;
       ObjPessoaDAO.Email := FConexao.Query.FieldByName('Email').AsString;
       ObjPessoaDAO.HomePage := FConexao.Query.FieldByName('HomePage').AsString;
-      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife').AsInteger;
+      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife')
+        .AsInteger;
       ObjPessoaDAO.Status := FConexao.Query.FieldByName('Status').AsInteger;
       ObjPessoaDAO.RotaId := FConexao.Query.FieldByName('RotaId').AsInteger;
-      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName('TransportadoraId')
-        .AsInteger;
-      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName('GoogleMaps').AsString;
+      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName
+        ('TransportadoraId').AsInteger;
+      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName
+        ('GoogleMaps').AsString;
       ObjPessoaDAO.Latitude := FConexao.Query.FieldByName('Latitude').AsString;
-      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude').AsString;
+      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude')
+        .AsString;
       Result.Add(tJson.ObjectToJsonObject(ObjPessoaDAO));
       // (ObjPessoaDAO.ClassToJson(ObjPessoaDAO).ToString);
       FConexao.Query.Next;
     End;
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
@@ -223,35 +235,40 @@ begin
     while Not FConexao.Query.Eof do
     Begin
       ObjPessoaDAO.pessoaid := FConexao.Query.FieldByName('PessoaId').AsInteger;
-      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP').AsInteger;
+      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP')
+        .AsInteger;
       ObjPessoaDAO.Razao := FConexao.Query.FieldByName('Razao').AsString;
       ObjPessoaDAO.Fantasia := FConexao.Query.FieldByName('Fantasia').AsString;
       // JSon PessoaTipo
-      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName('PessoaTipoId')
-        .AsInteger;
-      ObjPessoaDAO.PessoaTipo.Descricao :=
-        FConexao.Query.FieldByName('Descricao').AsString;
-      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName('PessoaTipoStatus')
-        .AsInteger;
+      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName
+        ('PessoaTipoId').AsInteger;
+      ObjPessoaDAO.PessoaTipo.Descricao := FConexao.Query.FieldByName
+        ('Descricao').AsString;
+      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName
+        ('PessoaTipoStatus').AsInteger;
       ObjPessoaDAO.Fone := FConexao.Query.FieldByName('Fone').AsString;
       ObjPessoaDAO.CnpjCpf := FConexao.Query.FieldByName('CnpjCpf').AsString;
       ObjPessoaDAO.Email := FConexao.Query.FieldByName('Email').AsString;
       ObjPessoaDAO.HomePage := FConexao.Query.FieldByName('HomePage').AsString;
       ObjPessoaDAO.Status := FConexao.Query.FieldByName('Status').AsInteger;
       ObjPessoaDAO.RotaId := FConexao.Query.FieldByName('RotaId').AsInteger;
-      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName('TransportadoraId')
-        .AsInteger;
-      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName('GoogleMaps').AsString;
+      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName
+        ('TransportadoraId').AsInteger;
+      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName
+        ('GoogleMaps').AsString;
       ObjPessoaDAO.Latitude := FConexao.Query.FieldByName('Latitude').AsString;
-      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude').AsString;
-      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife').AsInteger;
+      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude')
+        .AsString;
+      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife')
+        .AsInteger;
       Result.AddElement(tJson.ObjectToJsonObject(ObjPessoaDAO,
         [joDateFormatISO8601]));
       // (ObjPessoaDAO.ClassToJson(ObjPessoaDAO).ToString);
       FConexao.Query.Next;
     End;
-  Except On E: Exception do
-    raise Exception.Create(E.Message);
+  Except
+    On E: Exception do
+      raise Exception.Create(E.Message);
   end;
 end;
 
@@ -294,7 +311,6 @@ begin
   End;
 
   Result := TJsonObject.Create();
-
 
   QryPesquisa := FConexao.GetQuery;
   QryPesquisa.SQL.Add(vSql);
@@ -358,8 +374,7 @@ begin
   QryRecordCount.Open();
   Result.AddPair('records',
     TJSONNumber.Create(QryRecordCount.FieldByName('cReg').AsInteger));
-  
-     
+
 end;
 
 function TpessoaDao.GetPessoaId(pPessoaId, pPessoaTipoID,
@@ -387,28 +402,32 @@ begin
     while Not FConexao.Query.Eof do
     Begin
       ObjPessoaDAO.pessoaid := FConexao.Query.FieldByName('PessoaId').AsInteger;
-      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP').AsInteger;
+      ObjPessoaDAO.CodPessoa := FConexao.Query.FieldByName('CodPessoaERP')
+        .AsInteger;
       ObjPessoaDAO.Razao := FConexao.Query.FieldByName('Razao').AsString;
       ObjPessoaDAO.Fantasia := FConexao.Query.FieldByName('Fantasia').AsString;
       // JSon PessoaTipo
-      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName('PessoaTipoId')
-        .AsInteger;
-      ObjPessoaDAO.PessoaTipo.Descricao :=
-        FConexao.Query.FieldByName('Descricao').AsString;
-      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName('PessoaTipoStatus')
-        .AsInteger;
+      ObjPessoaDAO.PessoaTipo.PessoaTipoId := FConexao.Query.FieldByName
+        ('PessoaTipoId').AsInteger;
+      ObjPessoaDAO.PessoaTipo.Descricao := FConexao.Query.FieldByName
+        ('Descricao').AsString;
+      ObjPessoaDAO.PessoaTipo.Status := FConexao.Query.FieldByName
+        ('PessoaTipoStatus').AsInteger;
       ObjPessoaDAO.Fone := FConexao.Query.FieldByName('Fone').AsString;
       ObjPessoaDAO.CnpjCpf := FConexao.Query.FieldByName('CnpjCpf').AsString;
       ObjPessoaDAO.Email := FConexao.Query.FieldByName('Email').AsString;
       ObjPessoaDAO.HomePage := FConexao.Query.FieldByName('HomePage').AsString;
       ObjPessoaDAO.Status := FConexao.Query.FieldByName('Status').AsInteger;
       ObjPessoaDAO.RotaId := FConexao.Query.FieldByName('RotaId').AsInteger;
-      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName('TransportadoraId')
-        .AsInteger;
-      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName('GoogleMaps').AsString;
+      ObjPessoaDAO.Transportadoraid := FConexao.Query.FieldByName
+        ('TransportadoraId').AsInteger;
+      ObjPessoaDAO.GoogleMaps := FConexao.Query.FieldByName
+        ('GoogleMaps').AsString;
       ObjPessoaDAO.Latitude := FConexao.Query.FieldByName('Latitude').AsString;
-      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude').AsString;
-      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife').AsInteger;
+      ObjPessoaDAO.Longitude := FConexao.Query.FieldByName('Longitude')
+        .AsString;
+      ObjPessoaDAO.ShelfLife := FConexao.Query.FieldByName('ShelfLife')
+        .AsInteger;
       Result.AddElement(tJson.ObjectToJsonObject(ObjPessoaDAO,
         [joDateFormatISO8601]));
       // (ObjPessoaDAO.ClassToJson(ObjPessoaDAO).ToString);
@@ -457,8 +476,8 @@ begin
       Else if UpperCase(pJsonArray.Items[xPes].GetValue<String>('pessoatipo')) = 'MOTORISTA'
       then
         FConexao.Query.ParamByName('pPessoaTipoId').Value := 4;
-      FConexao.Query.ParamByName('pCodPessoaERP').Value := pJsonArray.Items[xPes]
-        .GetValue<Integer>('pessoaid');
+      FConexao.Query.ParamByName('pCodPessoaERP').Value :=
+        pJsonArray.Items[xPes].GetValue<Integer>('pessoaid');
       FConexao.Query.ParamByName('pRazao').Value := pJsonArray.Items[xPes]
         .GetValue<String>('razao');
       FConexao.Query.ParamByName('pFantasia').Value := pJsonArray.Items[xPes]
@@ -544,8 +563,8 @@ Var
   vRegEstrutura: TJsonObject;
 begin
   Result := TjSonArray.Create;
-  FConexao.Query.Open(
-    'SELECT COLUMN_NAME As Nome, DATA_TYPE As Tipo, Coalesce(CHARACTER_MAXIMUM_LENGTH, 0) as Tamanho'
+  FConexao.Query.Open
+    ('SELECT COLUMN_NAME As Nome, DATA_TYPE As Tipo, Coalesce(CHARACTER_MAXIMUM_LENGTH, 0) as Tamanho'
     + sLineBreak + 'FROM INFORMATION_SCHEMA.COLUMNS' + sLineBreak +
     'Where TABLE_NAME = ' + QuotedStr('Pessoa') +
     ' and CHARACTER_MAXIMUM_LENGTH Is Not Null');
@@ -559,8 +578,8 @@ begin
       vRegEstrutura := TJsonObject.Create;
       vRegEstrutura.AddPair('coluna',
         LowerCase(FConexao.Query.FieldByName('Nome').AsString));
-      vRegEstrutura.AddPair('tipo',
-        LowerCase(FConexao.Query.FieldByName('Tipo').AsString));
+      vRegEstrutura.AddPair('tipo', LowerCase(FConexao.Query.FieldByName('Tipo')
+        .AsString));
       vRegEstrutura.AddPair('tamanho',
         TJSONNumber.Create(FConexao.Query.FieldByName('Tamanho').AsInteger));
       Result.AddElement(vRegEstrutura);

@@ -57,12 +57,12 @@ end;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   UnidadeDAO: TUnidadeDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     Try
       UnidadeDAO := TUnidadeDao.Create;
-      Res.Send<TJSonArray>(UnidadeDAO.GetID(0)).Status(THTTPStatus.Ok);
+      Res.Send<TJsonArray>(UnidadeDAO.GetID(0)).Status(THTTPStatus.Ok);
     Except
       On E: Exception do
       Begin
@@ -80,13 +80,13 @@ end;
 procedure GetDescricao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   UnidadeDAO: TUnidadeDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       UnidadeDAO := TUnidadeDao.Create;
-      Res.Send<TJSonArray>(UnidadeDAO.GetDescricao(Req.Params.Items['descricao']))
-        .Status(THttpStatus.Created);
+      Res.Send<TJsonArray>(UnidadeDAO.GetDescricao(Req.Params.Items['descricao']
+        )).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
@@ -104,13 +104,13 @@ End;
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   UnidadeDAO: TUnidadeDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       UnidadeDAO := TUnidadeDao.Create;
-      Res.Send<TJSonArray>(UnidadeDAO.GetID(StrToIntDef(Req.Params.Items['id'], 0)
-        )).Status(THttpStatus.Created);
+      Res.Send<TJsonArray>(UnidadeDAO.GetID(StrToIntDef(Req.Params.Items['id'],
+        0))).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
@@ -127,82 +127,83 @@ end;
 
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  JSonUnidade: TJSONObject;
+  JSonUnidade: tJsonObject;
   UnidadeDAO: TUnidadeDao;
 begin
   Try
     UnidadeDAO := TUnidadeDao.Create;
     Try
-      JSonUnidade := TJSONObject.Create;
-      JSonUnidade := Req.Body<TJSONObject>;
+      JSonUnidade := tJsonObject.Create;
+      JSonUnidade := Req.Body<tJsonObject>;
       UnidadeDAO.InsertUpdate(GetValueInjSon(JSonUnidade, 'id').ToInteger,
         // ObjUnidade.Get('descricao').JsonValue.Value
         GetValueInjSon(JSonUnidade, 'Sigla'), GetValueInjSon(JSonUnidade,
         'descricao'), GetValueInjSon(JSonUnidade, 'status').ToInteger);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro salvo com Sucesso!'))).Status(THttpStatus.Created);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(JsonUnidade) then
-       FreeAndNil(JsonUnidade);
+    if Assigned(JSonUnidade) then
+      FreeAndNil(JSonUnidade);
     FreeAndNil(UnidadeDAO);
   End;
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjUnidade: TJSONObject;
+  ObjUnidade: tJsonObject;
   UnidadeDAO: TUnidadeDao;
 begin
   Try
     Try
-      ObjUnidade := TJSONObject.Create;
-      ObjUnidade := Req.Body<TJSONObject>;
+      ObjUnidade := tJsonObject.Create;
+      ObjUnidade := Req.Body<tJsonObject>;
       UnidadeDAO := TUnidadeDao.Create;
       UnidadeDAO.InsertUpdate(StrToIntDef(Req.Params.Items['id'], 0),
         // ObjUnidade.Get('descricao').JsonValue.Value
         GetValueInjSon(ObjUnidade, 'Sigla'), GetValueInjSon(ObjUnidade,
         'descricao'), GetValueInjSon(ObjUnidade, 'status').ToInteger);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro Alterado com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(ObjUnidade) then
-       FreeAndNil(ObjUnidade);
     FreeAndNil(UnidadeDAO);
+    if Assigned(ObjUnidade) then
+      FreeAndNil(ObjUnidade);
+
   End;
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjArray: TJSONObject;
+  ObjArray: tJsonObject;
   UnidadeDAO: TUnidadeDao;
 begin
   Try
     Try
       UnidadeDAO := TUnidadeDao.Create;
       If UnidadeDAO.Delete(StrToIntDef(Req.Params.Items['id'], 0)) then
-         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-           'Registro Excluído com Sucesso!'))).Status(THttpStatus.Ok)
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro Excluído com Sucesso!'))).Status(THTTPStatus.Ok)
       Else
-         raise Exception.Create('Não foi possível excluir o registro!');
+        raise Exception.Create('Não foi possível excluir o registro!');
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -217,12 +218,13 @@ begin
   Try
     Try
       UnidadeDAO := TUnidadeDao.Create;
-      Res.Send<TJSONObject>(UnidadeDAO.GetUnidade4D(Req.Query.Dictionary)).Status(THTTPStatus.Ok);
+      Res.Send<tJsonObject>(UnidadeDAO.GetUnidade4D(Req.Query.Dictionary))
+        .Status(THTTPStatus.Ok);
     Except
       On E: Exception do
       Begin
-        Res.Status(500).Send<TJSONObject>
-          (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Status(500).Send<tJsonObject>
+          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;
     End;
   Finally

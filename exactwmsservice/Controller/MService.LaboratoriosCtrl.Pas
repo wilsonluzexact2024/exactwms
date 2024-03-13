@@ -351,8 +351,9 @@ begin
       End;
     End;
   Finally
-    FreeAndNil(ObjLaboratorio);
     FreeAndNil(LaboratorioDAO);
+    FreeAndNil(ObjLaboratorio);
+
   End; 
 end;
 

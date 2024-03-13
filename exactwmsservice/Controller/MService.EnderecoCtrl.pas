@@ -186,7 +186,7 @@ Begin
   Finally
     FreeAndNil(enderecoDAO);
   End;
-  FreeAndNil(EnderecoDAO);
+
 End;
 
 Procedure EnderecoBloquear(Req: THorseRequest; Res: THorseResponse;

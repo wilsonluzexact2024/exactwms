@@ -1,4 +1,4 @@
-{
+﻿{
   EnderecoTipoCtrl.Pas
   Criado por Genilson S Soares (RhemaSys Automa��o Comercial) em 09/09/2020
   Projeto: RhemaWMS
@@ -93,7 +93,7 @@ begin
   Finally
     FreeAndNil(EnderecoTipoDAO);
   End;
-  FreeAndNil(EnderecoTipoDAO);
+
 end;
 
 procedure GetDescricao(Req: THorseRequest; Res: THorseResponse; Next: TProc);

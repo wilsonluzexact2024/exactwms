@@ -15,7 +15,7 @@ uses
   exactwmsservice.dao.base;
 
 type
-  TServiceProduto = class   (TBasicDao)
+  TServiceProduto = class(TBasicDao)
   private
     { Private declarations }
 
@@ -66,160 +66,167 @@ begin
     Else
     Begin
       ObjProduto := TProduto.Create;
-      While Not FConexao.Query.Eof do
-      Begin
-        ObjProduto.IdProduto := FConexao.Query.FieldByName('IdProduto')
-          .AsInteger;
-        ObjProduto.CodProduto := FConexao.Query.FieldByName('CodProduto')
-          .AsInteger;
-        ObjProduto.EanPrincipal := FConexao.Query.FieldByName
-          ('EanPrincipal').AsString;
-        ObjProduto.Descricao := FConexao.Query.FieldByName('Descricao')
-          .AsString;
-        ObjProduto.DescricaoRed := FConexao.Query.FieldByName
-          ('DescrReduzida').AsString;
-        ObjProduto.CodigoMS := FConexao.Query.FieldByName('CodigoMS').AsString;
+      try
+        While Not FConexao.Query.Eof do
+        Begin
+          ObjProduto.IdProduto := FConexao.Query.FieldByName('IdProduto')
+            .AsInteger;
+          ObjProduto.CodProduto := FConexao.Query.FieldByName('CodProduto')
+            .AsInteger;
+          ObjProduto.EanPrincipal := FConexao.Query.FieldByName
+            ('EanPrincipal').AsString;
+          ObjProduto.Descricao := FConexao.Query.FieldByName
+            ('Descricao').AsString;
+          ObjProduto.DescricaoRed := FConexao.Query.FieldByName
+            ('DescrReduzida').AsString;
+          ObjProduto.CodigoMS := FConexao.Query.FieldByName('CodigoMS')
+            .AsString;
 
-        // ObjProduto.ProdutoControle.IdControle := FConexao.Query.FieldByName('IdControle').AsInteger;
-        // ObjProduto.ProdutoControle.Descricao  := FConexao.Query.FieldByName('DescrControle').AsString;
-        // ObjProduto.ProdutoControle.Status     := FConexao.Query.FieldByName('StatusControle').AsInteger;
-        ObjProduto.Rastro.RastroId := FConexao.Query.FieldByName('RastroId')
-          .AsInteger;
-        ObjProduto.Rastro.Descricao := FConexao.Query.FieldByName
-          ('RastroDescricao').AsString;
-        ObjProduto.Rastro.Status := FConexao.Query.FieldByName('RastroStatus')
-          .AsInteger;
+          // ObjProduto.ProdutoControle.IdControle := FConexao.Query.FieldByName('IdControle').AsInteger;
+          // ObjProduto.ProdutoControle.Descricao  := FConexao.Query.FieldByName('DescrControle').AsString;
+          // ObjProduto.ProdutoControle.Status     := FConexao.Query.FieldByName('StatusControle').AsInteger;
+          ObjProduto.Rastro.RastroId := FConexao.Query.FieldByName('RastroId')
+            .AsInteger;
+          ObjProduto.Rastro.Descricao := FConexao.Query.FieldByName
+            ('RastroDescricao').AsString;
+          ObjProduto.Rastro.Status := FConexao.Query.FieldByName('RastroStatus')
+            .AsInteger;
 
-        // JSon ProdutoTipo
-        ObjProduto.ProdutoTipo.Id := FConexao.Query.FieldByName('ProdutoTipoId')
-          .AsInteger;
-        ObjProduto.ProdutoTipo.Descricao := FConexao.Query.FieldByName
-          ('ProdutoTipoDescricao').AsString;
-        ObjProduto.ProdutoTipo.Status := FConexao.Query.FieldByName
-          ('ProdutoTipoStatus').AsInteger;
+          // JSon ProdutoTipo
+          ObjProduto.ProdutoTipo.Id := FConexao.Query.FieldByName
+            ('ProdutoTipoId').AsInteger;
+          ObjProduto.ProdutoTipo.Descricao := FConexao.Query.FieldByName
+            ('ProdutoTipoDescricao').AsString;
+          ObjProduto.ProdutoTipo.Status := FConexao.Query.FieldByName
+            ('ProdutoTipoStatus').AsInteger;
 
-        ObjProduto.Unid.Id := FConexao.Query.FieldByName('UnidadeId').AsInteger;
-        ObjProduto.Unid.Descricao := FConexao.Query.FieldByName
-          ('UnidadeDescricao').AsString;
-        ObjProduto.Unid.Sigla := FConexao.Query.FieldByName
-          ('UnidadeSigla').AsString;
-        ObjProduto.Unid.Status := FConexao.Query.FieldByName('UnidadeStatus')
-          .AsInteger;
-        ObjProduto.QtdUnid := FConexao.Query.FieldByName('QtdUnid').AsInteger;
-        ObjProduto.UnidSecundaria.Id := FConexao.Query.FieldByName
-          ('UnidadeSecundariaId').AsInteger;
-        ObjProduto.UnidSecundaria.Descricao :=
-          FConexao.Query.FieldByName('UnidadeSecundariaDescricao').AsString;
-        ObjProduto.UnidSecundaria.Sigla := FConexao.Query.FieldByName
-          ('UnidadeSecundariaSigla').AsString;
-        ObjProduto.UnidSecundaria.Status := FConexao.Query.FieldByName
-          ('UnidadeSecundariaStatus').AsInteger;
-        ObjProduto.FatorConversao := FConexao.Query.FieldByName
-          ('FatorConversao').AsInteger;
-        ObjProduto.SomenteCxaFechada := FConexao.Query.FieldByName
-          ('SomenteCxaFechada').AsInteger;
-        // Enderecamento de Picking
-        ObjProduto.Endereco.EnderecoId := FConexao.Query.FieldByName
-          ('EnderecoId').AsInteger;
-        ObjProduto.Endereco.Descricao := FConexao.Query.FieldByName
-          ('EnderecoDescricao').AsString;
-        ObjProduto.Endereco.EnderecoEstrutura.EstruturaId :=
-          FConexao.Query.FieldByName('EstruturaId').AsInteger;
-        ObjProduto.Endereco.EnderecoEstrutura.Descricao :=
-          FConexao.Query.FieldByName('EstruturaDescricao').AsString;
-        ObjProduto.Endereco.EnderecoEstrutura.Mascara :=
-          FConexao.Query.FieldByName('mascara').AsString;
-        ObjProduto.Endereco.EnderecoRua.RuaId :=
-          FConexao.Query.FieldByName('RuaId').AsInteger;
-        ObjProduto.Endereco.EnderecoRua.Descricao :=
-          FConexao.Query.FieldByName('RuaDescricao').AsString;
-        ObjProduto.Endereco.EnderecoRua.Lado :=
-          FConexao.Query.FieldByName('RuaLado').AsString;
-        ObjProduto.Endereco.EnderecoRua.Ordem :=
-          FConexao.Query.FieldByName('RuaOrdem').AsInteger;
-        ObjProduto.Endereco.EnderecoRua.Status :=
-          FConexao.Query.FieldByName('RuaStatus').AsInteger;
-        ObjProduto.Endereco.Status := FConexao.Query.FieldByName
-          ('EnderecoStatus').AsInteger;
-        // Zona do Endereco
-        ObjProduto.Endereco.EnderecamentoZona.ZonaId :=
-          FConexao.Query.FieldByName('zonaid').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.Descricao :=
-          FConexao.Query.FieldByName('zonadescricao').AsString;
-        ObjProduto.Endereco.EnderecamentoZona.EstoqueTipoId :=
-          FConexao.Query.FieldByName('EstoqueTipoId').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.RastroId :=
-          FConexao.Query.FieldByName('ZonaRastroId').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.LoteReposicao :=
-          FConexao.Query.FieldByName('LoteReposicao').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.SeparacaoConsolidada :=
-          FConexao.Query.FieldByName('SeparacaoConsolidada').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.ProdutoSNGPC :=
-          FConexao.Query.FieldByName('ProdutoSNGPC').AsInteger;
+          ObjProduto.Unid.Id := FConexao.Query.FieldByName('UnidadeId')
+            .AsInteger;
+          ObjProduto.Unid.Descricao := FConexao.Query.FieldByName
+            ('UnidadeDescricao').AsString;
+          ObjProduto.Unid.Sigla := FConexao.Query.FieldByName
+            ('UnidadeSigla').AsString;
+          ObjProduto.Unid.Status := FConexao.Query.FieldByName('UnidadeStatus')
+            .AsInteger;
+          ObjProduto.QtdUnid := FConexao.Query.FieldByName('QtdUnid').AsInteger;
+          ObjProduto.UnidSecundaria.Id := FConexao.Query.FieldByName
+            ('UnidadeSecundariaId').AsInteger;
+          ObjProduto.UnidSecundaria.Descricao :=
+            FConexao.Query.FieldByName('UnidadeSecundariaDescricao').AsString;
+          ObjProduto.UnidSecundaria.Sigla := FConexao.Query.FieldByName
+            ('UnidadeSecundariaSigla').AsString;
+          ObjProduto.UnidSecundaria.Status := FConexao.Query.FieldByName
+            ('UnidadeSecundariaStatus').AsInteger;
+          ObjProduto.FatorConversao := FConexao.Query.FieldByName
+            ('FatorConversao').AsInteger;
+          ObjProduto.SomenteCxaFechada := FConexao.Query.FieldByName
+            ('SomenteCxaFechada').AsInteger;
+          // Enderecamento de Picking
+          ObjProduto.Endereco.EnderecoId := FConexao.Query.FieldByName
+            ('EnderecoId').AsInteger;
+          ObjProduto.Endereco.Descricao := FConexao.Query.FieldByName
+            ('EnderecoDescricao').AsString;
+          ObjProduto.Endereco.EnderecoEstrutura.EstruturaId :=
+            FConexao.Query.FieldByName('EstruturaId').AsInteger;
+          ObjProduto.Endereco.EnderecoEstrutura.Descricao :=
+            FConexao.Query.FieldByName('EstruturaDescricao').AsString;
+          ObjProduto.Endereco.EnderecoEstrutura.Mascara :=
+            FConexao.Query.FieldByName('mascara').AsString;
+          ObjProduto.Endereco.EnderecoRua.RuaId :=
+            FConexao.Query.FieldByName('RuaId').AsInteger;
+          ObjProduto.Endereco.EnderecoRua.Descricao :=
+            FConexao.Query.FieldByName('RuaDescricao').AsString;
+          ObjProduto.Endereco.EnderecoRua.Lado :=
+            FConexao.Query.FieldByName('RuaLado').AsString;
+          ObjProduto.Endereco.EnderecoRua.Ordem :=
+            FConexao.Query.FieldByName('RuaOrdem').AsInteger;
+          ObjProduto.Endereco.EnderecoRua.Status :=
+            FConexao.Query.FieldByName('RuaStatus').AsInteger;
+          ObjProduto.Endereco.Status := FConexao.Query.FieldByName
+            ('EnderecoStatus').AsInteger;
+          // Zona do Endereco
+          ObjProduto.Endereco.EnderecamentoZona.ZonaId :=
+            FConexao.Query.FieldByName('zonaid').AsInteger;
+          ObjProduto.Endereco.EnderecamentoZona.Descricao :=
+            FConexao.Query.FieldByName('zonadescricao').AsString;
+          ObjProduto.Endereco.EnderecamentoZona.EstoqueTipoId :=
+            FConexao.Query.FieldByName('EstoqueTipoId').AsInteger;
+          ObjProduto.Endereco.EnderecamentoZona.RastroId :=
+            FConexao.Query.FieldByName('ZonaRastroId').AsInteger;
+          ObjProduto.Endereco.EnderecamentoZona.LoteReposicao :=
+            FConexao.Query.FieldByName('LoteReposicao').AsInteger;
+          ObjProduto.Endereco.EnderecamentoZona.SeparacaoConsolidada :=
+            FConexao.Query.FieldByName('SeparacaoConsolidada').AsInteger;
+          ObjProduto.Endereco.EnderecamentoZona.ProdutoSNGPC :=
+            FConexao.Query.FieldByName('ProdutoSNGPC').AsInteger;
 
-        ObjProduto.EnderecamentoZona.Status :=
-          FConexao.Query.FieldByName('zonastatus').AsInteger;
-        // Incluir Dados adicionais da Zona - ver select GSS em 09012021
-        ObjProduto.Endereco.DesenhoArmazem.Id :=
-          FConexao.Query.FieldByName('DesenhoArmazemId').AsInteger;
-        ObjProduto.Endereco.DesenhoArmazem.Descricao :=
-          FConexao.Query.FieldByName('DesenhoArmazemDescricao').AsString;
-        ObjProduto.Endereco.DesenhoArmazem.Status :=
-          FConexao.Query.FieldByName('DesenhoArmazemStatus').AsInteger;
-        // Zona de Armazenamento
-        ObjProduto.EnderecamentoZona.ZonaId :=
-          FConexao.Query.FieldByName('armazenamentozonaid').AsInteger;
-        ObjProduto.EnderecamentoZona.Descricao :=
-          FConexao.Query.FieldByName('armazenamentozona').AsString;
-        ObjProduto.EnderecamentoZona.Status :=
-          FConexao.Query.FieldByName('armazenamentozonastatus').AsInteger;
+          ObjProduto.EnderecamentoZona.Status :=
+            FConexao.Query.FieldByName('zonastatus').AsInteger;
+          // Incluir Dados adicionais da Zona - ver select GSS em 09012021
+          ObjProduto.Endereco.DesenhoArmazem.Id :=
+            FConexao.Query.FieldByName('DesenhoArmazemId').AsInteger;
+          ObjProduto.Endereco.DesenhoArmazem.Descricao :=
+            FConexao.Query.FieldByName('DesenhoArmazemDescricao').AsString;
+          ObjProduto.Endereco.DesenhoArmazem.Status :=
+            FConexao.Query.FieldByName('DesenhoArmazemStatus').AsInteger;
+          // Zona de Armazenamento
+          ObjProduto.EnderecamentoZona.ZonaId :=
+            FConexao.Query.FieldByName('armazenamentozonaid').AsInteger;
+          ObjProduto.EnderecamentoZona.Descricao :=
+            FConexao.Query.FieldByName('armazenamentozona').AsString;
+          ObjProduto.EnderecamentoZona.Status :=
+            FConexao.Query.FieldByName('armazenamentozonastatus').AsInteger;
 
-        ObjProduto.Importado := FConexao.Query.FieldByName('Importado')
-          .AsInteger = 1;
-        ObjProduto.MedicamentoTipo.Id := FConexao.Query.FieldByName
-          ('MedicamentoTipoId').AsInteger;
-        ObjProduto.MedicamentoTipo.Descricao :=
-          FConexao.Query.FieldByName('MedicamentoTipoDescricao').AsString;
-        ObjProduto.SNGPC := FConexao.Query.FieldByName('SNGPC').AsInteger = 1;
+          ObjProduto.Importado := FConexao.Query.FieldByName('Importado')
+            .AsInteger = 1;
+          ObjProduto.MedicamentoTipo.Id := FConexao.Query.FieldByName
+            ('MedicamentoTipoId').AsInteger;
+          ObjProduto.MedicamentoTipo.Descricao :=
+            FConexao.Query.FieldByName('MedicamentoTipoDescricao').AsString;
+          ObjProduto.SNGPC := FConexao.Query.FieldByName('SNGPC').AsInteger = 1;
 
-        // ObjProduto.EanPrincipal := FConexao.Query.FieldByName('EanPrincipal').AsString;
-        // ObjProduto.UnidMedIndustrial := FConexao.Query.FieldByName('IdUnidadeIndustrial').AsInteger;
-        ObjProduto.Laboratorio.IdLaboratorio :=
-          FConexao.Query.FieldByName('LaboratorioId').AsInteger;
-        ObjProduto.Laboratorio.Nome := FConexao.Query.FieldByName
-          ('LaboratorioNome').AsString;
-        ObjProduto.Peso := FConexao.Query.FieldByName('PesoLiquido').AsFloat;
-        ObjProduto.Liquido := FConexao.Query.FieldByName('Liquido')
-          .AsInteger = 1;
-        ObjProduto.Perigoso := FConexao.Query.FieldByName('Perigoso')
-          .AsInteger = 1;
-        ObjProduto.Inflamavel := FConexao.Query.FieldByName('Inflamavel')
-          .AsInteger = 1;
-        ObjProduto.Medicamento := FConexao.Query.FieldByName('Medicamento')
-          .AsInteger = 1;
-        ObjProduto.SNGPC := FConexao.Query.FieldByName('Sngpc').AsInteger = 1;
-        ObjProduto.Altura := FConexao.Query.FieldByName('Altura').AsFloat;
-        ObjProduto.Largura := FConexao.Query.FieldByName('Largura').AsFloat;
-        ObjProduto.Comprimento := FConexao.Query.FieldByName
-          ('Comprimento').AsFloat;
-        ObjProduto.QtdReposicao := FConexao.Query.FieldByName('QtdReposicao')
-          .AsInteger;
-        ObjProduto.PercReposicao := FConexao.Query.FieldByName('PercReposicao')
-          .AsInteger;
-        ObjProduto.MinPicking := FConexao.Query.FieldByName('MinPicking')
-          .AsInteger;
-        ObjProduto.MaxPicking := FConexao.Query.FieldByName('MaxPicking')
-          .AsInteger;
-        ObjProduto.MesEntradaMinima := FConexao.Query.FieldByName
-          ('MesEntradaMinima').AsInteger;
-        ObjProduto.MesSaidaMinima := FConexao.Query.FieldByName
-          ('MesSaidaMinima').AsInteger;
-        ObjProduto.Status := FConexao.Query.FieldByName('Status').AsInteger;
-        Result.AddElement(tJson.ObjectToJsonObject(ObjProduto));
-        FConexao.Query.Next;
-      End;
-      // (ObjProduto.ClassToJson(ObjProduto).ToString);
+          // ObjProduto.EanPrincipal := FConexao.Query.FieldByName('EanPrincipal').AsString;
+          // ObjProduto.UnidMedIndustrial := FConexao.Query.FieldByName('IdUnidadeIndustrial').AsInteger;
+          ObjProduto.Laboratorio.IdLaboratorio :=
+            FConexao.Query.FieldByName('LaboratorioId').AsInteger;
+          ObjProduto.Laboratorio.Nome := FConexao.Query.FieldByName
+            ('LaboratorioNome').AsString;
+          ObjProduto.Peso := FConexao.Query.FieldByName('PesoLiquido').AsFloat;
+          ObjProduto.Liquido := FConexao.Query.FieldByName('Liquido')
+            .AsInteger = 1;
+          ObjProduto.Perigoso := FConexao.Query.FieldByName('Perigoso')
+            .AsInteger = 1;
+          ObjProduto.Inflamavel := FConexao.Query.FieldByName('Inflamavel')
+            .AsInteger = 1;
+          ObjProduto.Medicamento := FConexao.Query.FieldByName('Medicamento')
+            .AsInteger = 1;
+          ObjProduto.SNGPC := FConexao.Query.FieldByName('Sngpc').AsInteger = 1;
+          ObjProduto.Altura := FConexao.Query.FieldByName('Altura').AsFloat;
+          ObjProduto.Largura := FConexao.Query.FieldByName('Largura').AsFloat;
+          ObjProduto.Comprimento := FConexao.Query.FieldByName
+            ('Comprimento').AsFloat;
+          ObjProduto.QtdReposicao := FConexao.Query.FieldByName('QtdReposicao')
+            .AsInteger;
+          ObjProduto.PercReposicao := FConexao.Query.FieldByName
+            ('PercReposicao').AsInteger;
+          ObjProduto.MinPicking := FConexao.Query.FieldByName('MinPicking')
+            .AsInteger;
+          ObjProduto.MaxPicking := FConexao.Query.FieldByName('MaxPicking')
+            .AsInteger;
+          ObjProduto.MesEntradaMinima := FConexao.Query.FieldByName
+            ('MesEntradaMinima').AsInteger;
+          ObjProduto.MesSaidaMinima := FConexao.Query.FieldByName
+            ('MesSaidaMinima').AsInteger;
+          ObjProduto.Status := FConexao.Query.FieldByName('Status').AsInteger;
+          Result.AddElement(tJson.ObjectToJsonObject(ObjProduto));
+          FConexao.Query.Next;
+        End;
+        // (ObjProduto.ClassToJson(ObjProduto).ToString);
+      finally
+        FreeAndNil(ObjProduto);
+      end;
     End;
+
     // sleep(500);
   Except
     ON E: Exception do
@@ -287,159 +294,155 @@ begin
         'Produto não encontrado na pesquisa!')))
     Else
     Begin
-      ObjProduto := TProduto.Create;
       While Not FConexao.Query.Eof do
       Begin
-        ObjProduto.IdProduto := FConexao.Query.FieldByName('IdProduto')
-          .AsInteger;
-        ObjProduto.CodProduto := FConexao.Query.FieldByName('CodProduto')
-          .AsInteger;
-        ObjProduto.EanPrincipal := FConexao.Query.FieldByName
-          ('EanPrincipal').AsString;
-        ObjProduto.Descricao := FConexao.Query.FieldByName('Descricao')
-          .AsString;
-        ObjProduto.DescricaoRed := FConexao.Query.FieldByName
-          ('DescrReduzida').AsString;
-        ObjProduto.CodigoMS := FConexao.Query.FieldByName('CodigoMS').AsString;
+        ObjProduto := TProduto.Create;
+        try
+          with ObjProduto do
+          begin
+            IdProduto := FConexao.Query.FieldByName('IdProduto').AsInteger;
+            CodProduto := FConexao.Query.FieldByName('CodProduto').AsInteger;
+            EanPrincipal := FConexao.Query.FieldByName('EanPrincipal').AsString;
+            Descricao := FConexao.Query.FieldByName('Descricao').AsString;
+            DescricaoRed := FConexao.Query.FieldByName('DescrReduzida')
+              .AsString;
+            CodigoMS := FConexao.Query.FieldByName('CodigoMS').AsString;
 
-        // ObjProduto.ProdutoControle.IdControle := FConexao.Query.FieldByName('IdControle').AsInteger;
-        // ObjProduto.ProdutoControle.Descricao  := FConexao.Query.FieldByName('DescrControle').AsString;
-        // ObjProduto.ProdutoControle.Status     := FConexao.Query.FieldByName('StatusControle').AsInteger;
-        ObjProduto.Rastro.RastroId := FConexao.Query.FieldByName('RastroId')
-          .AsInteger;
-        ObjProduto.Rastro.Descricao := FConexao.Query.FieldByName
-          ('RastroDescricao').AsString;
-        ObjProduto.Rastro.Status := FConexao.Query.FieldByName('RastroStatus')
-          .AsInteger;
+            // ProdutoControle.IdControle := FConexao.Query.FieldByName('IdControle').AsInteger;
+            // ProdutoControle.Descricao  := FConexao.Query.FieldByName('DescrControle').AsString;
+            // ProdutoControle.Status     := FConexao.Query.FieldByName('StatusControle').AsInteger;
+            Rastro.RastroId := FConexao.Query.FieldByName('RastroId').AsInteger;
+            Rastro.Descricao := FConexao.Query.FieldByName
+              ('RastroDescricao').AsString;
+            Rastro.Status := FConexao.Query.FieldByName('RastroStatus')
+              .AsInteger;
 
-        // JSon ProdutoTipo
-        ObjProduto.ProdutoTipo.Id := FConexao.Query.FieldByName('ProdutoTipoId')
-          .AsInteger;
-        ObjProduto.ProdutoTipo.Descricao := FConexao.Query.FieldByName
-          ('ProdutoTipoDescricao').AsString;
-        ObjProduto.ProdutoTipo.Status := FConexao.Query.FieldByName
-          ('ProdutoTipoStatus').AsInteger;
+            // JSon ProdutoTipo
+            ProdutoTipo.Id := FConexao.Query.FieldByName('ProdutoTipoId')
+              .AsInteger;
+            ProdutoTipo.Descricao := FConexao.Query.FieldByName
+              ('ProdutoTipoDescricao').AsString;
+            ProdutoTipo.Status := FConexao.Query.FieldByName
+              ('ProdutoTipoStatus').AsInteger;
 
-        ObjProduto.Unid.Id := FConexao.Query.FieldByName('UnidadeId').AsInteger;
-        ObjProduto.Unid.Descricao := FConexao.Query.FieldByName
-          ('UnidadeDescricao').AsString;
-        ObjProduto.Unid.Sigla := FConexao.Query.FieldByName
-          ('UnidadeSigla').AsString;
-        ObjProduto.Unid.Status := FConexao.Query.FieldByName('UnidadeStatus')
-          .AsInteger;
-        ObjProduto.QtdUnid := FConexao.Query.FieldByName('QtdUnid').AsInteger;
-        ObjProduto.UnidSecundaria.Id := FConexao.Query.FieldByName
-          ('UnidadeSecundariaId').AsInteger;
-        ObjProduto.UnidSecundaria.Descricao :=
-          FConexao.Query.FieldByName('UnidadeSecundariaDescricao').AsString;
-        ObjProduto.UnidSecundaria.Sigla := FConexao.Query.FieldByName
-          ('UnidadeSecundariaSigla').AsString;
-        ObjProduto.UnidSecundaria.Status := FConexao.Query.FieldByName
-          ('UnidadeSecundariaStatus').AsInteger;
-        ObjProduto.FatorConversao := FConexao.Query.FieldByName
-          ('FatorConversao').AsInteger;
-        ObjProduto.SomenteCxaFechada := FConexao.Query.FieldByName
-          ('SomenteCxaFechada').AsInteger;
-        // Enderecamento de Picking
-        ObjProduto.Endereco.EnderecoId := FConexao.Query.FieldByName
-          ('EnderecoId').AsInteger;
-        ObjProduto.Endereco.Descricao := FConexao.Query.FieldByName
-          ('EnderecoDescricao').AsString;
-        ObjProduto.Endereco.EnderecoEstrutura.EstruturaId :=
-          FConexao.Query.FieldByName('EstruturaId').AsInteger;
-        ObjProduto.Endereco.EnderecoEstrutura.Descricao :=
-          FConexao.Query.FieldByName('EstruturaDescricao').AsString;
-        ObjProduto.Endereco.EnderecoEstrutura.Mascara :=
-          FConexao.Query.FieldByName('mascara').AsString;
-        ObjProduto.Endereco.EnderecoRua.RuaId :=
-          FConexao.Query.FieldByName('RuaId').AsInteger;
-        ObjProduto.Endereco.EnderecoRua.Descricao :=
-          FConexao.Query.FieldByName('RuaDescricao').AsString;
-        ObjProduto.Endereco.EnderecoRua.Lado :=
-          FConexao.Query.FieldByName('RuaLado').AsString;
-        ObjProduto.Endereco.EnderecoRua.Ordem :=
-          FConexao.Query.FieldByName('RuaOrdem').AsInteger;
-        ObjProduto.Endereco.EnderecoRua.Status :=
-          FConexao.Query.FieldByName('RuaStatus').AsInteger;
-        ObjProduto.Endereco.Status := FConexao.Query.FieldByName
-          ('EnderecoStatus').AsInteger;
-        // Zona do Endereco
-        ObjProduto.Endereco.EnderecamentoZona.ZonaId :=
-          FConexao.Query.FieldByName('zonaid').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.Descricao :=
-          FConexao.Query.FieldByName('zonadescricao').AsString;
-        ObjProduto.Endereco.EnderecamentoZona.EstoqueTipoId :=
-          FConexao.Query.FieldByName('EstoqueTipoId').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.RastroId :=
-          FConexao.Query.FieldByName('ZonaRastroId').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.LoteReposicao :=
-          FConexao.Query.FieldByName('LoteReposicao').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.SeparacaoConsolidada :=
-          FConexao.Query.FieldByName('SeparacaoConsolidada').AsInteger;
-        ObjProduto.Endereco.EnderecamentoZona.ProdutoSNGPC :=
-          FConexao.Query.FieldByName('ProdutoSNGPC').AsInteger;
+            Unid.Id := FConexao.Query.FieldByName('UnidadeId').AsInteger;
+            Unid.Descricao := FConexao.Query.FieldByName
+              ('UnidadeDescricao').AsString;
+            Unid.Sigla := FConexao.Query.FieldByName('UnidadeSigla').AsString;
+            Unid.Status := FConexao.Query.FieldByName('UnidadeStatus')
+              .AsInteger;
+            QtdUnid := FConexao.Query.FieldByName('QtdUnid').AsInteger;
+            UnidSecundaria.Id := FConexao.Query.FieldByName
+              ('UnidadeSecundariaId').AsInteger;
+            UnidSecundaria.Descricao := FConexao.Query.FieldByName
+              ('UnidadeSecundariaDescricao').AsString;
+            UnidSecundaria.Sigla := FConexao.Query.FieldByName
+              ('UnidadeSecundariaSigla').AsString;
+            UnidSecundaria.Status := FConexao.Query.FieldByName
+              ('UnidadeSecundariaStatus').AsInteger;
+            FatorConversao := FConexao.Query.FieldByName('FatorConversao')
+              .AsInteger;
+            SomenteCxaFechada := FConexao.Query.FieldByName('SomenteCxaFechada')
+              .AsInteger;
+            // Enderecamento de Picking
+            Endereco.EnderecoId := FConexao.Query.FieldByName('EnderecoId')
+              .AsInteger;
+            Endereco.Descricao := FConexao.Query.FieldByName
+              ('EnderecoDescricao').AsString;
+            Endereco.EnderecoEstrutura.EstruturaId :=
+              FConexao.Query.FieldByName('EstruturaId').AsInteger;
+            Endereco.EnderecoEstrutura.Descricao :=
+              FConexao.Query.FieldByName('EstruturaDescricao').AsString;
+            Endereco.EnderecoEstrutura.Mascara :=
+              FConexao.Query.FieldByName('mascara').AsString;
+            Endereco.EnderecoRua.RuaId := FConexao.Query.FieldByName('RuaId')
+              .AsInteger;
+            Endereco.EnderecoRua.Descricao := FConexao.Query.FieldByName
+              ('RuaDescricao').AsString;
+            Endereco.EnderecoRua.Lado := FConexao.Query.FieldByName
+              ('RuaLado').AsString;
+            Endereco.EnderecoRua.Ordem := FConexao.Query.FieldByName('RuaOrdem')
+              .AsInteger;
+            Endereco.EnderecoRua.Status := FConexao.Query.FieldByName
+              ('RuaStatus').AsInteger;
+            Endereco.Status := FConexao.Query.FieldByName('EnderecoStatus')
+              .AsInteger;
+            // Zona do Endereco
+            Endereco.EnderecamentoZona.ZonaId :=
+              FConexao.Query.FieldByName('zonaid').AsInteger;
+            Endereco.EnderecamentoZona.Descricao :=
+              FConexao.Query.FieldByName('zonadescricao').AsString;
+            Endereco.EnderecamentoZona.EstoqueTipoId :=
+              FConexao.Query.FieldByName('EstoqueTipoId').AsInteger;
+            Endereco.EnderecamentoZona.RastroId :=
+              FConexao.Query.FieldByName('ZonaRastroId').AsInteger;
+            Endereco.EnderecamentoZona.LoteReposicao :=
+              FConexao.Query.FieldByName('LoteReposicao').AsInteger;
+            Endereco.EnderecamentoZona.SeparacaoConsolidada :=
+              FConexao.Query.FieldByName('SeparacaoConsolidada').AsInteger;
+            Endereco.EnderecamentoZona.ProdutoSNGPC :=
+              FConexao.Query.FieldByName('ProdutoSNGPC').AsInteger;
 
-        ObjProduto.EnderecamentoZona.Status :=
-          FConexao.Query.FieldByName('zonastatus').AsInteger;
-        // Incluir Dados adicionais da Zona - ver select GSS em 09012021
-        ObjProduto.Endereco.DesenhoArmazem.Id :=
-          FConexao.Query.FieldByName('DesenhoArmazemId').AsInteger;
-        ObjProduto.Endereco.DesenhoArmazem.Descricao :=
-          FConexao.Query.FieldByName('DesenhoArmazemDescricao').AsString;
-        ObjProduto.Endereco.DesenhoArmazem.Status :=
-          FConexao.Query.FieldByName('DesenhoArmazemStatus').AsInteger;
-        // Zona de Armazenamento
-        ObjProduto.EnderecamentoZona.ZonaId :=
-          FConexao.Query.FieldByName('armazenamentozonaid').AsInteger;
-        ObjProduto.EnderecamentoZona.Descricao :=
-          FConexao.Query.FieldByName('armazenamentozona').AsString;
-        ObjProduto.EnderecamentoZona.Status :=
-          FConexao.Query.FieldByName('armazenamentozonastatus').AsInteger;
+            EnderecamentoZona.Status := FConexao.Query.FieldByName('zonastatus')
+              .AsInteger;
+            // Incluir Dados adicionais da Zona - ver select GSS em 09012021
+            Endereco.DesenhoArmazem.Id := FConexao.Query.FieldByName
+              ('DesenhoArmazemId').AsInteger;
+            Endereco.DesenhoArmazem.Descricao :=
+              FConexao.Query.FieldByName('DesenhoArmazemDescricao').AsString;
+            Endereco.DesenhoArmazem.Status := FConexao.Query.FieldByName
+              ('DesenhoArmazemStatus').AsInteger;
+            // Zona de Armazenamento
+            EnderecamentoZona.ZonaId := FConexao.Query.FieldByName
+              ('armazenamentozonaid').AsInteger;
+            EnderecamentoZona.Descricao := FConexao.Query.FieldByName
+              ('armazenamentozona').AsString;
+            EnderecamentoZona.Status := FConexao.Query.FieldByName
+              ('armazenamentozonastatus').AsInteger;
 
-        ObjProduto.Importado := FConexao.Query.FieldByName('Importado')
-          .AsInteger = 1;
-        ObjProduto.MedicamentoTipo.Id := FConexao.Query.FieldByName
-          ('MedicamentoTipoId').AsInteger;
-        ObjProduto.MedicamentoTipo.Descricao :=
-          FConexao.Query.FieldByName('MedicamentoTipoDescricao').AsString;
-        ObjProduto.SNGPC := FConexao.Query.FieldByName('SNGPC').AsInteger = 1;
+            Importado := FConexao.Query.FieldByName('Importado').AsInteger = 1;
+            MedicamentoTipo.Id := FConexao.Query.FieldByName
+              ('MedicamentoTipoId').AsInteger;
+            MedicamentoTipo.Descricao := FConexao.Query.FieldByName
+              ('MedicamentoTipoDescricao').AsString;
+            SNGPC := FConexao.Query.FieldByName('SNGPC').AsInteger = 1;
 
-        // ObjProduto.EanPrincipal := FConexao.Query.FieldByName('EanPrincipal').AsString;
-        // ObjProduto.UnidMedIndustrial := FConexao.Query.FieldByName('IdUnidadeIndustrial').AsInteger;
-        ObjProduto.Laboratorio.IdLaboratorio :=
-          FConexao.Query.FieldByName('LaboratorioId').AsInteger;
-        ObjProduto.Laboratorio.Nome := FConexao.Query.FieldByName
-          ('LaboratorioNome').AsString;
-        ObjProduto.Peso := FConexao.Query.FieldByName('PesoLiquido').AsFloat;
-        ObjProduto.Liquido := FConexao.Query.FieldByName('Liquido')
-          .AsInteger = 1;
-        ObjProduto.Perigoso := FConexao.Query.FieldByName('Perigoso')
-          .AsInteger = 1;
-        ObjProduto.Inflamavel := FConexao.Query.FieldByName('Inflamavel')
-          .AsInteger = 1;
-        ObjProduto.Medicamento := FConexao.Query.FieldByName('Medicamento')
-          .AsInteger = 1;
-        ObjProduto.SNGPC := FConexao.Query.FieldByName('Sngpc').AsInteger = 1;
-        ObjProduto.Altura := FConexao.Query.FieldByName('Altura').AsFloat;
-        ObjProduto.Largura := FConexao.Query.FieldByName('Largura').AsFloat;
-        ObjProduto.Comprimento := FConexao.Query.FieldByName
-          ('Comprimento').AsFloat;
-        ObjProduto.QtdReposicao := FConexao.Query.FieldByName('QtdReposicao')
-          .AsInteger;
-        ObjProduto.PercReposicao := FConexao.Query.FieldByName('PercReposicao')
-          .AsInteger;
-        ObjProduto.MinPicking := FConexao.Query.FieldByName('MinPicking')
-          .AsInteger;
-        ObjProduto.MaxPicking := FConexao.Query.FieldByName('MaxPicking')
-          .AsInteger;
-        ObjProduto.MesEntradaMinima := FConexao.Query.FieldByName
-          ('MesEntradaMinima').AsInteger;
-        ObjProduto.MesSaidaMinima := FConexao.Query.FieldByName
-          ('MesSaidaMinima').AsInteger;
-        ObjProduto.Status := FConexao.Query.FieldByName('Status').AsInteger;
-        Result.AddElement(tJson.ObjectToJsonObject(ObjProduto));
+            // EanPrincipal := FConexao.Query.FieldByName('EanPrincipal').AsString;
+            // UnidMedIndustrial := FConexao.Query.FieldByName('IdUnidadeIndustrial').AsInteger;
+            Laboratorio.IdLaboratorio := FConexao.Query.FieldByName
+              ('LaboratorioId').AsInteger;
+            Laboratorio.Nome := FConexao.Query.FieldByName
+              ('LaboratorioNome').AsString;
+            Peso := FConexao.Query.FieldByName('PesoLiquido').AsFloat;
+            Liquido := FConexao.Query.FieldByName('Liquido').AsInteger = 1;
+            Perigoso := FConexao.Query.FieldByName('Perigoso').AsInteger = 1;
+            Inflamavel := FConexao.Query.FieldByName('Inflamavel')
+              .AsInteger = 1;
+            Medicamento := FConexao.Query.FieldByName('Medicamento')
+              .AsInteger = 1;
+            SNGPC := FConexao.Query.FieldByName('Sngpc').AsInteger = 1;
+            Altura := FConexao.Query.FieldByName('Altura').AsFloat;
+            Largura := FConexao.Query.FieldByName('Largura').AsFloat;
+            Comprimento := FConexao.Query.FieldByName('Comprimento').AsFloat;
+            QtdReposicao := FConexao.Query.FieldByName('QtdReposicao')
+              .AsInteger;
+            PercReposicao := FConexao.Query.FieldByName('PercReposicao')
+              .AsInteger;
+            MinPicking := FConexao.Query.FieldByName('MinPicking').AsInteger;
+            MaxPicking := FConexao.Query.FieldByName('MaxPicking').AsInteger;
+            MesEntradaMinima := FConexao.Query.FieldByName('MesEntradaMinima')
+              .AsInteger;
+            MesSaidaMinima := FConexao.Query.FieldByName('MesSaidaMinima')
+              .AsInteger;
+            Status := FConexao.Query.FieldByName('Status').AsInteger;
+            Result.AddElement(tJson.ObjectToJsonObject(ObjProduto));
+          end;
+        finally
+          FreeAndNil(ObjProduto);
+        end;
         FConexao.Query.Next;
       End;
+      FConexao.Query.Close;
       // (ObjProduto.ClassToJson(ObjProduto).ToString);
     End;
     // sleep(500);
@@ -683,13 +686,13 @@ end;
 function TServiceProduto.GetCodProdutoEan(pCodProduto: String): TJsonObject;
 begin
   Try
-    //FConexao.GetQuery;
+    // FConexao.GetQuery;
     FConexao.Query.SQL.Clear;
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetProduto);
     FConexao.Query.ParamByName('pProdutoid').Value := pCodProduto;
     FConexao.Query.Open;
     if DebugHook <> 0 then
-       FConexao.Query.SQL.SaveToFile('produtoEan.Sql');
+      FConexao.Query.SQL.SaveToFile('produtoEan.Sql');
     if FConexao.Query.IsEmpty then
     Begin
       Result := TJsonObject.Create;

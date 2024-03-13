@@ -52,8 +52,12 @@ var
 begin
   Try
     RegistroTipoDAO := TRegistroTipoDao.Create;
-    Res.Send<TJSonArray>(RegistroTipoDAO.GetID(0));
-    RegistroTipoDAO.Destroy;
+    try
+      Res.Send<TJSonArray>(RegistroTipoDAO.GetID(0));
+    finally
+      FreeAndNil(RegistroTipoDAO);
+    end;
+
   Except
     ON E: Exception do
       raise EHorseException.New.Error('Não foi possível consultar os dados!' +
@@ -67,9 +71,13 @@ var
 begin
   try
     RegistroTipoDAO := TRegistroTipoDao.Create;
+    try
     Res.Send<TJSonArray>(RegistroTipoDAO.GetDescricao(Req.Params.Items
       ['descricao'])).Status(THttpStatus.Created);
-    RegistroTipoDAO.Destroy;
+    finally
+       FreeAndNil(RegistroTipoDAO)
+    end;
+
   Except
     On E: Exception do
       raise EHorseException.New.Error('Não foi possível consultar os dados!' +
@@ -83,10 +91,14 @@ var
 begin
   try
     RegistroTipoDAO := TRegistroTipoDao.Create;
+    try
     Res.Send<TJSonArray>
       (RegistroTipoDAO.GetID(StrToInt64Def(Req.Params.Items['id'], 0)))
       .Status(THttpStatus.Created);
-    RegistroTipoDAO.Destroy;
+    finally
+       FreeAndNil(RegistroTipoDAO)
+    end;
+
   Except
     On E: Exception do
     Begin
@@ -105,12 +117,16 @@ begin
     raise EHorseException.New.Error('Json com dados não enviado ao servidor!');
   Try
     JsonRegistroTipo := TJSONObject.Create;
-    JsonRegistroTipo := Req.Body<TJSONObject>;
-    RegistroTipoDAO := TRegistroTipoDao.Create;
-    RegistroTipoDAO.InsertUpdate(GetValueInjSon(JsonRegistroTipo, 'id').ToInt64,
-      GetValueInjSon(JsonRegistroTipo, 'descricao'),
-      GetValueInjSon(JsonRegistroTipo, 'registro_tipo').ToInt64, 1);
-    JsonRegistroTipo := Nil;
+    try
+      JsonRegistroTipo := Req.Body<TJSONObject>;
+      RegistroTipoDAO := TRegistroTipoDao.Create;
+      RegistroTipoDAO.InsertUpdate(GetValueInjSon(JsonRegistroTipo, 'id')
+        .ToInt64, GetValueInjSon(JsonRegistroTipo, 'descricao'),
+        GetValueInjSon(JsonRegistroTipo, 'registro_tipo').ToInt64, 1);
+      JsonRegistroTipo := Nil;
+    finally
+      FreeAndNil(RegistroTipoDAO)
+    end;
     JsonRegistroTipo.DisposeOf;
     Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
       'Cadastro de RegistroTipos Salvo com Sucesso!')))
@@ -122,7 +138,7 @@ begin
         + E.Message);
     End;
   End;
-  RegistroTipoDAO := Nil;
+
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -136,19 +152,23 @@ begin
     ObjRegistroTipo := TJSONObject.Create;
     ObjRegistroTipo := Req.Body<TJSONObject>;
     RegistroTipoDAO := TRegistroTipoDao.Create;
-    RegistroTipoDAO.InsertUpdate(StrToInt64Def(Req.Params.Items['id'], 0),
-      GetValueInjSon(ObjRegistroTipo, 'descricao'),
-      GetValueInjSon(ObjRegistroTipo, 'registro_tipo').ToInt64(), 1);
-    ObjRegistroTipo := Nil;
-    ObjRegistroTipo.DisposeOf;
-    Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-      'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+    try
+      RegistroTipoDAO.InsertUpdate(StrToInt64Def(Req.Params.Items['id'], 0),
+        GetValueInjSon(ObjRegistroTipo, 'descricao'),
+        GetValueInjSon(ObjRegistroTipo, 'registro_tipo').ToInt64(), 1);
+      ObjRegistroTipo := Nil;
+
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+        'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+    finally
+      FreeAndNil(RegistroTipoDAO);
+    end;
   Except
     on E: Exception do
       raise EHorseException.New.Error
         ('Não foi possível salvar as alterações dos dados!');
   End;
-  RegistroTipoDAO := Nil;
+
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -158,9 +178,13 @@ Var
 begin
   Try
     RegistroTipoDAO := TRegistroTipoDao.Create;
-    RegistroTipoDAO.Delete(StrToInt64Def(Req.Params.Items['id'], 0));
-    Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-      'Registro Excluído com Sucesso!'))).Status(THttpStatus.NoContent);
+    try
+      RegistroTipoDAO.Delete(StrToInt64Def(Req.Params.Items['id'], 0));
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+        'Registro Excluído com Sucesso!'))).Status(THttpStatus.NoContent);
+    finally
+      FreeAndNil(RegistroTipoDAO);
+    end;
   Except
     on E: Exception do
       raise EHorseException.New.Error('Não foi possível Excluir os dados!');

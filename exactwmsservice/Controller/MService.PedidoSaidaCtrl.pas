@@ -1385,26 +1385,28 @@ begin
     try
       PedidoSaidaDAO := TPedidoSaidaDAO.Create;
       JsonArrayRetorno := PedidoSaidaDAO.GetPendente;
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/saida/pendente', Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
+      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
     Except
       On E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.InternalServerError);
+
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/saida/pendente', Trim(Req.Params.Content.Text), Req.Body, '',
           E.Message, 500, ((Time - HrInicioLog) / 1000),
           Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Res.Send<TJSonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.InternalServerError);
       End;
     end;
   Finally
@@ -1425,7 +1427,7 @@ begin
       PedidoSaidaDAO := TPedidoSaidaDAO.Create;
       JsonArrayRetorno := PedidoSaidaDAO.GetEstoqueCaixaFechada
         (StrToIntDef(Req.Params.Items['pedidoid'], 0));
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/saida/pedidocubagem_caixafechada/:pedidoid',
@@ -1433,20 +1435,22 @@ begin
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
         ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
         Req.Headers['versao']);
+      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
     Except
       On E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.InternalServerError);
+
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/saida/pedidocubagem_caixafechada/:pedidoid',
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
+        Res.Send<TJSonArray>(JsonArrayRetorno)
+          .Status(THttpStatus.InternalServerError);
       End;
     end;
   Finally

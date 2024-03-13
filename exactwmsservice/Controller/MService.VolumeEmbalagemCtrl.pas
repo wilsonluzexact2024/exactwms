@@ -44,30 +44,28 @@ uses MService.VolumeEmbalagemDAO, uFuncoes;
 
 procedure Registry;
 begin
-  THorse.Group
-  .Prefix('v1')
-    .Get('/volumeembalagem', Get)
-    .Get('/volumeembalagem/:volumeembalagemid', GetID)
-    .Post('/volumeembalagem', Insert)
-    .Put('/volumeembalagem/:volumeembalagemid', Update)
+  THorse.Group.Prefix('v1').Get('/volumeembalagem', Get)
+    .Get('/volumeembalagem/:volumeembalagemid', GetID).Post('/volumeembalagem',
+    Insert).Put('/volumeembalagem/:volumeembalagemid', Update)
     .Delete('/volumeembalagem/:volumeembalagemid', Delete)
 end;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   VolumeEmbalagemDAO: TVolumeEmbalagemDao;
-  RetornoErro : TJsonArray;
+  RetornoErro: TJsonArray;
 begin
   Try
     Try
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
-      Res.Send<TJSonArray>(VolumeEmbalagemDAO.GetID('0')).Status(THTTPStatus.Ok);
+      Res.Send<TJsonArray>(VolumeEmbalagemDAO.GetID('0'))
+        .Status(THTTPStatus.Ok);
     Except
       on E: Exception do
       Begin
         RetornoErro := TJsonArray.Create;
         RetornoErro.AddElement(tJsonObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(RetornoErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(RetornoErro).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -78,19 +76,19 @@ end;
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   VolumeEmbalagemDAO: TVolumeEmbalagemDao;
-  RetornoErro : TJsonArray;
+  RetornoErro: TJsonArray;
 begin
   Try
     try
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
-      Res.Send<TJSonArray>(VolumeEmbalagemDAO.GetID(Req.Params.Items
+      Res.Send<TJsonArray>(VolumeEmbalagemDAO.GetID(Req.Params.Items
         ['volumeembalagemid'])).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
         RetornoErro := TJsonArray.Create;
         RetornoErro.AddElement(tJsonObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(RetornoErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(RetornoErro).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -100,13 +98,13 @@ end;
 
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  jsonVolumeEmbalagem: TJSONObject;
+  jsonVolumeEmbalagem: tJsonObject;
   VolumeEmbalagemDAO: TVolumeEmbalagemDao;
 begin
   Try
     Try
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
-      jsonVolumeEmbalagem := Req.Body<TJSONObject>;
+      jsonVolumeEmbalagem := Req.Body<tJsonObject>;
       with VolumeEmbalagemDAO.ObjVolumeEmbalagemDAO do
       Begin
         EmbalagemId := jsonVolumeEmbalagem.GetValue<Integer>('embalagemId');
@@ -116,7 +114,8 @@ begin
         Altura := jsonVolumeEmbalagem.GetValue<Double>('altura');
         Largura := jsonVolumeEmbalagem.GetValue<Double>('largura');
         Comprimento := jsonVolumeEmbalagem.GetValue<Double>('comprimento');
-        Aproveitamento := jsonVolumeEmbalagem.GetValue<Integer>('aproveitamento');
+        Aproveitamento := jsonVolumeEmbalagem.GetValue<Integer>
+          ('aproveitamento');
         Tara := jsonVolumeEmbalagem.GetValue<Double>('tara');
         Capacidade := jsonVolumeEmbalagem.GetValue<Double>('capacidade');
         QtdLacres := jsonVolumeEmbalagem.GetValue<Integer>('qtdLacres');
@@ -126,68 +125,71 @@ begin
         Status := jsonVolumeEmbalagem.GetValue<Integer>('status');
       End;
       VolumeEmbalagemDAO.InsertUpdate(VolumeEmbalagemDAO.ObjVolumeEmbalagemDAO);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(jsonVolumeEmbalagem) then
-       FreeAndNil(JsonVolumeEmbalagem);
     FreeAndNil(VolumeEmbalagemDAO);
+    if Assigned(jsonVolumeEmbalagem) then
+      FreeAndNil(jsonVolumeEmbalagem);
+
   End;
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  jsonVolumeEmbalagem: TJSONObject;
+  jsonVolumeEmbalagem: tJsonObject;
   VolumeEmbalagemDAO: TVolumeEmbalagemDao;
 begin
   Try
     Try
-      jsonVolumeEmbalagem := Req.Body<TJSONObject>;
+      jsonVolumeEmbalagem := Req.Body<tJsonObject>;
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
       VolumeEmbalagemDAO.ObjVolumeEmbalagemDAO :=
         VolumeEmbalagemDAO.ObjVolumeEmbalagemDAO.JsonToClass
         (jsonVolumeEmbalagem.ToString);
       VolumeEmbalagemDAO.InsertUpdate(VolumeEmbalagemDAO.ObjVolumeEmbalagemDAO);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
         'Registro Alterado com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(jsonVolumeEmbalagem) then
-       FreeAndNil(JsonVolumeEmbalagem);
     FreeAndNil(VolumeEmbalagemDAO);
+    if Assigned(jsonVolumeEmbalagem) then
+      FreeAndNil(jsonVolumeEmbalagem);
+
   End;
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjArray: TJSONObject;
+  ObjArray: tJsonObject;
   VolumeEmbalagemDAO: TVolumeEmbalagemDao;
 begin
   Try
     Try
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
-      If VolumeEmbalagemDAO.Delete(StrToIntDef(Req.Params.Items['volumeembalagemid'], 0)) Then
-         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-           'Registro Excluído com Sucesso!'))).Status(THTTPStatus.Created)
+      If VolumeEmbalagemDAO.Delete
+        (StrToIntDef(Req.Params.Items['volumeembalagemid'], 0)) Then
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro Excluído com Sucesso!'))).Status(THTTPStatus.Created)
       Else
-         raise Exception.Create('Não foi possível Excluir o Registro!');
+        raise Exception.Create('Não foi possível Excluir o Registro!');
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;

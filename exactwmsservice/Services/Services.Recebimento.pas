@@ -22,11 +22,14 @@ Const
     'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
     'Declare @Pendente Integer        = :pPendente' + sLineBreak +
     'Declare @AgrupamentoId Integer   = :pAgrupamentoId' + sLineBreak +
-    'Declare @CodBarra Varchar(25)    = :pCodProduto'+sLineBreak+
-    'Declare @CodProduto Integer      = Coalesce((Select CodProduto From PRoduto Prd '+sLineBreak+
-    '                                Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Prd.IdProduto'+sLineBreak+
-				'					Where Cast(CodProduto as varchar(25)) = @CodBarra or Pc.CodBarras = @CodBarra), 0)'+sLineBreak+
-    'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal' + sLineBreak +
+    'Declare @CodBarra Varchar(25)    = :pCodProduto' + sLineBreak +
+    'Declare @CodProduto Integer      = Coalesce((Select CodProduto From PRoduto Prd '
+    + sLineBreak +
+    '                                Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Prd.IdProduto'
+    + sLineBreak +
+    '					Where Cast(CodProduto as varchar(25)) = @CodBarra or Pc.CodBarras = @CodBarra), 0)'
+    + sLineBreak + 'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal' +
+    sLineBreak +
     'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid,'
     + sLineBreak +
     '       P.CodPessoaERP, P.Razao, Ped.DocumentoNr, FORMAT(Rd.Data, ' + #39 +
@@ -41,23 +44,32 @@ Const
     sLineBreak + 'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData ' +
     sLineBreak + 'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao ' +
     sLineBreak + 'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao ' +
-    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid' + sLineBreak +
-    sLineBreak + 'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' + sLineBreak +
-                 'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi' + sLineBreak +
-    sLineBreak + '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId' + sLineBreak +
-		  sLineBreak + '           Where Pl.CodProduto = @CodProduto' + sLineBreak +
-		  sLineBreak + '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'+slinebreak+
-    'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '+ sLineBreak +
-    '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and ' + sLineBreak +
-    '      (@DocumentoNr = ' + #39 + #39 +' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak +
-    '      (@Razao = '+ #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
-    '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)' + sLineBreak +
-    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+
-    sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
-    sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' + sLineBreak +
-    '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+ sLineBreak +
-    '      And De.ProcessoId <> 31' + sLineBreak +
-    '      And (@CodProduto='+#39+'0'+#39+' or (@CodProduto=0 or @CodProduto = Pl.CodProduto))'+sLinebreak+
+    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid' +
+    sLineBreak + sLineBreak +
+    'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' +
+    sLineBreak + 'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi'
+    + sLineBreak + sLineBreak +
+    '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId' +
+    sLineBreak + sLineBreak + '           Where Pl.CodProduto = @CodProduto' +
+    sLineBreak + sLineBreak +
+    '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'
+    + sLineBreak +
+    'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '
+    + sLineBreak +
+    '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and ' +
+    sLineBreak + '      (@DocumentoNr = ' + #39 + #39 +
+    ' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak + '      (@Razao = '
+    + #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
+    '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)'
+    + sLineBreak +
+    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'
+    + sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
+    sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' +
+    sLineBreak +
+    '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'
+    + sLineBreak + '      And De.ProcessoId <> 31' + sLineBreak +
+    '      And (@CodProduto=' + #39 + '0' + #39 +
+    ' or (@CodProduto=0 or @CodProduto = Pl.CodProduto))' + sLineBreak +
     'Order by Ped.PedidoId';
   // Retiraro o 5, ver se não gera impacto no retorno da integração
 
@@ -93,8 +105,8 @@ type
     { Public declarations }
     function Pesquisar(pPedidoId, pCodPessoaERP: Integer;
       pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : String; pBasico: Boolean;
-      pShowErro: Integer = 1): tJsonArray;
+      pPendente: Integer; pAgrupamentoId: Integer; pCodProduto: String;
+      pBasico: Boolean; pShowErro: Integer = 1): tJsonArray;
     Function GetEtiquetaArmazenagem(pPedidoId: Integer = 0;
       pDocumentoNr: String = ''; pZonaId: Integer = 0; pCodProduto: Integer = 0;
       pSintetico: Integer = 0; pDtInicio: TDateTime = 0;
@@ -142,7 +154,7 @@ type
     Function GetAcompanhamentoCheckIn(pPedidoId, pCodPessoaERP: Integer;
       pDataInicial, pDataFinal: TDateTime): tJsonArray;
 
-    constructor Create;  overload;
+    constructor Create; overload;
     destructor Destroy; override;
   end;
 
@@ -568,9 +580,12 @@ begin
     vQryItens.Sql.Add('Select De.ProcessoId, Ped.Status ');
     vQryItens.Sql.Add('From vDocumentoEtapas De');
     vQryItens.Sql.Add('Inner join Pedido Ped On Ped.Uuid = De.Documento');
-    vQryItens.Sql.Add('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.PedidoId = '+EntradaId.ToString());
+    vQryItens.Sql.Add
+      ('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.PedidoId = '
+      + EntradaId.ToString());
     vQryItens.Open;
-    if (vQryItens.FieldByName('ProcessoId').AsInteger = 5) or (vQryItens.FieldByName('Status').AsInteger = 2) then
+    if (vQryItens.FieldByName('ProcessoId').AsInteger = 5) or
+      (vQryItens.FieldByName('Status').AsInteger = 2) then
     Begin
       vQryItens.Close;
       raise Exception.Create('Entrada já finalizada!!!');
@@ -579,9 +594,12 @@ begin
     vQryItens.Sql.Clear;
     vQryItens.Sql.Add('select PI.*, Rd.Data, Rh.hora ');
     vQryItens.Sql.Add('From PedidoItensCheckIn PI');
-    vQryItens.Sql.Add('Inner Join Rhema_Data Rd On Rd.IdData = PI.CheckInDtInicio');
-    vQryItens.Sql.Add('Inner join Rhema_Hora Rh ON Rh.IdHora = Pi.CheckInHrInicio');
-    vQryItens.Sql.Add('where PedidoId = ' + EntradaId.ToString());// + ' and Pi.QtdCheckIn > 0');
+    vQryItens.Sql.Add
+      ('Inner Join Rhema_Data Rd On Rd.IdData = PI.CheckInDtInicio');
+    vQryItens.Sql.Add
+      ('Inner join Rhema_Hora Rh ON Rh.IdHora = Pi.CheckInHrInicio');
+    vQryItens.Sql.Add('where PedidoId = ' + EntradaId.ToString());
+    // + ' and Pi.QtdCheckIn > 0');
     vQryItens.Open;
     vRecno := vQryItens.RecordCount;
     vQryItens.First;
@@ -591,52 +609,64 @@ begin
       vQryFinalizar.Close;
       vQryFinalizar.Sql.Clear;
       vQryFinalizar.Sql.Add('select LoteId, ');
-      vQryFinalizar.Sql.Add('       (Case When SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
-      vQryFinalizar.Sql.Add('	            Else (Select EnderecoIdStage From Configuracao) End) EnderecoIdStage');
+      vQryFinalizar.Sql.Add
+        ('       (Case When SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
+      vQryFinalizar.Sql.Add
+        ('	            Else (Select EnderecoIdStage From Configuracao) End) EnderecoIdStage');
       vQryFinalizar.Sql.Add('from vProdutoLotes');
       vQryFinalizar.Sql.Add('where LoteId = :pLoteId');
-      vQryFinalizar.ParamByName('pLoteId').Value := vQryItens.FieldByName('LoteId').AsInteger;
+      vQryFinalizar.ParamByName('pLoteId').Value :=
+        vQryItens.FieldByName('LoteId').AsInteger;
       vQryFinalizar.Open();
-      vEnderecoIdStage := vQryFinalizar.FieldByName('EnderecoIdStage').AsInteger;
+      vEnderecoIdStage := vQryFinalizar.FieldByName('EnderecoIdStage')
+        .AsInteger;
       // Pegar Saldo inicial do Lote
       vQryFinalizar.Close;
       vQryFinalizar.Sql.Clear;
       vQryFinalizar.Sql.Add('select Qtde From Estoque');
-      vQryFinalizar.Sql.Add('Where LoteId = ' + vQryItens.FieldByName('LoteId').AsString);
-      vQryFinalizar.Sql.Add('  And EnderecoId = ' + vEnderecoIdStage.ToString());
+      vQryFinalizar.Sql.Add('Where LoteId = ' + vQryItens.FieldByName('LoteId')
+        .AsString);
+      vQryFinalizar.Sql.Add('  And EnderecoId = ' +
+        vEnderecoIdStage.ToString());
       vQryFinalizar.Sql.Add('  And EstoqueTipoId = 1');
       vQryFinalizar.Open;
       vEstoqueInicial := vQryFinalizar.FieldByName('Qtde').AsInteger;
       vQryFinalizar.Close;
       vQryFinalizar.Sql.Clear;
-      vSql := 'Declare @EntradaId Integer = ' + EntradaId.ToString() + sLineBreak +
-              'Declare @LoteId Integer = ' + vQryItens.FieldByName('LoteId').AsString + sLineBreak +
-              'Declare @QtdXml     Integer = ' + vQryItens.FieldByName('QtdXml').AsString + sLineBreak +
-              'Declare @QtdCheckIn Integer = ' + vQryItens.FieldByName('QtdCheckIn').AsString + sLineBreak +
-              'Declare @QtdDevolvida Integer = ' + vQryItens.FieldByName('QtdDevolvida').AsString + sLineBreak +
-              'Declare @QtdSegregada Integer = ' + vQryItens.FieldByName('QtdSegregada').AsString + sLineBreak +
-              'Declare @EnderecoIdStage Integer = ' + vEnderecoIdStage.ToString();
-      vSql := vSql +
-              'If @QtdCheckIn > 0 Begin' + sLineBreak +
-              '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage) Begin'+sLineBreak +
-              '      Update Estoque Set Qtde = Qtde + @QtdCheckIn Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'+sLineBreak +
-              '      End' + sLineBreak + 'Else Begin' + sLineBreak +
-              '      Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) '+sLineBreak +
-              '           Values (@LoteId, @EnderecoIdStage, 1, @QtdCheckIn, ' +sLineBreak +
-              '                  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '+ sLineBreak +
-              '                  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
-              '   End;'+sLineBreak+
-              'End;'+sLineBreak;
+      vSql := 'Declare @EntradaId Integer = ' + EntradaId.ToString() +
+        sLineBreak + 'Declare @LoteId Integer = ' + vQryItens.FieldByName
+        ('LoteId').AsString + sLineBreak + 'Declare @QtdXml     Integer = ' +
+        vQryItens.FieldByName('QtdXml').AsString + sLineBreak +
+        'Declare @QtdCheckIn Integer = ' + vQryItens.FieldByName('QtdCheckIn')
+        .AsString + sLineBreak + 'Declare @QtdDevolvida Integer = ' +
+        vQryItens.FieldByName('QtdDevolvida').AsString + sLineBreak +
+        'Declare @QtdSegregada Integer = ' + vQryItens.FieldByName
+        ('QtdSegregada').AsString + sLineBreak +
+        'Declare @EnderecoIdStage Integer = ' + vEnderecoIdStage.ToString();
+      vSql := vSql + 'If @QtdCheckIn > 0 Begin' + sLineBreak +
+        '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage) Begin'
+        + sLineBreak +
+        '      Update Estoque Set Qtde = Qtde + @QtdCheckIn Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'
+        + sLineBreak + '      End' + sLineBreak + 'Else Begin' + sLineBreak +
+        '      Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) '
+        + sLineBreak +
+        '           Values (@LoteId, @EnderecoIdStage, 1, @QtdCheckIn, ' +
+        sLineBreak +
+        '                  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '
+        + sLineBreak +
+        '                  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'
+        + sLineBreak + '   End;' + sLineBreak + 'End;' + sLineBreak;
       vSql := vSql + 'If @QtdSegregada > 0 Begin' + sLineBreak +
-              '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)) Begin'+ sLineBreak +
-              '      Update Estoque Set Qtde = Qtde + @QtdSegregada Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'+sLineBreak +
-              '   End' + sLineBreak +
-              '	  Else Begin' + sLineBreak +
-              '	   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada,'+sLineBreak +
-              '							(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'+sLineBreak +
-              '							(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
-              '   End;' + sLineBreak +
-              'End;';
+        '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)) Begin'
+        + sLineBreak +
+        '      Update Estoque Set Qtde = Qtde + @QtdSegregada Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'
+        + sLineBreak + '   End' + sLineBreak + '	  Else Begin' + sLineBreak +
+        '	   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada,'
+        + sLineBreak +
+        '							(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'
+        + sLineBreak +
+        '							(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'
+        + sLineBreak + '   End;' + sLineBreak + 'End;';
       // try Clipboard.AsText := vSql; Except End;
       vQryFinalizar.Sql.Add(vSql);
       if DebugHook <> 0 then
@@ -858,8 +888,8 @@ begin
         Result.AddElement(JsonObjectAgrupamento);
         vQryAgrupamentoLista.Next;
       End;
-    //vQryAgrupamentoLista.Close;
-    //vQryAgrupamentoLista.Free;
+    // vQryAgrupamentoLista.Close;
+    // vQryAgrupamentoLista.Free;
   Except
     On E: Exception do
     Begin
@@ -1355,15 +1385,14 @@ end;
 
 function TServiceRecebimento.Pesquisar(pPedidoId, pCodPessoaERP: Integer;
   pDocumento, pRazao, pRegistroERP: String; pDtNotaFiscal: TDateTime;
-  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto : String; pBasico: Boolean;
-  pShowErro: Integer): tJsonArray;
+  pPendente: Integer; pAgrupamentoId: Integer; pCodProduto: String;
+  pBasico: Boolean; pShowErro: Integer): tJsonArray;
 var // VQry,
-  vQryRecebimentos: TFdQuery;
-  vQryItens: TFdQuery;
+  LQryRecebimentos: TFdQuery;
+  LQryItens: TFdQuery;
   vSql, vSqlItens: String;
   ObjJson: TJsonObject;
-  vItens, vProdutoId: Integer;
-
+  vItens, vProdutoId, I: Integer;
   JsonRecebimento: TJsonObject;
   ObjEntrada: TEntrada;
   ObjEntradaItens: TEntradaItens;
@@ -1371,162 +1400,192 @@ var // VQry,
   JsonArrayProduto: tJsonArray;
   LServiceProduto: TServiceProduto;
   aQueryParamProduto: TDictionary<String, String>;
+  LreceBimentos: TFDMemTable;
+  LItens: TFDMemTable;
+
 begin // Processo lento
   Try
-    vQryRecebimentos := FConexao.GetQuery;
-    vQryItens := FConexao.GetQuery;
-    vQryRecebimentos.Sql.Add(SqlEntrada);
-    vQryRecebimentos.ParamByName('pPedidoId').Value      := pPedidoId;
-    vQryRecebimentos.ParamByName('pCodPessoaERP').Value  := pCodPessoaERP;
-    vQryRecebimentos.ParamByName('pDocumentoNr').Value   := pDocumento;
-    vQryRecebimentos.ParamByName('pRazao').Value         := '%' + pRazao + '%';
-    vQryRecebimentos.ParamByName('pRegistroERP').Value   := pRegistroERP;
-    vQryRecebimentos.ParamByName('pCodProduto').Value    := pCodProduto;
-    vQryRecebimentos.ParamByName('pPendente').Value      := pPendente;
-    vQryRecebimentos.ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
-    vQryRecebimentos.Sql.Add('--pAgrupamentoId = ' + pAgrupamentoId.ToString());
-    if pDtNotaFiscal = 0 then
-      vQryRecebimentos.ParamByName('pDtNotaFiscal').Value := 0
-    Else
-      vQryRecebimentos.ParamByName('pDtNotaFiscal').Value :=
-        FormatDateTime('YYYY-MM-DD', pDtNotaFiscal);
-    if DebugHook <> 0 then
-      vQryRecebimentos.Sql.SaveToFile('EntradaPesquisar.Sql');
-    vQryRecebimentos.Open;
-    if vQryRecebimentos.IsEmpty then
+    LQryRecebimentos := FConexao.GetQuery;
+
+    LreceBimentos := TFDMemTable.Create(Nil);
+    LQryItens := FConexao.GetQuery;
+    with LQryRecebimentos do
+    begin
+      FetchOptions.RecsMax := 10;
+      FetchOptions.RowsetSize := 10;;
+      Sql.Add(SqlEntrada);
+      ParamByName('pPedidoId').Value := pPedidoId;
+      ParamByName('pCodPessoaERP').Value := pCodPessoaERP;
+      ParamByName('pDocumentoNr').Value := pDocumento;
+      ParamByName('pRazao').Value := '%' + pRazao + '%';
+      ParamByName('pRegistroERP').Value := pRegistroERP;
+      ParamByName('pCodProduto').Value := pCodProduto;
+      ParamByName('pPendente').Value := pPendente;
+      ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
+      Sql.Add('--pAgrupamentoId = ' + pAgrupamentoId.ToString());
+      if pDtNotaFiscal = 0 then
+        ParamByName('pDtNotaFiscal').Value := 0
+      Else
+        ParamByName('pDtNotaFiscal').Value := FormatDateTime('YYYY-MM-DD',
+          pDtNotaFiscal);
+      if DebugHook <> 0 then
+        Sql.SaveToFile('EntradaPesquisar.Sql');
+      LQryRecebimentos.Open;
+      LreceBimentos.Data := LQryRecebimentos.Data;
+      LQryRecebimentos.Close;
+    end;
+    if LreceBimentos.IsEmpty then
     Begin
       Result := tJsonArray.Create;
       Result.AddElement(TJsonObject.Create.AddPair('Erro',
         TuEvolutConst.QrySemDados))
     End
     Else if pBasico then
-      Result := vQryRecebimentos.ToJSONArray
+      Result := LreceBimentos.ToJSONArray
     Else
     Begin
       Result := tJsonArray.Create;
-      while Not vQryRecebimentos.Eof do
+      while Not LreceBimentos.Eof do
       Begin
         ObjEntrada := TEntrada.Create;
-        ObjEntrada.EntradaId := vQryRecebimentos.FieldByName('PedidoId')
-          .AsInteger;
-        ObjEntrada.OperacaoTipo.OperacaoTipoId :=
-          vQryRecebimentos.FieldByName('OperacaoTipoId').AsInteger;
-        ObjEntrada.OperacaoTipo.Descricao := vQryRecebimentos.FieldByName
-          ('OperacaoTipo').AsString;
-        ObjEntrada.Pessoa.PessoaId := vQryRecebimentos.FieldByName('PessoaId')
-          .AsInteger;
-        ObjEntrada.Pessoa.CodPessoa := vQryRecebimentos.FieldByName
-          ('CodPessoaERP').AsInteger;
-        ObjEntrada.Pessoa.Razao := vQryRecebimentos.FieldByName
-          ('Razao').AsString;
-        ObjEntrada.DocumentoNr := vQryRecebimentos.FieldByName
-          ('DocumentoNr').AsString;
-        ObjEntrada.DocumentoData := vQryRecebimentos.FieldByName
-          ('DocumentoData').AsDateTime;
-        ObjEntrada.RegistroERP := vQryRecebimentos.FieldByName
-          ('RegistroERP').AsString;
-        ObjEntrada.DtInclusao := vQryRecebimentos.FieldByName('DtInclusao')
-          .AsDateTime;
-        ObjEntrada.HrInclusao :=
-          StrToTime(Copy(vQryRecebimentos.FieldByName('HrInclusao')
-          .AsString, 1, 8));
-        ObjEntrada.ArmazemId := vQryRecebimentos.FieldByName('ArmazemId')
-          .AsInteger;
-        ObjEntrada.Status := vQryRecebimentos.FieldByName('Status').AsInteger;
-        ObjEntrada.ProcessoId := vQryRecebimentos.FieldByName('ProcessoId')
-          .AsInteger;
-        ObjEntrada.Processo := vQryRecebimentos.FieldByName('Processo')
-          .AsString;
-        vQryItens.Close;
-        vQryItens.Sql.Clear;
-        vQryItens.Sql.Add('Declare @pPedido  Integer = ' +
-          ObjEntrada.EntradaId.ToString());
-        vQryItens.Sql.Add('Declare @ProdutoId Integer = 0');
-        vQryItens.Sql.Add('Declare @LoteId Integer    = 0');
-        vQryItens.Sql.Add(SqlEntradaItens);
-        vQryItens.Sql.Add
-          ('   and (@ProdutoId = 0 or Prd.IdProduto = @ProdutoId)');
-        vQryItens.Sql.Add
-          ('   and (@LoteId    = 0 or Pl.LoteId     = @LoteId) ');
-        vQryItens.Sql.Add('Order by PIt.PedidoId, PIt.PedidoItemId');
-        if DebugHook <> 0 then
-          vQryItens.Sql.SaveToFile('PedidoItens.Sql');
-        vQryItens.Open;
-        vQryItens.First;
-        vProdutoId := 0;
-        if Not vQryItens.IsEmpty then
-          While Not vQryItens.Eof do
+        try
+          ObjEntrada.EntradaId := LreceBimentos.FieldByName('PedidoId')
+            .AsInteger;
+          ObjEntrada.OperacaoTipo.OperacaoTipoId :=
+            LreceBimentos.FieldByName('OperacaoTipoId').AsInteger;
+          ObjEntrada.OperacaoTipo.Descricao :=
+            LreceBimentos.FieldByName('OperacaoTipo').AsString;
+          ObjEntrada.Pessoa.PessoaId := LreceBimentos.FieldByName('PessoaId')
+            .AsInteger;
+          ObjEntrada.Pessoa.CodPessoa := LreceBimentos.FieldByName
+            ('CodPessoaERP').AsInteger;
+          ObjEntrada.Pessoa.Razao := LreceBimentos.FieldByName('Razao')
+            .AsString;
+          ObjEntrada.DocumentoNr := LreceBimentos.FieldByName
+            ('DocumentoNr').AsString;
+          ObjEntrada.DocumentoData := LreceBimentos.FieldByName('DocumentoData')
+            .AsDateTime;
+          ObjEntrada.RegistroERP := LreceBimentos.FieldByName
+            ('RegistroERP').AsString;
+          ObjEntrada.DtInclusao := LreceBimentos.FieldByName('DtInclusao')
+            .AsDateTime;
+          ObjEntrada.HrInclusao :=
+            StrToTime(Copy(LreceBimentos.FieldByName('HrInclusao')
+            .AsString, 1, 8));
+          ObjEntrada.ArmazemId := LreceBimentos.FieldByName('ArmazemId')
+            .AsInteger;
+          ObjEntrada.Status := LreceBimentos.FieldByName('Status').AsInteger;
+          ObjEntrada.ProcessoId := LreceBimentos.FieldByName('ProcessoId')
+            .AsInteger;
+          ObjEntrada.Processo := LreceBimentos.FieldByName('Processo').AsString;
+          with LQryItens do
+          begin
+            LQryItens.Close;
+            Sql.Clear;
+            Sql.Add('Declare @pPedido  Integer = ' +
+              ObjEntrada.EntradaId.ToString());
+            Sql.Add('Declare @ProdutoId Integer = 0');
+            Sql.Add('Declare @LoteId Integer    = 0');
+            Sql.Add(SqlEntradaItens);
+            Sql.Add('   and (@ProdutoId = 0 or Prd.IdProduto = @ProdutoId)');
+            Sql.Add('   and (@LoteId    = 0 or Pl.LoteId     = @LoteId) ');
+            Sql.Add('Order by PIt.PedidoId, PIt.PedidoItemId');
+            if DebugHook <> 0 then
+              Sql.SaveToFile('PedidoItens.Sql');
+            Open;
+            First;
+            LItens := TFDMemTable.Create(Nil);
+            LItens.Data := Data;
+            LItens.First;
+            Close;
+
+          end;
+          vProdutoId := 0;
+
+          While Not LItens.Eof do
           Begin
             ObjEntradaItens := TEntradaItens.Create;
-            ObjEntradaItens.EntradaId := vQryItens.FieldByName('PedidoId')
-              .AsInteger;
-            ObjEntradaItens.EntradaItemId :=
-              vQryItens.FieldByName('PedidoItemId').AsInteger;
-            // ObjEntradaItens := TEntradaItens.Create;
-            // if vProdutoId <> vQryItens.FieldByName('ProdutoId').AsInteger then Begin
-            // ObjEntradaItens.ProdutoLotes.Produto.IdProduto := vQryItens.FieldByName('ProdutoId').AsInteger;
-            // vProdutoId := vQryItens.FieldByName('ProdutoId').AsInteger;
-            // End;
-            LServiceProduto := TServiceProduto.Create;
-            aQueryParamProduto := TDictionary<String, String>.Create;
-            aQueryParamProduto.Add('codigoerp',
-              vQryItens.FieldByName('CodigoERP').AsString);
-            JsonArrayProduto := LServiceProduto.GetProduto(aQueryParamProduto);
-            ObjEntradaItens := TEntradaItens.Create;
-            ObjEntradaItens.EntradaId := vQryItens.FieldByName('PedidoId')
-              .AsInteger;
-            ObjEntradaItens.EntradaItemId :=
-              vQryItens.FieldByName('PedidoItemId').AsInteger;
-            ObjEntradaItens.ProdutoLotes.Produto :=
-              tJson.JsonToObject<TProduto>
-              (JsonArrayProduto.Items[0] as TJsonObject);
-            ObjEntradaItens.ProdutoLotes.Lotes.LoteId :=
-              vQryItens.FieldByName('LoteId').AsInteger;
-            ObjEntradaItens.ProdutoLotes.Lotes.ProdutoId :=
-              vQryItens.FieldByName('ProdutoId').AsInteger;
-            ObjEntradaItens.ProdutoLotes.Lotes.CodigoERP :=
-              vQryItens.FieldByName('CodigoERP').AsInteger;
-            ObjEntradaItens.ProdutoLotes.Lotes.DescrLote :=
-              vQryItens.FieldByName('descrLote').AsString;
-            ObjEntradaItens.ProdutoLotes.Lotes.Fabricacao :=
-              vQryItens.FieldByName('Fabricacao').AsDateTime;
-            ObjEntradaItens.ProdutoLotes.Lotes.Vencimento :=
-              vQryItens.FieldByName('Vencimento').AsDateTime;
-            ObjEntradaItens.ProdutoLotes.Lotes.DtEntrada :=
-              vQryItens.FieldByName('DtEntrada').AsDateTime;
-            ObjEntradaItens.ProdutoLotes.Lotes.HrEntrada :=
-              StrToTime(Copy(vQryItens.FieldByName('HrEntrada')
-              .AsString, 1, 8));
-            ObjEntradaItens.ProdutoLotes.Lotes.QtdeDisponivel := 0;
-            // vQry.FieldByName('QtdeDisponivel').AsInteger;
-            ObjEntradaItens.QtdXml := vQryItens.FieldByName('QtdXml').AsInteger;
-            ObjEntradaItens.QtdCheckIn := vQryItens.FieldByName('QtdCheckIn')
-              .AsInteger;
-            ObjEntradaItens.QtdDevolvida :=
-              vQryItens.FieldByName('QtdDevolvida').AsInteger;
-            ObjEntradaItens.QtdSegregada :=
-              vQryItens.FieldByName('QtdSegregada').AsInteger;
-            ObjEntradaItens.PrintEtqControlado :=
-              vQryItens.FieldByName('PrintEtqControlado').AsInteger;
-            ObjEntrada.Itens.Add(ObjEntradaItens);
-            vQryItens.Next;
+            try
+              ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
+                .AsInteger;
+              ObjEntradaItens.EntradaItemId :=
+                LItens.FieldByName('PedidoItemId').AsInteger;
+              // ObjEntradaItens := TEntradaItens.Create;
+              // if vProdutoId <> LItens.FieldByName('ProdutoId').AsInteger then Begin
+              // ObjEntradaItens.ProdutoLotes.Produto.IdProduto := LItens.FieldByName('ProdutoId').AsInteger;
+              // vProdutoId := LItens.FieldByName('ProdutoId').AsInteger;
+              // End;
+              LServiceProduto := TServiceProduto.Create;
+              try
+                aQueryParamProduto := TDictionary<String, String>.Create;
+                aQueryParamProduto.Add('codigoerp',
+                  LItens.FieldByName('CodigoERP').AsString);
+                JsonArrayProduto := LServiceProduto.GetProduto
+                  (aQueryParamProduto);
+              finally
+                FreeAndNil(LServiceProduto);
+              end;
+              ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
+                .AsInteger;
+              ObjEntradaItens.EntradaItemId :=
+                LItens.FieldByName('PedidoItemId').AsInteger;
+              ObjEntradaItens.ProdutoLotes.Produto :=
+                tJson.JsonToObject<TProduto>
+                (JsonArrayProduto.Items[0] as TJsonObject);
+              ObjEntradaItens.ProdutoLotes.Lotes.LoteId :=
+                LItens.FieldByName('LoteId').AsInteger;
+              ObjEntradaItens.ProdutoLotes.Lotes.ProdutoId :=
+                LItens.FieldByName('ProdutoId').AsInteger;
+              ObjEntradaItens.ProdutoLotes.Lotes.CodigoERP :=
+                LItens.FieldByName('CodigoERP').AsInteger;
+              ObjEntradaItens.ProdutoLotes.Lotes.DescrLote :=
+                LItens.FieldByName('descrLote').AsString;
+              ObjEntradaItens.ProdutoLotes.Lotes.Fabricacao :=
+                LItens.FieldByName('Fabricacao').AsDateTime;
+              ObjEntradaItens.ProdutoLotes.Lotes.Vencimento :=
+                LItens.FieldByName('Vencimento').AsDateTime;
+              ObjEntradaItens.ProdutoLotes.Lotes.DtEntrada :=
+                LItens.FieldByName('DtEntrada').AsDateTime;
+              ObjEntradaItens.ProdutoLotes.Lotes.HrEntrada :=
+                StrToTime(Copy(LItens.FieldByName('HrEntrada').AsString, 1, 8));
+              ObjEntradaItens.ProdutoLotes.Lotes.QtdeDisponivel := 0;
+              // vQry.FieldByName('QtdeDisponivel').AsInteger;
+              ObjEntradaItens.QtdXml := LItens.FieldByName('QtdXml').AsInteger;
+              ObjEntradaItens.QtdCheckIn := LItens.FieldByName('QtdCheckIn')
+                .AsInteger;
+              ObjEntradaItens.QtdDevolvida := LItens.FieldByName('QtdDevolvida')
+                .AsInteger;
+              ObjEntradaItens.QtdSegregada := LItens.FieldByName('QtdSegregada')
+                .AsInteger;
+              ObjEntradaItens.PrintEtqControlado :=
+                LItens.FieldByName('PrintEtqControlado').AsInteger;
+              ObjEntrada.Itens.Add(ObjEntradaItens);
+            finally
+              LItens.Next;
+            end;
+
           End;
-        Result.AddElement(tJson.ObjectToJsonObject(ObjEntrada,
-          [joDateFormatISO8601]));
-        vQryRecebimentos.Next;
+          Result.AddElement(tJson.ObjectToJsonObject(ObjEntrada,
+            [joDateFormatISO8601]));
+        finally
+          for I := 0 to Pred(ObjEntrada.Itens.Count) do
+            FreeAndNil(ObjEntrada.Itens[I]);
+          FreeAndNil(ObjEntrada);
+          FreeAndNil(LItens);
+        end;
+        LreceBimentos.Next;
       End;
     End;
-    vQryRecebimentos.Close;
-    vQryItens.Close;
-
+    LreceBimentos.Close;
   Except
     On E: Exception do
     Begin
-      vQryRecebimentos.Close;
-
+      LreceBimentos.Close;
       raise Exception.Create(E.Message);
     End;
   End;
+  if assigned(LreceBimentos) then
+    FreeAndNil(LQryRecebimentos);
 end;
 
 function TServiceRecebimento.RegPrintEtqProduto(pPedidoId, pLoteId: Integer)
@@ -1764,11 +1823,19 @@ begin
     Result := TJsonObject.Create;
     With Result do
     Begin
-      AddPair('pedidoitemid', TJsonNumber.Create(FConexao.Query.FieldByName('PedidoItemId').AsInteger));
-      AddPair('loteid', TJsonNumber.Create(FConexao.Query.FieldByName('LoteId').AsInteger));
-      AddPair('qtdcheckin', TJsonNumber.Create(FConexao.Query.FieldByName('QtdCheckIn').AsInteger));
-      AddPair('qtddevolvida', TJsonNumber.Create(FConexao.Query.FieldByName('QtdDevolvida').AsInteger));
-      AddPair('qtdsegregada', TJsonNumber.Create(FConexao.Query.FieldByName('QtdSegregada').AsInteger));
+      AddPair('pedidoitemid',
+        TJsonNumber.Create(FConexao.Query.FieldByName('PedidoItemId')
+        .AsInteger));
+      AddPair('loteid', TJsonNumber.Create(FConexao.Query.FieldByName('LoteId')
+        .AsInteger));
+      AddPair('qtdcheckin',
+        TJsonNumber.Create(FConexao.Query.FieldByName('QtdCheckIn').AsInteger));
+      AddPair('qtddevolvida',
+        TJsonNumber.Create(FConexao.Query.FieldByName('QtdDevolvida')
+        .AsInteger));
+      AddPair('qtdsegregada',
+        TJsonNumber.Create(FConexao.Query.FieldByName('QtdSegregada')
+        .AsInteger));
     End;
     // jsonEntradaItem.Free;
     // jsonArrayItens.Free;

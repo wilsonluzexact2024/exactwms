@@ -75,10 +75,12 @@ End;
 
 destructor TCargas.Destroy;
 begin
-  Ftransportadora := Nil;
-  Fveiculo := Nil;
-  Fmotorista := Nil;
-  // FPedidos        := Nil;
+  if assigned(Fmotorista) then
+    Fmotorista.Free;
+  if assigned(Ftransportadora) then
+    Ftransportadora.Free;
+  if assigned(Fveiculo) then
+    Fveiculo.Free;
   inherited;
 end;
 
@@ -102,7 +104,8 @@ begin
   // JsonValue := TJSonObject.ParseJSONValue(st);
   // JsonValue.GetValue<string>('data.results[0].veiculo');  //Busca um JsonObject dentro de um array
   // https://showdelphi.com.br/como-fazer-um-parse-a-json-string-in-delphi/
-  Result := tJson.JsonToObject<TCargas>(Json, [joDateFormatUnix]) //,[joDateIsUTC, joDateFormatISO8601])
+  Result := tJson.JsonToObject<TCargas>(Json, [joDateFormatUnix])
+  // ,[joDateIsUTC, joDateFormatISO8601])
   // JsonValue := Free;
 end;
 
@@ -110,15 +113,15 @@ procedure TCargas.Limpar;
 begin
   Fcargaid := 0;
   Frotaid := 0;
-  if Assigned(Ftransportadora) then
+  if assigned(Ftransportadora) then
     Ftransportadora.Limpar // := Nil;
   Else
     Ftransportadora := TPessoa.Create;
-  if Assigned(Fveiculo) then
+  if assigned(Fveiculo) then
     Fveiculo.Limpar // := Nil;
   Else
     Fveiculo := TVeiculo.Create;
-  if Assigned(Fmotorista) then
+  if assigned(Fmotorista) then
     Fmotorista.Limpar // := Nil;
   Else
     Fmotorista := TPessoa.Create;

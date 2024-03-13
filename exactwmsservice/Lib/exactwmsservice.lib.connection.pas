@@ -14,6 +14,7 @@ uses
   FireDAC.Stan.Intf,
   FireDAC.Phys,
   FireDAC.Stan.Async,
+  Horse,
   FireDAC.UI.Intf,
   Data.DB,
   FireDAC.Comp.UI,
@@ -21,10 +22,10 @@ uses
   FireDAC.Comp.DataSet,
   FireDAC.Stan.Pool,
   exactwmsservice.lib.utils,
-  FireDAC.Phys.MSSQL, Generics.Collections;
+  FireDAC.Phys.MSSQL, Generics.Collections, Horse.Core;
 
 type
-  TConnection = class(TComponent)
+  TConnection = class
   private
     FQuery: TFDQuery;
     FSender: TObject;
@@ -33,6 +34,7 @@ type
     FtimeExecute: TTime;
     FtimeOpen: TTime;
     FtimeConnect: TTime;
+    Fhorse: thorsecore;
     FListQuerys: TObjectList<TFDQuery>;
     procedure SetupQuery(Obj: TFDQuery);
     Function GetSender: String;
@@ -84,28 +86,39 @@ end;
 
 constructor TConnection.Create(TypeConnecion: Integer = 0);
 begin
+  try
 
-  FListQuerys := TObjectList<TFDQuery>.Create();
-  DB := TFDConnection.Create(nil);
-  DB.FetchOptions.Unidirectional := true;
-  DB.ResourceOptions.KeepConnection := true;
-  DB.OnLogin := OnLogin;
-  DB.OnError := ConnectionError;
-  DB.ResourceOptions.SilentMode := true;
-  DB.ResourceOptions.AutoReconnect := False;
-  DB.BeforeConnect := DConnectionBeforeConnect;
-  DB.AfterConnect := DAfterforeConnect;
-  // criando sem pool - n�o funcina no modelo atual
-  Tutil.SetConection(DB, TypeConnecion);
-  {
-    if TypeConnecion = 1 then
-    DB.ConnectionDefName := _CTCONEXAOLOG
-    else
-    DB.ConnectionDefName := _CTCONEXAO;
-  }
-  Query := TFDQuery.Create(nil);
-  Query.connection := DB;
-  SetupQuery(Query);
+    FListQuerys := TObjectList<TFDQuery>.Create();
+
+    DB := TFDConnection.Create(nil);
+
+    DB.FetchOptions.Unidirectional := true;
+    DB.ResourceOptions.KeepConnection := true;
+    DB.OnLogin := OnLogin;
+    DB.OnError := ConnectionError;
+
+    DB.ResourceOptions.SilentMode := true;
+    DB.ResourceOptions.AutoReconnect := False;
+    DB.BeforeConnect := DConnectionBeforeConnect;
+    DB.AfterConnect := DAfterforeConnect;
+    // criando sem pool - n�o funcina no modelo atual
+    Tutil.SetConection(DB, TypeConnecion);
+    {
+      if TypeConnecion = 1 then
+      DB.ConnectionDefName := _CTCONEXAOLOG
+      else
+      DB.ConnectionDefName := _CTCONEXAO;
+    }
+
+    Query := TFDQuery.Create(nil);
+    Query.connection := DB;
+    SetupQuery(Query);
+    Fhorse := THorse.GetInstance;
+  except
+    on e: Exception do
+      Tutil.Gravalog('[110]Conection create ' + e.Message);
+
+  END;
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -179,6 +192,7 @@ end;
 procedure TConnection.FDQueryAfterOpen(DataSet: TDataSet);
 
 begin
+
   var
   Lsender := GetSender;
   try
@@ -201,6 +215,7 @@ end;
 procedure TConnection.FDQueryBeforeExecute(DataSet: TFDDataSet);
 begin
   try
+
     var
     Lsender := GetSender;
     var
@@ -216,6 +231,7 @@ end;
 procedure TConnection.FDQueryBeforeOpen(DataSet: TDataSet);
 begin
   FtimeOpen := Time;
+
   try
     var
     Lsender := GetSender;
@@ -231,6 +247,7 @@ function TConnection.FormatQuery(value: string): string;
 var
   I: Integer;
 begin
+
   var
   Lts := TStringList.Create;
   try
@@ -239,7 +256,9 @@ begin
     begin
       Lts[I] := '     ' + LowerCase(Lts[I]);
     end;
-    Result := Lts.text;
+    //LOGS DE QUERY INUTEIS
+    //Result := Lts.text;
+    Result :='';
   finally
     FreeAndNil(Lts);
   end;
@@ -247,7 +266,7 @@ end;
 
 function TConnection.GetQuery: TFDQuery;
 begin
-  Result := TFDQuery.Create(Self);
+  Result := TFDQuery.Create(nil);
   SetupQuery(Result);
   FListQuerys.Add(Result);
 end;
@@ -272,7 +291,9 @@ end;
 procedure TConnection.QueryError(ASender, AInitiator: TObject;
   var AException: Exception);
 begin
+
   var
+
   Lsender := GetSender;
   var
   Lmessage := AException.Message;
@@ -299,9 +320,11 @@ begin
   Obj.FetchOptions.Mode := fmAll;
 
   Obj.OnError := QueryError;
+
 {$IFDEF TESTEDEUBG}
   Obj.FetchOptions.AutoFetchAll := afDisable;
-  Obj.FetchOptions.RecsMax := 2 Obj.FetchOptions.RowsetSize := 20;;
+  Obj.FetchOptions.RecsMax := 500;
+  Obj.FetchOptions.RowsetSize := 500;;
 {$ENDIF}
 end;
 

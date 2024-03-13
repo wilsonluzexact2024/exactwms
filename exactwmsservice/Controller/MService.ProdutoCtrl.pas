@@ -36,7 +36,8 @@ procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetCodProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MontarPaginacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure EnderecarProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EnderecarProduto(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure Import(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Integração ERP
 Procedure ImportDados(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -49,21 +50,28 @@ Procedure ImportCubagemDC(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Cadastro Basico Implantação
 Procedure ImportEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Cadastro Basico Implantação
-Procedure ImportEnderecamento(Req: THorseRequest; Res: THorseResponse; Next: TProc); // Cadastro Basico Implantação
+Procedure ImportEnderecamento(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc); // Cadastro Basico Implantação
 Procedure ImportEan(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SalvarColetor(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Get4D(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetResumoEntrada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetResumoEntrada(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure GetResumoSaida(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Relatorios
-Procedure GetRelEnderecamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelEnderecamento(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure GetProdutoList(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetProdutoLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure ExportFile(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetRelProdutos01(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarCubagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarCubagemIntegracao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarRastreabilidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelProdutos01(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure AtualizarCubagem(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure AtualizarCubagemIntegracao(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
+Procedure AtualizarRastreabilidade(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc);
 Procedure UpdatePicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
@@ -77,21 +85,17 @@ begin
 
   THorse.Group.Prefix('v1').Get('/produto', Get)
     .Get('/produto/pesquisar/:codprodean', GetCodProduto)
-    .Get('/produto/picking/:picking', GetPicking)
-    .Get('/produto/:id', GetID).Get('/produto/codigoerp/:codigoerp', GetCodigoERP)
+    .Get('/produto/picking/:picking', GetPicking).Get('/produto/:id', GetID)
+    .Get('/produto/codigoerp/:codigoerp', GetCodigoERP)
     .Get('/produto/:id/:descricao', GetDescricao)
 
-    .Get('/produto/Estrutura', Estrutura)
-    .Post('/produto', Insert)
-    .Post('/produto/import', Import)
-    .Put('/produto/enderecar', EnderecarProduto)
-    .Put('/produto/:id', Update)
-    .Delete('/produto/:id', Delete)
+    .Get('/produto/Estrutura', Estrutura).Post('/produto', Insert)
+    .Post('/produto/import', Import).Put('/produto/enderecar', EnderecarProduto)
+    .Put('/produto/:id', Update).Delete('/produto/:id', Delete)
     .Get('/produto/montarpaginacao', MontarPaginacao)
     .Put('/produto/importdados', ImportDados) // Integração ERP x eXactWMS
-    .Get('/produto/cubagem', ExportarCubagem)
-    .Put('/produto/importcubagem', ImportCubagem)
-    .Put('/produto/importcubagemdc', ImportCubagemDC)
+    .Get('/produto/cubagem', ExportarCubagem).Put('/produto/importcubagem',
+    ImportCubagem).Put('/produto/importcubagemdc', ImportCubagemDC)
     .Put('/produto/importestoque', ImportEstoque)
     .Put('/produto/importenderecamento', ImportEnderecamento)
     .Put('/produto/importean', ImportEan)
@@ -101,12 +105,12 @@ begin
     .Get('/produto4D/:pedidoid/:codproduto', GetResumoSaida)
     .Get('/produto/produtolist', GetProdutoList)
     .Get('/produto/lotes/:produtoid/:descricao', GetProdutoLotes)
-    .Get('/produto/exportfile', ExportFile)
-    .Get('/produto/relatorio01', GetRelProdutos01)
-    .Put('/produto/atualizarcubagem', AtualizarCubagem)
+    .Get('/produto/exportfile', ExportFile).Get('/produto/relatorio01',
+    GetRelProdutos01).Put('/produto/atualizarcubagem', AtualizarCubagem)
     .Put('/produto/atualizarcubagemintegracao', AtualizarCubagemIntegracao)
-    .Put('/produto/atualizarrastreabilidade/:produtoid/:rastroid', AtualizarRastreabilidade)
-    .Get('/produto/updatepicking/:codproduto', UpdatePicking);
+    .Put('/produto/atualizarrastreabilidade/:produtoid/:rastroid',
+    AtualizarRastreabilidade).Get('/produto/updatepicking/:codproduto',
+    UpdatePicking);
 end;
 
 Procedure AtualizarCubagem(Req: THorseRequest; Res: THorseResponse;
@@ -126,7 +130,8 @@ Begin
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     end;
   Finally
@@ -152,7 +157,8 @@ Begin
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     end;
   Finally
@@ -179,7 +185,8 @@ Begin
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     end;
   Finally
@@ -190,7 +197,7 @@ End;
 Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     Try
@@ -201,7 +208,8 @@ Begin
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     end;
   Finally
@@ -235,18 +243,20 @@ end;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
       ProdutoDAO := TProdutoDAO.Create;
-      Res.Send<TJsonArray>(ProdutoDAO.GetID('0', 1, '0', Req.Query.Dictionary)).Status(THTTPStatus.Ok);
+      Res.Send<TJsonArray>(ProdutoDAO.GetID('0', 1, '0', Req.Query.Dictionary))
+        .Status(THttpStatus.Ok);
     Except
       On E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     end;
   Finally
@@ -285,7 +295,7 @@ Begin
     end;
   Finally
     If Assigned(AQueryParam) then
-       FreeAndNil(AQueryParam);
+      FreeAndNil(AQueryParam);
     FreeAndNil(LService);
   End;
 End;
@@ -348,15 +358,16 @@ Begin
       End;
     end;
   Finally
-    if Assigned(AQueryParam) then
-       FreeAndNil(AQueryParam);
     FreeAndNil(LService);
+    if Assigned(AQueryParam) then
+      FreeAndNil(AQueryParam);
+
   End;
 end;
 
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
-  ProdutoDAO: TProdutoDAO;
+
   pCodRequisicao: String;
 
   LService: TServiceProduto;
@@ -384,10 +395,10 @@ Begin
         Res.Send<TJsonArray>(JsonArrayErro)
           .Status(THttpStatus.InternalServerError);
       End;
-  end;
+    end;
   Finally
     if Assigned(AQueryParam) then
-       FreeAndNil(AQueryParam);
+      FreeAndNil(AQueryParam);
     FreeAndNil(LService);
   End;
 end;
@@ -395,7 +406,7 @@ end;
 Procedure GetProdutoList(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     try
@@ -411,7 +422,7 @@ Begin
         Res.Send<TJsonArray>(JsonArrayErro)
           .Status(THttpStatus.InternalServerError);
       End;
-  end;
+    end;
   Finally
     FreeAndNil(ProdutoDAO);
   End;
@@ -421,8 +432,8 @@ Procedure GetProdutoLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
   pDescricao: String;
-  JsonArrayRetorno : TJsonArray;
-  JsonArrayErro : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     try
@@ -431,7 +442,8 @@ Begin
         pDescricao := '%'
       Else
         pDescricao := Req.Params.Items['descricao'];
-      JsonArrayRetorno := ProdutoDAO.GetProdutoLotes(Req.Params.Items['produtoid'].ToInteger(), pDescricao);
+      JsonArrayRetorno := ProdutoDAO.GetProdutoLotes
+        (Req.Params.Items['produtoid'].ToInteger(), pDescricao);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
     Except
       On E: Exception do
@@ -442,7 +454,7 @@ Begin
         Res.Send<TJsonArray>(JsonArrayErro)
           .Status(THttpStatus.InternalServerError);
       End;
-  end;
+    end;
   Finally
     FreeAndNil(ProdutoDAO);
   End;
@@ -455,7 +467,7 @@ begin
   Try
     Try
       ProdutoDAO := TProdutoDAO.Create;
-      Res.Send(ProdutoDAO.GetId4D(Req.Query.Dictionary)).Status(THTTPStatus.Ok);
+      Res.Send(ProdutoDAO.GetId4D(Req.Query.Dictionary)).Status(THttpStatus.Ok);
     Except
       on E: Exception do
       Begin
@@ -471,7 +483,7 @@ End;
 procedure Import(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     Try
@@ -487,7 +499,7 @@ Begin
         Res.Send<TJsonArray>(JsonArrayErro)
           .Status(THttpStatus.InternalServerError);
       End;
-  end;
+    end;
   Finally
     FreeAndNil(ProdutoDAO);
   End;
@@ -514,7 +526,8 @@ Begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -540,7 +553,8 @@ Begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       end;
     End;
   Finally
@@ -576,7 +590,7 @@ End;
 procedure ImportCubagemDC(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 Begin
   Try
     Try
@@ -615,7 +629,8 @@ Begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -627,7 +642,7 @@ procedure ImportEnderecamento(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     Try
@@ -641,7 +656,8 @@ Begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -652,7 +668,7 @@ End;
 procedure ImportEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 Begin
   Try
     Try
@@ -666,7 +682,8 @@ Begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -690,12 +707,13 @@ begin
       on E: EHorseException do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+          E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
-    FreeAndNil(JsonProduto);
     FreeAndNil(ProdutoDAO);
+    FreeAndNil(jSonProduto);
+
   End;
 end;
 
@@ -706,12 +724,12 @@ begin
   Try
     Try
       ProdutoDAO := TProdutoDAO.Create;
-      Res.Send<TJSONObject>(ProdutoDAO.MontarPaginacao).Status(THTTPStatus.Ok);
+      Res.Send<TJSONObject>(ProdutoDAO.MontarPaginacao).Status(THttpStatus.Ok);
     Except
       on E: EHorseException do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+          E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -728,11 +746,9 @@ Var
 begin
   Try
     Try
-      //jSonProduto := TJSONObject.Create;
+      // jSonProduto := TJSONObject.Create;
       jSonProduto := Req.Body<TJSONObject>;
       ProdutoDAO := TProdutoDAO.Create;
-      ProdutoDAO := TProdutoDAO.Create;
-
       JSonProdutoTipo := TJSONObject.Create;
       JSonProdutoTipo := jSonProduto.GetValue('produtoTipo') as TJSONObject;
 
@@ -754,8 +770,8 @@ begin
         as TJSONObject;
       jsonRastro := TJSONObject.Create;
       jsonRastro := jSonProduto.GetValue('rastro') as TJSONObject;
-      ProdutoDAO.InsertUpdate(GetValueInjSon(jSonProduto, 'IdProduto').ToInteger,
-        GetValueInjSon(jSonProduto, 'CodProduto').ToInteger,
+      ProdutoDAO.InsertUpdate(GetValueInjSon(jSonProduto, 'IdProduto')
+        .ToInteger, GetValueInjSon(jSonProduto, 'CodProduto').ToInteger,
         GetValueInjSon(jSonProduto, 'CodigoMS'), GetValueInjSon(jSonProduto,
         'Descricao'), GetValueInjSon(jSonProduto, 'DescricaoRed'),
         StrToIntDef(GetValueInjSon(JSonUnidade, 'id'), 0),
@@ -765,8 +781,8 @@ begin
         StrToIntDef(GetValueInjSon(jSonProduto, 'SomenteCxaFechada'), 0),
         StrToIntDef(GetValueInjSon(JSonEndereco, 'EnderecoId'), 0),
         StrToIntDef(GetValueInjSon(jsonRastro, 'rastroid'), 0),
-        StrToIntDef(IfThen(jSonProduto.GetValue<boolean>('importado') = true, '1',
-        '0'), 0), StrToIntDef(IfThen(jSonProduto.GetValue<boolean>('sNGPC')
+        StrToIntDef(IfThen(jSonProduto.GetValue<boolean>('importado') = true,
+        '1', '0'), 0), StrToIntDef(IfThen(jSonProduto.GetValue<boolean>('sNGPC')
         = true, '1', '0'), 0), StrToIntDef(GetValueInjSon(JSonEnderecamentoZona,
         'ZonaId'), 0), GetValueInjSon(jSonProduto, 'EanPrincipal'),
         GetValueInjSon(JSonProdutoTipo, 'Descricao'),
@@ -782,11 +798,13 @@ begin
         '1', '0'), 0),
 
         StrToFloatDef(StringReplace(jSonProduto.GetValue<String>('peso'), '.',
-        ',', []), 0), StrToFloatDef(StringReplace(jSonProduto.GetValue<String>
-        ('altura'), '.', ',', []), 0),
-        StrToFloatDef(StringReplace(jSonProduto.GetValue<String>('largura'), '.',
-        ',', []), 0), StrToFloatDef(StringReplace(jSonProduto.GetValue<String>
-        ('comprimento'), '.', ',', []), 0),
+        ',', []), 0),
+        StrToFloatDef(StringReplace(jSonProduto.GetValue<String>('altura'), '.',
+        ',', []), 0),
+        StrToFloatDef(StringReplace(jSonProduto.GetValue<String>('largura'),
+        '.', ',', []), 0),
+        StrToFloatDef(StringReplace(jSonProduto.GetValue<String>('comprimento'),
+        '.', ',', []), 0),
 
         StrToIntDef(GetValueInjSon(jSonProduto, 'MinPicking'), 0),
         StrToIntDef(GetValueInjSon(jSonProduto, 'MaxPicking'), 0),
@@ -805,7 +823,7 @@ begin
       End;
     End;
   Finally
-    //If Assigned(jSonProduto) then FreeAndNil(JsonProduto);
+    // If Assigned(jSonProduto) then FreeAndNil(JsonProduto);
     FreeAndNil(ProdutoDAO);
   End;
 end;
@@ -833,7 +851,7 @@ begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
           'Registro Excluído com Sucesso!'))).Status(THttpStatus.Ok)
       Else
-         raise Exception.Create('Não foi possível Excluir o Registro!');
+        raise Exception.Create('Não foi possível Excluir o Registro!');
     Except
       on E: Exception do
       Begin
@@ -850,7 +868,7 @@ Procedure EnderecarProduto(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
@@ -864,7 +882,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -875,7 +894,7 @@ End;
 Procedure ExportFile(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJSonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
@@ -889,7 +908,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -901,7 +921,7 @@ Procedure GetRelProdutos01(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
@@ -915,7 +935,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -927,7 +948,7 @@ Procedure GetRelEnderecamento(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
@@ -941,7 +962,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -953,7 +975,7 @@ Procedure SalvarColetor(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ProdutoDAO: TProdutoDAO;
   JsonProd: TJSONObject;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     Try
@@ -968,7 +990,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -980,19 +1003,21 @@ Procedure GetResumoEntrada(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     try
       JsonArrayErro := TJsonArray.Create;
-      JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', 'Rotina não Desenvolvida!'));
+      JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro',
+        'Rotina não Desenvolvida!'));
       Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.NotFound);
       JsonArrayErro := TJsonArray.Create;
       JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '200')
-                              .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem', 'Rotina não desenvolvida' ));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
-//      ProdutoDAO := TProdutoDAO.Create;
-//      Res.Send<TJSonArray>(ProdutoDAO.GetResumoEntrada(Req.Params.Items['pedidoid'].ToInteger, Req.Params.Items['codproduto'].ToInteger)).Status(THttpStatus.Created);
+        .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
+        'Rotina não desenvolvida'));
+      Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+      // ProdutoDAO := TProdutoDAO.Create;
+      // Res.Send<TJSonArray>(ProdutoDAO.GetResumoEntrada(Req.Params.Items['pedidoid'].ToInteger, Req.Params.Items['codproduto'].ToInteger)).Status(THttpStatus.Created);
     Except
       ON E: Exception do
       Begin
@@ -1000,7 +1025,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -1011,17 +1037,19 @@ end;
 Procedure GetResumoSaida(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayErro : TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     try
       JsonArrayErro := TJsonArray.Create;
-      JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', 'Rotina não Desenvolvida!'));
+      JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro',
+        'Rotina não Desenvolvida!'));
       Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.NotFound);
       JsonArrayErro := TJsonArray.Create;
       JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '200')
-                              .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem', 'Rotina não desenvolvida' ));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
+        'Rotina não desenvolvida'));
+      Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
       // ProdutoDAO := TProdutoDAO.Create;
       // Res.Send<TJSonArray>(GetResumoSaida(Req.Params.Items['pedidoid'].ToInteger, Req.Params.Items['codproduto'].ToInteger).Status(THttpStatus.Created);
     Except
@@ -1031,7 +1059,8 @@ begin
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
           .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
           E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -1042,22 +1071,24 @@ end;
 Procedure UpdatePicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoDAO: TProdutoDAO;
-  JsonArrayRetorno : TJsonArray;
-  JsonArrayErro : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
+  JsonArrayErro: TJsonArray;
 begin
   Try
     ProdutoDAO := TProdutoDAO.Create;
     try
       if StrToIntDef(Req.Params.Items['codproduto'], 0) <= 0 then
-         raise Exception.Create('Código do produto inválido!!!');
-      JsonArrayRetorno := ProdutoDAO.UpdatePicking(StrToIntDef(Req.Params.Items['codproduto'], 0));
+        raise Exception.Create('Código do produto inválido!!!');
+      JsonArrayRetorno := ProdutoDAO.UpdatePicking
+        (StrToIntDef(Req.Params.Items['codproduto'], 0));
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Ok)
     Except
       ON E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.InternalServerError);
+        Res.Send<TJsonArray>(JsonArrayErro)
+          .Status(THttpStatus.InternalServerError);
       End;
     End;
   Finally

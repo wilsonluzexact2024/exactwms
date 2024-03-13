@@ -53,7 +53,7 @@ var
   AQueryParam: TDictionary<String, String>;
   pVeiculoId, pTransportadoraId: Integer;
   pPlaca: String;
-  RetornoErro : TJsonArray;
+  RetornoErro: TJsonArray;
 begin
   Try
     VeiculoDAO := TVeiculoDao.Create;
@@ -72,7 +72,7 @@ begin
           pTransportadoraId :=
             StrToIntDef(AQueryParam.Items['transportadoraid'], 0);
       End;
-      Res.Status(200).Send<TJSonArray>(VeiculoDAO.Get(pVeiculoId, pPlaca,
+      Res.Status(200).Send<TJsonArray>(VeiculoDAO.Get(pVeiculoId, pPlaca,
         pTransportadoraId));
     Except
       on E: Exception do
@@ -94,12 +94,12 @@ begin
   Try
     Try
       VeiculoDAO := TVeiculoDao.Create;
-      Res.Send(VeiculoDAO.Get4D(Req.Query.Dictionary)).Status(THTTPStatus.Ok);
+      Res.Send(VeiculoDAO.Get4D(Req.Query.Dictionary)).Status(THttpStatus.Ok);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -115,15 +115,15 @@ begin
     Try
       ObjVeiculoDAO := TVeiculoDao.Create;
       ObjVeiculoDAO.ObjVeiculo := ObjVeiculoDAO.ObjVeiculo.JsonToClass
-        (Req.Body<TJSONObject>.ToJson);
+        (Req.Body<tJsonObject>.ToJson);
       ObjVeiculoDAO.InsertUpdate(ObjVeiculoDAO.ObjVeiculo);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro salvo com Sucesso!'))).Status(THttpStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Status(500).Send<TJSONObject>
-          (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Status(500).Send<tJsonObject>
+          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;
     End;
   Finally
@@ -133,22 +133,26 @@ end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjArray: TJSONObject;
+  ObjArray: tJsonObject;
   VeiculoDAO: TVeiculoDao;
 begin
   Try
     VeiculoDAO := TVeiculoDao.Create;
-    If VeiculoDAO.Delete(StrToIntDef(Req.Params.Items['veiculoid'], 0)) then
-       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-         'Registro Excluído com Sucesso!'))).Status(THTTPStatus.Created)
-    Else
-       raise Exception.Create('Não foi possível Excluir o registro!');
+    try
+      If VeiculoDAO.Delete(StrToIntDef(Req.Params.Items['veiculoid'], 0)) then
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro Excluído com Sucesso!'))).Status(THttpStatus.Created)
+      Else
+        raise Exception.Create('Não foi possível Excluir o registro!');
+    finally
+      FreeAndNil(VeiculoDAO);
+    end;
   Except
     on E: Exception do
     Begin
-      Res.Status(500).Send<TJSONObject>
-        (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)))
-        .Status(THTTPStatus.ExpectationFailed); // Status(THTTPStatus.Created);
+      Res.Status(500).Send<tJsonObject>
+        (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)))
+        .Status(THttpStatus.ExpectationFailed); // Status(THTTPStatus.Created);
     End;
   End;
 end;

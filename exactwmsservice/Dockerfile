@@ -15,7 +15,7 @@ RUN \
 RUN \
  apt-get -y upgrade && \
  apt-get -y dist-upgrade && \
- apt-get -y install joe wget p7zip-full curl unzip build-essential zlib1g-dev libcurl4-gnutls-dev && \
+ apt-get -y install joe wget p7zip-full curl unzip build-essential zlib1g-dev libcurl4-gnutls-dev && \ 
  apt-get -y install mysecureshell 
 
 
@@ -28,6 +28,9 @@ RUN \
  apt-get update && \
  ACCEPT_EULA=Y apt-get -q -y install msodbcsql17
 
+#RUN \
+ #apt-get -y install valgrind
+
 RUN \ 
  apt-get -y autoremove && \
  apt-get -y autoclean 
@@ -36,8 +39,8 @@ WORKDIR /root
 COPY bin bin
 # Comandos no container
 
-
-CMD cd bin;chmod +x ./exactwmsservice ; ./exactwmsservice
+CMD cd bin;chmod +x ./exactwmsservice ; MemoryMax=20M ./exactwmsservice
+#CMD cd bin;chmod +x ./exactwmsservice ; valgrind --leak-check=full ./exactwmsservice
 #CMD  systemd-run --scope -p MemoryMax=1G ./exactwmsservice
 # portas
 EXPOSE 8200

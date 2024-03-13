@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  Caption = 'Horse VCL with SSL - Sample'
+  Caption = 'Teste Leak service'
   ClientHeight = 298
   ClientWidth = 356
   Color = clBtnFace
@@ -26,7 +26,7 @@ object frmMain: TfrmMain
     Top = 242
     Width = 75
     Height = 25
-    Caption = 'Start'
+    Caption = 'Iniciar'
     TabOrder = 1
     OnClick = Button1Click
   end
@@ -93,8 +93,8 @@ object frmMain: TfrmMain
       item
         Width = 50
       end>
-    ExplicitTop = 270
-    ExplicitWidth = 350
+    ExplicitTop = 278
+    ExplicitWidth = 352
   end
   object OpenDialog1: TOpenDialog
     Left = 264

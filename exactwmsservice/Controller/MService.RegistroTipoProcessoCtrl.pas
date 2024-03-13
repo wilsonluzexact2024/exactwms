@@ -79,9 +79,13 @@ var
 begin
   try
     RegistroTipoProcessoDAO := TRegistroTipoProcessoDao.Create;
-    Res.Send<TJSonArray>(RegistroTipoProcessoDAO.GetID
-      (StrToInt64Def(Req.Params.Items['id'], 0))).Status(THttpStatus.Created);
-    RegistroTipoProcessoDAO.Destroy;
+    try
+      Res.Send<TJSonArray>(RegistroTipoProcessoDAO.GetID
+        (StrToInt64Def(Req.Params.Items['id'], 0))).Status(THttpStatus.Created);
+    finally
+      FreeAndNil(RegistroTipoProcessoDAO)
+    end;
+
   Except
     On E: Exception do
     Begin
@@ -101,15 +105,19 @@ begin
     JsonRegistroTipoProcesso := TJSONObject.Create;
     JsonRegistroTipoProcesso := Req.Body<TJSONObject>;
     RegistroTipoProcessoDAO := TRegistroTipoProcessoDao.Create;
-    RegistroTipoProcessoDAO.InsertUpdate
-      (GetValueInjSon(JsonRegistroTipoProcesso, 'id').ToInt64,
-      GetValueInjSon(JsonRegistroTipoProcesso, 'ProcessoId').ToInt64,
-      GetValueInjSon(JsonRegistroTipoProcesso, 'RegistroTipoId').ToInt64, 1);
-    JsonRegistroTipoProcesso := Nil;
-    JsonRegistroTipoProcesso.DisposeOf;
-    Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-      'Cadastro de RegistroTipoProcessos Salvo com Sucesso!')))
-      .Status(THttpStatus.Created);
+    try
+      RegistroTipoProcessoDAO.InsertUpdate
+        (GetValueInjSon(JsonRegistroTipoProcesso, 'id').ToInt64,
+        GetValueInjSon(JsonRegistroTipoProcesso, 'ProcessoId').ToInt64,
+        GetValueInjSon(JsonRegistroTipoProcesso, 'RegistroTipoId').ToInt64, 1);
+      JsonRegistroTipoProcesso := Nil;
+      JsonRegistroTipoProcesso.DisposeOf;
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+        'Cadastro de RegistroTipoProcessos Salvo com Sucesso!')))
+        .Status(THttpStatus.Created);
+    finally
+      FreeAndNil(RegistroTipoProcessoDAO);
+    end;
   Except
     on E: Exception do
     Begin
@@ -117,7 +125,7 @@ begin
         + E.Message);
     End;
   End;
-  RegistroTipoProcessoDAO := Nil;
+
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -131,13 +139,17 @@ begin
     ObjRegistroTipoProcesso := TJSONObject.Create;
     ObjRegistroTipoProcesso := Req.Body<TJSONObject>;
     RegistroTipoProcessoDAO := TRegistroTipoProcessoDao.Create;
-    RegistroTipoProcessoDAO.InsertUpdate(StrToInt64Def(Req.Params.Items['id'],
-      0), GetValueInjSon(ObjRegistroTipoProcesso, 'ProcessoId').ToInt64,
-      GetValueInjSon(ObjRegistroTipoProcesso, 'RegistroTipoId').ToInt64, 1);
-    ObjRegistroTipoProcesso := Nil;
-    ObjRegistroTipoProcesso.DisposeOf;
-    Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-      'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+    try
+      RegistroTipoProcessoDAO.InsertUpdate(StrToInt64Def(Req.Params.Items['id'],
+        0), GetValueInjSon(ObjRegistroTipoProcesso, 'ProcessoId').ToInt64,
+        GetValueInjSon(ObjRegistroTipoProcesso, 'RegistroTipoId').ToInt64, 1);
+      ObjRegistroTipoProcesso := Nil;
+      ObjRegistroTipoProcesso.DisposeOf;
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+        'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+    finally
+      FreeAndNil(RegistroTipoProcessoDAO);
+    end;
   Except
     on E: Exception do
     Begin
@@ -146,7 +158,7 @@ begin
       // Res.Send<TJSONObject>(tJsonObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THTTPStatus.ExpectationFailed);
     End;
   End;
-  RegistroTipoProcessoDAO := Nil;
+
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -156,9 +168,13 @@ Var
 begin
   Try
     RegistroTipoProcessoDAO := TRegistroTipoProcessoDao.Create;
-    RegistroTipoProcessoDAO.Delete(StrToInt64Def(Req.Params.Items['id'], 0));
-    Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-      'Registro Excluído com Sucesso!'))).Status(THttpStatus.NoContent);
+    try
+      RegistroTipoProcessoDAO.Delete(StrToInt64Def(Req.Params.Items['id'], 0));
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+        'Registro Excluído com Sucesso!'))).Status(THttpStatus.NoContent);
+    finally
+      FreeAndNil(RegistroTipoProcessoDAO);
+    end;
   Except
     on E: Exception do
     Begin

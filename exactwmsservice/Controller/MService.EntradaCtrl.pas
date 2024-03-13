@@ -282,7 +282,7 @@ begin
   Finally
     FreeAndNil(LService);
   End;
-  FreeAndNil(LService);
+
 End;
 
 Procedure Header(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -334,7 +334,7 @@ begin
   Finally
     FreeAndNil(LService);
   End;
-  FreeAndNil(LService);
+
 End;
 
 Procedure GetAcompanhamentoCheckIn(Req: THorseRequest; Res: THorseResponse;

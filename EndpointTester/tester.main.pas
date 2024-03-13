@@ -285,9 +285,9 @@ begin
       var
         i: Integer;
       MemoResults.Lines.Clear;
-      for i := 0 to 500 do
+      for i := 0 to memoUrls.Lines.Count do
       begin
-        sleep(30);
+        sleep(100);
         try
 
           TThread.Synchronize(TThread.CurrentThread,

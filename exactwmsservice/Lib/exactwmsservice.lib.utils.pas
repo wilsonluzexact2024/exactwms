@@ -44,7 +44,7 @@ type
   end;
 
 const
-  _CTCONEXAO = 'EVOLUTIONSERVICE';
+  _CTCONEXAO = 'exactdbservice';
 
 const
   _CTCONEXAOLOG = 'EXACTWMSDBLOG';
@@ -77,14 +77,17 @@ var
 begin
   OParams := TStringList.Create;
   try
+
     if GetEnvironmentVariable('RHEMA_DB_HOST') <> '' then
     begin
       if TypeConnection = 0 then
       begin
+
         OParams.Clear;
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
-        OParams.add('ApplicationName=EVOLUTIONSERVICE_API2');
+        OParams.add('ApplicationName=' + _CTCONEXAO);
+        OParams.add('TrustServerCertificate=yes');
         OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
         OParams.add('POOL_MaximumItems=200');
@@ -92,15 +95,18 @@ begin
         OParams.add('POOL_ExpireTimeout=1000');
         OParams.add('POOL_CleanupTimeout=3000');
         // OParams.add('Pooled=True');
+
         Conection.Params.Text := OParams.Text;
         Conection.Params.DriverID := 'MSSQL';
         OParams.Clear;
       end
       else
       begin
+
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_LOG_HOST'));
-        OParams.add('ApplicationName=EVOLUTIONSERVICE_API2');
+        OParams.add('ApplicationName=' + _CTCONEXAO);
+        OParams.add('TrustServerCertificate=yes');
         OParams.add('Database=' + GetEnvironmentVariable
           ('RHEMA_DB_LOG_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_LOG_USER'));
@@ -109,60 +115,71 @@ begin
         OParams.add('Password=' + GetEnvironmentVariable
           ('RHEMA_DB_LOG_PASSWORD'));
         // OParams.add('Pooled=True');
+
         Conection.Params.Text := OParams.Text;
         Conection.Params.DriverID := 'MSSQL';
       end;
     end
     else
     begin
+
       if not fileexists(ExtractFilePath(GetModuleName(HInstance)) +
         'eXactWMS.ini') then
       Begin
-        Writeln('[Provider.Connection]Erro : [não encotrado arquivo de configuracao] '
-          + ExtractFilePath(GetModuleName(HInstance)));
+        if IsConsole then
+          Writeln('[Provider.Connection]Erro : [não encotrado arquivo de configuracao] '
+            + ExtractFilePath(GetModuleName(HInstance)));
         exit;
       end;
       ArqIni := TIniFile.Create(ExtractFilePath(GetModuleName(HInstance)) +
         'eXactWMS.ini');
-      if TypeConnection = 0 then
-      begin
-        OParams.Clear;
-        OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
-        OParams.add('Server=' + ArqIni.ReadString('BD', 'Server', 'locahost'));
-        OParams.add('ApplicationName=EVOLUTIONSERVIC_LOG');
-        OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
-          'eXactWMS'));
-        OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
-        OParams.add('Password=' + ArqIni.ReadString('BD', 'pwd', 'Ctpd$#*%0'));
-        Conection.Params.Text := OParams.Text;
-        Conection.Params.Database := ArqIni.ReadString('BD', 'DataBase',
-          'eXactWMS');
-        Conection.Params.UserName := ArqIni.ReadString('BD', 'user', 'sa');
-        Conection.Params.DriverID := 'MSSQL';
-      end
-      else
-      begin
-        OParams.Clear;
-        OParams.add('DriverID=' + ArqIni.ReadString('BDLOG', 'Driver',
-          'MSSQL'));
-        OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server',
-          'locahost'));
-        OParams.add('ApplicationName=EVOLUTIONSERVICE_LOG');
-        OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
-          'eXactWMS'));
-        OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));
-        OParams.add('Password=' + ArqIni.ReadString('BDLOG', 'pwd',
-          'Ctpd$#*%0'));
-        Conection.Params.Text := OParams.Text;
-        Conection.Params.Database := ArqIni.ReadString('BDLOG', 'DataBase',
-          'eXactWMS');
-        Conection.Params.UserName := ArqIni.ReadString('BDLOG', 'user', 'sa');
-        Conection.Params.DriverID := 'MSSQL';
+      try
+        if TypeConnection = 0 then
+        begin
+          OParams.Clear;
+          OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
+          OParams.add('Server=' + ArqIni.ReadString('BD', 'Server',
+            'locahost'));
+          OParams.add('ApplicationName=' + _CTCONEXAOLOG);
+          OParams.add('TrustServerCertificate=yes');
+          OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
+            'eXactWMS'));
+          OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
+          OParams.add('Password=' + ArqIni.ReadString('BD', 'pwd',
+            'Ctpd$#*%0'));
+          Conection.Params.Text := OParams.Text;
+          Conection.Params.Database := ArqIni.ReadString('BD', 'DataBase',
+            'eXactWMS');
+          Conection.Params.UserName := ArqIni.ReadString('BD', 'user', 'sa');
+          Conection.Params.DriverID := 'MSSQL';
+        end
+        else
+        begin
+          OParams.Clear;
+          OParams.add('DriverID=' + ArqIni.ReadString('BDLOG', 'Driver',
+            'MSSQL'));
+          OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server',
+            'locahost'));
+          OParams.add('ApplicationName=' + _CTCONEXAO);
+          OParams.add('TrustServerCertificate=yes');
+          OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
+            'eXactWMS'));
+          OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));
+          OParams.add('Password=' + ArqIni.ReadString('BDLOG', 'pwd',
+            'Ctpd$#*%0'));
+          Conection.Params.Text := OParams.Text;
+          Conection.Params.Database := ArqIni.ReadString('BDLOG', 'DataBase',
+            'eXactWMS');
+          Conection.Params.UserName := ArqIni.ReadString('BDLOG', 'user', 'sa');
+          Conection.Params.DriverID := 'MSSQL';
+        end;
+      finally
+        if assigned(ArqIni) then
+          FreeAndNil(ArqIni);
       end;
     end;
   finally
-    if assigned(ArqIni) then
-      FreeAndNil(ArqIni);
+
     if assigned(OParams) then
       FreeAndNil(OParams)
   end;
@@ -176,24 +193,29 @@ var
 begin
   if GetEnvironmentVariable('RHEMA_DB_HOST') <> '' then
   begin
-    Writeln('Geting enviroment variables...');
+    if IsConsole then
+      Writeln('Geting enviroment variables...');
     OParams := TStringList.Create;
     try
       OParams.Clear;
       OParams.add('DriverID=MSSQL');
       OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE_api2');
+      OParams.add('ApplicationName=' + _CTCONEXAO);
+      OParams.add('TrustServerCertificate=yes');
       OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
       OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
-      OParams.add('POOL_MaximumItems=200');
+      OParams.add('POOL_MaximumItems=2000');
       OParams.add('Password=' + GetEnvironmentVariable('RHEMA_DB_PASSWORD'));
       OParams.add('POOL_ExpireTimeout=1000');
       OParams.add('POOL_CleanupTimeout=3000');
       OParams.add('Pooled=True');
-      Writeln('Servidor DB Host: ' + GetEnvironmentVariable('RHEMA_DB_HOST'));
-      Writeln('Servidor DB Database: ' + GetEnvironmentVariable
-        ('RHEMA_DB_DATABASE'));
-      Writeln('Servidor User: ' + GetEnvironmentVariable('RHEMA_DB_USER'));
+      if IsConsole then
+      begin
+        Writeln('Servidor DB Host: ' + GetEnvironmentVariable('RHEMA_DB_HOST'));
+        Writeln('Servidor DB Database: ' + GetEnvironmentVariable
+          ('RHEMA_DB_DATABASE'));
+        Writeln('Servidor User: ' + GetEnvironmentVariable('RHEMA_DB_USER'));
+      end;
       try
         if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO))
         then
@@ -205,7 +227,8 @@ begin
 
       OParams.add('DriverID=MSSQL');
       OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_LOG_HOST'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE');
+      OParams.add('ApplicationName=' + _CTCONEXAOLOG);
+      OParams.add('TrustServerCertificate=yes');
       OParams.add('Database=' + GetEnvironmentVariable
         ('RHEMA_DB_LOG_DATABASE'));
       OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_LOG_USER'));
@@ -228,8 +251,9 @@ begin
   if not fileexists(ExtractFilePath(GetModuleName(HInstance)) + 'eXactWMS.ini')
   then
   Begin
-    Writeln('[Provider.Connection]Erro : [não encotrado arquivo de configuracao] '
-      + ExtractFilePath(GetModuleName(HInstance)));
+    if IsConsole then
+      Writeln('[Provider.Connection]Erro : [não encotrado arquivo de configuracao] '
+        + ExtractFilePath(GetModuleName(HInstance)));
     exit;
   end;
   Try
@@ -240,7 +264,8 @@ begin
       OParams.Clear;
       OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BD', 'Server', 'locahost'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE_api2');
+      OParams.add('ApplicationName=' + _CTCONEXAO);
+      OParams.add('TrustServerCertificate=yes');
       OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
         'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
@@ -249,9 +274,10 @@ begin
       OParams.add('Pooled=True');
       OParams.add('POOL_ExpireTimeout=100');
       OParams.add('POOL_CleanupTimeout=300');
-{$IFDEF LINUX}
-      Writeln('Servidor DB: ' + ArqIni.ReadString('BD', 'Server', 'locahost'));
-{$ENDIF}
+      if IsConsole then
+        Writeln('Servidor DB: ' + ArqIni.ReadString('BD', 'Server',
+          'locahost'));
+
       try
         if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO))
         then
@@ -261,7 +287,8 @@ begin
       OParams.Clear;
       OParams.add('DriverID=' + ArqIni.ReadString('BDLOG', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server', 'locahost'));
-      OParams.add('ApplicationName=EVOLUTIONSERVICE');
+      OParams.add('ApplicationName=' + _CTCONEXAOLOG);
+      OParams.add('TrustServerCertificate=yes');
       OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
         'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));
@@ -496,7 +523,8 @@ begin
       try
         try
           LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
-          Writeln(LSaida);
+          if IsConsole then
+            Writeln(LSaida);
           p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
           ForceDirectories(p);
           p := p + FormatDateTime('yyyymmdd', now) + '_' +
@@ -507,6 +535,7 @@ begin
           else
             Append(F);
           Writeln(F, LSaida);
+
         except
         end;
       finally
@@ -520,12 +549,11 @@ begin
   end;
   LSaida := '';
 
+  {
+    End).Start;
 
-{
-  End).Start;
-
-  except
-  end; }
+    except
+    end; }
 end;
 
 { ----------------------------------------------------------------------------- }

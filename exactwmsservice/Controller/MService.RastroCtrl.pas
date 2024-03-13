@@ -52,12 +52,12 @@ end;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   RastroDAO: TRastroDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     Try
       RastroDAO := TRastroDao.Create;
-      Res.Send<TJSonArray>(RastroDAO.GetID(0)).Status(THTTPStatus.ok);
+      Res.Send<TJsonArray>(RastroDAO.GetID(0)).Status(THTTPStatus.ok);
     Except
       On E: Exception do
       Begin
@@ -75,13 +75,13 @@ end;
 procedure GetDescricao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   RastroDAO: TRastroDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       RastroDAO := TRastroDao.Create;
-      Res.Send<TJSonArray>(RastroDAO.GetDescricao(Req.Params.Items['descricao']))
-        .Status(THttpStatus.Created);
+      Res.Send<TJsonArray>(RastroDAO.GetDescricao(Req.Params.Items['descricao'])
+        ).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
@@ -99,18 +99,18 @@ End;
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   RastroDAO: TRastroDao;
-  JsonArrayRetorno : TJsonArray;
+  JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       RastroDAO := TRastroDao.Create;
       if StrToInt64Def(Req.Params.Items['rastroid'], 0) > 0 then
-        Res.Send<TJSonArray>
+        Res.Send<TJsonArray>
           (RastroDAO.GetID(StrToIntDef(Req.Params.Items['rastroid'], 0)))
-          .Status(THttpStatus.Created)
+          .Status(THTTPStatus.Created)
       Else
-        Res.Send<TJSonArray>(RastroDAO.GetDescricao(Req.Params.Items['rastroid']))
-          .Status(THttpStatus.Created);
+        Res.Send<TJsonArray>(RastroDAO.GetDescricao(Req.Params.Items['rastroid']
+          )).Status(THTTPStatus.Created);
     Except
       On E: Exception do
       Begin
@@ -127,76 +127,78 @@ end;
 
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjRastro: TJSONObject;
+  ObjRastro: tJsonObject;
   RastroDAO: TRastroDao;
 begin
   Try
     Try
-      ObjRastro := TJSONObject.Create;
-      ObjRastro := Req.Body<TJSONObject>;
+      ObjRastro := tJsonObject.Create;
+      ObjRastro := Req.Body<tJsonObject>;
       RastroDAO := TRastroDao.Create;
       RastroDAO.InsertUpdate(GetValueInjSon(ObjRastro, 'rastroid').ToInteger(),
         GetValueInjSon(ObjRastro, 'descricao'));
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro salvo com Sucesso!'))).Status(THttpStatus.Created);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(ObjRastro) then
-       FreeAndNil(ObjRastro);
     FreeAndNil(RastroDAO);
+    if Assigned(ObjRastro) then
+      FreeAndNil(ObjRastro);
+
   End;
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjRastro: TJSONObject;
+  ObjRastro: tJsonObject;
   RastroDAO: TRastroDao;
 begin
   Try
     Try
-      ObjRastro := TJSONObject.Create;
-      ObjRastro := Req.Body<TJSONObject>;
+      ObjRastro := tJsonObject.Create;
+      ObjRastro := Req.Body<tJsonObject>;
       RastroDAO := TRastroDao.Create;
       RastroDAO.InsertUpdate(StrToIntDef(Req.Params.Items['rastroid'], 0),
         Req.Params.Items['descricao']);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro Alterado com Sucesso!'))).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(ObjRastro) then
-       FreeAndNil(ObjRastro);
     FreeAndNil(RastroDAO);
+    if Assigned(ObjRastro) then
+      FreeAndNil(ObjRastro);
+
   End;
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjArray: TJSONObject;
+  ObjArray: tJsonObject;
   RastroDAO: TRastroDao;
 begin
   Try
     Try
       RastroDAO := TRastroDao.Create;
       RastroDAO.Delete(StrToIntDef(Req.Params.Items['rastroid'], 0));
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Alterado com Sucesso!'))).Status(THttpStatus.NoContent);
+      Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+        'Registro Alterado com Sucesso!'))).Status(THTTPStatus.NoContent);
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally

@@ -44,29 +44,28 @@ uses ProdutoCodBarrasDAO, uFuncoes;
 
 procedure Registry;
 begin
-  THorse.Group.Prefix('v1')
-    .Get('/produtocodbarras', Get)
+  THorse.Group.Prefix('v1').Get('/produtocodbarras', Get)
     .Get('/produtocodbarras/:codbarrasid/:produtoid/:codbarras', GetCodBarras)
-    .Post('/produtocodbarras', Insert)
-    .Put('/produtocodbarras/:codbarrasid', Update)
-    .Delete('/produtocodbarras/:codbarrasid', Delete)
+    .Post('/produtocodbarras', Insert).Put('/produtocodbarras/:codbarrasid',
+    Update).Delete('/produtocodbarras/:codbarrasid', Delete)
 end;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoCodBarrasDAO: TProdutoCodBarrasDao;
-  RetornoErro : TJsonArray;
+  RetornoErro: TJsonArray;
 begin
   Try
     Try
       ProdutoCodBarrasDAO := TProdutoCodBarrasDao.Create;
-      Res.Send<TJSonArray>(ProdutoCodBarrasDAO.GetProdutoCodBarras(0, 0, 'Null')).Status(THTTPStatus.OK);
+      Res.Send<TJsonArray>(ProdutoCodBarrasDAO.GetProdutoCodBarras(0, 0, 'Null')
+        ).Status(THTTPStatus.OK);
     Except
       on E: Exception do
       Begin
         RetornoErro := TJsonArray.Create;
         RetornoErro.AddElement(tJsonObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(RetornoErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(RetornoErro).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -77,21 +76,21 @@ end;
 procedure GetCodBarras(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   ProdutoCodBarrasDAO: TProdutoCodBarrasDao;
-  RetornoErro : TJsonArray;
+  RetornoErro: TJsonArray;
 begin
   Try
     try
       ProdutoCodBarrasDAO := TProdutoCodBarrasDao.Create;
-      Res.Send<TJSonArray>(ProdutoCodBarrasDAO.GetProdutoCodBarras(Req.Params.Items['codbarrasid'].ToInteger(),
-                                                                   Req.Params.Items['produtoid'].ToInteger(),
-                                                                   Req.Params.Items['codbarras']))
-        .Status(THttpStatus.Created);
+      Res.Send<TJsonArray>(ProdutoCodBarrasDAO.GetProdutoCodBarras
+        (Req.Params.Items['codbarrasid'].ToInteger(),
+        Req.Params.Items['produtoid'].ToInteger(), Req.Params.Items['codbarras']
+        )).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin
         RetornoErro := TJsonArray.Create;
         RetornoErro.AddElement(tJsonObject.Create.AddPair('Erro', E.Message));
-        Res.Send<TJsonArray>(RetornoErro).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJsonArray>(RetornoErro).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -101,70 +100,72 @@ End;
 
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjJson: TJSONObject;
+  ObjJson: tJsonObject;
   ProdutoCodBarrasDAO: TProdutoCodBarrasDao;
 begin
   Try
     Try
-      ObjJson := Req.Body<TJSONObject>;
+      ObjJson := Req.Body<tJsonObject>;
       ProdutoCodBarrasDAO := TProdutoCodBarrasDao.Create;
       ProdutoCodBarrasDAO.ProdutoCodBarras :=
         ProdutoCodBarrasDAO.ProdutoCodBarras.JsonToClass(ObjJson.ToString());
       if ProdutoCodBarrasDAO.Salvar then
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          'Registro salvo com Sucesso!'))).Status(THttpStatus.Created)
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created)
       Else
         raise Exception.Create('Não foi possível Salvar o Registro!');
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(ObjJson) then
-       FreeAndNil(ObjJSon);
     FreeAndNil(ProdutoCodBarrasDAO);
+    if Assigned(ObjJson) then
+      FreeAndNil(ObjJson);
+
   End;
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  JsonProdutoCodBarras: TJSONObject;
+  JsonProdutoCodBarras: tJsonObject;
   ProdutoCodBarrasDAO: TProdutoCodBarrasDao;
   ObjProdutoCodBarras: TProdutoCodBarras;
 begin
   Try
     Try
-      JsonProdutoCodBarras := Req.Body<TJSONObject>;
+      JsonProdutoCodBarras := Req.Body<tJsonObject>;
       ProdutoCodBarrasDAO := TProdutoCodBarrasDao.Create;
       ProdutoCodBarrasDAO.ProdutoCodBarras :=
         ProdutoCodBarrasDAO.ProdutoCodBarras.JsonToClass
         (JsonProdutoCodBarras.ToString());
       // ObjProdutoCodBarras := ProdutoCodBarrasDAO.ProdutoCodBarras.JsonToClass(JsonProdutoCodBarras.ToString());
       if ProdutoCodBarrasDAO.Salvar then
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          'Registro salvo com Sucesso!'))).Status(THttpStatus.Created)
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created)
       Else
         raise Exception.Create('Error Não possível Salvar o Registro!');
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
-    if Assigned(JsonProdutoCodBarras) then
-       FreeAndNil(JsonProdutoCodBarras);
     FreeAndNil(ProdutoCodBarrasDAO);
+    if Assigned(JsonProdutoCodBarras) then
+      FreeAndNil(JsonProdutoCodBarras);
+
   End;
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  ObjArray: TJSONObject;
+  ObjArray: tJsonObject;
   ProdutoCodBarrasDAO: TProdutoCodBarrasDao;
 begin
   Try
@@ -173,15 +174,15 @@ begin
       ProdutoCodBarrasDAO.ProdutoCodBarras.CodBarrasId :=
         StrToIntDef(Req.Params.Items['codbarrasid'], 0);
       If ProdutoCodBarrasDAO.Delete then
-         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-           'Registro Alterado com Sucesso!'))).Status(THttpStatus.Ok)
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          'Registro Alterado com Sucesso!'))).Status(THTTPStatus.OK)
       Else
-         raise Exception.Create('Não foi possível Excluir o Registro!');
+        raise Exception.Create('Não foi possível Excluir o Registro!');
     Except
       on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Resultado',
+          E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally

@@ -73,7 +73,7 @@ end;
 
 destructor TPedidoProduto.Destroy;
 begin
-  FProduto := Nil;
+  FProduto.Free;
   inherited;
 end;
 
