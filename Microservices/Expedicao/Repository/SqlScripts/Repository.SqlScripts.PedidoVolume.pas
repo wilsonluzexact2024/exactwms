@@ -15,14 +15,15 @@ class function TScriptRepository.GerarKardexReserva: String;
 begin
   Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
             'Declare @UsuarioId Integer = :pUsuarioId'+sLineBreak+
+            'INSERT INTO KARDEX'+sLineBreak+
             '  SELECT 2, VL.LOTEID, VL.ENDERECOID, VL.ESTOQUETIPOID, VL.QTDSUPRIDA,'+sLineBreak+
-            '     (SELECT IsNull(QTDE, 0)'+sLineBreak+
+            '     (SELECT Coalesce(QTDE, 0)'+sLineBreak+
             '      FROM ESTOQUE'+sLineBreak+
             '       WHERE  LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID ),'+sLineBreak+
-            '     (SELECT IsNull(QTDE, 0)-VL.QTDSUPRIDA'+sLineBreak+
+            '     (SELECT Coalesce(QTDE, 0)-VL.QTDSUPRIDA'+sLineBreak+
             '      FROM ESTOQUE'+sLineBreak+
             '      WHERE LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID) ,'+sLineBreak+
-            '         '+#39+'BAIXA VOLUME:'+#39+'+ CAST(VL.PEDIDOVOLUMEID AS VARCHAR), NULL, 0, 0, '+#39+'TRANSFERENCIA PARA LOJA'+#39+', '+sLineBreak+
+            '         '+#39+'BAIXA VOLUME: '+#39+'+ CAST(VL.PEDIDOVOLUMEID AS VARCHAR), NULL, 0, 0, '+#39+'TRANSFERENCIA PARA LOJA'+#39+', '+sLineBreak+
             '     (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,'+sLineBreak+
             '     (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),'+sLineBreak+
             '     @USUARIOID, '+#39+'API EXP OFF'+#39+sLineBreak+
@@ -55,7 +56,7 @@ end;
 Class function TScriptRepository.GetLoteInexistente: String;
 begin
   Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
-            'Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,'+sLineBreak+
+            'Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1 QtdSuprida,'+sLineBreak+
   		        '   (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,'+sLineBreak+
   		        '   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), NULL, NULL, NULL, Null'+sLineBreak+
   		        '   FROM PEDIDOVOLUMELOTES VL'+sLineBreak+

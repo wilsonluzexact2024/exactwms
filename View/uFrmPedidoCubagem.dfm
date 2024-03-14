@@ -66,6 +66,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Par'#226'metros para Processamento'
+      ExplicitTop = 26
       ExplicitHeight = 639
       DesignSize = (
         1157

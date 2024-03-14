@@ -132,8 +132,8 @@ uses MService.PedidoVolumeDAO, uFuncoes, Services.PedidoVolume;
 procedure Registry;
 begin
   THorse.Group.Prefix('v1').Get('/pedidovolume', Get)
-    .Get('/pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
-    GetOpenVolumeParaSeparacao).Get('/pedidovolumeseparacao/:pedidovolumeid',
+    .Get('/pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal', GetOpenVolumeParaSeparacao)
+    .Get('/pedidovolumeseparacao/:pedidovolumeid',
     GetVolumeSeparacao).Get('/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
     GetPedidoVolumeSeparacao)
     .Get('/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',

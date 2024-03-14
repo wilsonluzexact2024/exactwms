@@ -1023,18 +1023,17 @@ begin
             TuEvolutConst.SqlHoraAtual + ', Null, Null, 0');
           vQrySeparacao.Sql.Add(')');
           vQrySeparacao.Sql.Add('Set @VolumeSeparacaoId = SCOPE_IDENTITY()');
-          vQrySeparacao.Sql.Add
-            ('Select @VolumeSeparacaoId As VolumeSeparacaoId');
+          vQrySeparacao.Sql.Add('Select @VolumeSeparacaoId As VolumeSeparacaoId');
           vQrySeparacao.Open;
           // Status do Volume
           vQrySeparacao.Sql.Clear;
-          vQrySeparacao.Sql.Add
-            ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-            + 'PedidoVolumeId = ' + pPedidoVolumeId.ToString() + ')');
+          vQrySeparacao.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '+'PedidoVolumeId = ' + pPedidoVolumeId.ToString() + ')');
           vQrySeparacao.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
           vQrySeparacao.ParamByName('pProcessoId').Value := 7;
           vQrySeparacao.ParamByName('pUsuarioId').Value := pUsuarioId;
           vQrySeparacao.ParamByName('pTerminal').Value := pTerminal;
+          vQrySeparacao.SQL.Add('Update PedidoVolumes Set CaixaEmbalagemId = '+pCaixaId.ToString());
+          vQrySeparacao.SQL.Add('Where pedidoVolumeId = '+pPedidoVolumeId.ToString());
           If DebugHook <> 0 then
             vQrySeparacao.Sql.SaveToFile('RegSeparacaoOpenSeparacao.Sql');
           vQrySeparacao.ExecSQL;

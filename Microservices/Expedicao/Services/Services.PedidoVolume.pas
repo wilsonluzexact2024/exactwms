@@ -60,20 +60,30 @@ begin
           While Not vQryLoteInexistente.Eof do Begin
             vQryBaixaEstoque.Close;
             vQryBaixaEstoque.Sql.Clear;
-            vQryBaixaEstoque.SQL.Add('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
-            vQryBaixaEstoque.Sql.Add('Insert Into Estoque Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,');
+//            vQryBaixaEstoque.SQL.Add('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
+            vQryBaixaEstoque.Sql.Add('Insert Into Estoque Values (');
+            vQryBaixaEstoque.Sql.Add(vQryLoteInexistente.FieldByName('LoteId').AsString+', '+
+                                     vQryLoteInexistente.FieldByName('EnderecoId').AsString+', '+
+                                     vQryLoteInexistente.FieldByName('EstoqueTipoId').AsString+', '+
+                                     (vQryLoteInexistente.FieldByName('QtdSuprida').AsInteger*-1).ToString()+', ');
+            //Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,');' +
   		        vQryBaixaEstoque.Sql.Add('   (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,');
-            vQryBaixaEstoque.Sql.Add('   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), NULL, NULL, NULL, Null');
-            vQryBaixaEstoque.Sql.Add('   FROM PEDIDOVOLUMELOTES VL');
-            vQryBaixaEstoque.Sql.Add('   Left join Estoque Est On Est.Loteid = Vl.Loteid and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId');
-            vQryBaixaEstoque.Sql.Add('   WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID and Est.LoteId Is Null  ');
-            vQryBaixaEstoque.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+            vQryBaixaEstoque.Sql.Add('   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), NULL, NULL, NULL, Null)');
+            //vQryBaixaEstoque.Sql.Add('   FROM PEDIDOVOLUMELOTES VL');
+            //vQryBaixaEstoque.Sql.Add('   Left join Estoque Est On Est.Loteid = Vl.Loteid and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId');
+            //vQryBaixaEstoque.Sql.Add('   WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID and Est.LoteId Is Null  ');
+            //vQryBaixaEstoque.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+            vQryBaixaEstoque.Sql.SaveToFile('ExpLoteInexistenteBaixa.Sql');
             vQryBaixaEstoque.ExecSql;
             vQryLoteInexistente.Next;
           End;
           vQryVolumeParaExpedicao.connection.Commit;
+          Sleep(10);
         Except
-          vQryVolumeParaExpedicao.connection.RollBack;
+          if vQryVolumeParaExpedicao.connection.InTransaction then Begin
+             vQryVolumeParaExpedicao.connection.RollBack;
+             Sleep(50);
+          End;
         End;
         vQryVolumeParaExpedicao.Next;
       End;
