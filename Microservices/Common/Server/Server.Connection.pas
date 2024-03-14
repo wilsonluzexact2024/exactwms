@@ -17,7 +17,7 @@ uses
   FireDAC.Comp.UI,
   FireDAC.Stan.Option,
   FireDAC.Stan.Pool,
-  FireDAC.Phys.PG {$IFDEF WINDOWS},
+  FireDAC.Phys.MSSQL {$IFDEF WINDOWS},
 
   Winapi.Messages,
   Vcl.Forms
@@ -28,7 +28,7 @@ type
   private
     FQuery: TFDQuery;
     FDB: TFDConnection;
-    Fdriver: TFDPhysPgDriverLink;
+    Fdriver: TFDPhysMSSQLDriverLink;
   public
     property DB: TFDConnection read FDB write FDB;
     property Query: TFDQuery read FQuery write FQuery;
@@ -49,25 +49,7 @@ var
   LStrTemp: string;
 begin
   try
-    Fdriver := TFDPhysPgDriverLink.Create(Nil);
-{$IFDEF WINDOWS}
-{$ENDIF}
-{$IFDEF LINUX}
-    LStrTemp := '/usr/lib/x86_64-linux-gnu/libpq.so';
-    if not FileExists(LStrTemp) then
-    begin
-      Writeln(' dll nao encontrada no diretorio padrao: ' + LStrTemp);
-      LStrTemp := ExtractFilePath(GetModuleName(HInstance)) + 'lib/libpq.so';
-    end;
-
-    Fdriver.VendorLib := LStrTemp;
-
-{$ELSE}
-    Fdriver.VendorHome := ExtractFilePath(GetModuleName(HInstance));
-    Fdriver.VendorLib := 'libpq.dll';
-
-{$ENDIF}
-
+    Fdriver := TFDPhysMSSQLDriverLink.Create(Nil);
     DB := TFDConnection.Create(nil);
     DB.ConnectionDefName := cConnectionDefName;
     DB.Connected := True;
@@ -75,10 +57,9 @@ begin
     Query.Connection := DB;
   except
     on e: exception do
-      {$IFDEF LINUX}
+{$IFDEF LINUX}
       Writeln(' Excesscao ocorrida ao conectar banco de dados at ' + e.Message);
-      {$ENDIF}
-
+{$ENDIF}
   end;
 end;
 

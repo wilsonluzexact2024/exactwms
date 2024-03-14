@@ -5,7 +5,7 @@
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>131</TargetedPlatforms>
         <AppType>Console</AppType>
         <MainSource>MicroservicesExpedicao.dpr</MainSource>
@@ -20,6 +20,16 @@
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Android64' and '$(Base)'=='true') or '$(Base_Android64)'!=''">
         <Base_Android64>true</Base_Android64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Base)'=='true') or '$(Base_iOSDevice64)'!=''">
+        <Base_iOSDevice64>true</Base_iOSDevice64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='iOSSimARM64' and '$(Base)'=='true') or '$(Base_iOSSimARM64)'!=''">
+        <Base_iOSSimARM64>true</Base_iOSSimARM64>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -58,6 +68,12 @@
     <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_2)'!=''">
         <Cfg_2>true</Cfg_2>
         <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Linux64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Linux64)'!=''">
+        <Cfg_2_Linux64>true</Cfg_2_Linux64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
@@ -121,8 +137,21 @@
         <Android_NotificationIcon96>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_iOSSimARM64)'!=''">
+        <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=7.1;CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user;UIBackgroundModes=;NSContactsUsageDescription=The reason for accessing the contacts;NSPhotoLibraryUsageDescription=The reason for accessing the photo library;NSPhotoLibraryAddUsageDescription=The reason for adding to the photo library;NSCameraUsageDescription=The reason for accessing the camera;NSFaceIDUsageDescription=The reason for accessing the face id;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSSiriUsageDescription=The reason for accessing Siri;ITSAppUsesNonExemptEncryption=false;NSBluetoothAlwaysUsageDescription=The reason for accessing bluetooth;NSBluetoothPeripheralUsageDescription=The reason for accessing bluetooth peripherals;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSMotionUsageDescription=The reason for accessing the accelerometer;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers</VerInfo_Keys>
+        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Linux64)'!=''">
         <DCC_UsePackage>DataSnapServer;emshosting;fmx;DbxCommonDriver;bindengine;FireDACCommonODBC;emsclient;FireDACCommonDriver;IndyProtocols;dbxcds;emsedge;inetdb;FireDACSqliteDriver;DbxClientDriver;FireDACASADriver;soapmidas;ACBr_PagFor;dbexpress;FireDACInfxDriver;inet;DataSnapCommon;dbrtl;FireDACOracleDriver;CustomIPTransport;FireDACMSSQLDriver;ACBr_NFSeX;DataSnapIndy10ServerTransport;DataSnapConnectors;FireDACMongoDBDriver;IndySystem;FireDACTDataDriver;bindcomp;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;IndyCore;RESTBackendComponents;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;dsnapxml;DataSnapClient;DataSnapFireDAC;emsclientfiredac;FireDACPgDriver;FireDAC;xmlrtl;ACBr_Boleto;dsnap;ACBr_GTIN;CloudService;FireDACDb2Driver;ACBr_OFX;DataSnapNativeClient;ACBr_DebitoAutomatico;DatasnapConnectorsFreePascal;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UnitSearchPath>$(fmxlinux)\Lib\$(ProductVersion)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DataSnapServer;vclwinx;ACBr_BPeDabpeESCPOS;ACBr_PAF;ACBr_TCP;ACBr_ONE;ACBr_NF3e;ACBr_OpenDelivery;ACBr_SPEDImportar;emshosting;fmx;DbxCommonDriver;vclie;bindengine;VCLRESTComponents;FireDACCommonODBC;DBXMSSQLDriver;IndyIPCommon;emsclient;FireDACCommonDriver;ACBr_OpenSSL;appanalytics;IndyProtocols;vclx;ACBr_ADRCST;ACBr_MTER;dbxcds;vcledge;IndyIPClient;bindcompvclwinx;ACBr_Convenio115;FmxTeeUI;emsedge;bindcompfmx;DBXFirebirdDriver;inetdb;ACBr_NFCeECFVirtual;ibmonitor;FireDACSqliteDriver;DbxClientDriver;FireDACASADriver;ACBr_LFD;Tee;soapmidas;ACBr_NF3eDANF3eESCPOS;vclactnband;TeeUI;ACBr_PagFor;fmxFireDAC;dbexpress;FireDACInfxDriver;ACBr_Reinf;DBXMySQLDriver;VclSmp;inet;DataSnapCommon;ACBr_Ponto;fmxase;vcltouch;DBXOdbcDriver;dbrtl;FireDACOracleDriver;FireDACDBXDriver;fmxdae;TeeDB;ACBr_NFSe;ACBre_Social;FireDACMSAccDriver;CustomIPTransport;FireDACMSSQLDriver;ACBr_NFSeX;DataSnapIndy10ServerTransport;ACBr_NFe;DataSnapConnectors;ACBr_ANe;vcldsnap;DBXInterBaseDriver;FireDACMongoDBDriver;IndySystem;ACBr_Diversos;ACBR_DeSTDA;ACBr_GNRE;ACBr_EDI;FireDACTDataDriver;ACBr_SAT;vcldb;ACBr_Integrador;ibxbindings;ACBr_PIXCD;ACBr_CIOT;ACBr_TEFD;vclFireDAC;ACBr_SPED;ACBr_CTe;bindcomp;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;ACBr_SEF2;ACBr_LCDPR;IndyCore;RESTBackendComponents;ACBr_SATWS;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;ACBr_BPe;RESTComponents;DBXSqliteDriver;vcl;adortl;dsnapxml;IndyIPServer;DataSnapClient;DataSnapProviderClient;dsnapcon;ACBr_Sintegra;DBXSybaseASEDriver;ACBr_Serial;DBXDb2Driver;ACBr_Comum;ACBr_MDFe;ACBr_NFeDanfeESCPOS;vclimg;DataSnapFireDAC;emsclientfiredac;FireDACPgDriver;FireDAC;FireDACDSDriver;inetdbxpress;xmlrtl;tethering;ACBr_Boleto;ibxpress;ACBr_SATExtratoESCPOS;ACBr_BlocoX;bindcompvcl;dsnap;ACBr_GTIN;DBXSybaseASADriver;CloudService;DBXOracleDriver;FireDACDb2Driver;DBXInformixDriver;ACBr_OFX;vclib;ACBr_SATECFVirtual;DataSnapNativeClient;bindcompvclsmp;fmxobj;FMXTee;ACBr_DebitoAutomatico;ACBr_PAFNFCe;DatasnapConnectorsFreePascal;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -178,6 +207,12 @@
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
+        <DCC_ExeOutput>.\bin</DCC_ExeOutput>
+        <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_ExeOutput>C:\App\eXactWMS\Service\</DCC_ExeOutput>
@@ -277,6 +312,15 @@
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\fortesreport-ce\Binary\LibD28\dclfrce.bpl">Fortes Report Comunity Edition (design-time)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFeDanfeRL.bpl">ACBr - (design-time) DANFe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFSeDanfseRL.bpl">ACBr - (design-time) DANFSe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_NFSeXDanfseRL.bpl">ACBr - (design-time) DANFSe X em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_CTeDacteRL.bpl">ACBr - (design-time) DACTe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_BoletoRL.bpl">ACBr - (design-time) Boleto Impressão em Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_MDFeDamdfeRL.bpl">ACBr - (design-time) DAMDFe em Fortes Report - (http://www.projetoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_SATExtratoRL.bpl">ACBr - (design-time) Extrato Cupom Fiscal Eletrônico SAT para Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Abr\Lib\Delphi\LibD28\Win32\DCLACBr_GNREGuiaRL.bpl">ACBr - (design-time) GNRE Impressão em Fortes Report - (http://www.projectoacbr.com.br/)</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
@@ -1139,6 +1183,8 @@
             <Platforms>
                 <Platform value="Android">False</Platform>
                 <Platform value="Android64">False</Platform>
+                <Platform value="iOSDevice64">False</Platform>
+                <Platform value="iOSSimARM64">False</Platform>
                 <Platform value="Linux64">True</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
