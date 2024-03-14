@@ -183,16 +183,16 @@ end;
 destructor TProduto.Destroy;
 begin
   FIdProduto := 0;
-  FLaboratorio.Free;
-  FProdutoTipo.Free;
-  FMedicamentoTipo.Free;
-  FEndereco.Free;
-  FUnid.Free;
-  FUnidSecundaria.Free;
-  FEnderecamentoZona.Free;
-
+  FreeAndNil(FLaboratorio);
+  FreeAndNil(FProdutoTipo);
+  FreeAndNil(FMedicamentoTipo);
+  FreeAndNil(FUnid);
+  FreeAndNil(FEndereco);
+  FreeAndNil(FUnid);
+  FreeAndNil(FUnidSecundaria);
+  FreeAndNil(FEnderecamentoZona);
   if assigned(FRastro) then
-    FRastro.Free;
+    FreeAndNil(FRastro);
   inherited;
 end;
 

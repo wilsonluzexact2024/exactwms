@@ -139,47 +139,51 @@ destructor TConnection.Destroy;
 var
   I: Integer;
 begin;
-
-  // 'sysctl -w vm.drop_caches=3'
-  for I := 0 to pred(FListQuerys.Count) do
-  begin
-    try
-      FListQuerys[I].close;
-      FreeAndNil(FListQuerys[I]);
-    except
-      on e: Exception do
-      begin
-        var
-        Lsender := GetSender;
-        Tutil.Gravalog('          ->' + Lsender +
-          ' Querry foi previamente liberada !');
+  try
+    // 'sysctl -w vm.drop_caches=3'
+    for I := 0 to pred(FListQuerys.Count) do
+    begin
+      try
+        if (FListQuerys[I].InstanceSize > 0) then
+        begin
+          FListQuerys[I].close;
+          FreeAndNil(FListQuerys[I]);
+        end;
+      except
+        on e: Exception do
+        begin
+          var
+          Lsender := GetSender;
+          Tutil.Gravalog('          ->' + Lsender +
+            ' Querry foi previamente liberada !');
+        end;
       end;
     end;
-  end;
-  try
-    FListQuerys.Destroy;
-  except
+    try
+      FListQuerys.Destroy;
+    except
 
-  end;
-  try
-    if assigned(Query) then
-    begin
-      Query.close;
-      Query.Free;
     end;
+    try
+      if assigned(Query) then
+      begin
+        Query.close;
+        Query.Free;
+      end;
+    except
+    end;
+    try
+      if assigned(DB) then
+      begin
+        DB.close;
+        DB.Connected := False;
+        FreeAndNil(DB);
+      end;
+    except
+    end;
+    inherited;
   except
   end;
-  try
-    if assigned(DB) then
-    begin
-      DB.close;
-      DB.Connected := False;
-      FreeAndNil(DB);
-    end;
-  except
-  end;
-
-  inherited;
 end;
 
 { ------------------------------------------------------------------------------- }
@@ -256,9 +260,9 @@ begin
     begin
       Lts[I] := '     ' + LowerCase(Lts[I]);
     end;
-    //LOGS DE QUERY INUTEIS
-    //Result := Lts.text;
-    Result :='';
+    // LOGS DE QUERY INUTEIS
+    // Result := Lts.text;
+    Result := '';
   finally
     FreeAndNil(Lts);
   end;

@@ -1193,9 +1193,11 @@ var
   JsonArrayRetorno: TJSonArray;
 begin
   Try
+    AQueryParam := Req.Query.Dictionary;
+    LService := TServiceRecebimento.Create;
     Try
       // Processos - Etapas dos Pedidos
-      LService := TServiceRecebimento.Create;
+
       vPedidoId := 0;
       vCodPessoaERP := 0;
       vDocumentoNr := '';
@@ -1206,7 +1208,7 @@ begin
       vCodProduto := '0';
       vBasico := False;
       vDtNotaFiscal := 0;
-      AQueryParam := Req.Query.Dictionary;
+
       If AQueryParam.Count <= 0 then
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
           'Defina os parâmetros para cubagem!'))).Status(THttpStatus.Created)
@@ -1240,6 +1242,7 @@ begin
           vDocumentoNr, vRazao, vRegistroERP, vDtNotaFiscal, vPendente,
           vAgrupamentoId, vCodProduto, vBasico, 0);
         Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+        JsonArrayRetorno:=Nil;
       End;
     Except
       on E: Exception do
@@ -1253,6 +1256,7 @@ begin
     End;
   Finally
     FreeAndNil(LService);
+
   End;
 End;
 

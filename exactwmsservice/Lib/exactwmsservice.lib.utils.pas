@@ -87,7 +87,7 @@ begin
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
         OParams.add('ApplicationName=' + _CTCONEXAO);
-        OParams.add('TrustServerCertificate=yes');
+        OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
         OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
         OParams.add('POOL_MaximumItems=200');
@@ -106,7 +106,7 @@ begin
         OParams.add('DriverID=MSSQL');
         OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_LOG_HOST'));
         OParams.add('ApplicationName=' + _CTCONEXAO);
-        OParams.add('TrustServerCertificate=yes');
+        OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
         OParams.add('Database=' + GetEnvironmentVariable
           ('RHEMA_DB_LOG_DATABASE'));
         OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_LOG_USER'));
@@ -141,7 +141,7 @@ begin
           OParams.add('Server=' + ArqIni.ReadString('BD', 'Server',
             'locahost'));
           OParams.add('ApplicationName=' + _CTCONEXAOLOG);
-          OParams.add('TrustServerCertificate=yes');
+          OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
           OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
             'eXactWMS'));
           OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
@@ -161,7 +161,7 @@ begin
           OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server',
             'locahost'));
           OParams.add('ApplicationName=' + _CTCONEXAO);
-          OParams.add('TrustServerCertificate=yes');
+          OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
           OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
             'eXactWMS'));
           OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));
@@ -201,7 +201,7 @@ begin
       OParams.add('DriverID=MSSQL');
       OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_HOST'));
       OParams.add('ApplicationName=' + _CTCONEXAO);
-      OParams.add('TrustServerCertificate=yes');
+      OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
       OParams.add('Database=' + GetEnvironmentVariable('RHEMA_DB_DATABASE'));
       OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_USER'));
       OParams.add('POOL_MaximumItems=2000');
@@ -228,7 +228,7 @@ begin
       OParams.add('DriverID=MSSQL');
       OParams.add('Server=' + GetEnvironmentVariable('RHEMA_DB_LOG_HOST'));
       OParams.add('ApplicationName=' + _CTCONEXAOLOG);
-      OParams.add('TrustServerCertificate=yes');
+      OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
       OParams.add('Database=' + GetEnvironmentVariable
         ('RHEMA_DB_LOG_DATABASE'));
       OParams.add('User_Name=' + GetEnvironmentVariable('RHEMA_DB_LOG_USER'));
@@ -265,7 +265,7 @@ begin
       OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BD', 'Server', 'locahost'));
       OParams.add('ApplicationName=' + _CTCONEXAO);
-      OParams.add('TrustServerCertificate=yes');
+      OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
       OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
         'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
@@ -288,7 +288,7 @@ begin
       OParams.add('DriverID=' + ArqIni.ReadString('BDLOG', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server', 'locahost'));
       OParams.add('ApplicationName=' + _CTCONEXAOLOG);
-      OParams.add('TrustServerCertificate=yes');
+      OParams.add('ODBCAdvanced=TrustServerCertificate=yes');
       OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
         'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));

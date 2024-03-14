@@ -26,10 +26,10 @@ RUN \
  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
  curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
  apt-get update && \
- ACCEPT_EULA=Y apt-get -q -y install msodbcsql17
+ ACCEPT_EULA=Y apt-get -q -y install msodbcsql18
 
-#RUN \
- #apt-get -y install valgrind
+RUN \
+ apt-get -y install valgrind
 
 RUN \ 
  apt-get -y autoremove && \
@@ -39,8 +39,8 @@ WORKDIR /root
 COPY bin bin
 # Comandos no container
 
-CMD cd bin;chmod +x ./exactwmsservice ; MemoryMax=20M ./exactwmsservice
-#CMD cd bin;chmod +x ./exactwmsservice ; valgrind --leak-check=full ./exactwmsservice
+#CMD cd bin;chmod +x ./exactwmsservice ; ./exactwmsservice
+CMD cd bin;chmod +x ./exactwmsservice ; valgrind --leak-check=full ./exactwmsservice
 #CMD  systemd-run --scope -p MemoryMax=1G ./exactwmsservice
 # portas
 EXPOSE 8200

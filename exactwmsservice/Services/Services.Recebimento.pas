@@ -888,8 +888,7 @@ begin
         Result.AddElement(JsonObjectAgrupamento);
         vQryAgrupamentoLista.Next;
       End;
-    // vQryAgrupamentoLista.Close;
-    // vQryAgrupamentoLista.Free;
+
   Except
     On E: Exception do
     Begin
@@ -1404,188 +1403,197 @@ var // VQry,
   LItens: TFDMemTable;
 
 begin // Processo lento
+
   Try
     LQryRecebimentos := FConexao.GetQuery;
-
     LreceBimentos := TFDMemTable.Create(Nil);
     LQryItens := FConexao.GetQuery;
-    with LQryRecebimentos do
-    begin
-      FetchOptions.RecsMax := 10;
-      FetchOptions.RowsetSize := 10;;
-      Sql.Add(SqlEntrada);
-      ParamByName('pPedidoId').Value := pPedidoId;
-      ParamByName('pCodPessoaERP').Value := pCodPessoaERP;
-      ParamByName('pDocumentoNr').Value := pDocumento;
-      ParamByName('pRazao').Value := '%' + pRazao + '%';
-      ParamByName('pRegistroERP').Value := pRegistroERP;
-      ParamByName('pCodProduto').Value := pCodProduto;
-      ParamByName('pPendente').Value := pPendente;
-      ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
-      Sql.Add('--pAgrupamentoId = ' + pAgrupamentoId.ToString());
-      if pDtNotaFiscal = 0 then
-        ParamByName('pDtNotaFiscal').Value := 0
-      Else
-        ParamByName('pDtNotaFiscal').Value := FormatDateTime('YYYY-MM-DD',
-          pDtNotaFiscal);
-      if DebugHook <> 0 then
-        Sql.SaveToFile('EntradaPesquisar.Sql');
-      LQryRecebimentos.Open;
-      LreceBimentos.Data := LQryRecebimentos.Data;
-      LQryRecebimentos.Close;
-    end;
-    if LreceBimentos.IsEmpty then
-    Begin
-      Result := tJsonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        TuEvolutConst.QrySemDados))
-    End
-    Else if pBasico then
-      Result := LreceBimentos.ToJSONArray
-    Else
-    Begin
-      Result := tJsonArray.Create;
-      while Not LreceBimentos.Eof do
+    try
+      with LQryRecebimentos do
+      begin
+        // wilson nao esquecer
+        FetchOptions.RecsMax := 2;
+        FetchOptions.RowsetSize := 2;
+        Sql.Add(SqlEntrada);
+        ParamByName('pPedidoId').Value := pPedidoId;
+        ParamByName('pCodPessoaERP').Value := pCodPessoaERP;
+        ParamByName('pDocumentoNr').Value := pDocumento;
+        ParamByName('pRazao').Value := '%' + pRazao + '%';
+        ParamByName('pRegistroERP').Value := pRegistroERP;
+        ParamByName('pCodProduto').Value := pCodProduto;
+        ParamByName('pPendente').Value := pPendente;
+        ParamByName('pAgrupamentoId').Value := pAgrupamentoId;
+        Sql.Add('--pAgrupamentoId = ' + pAgrupamentoId.ToString());
+        if pDtNotaFiscal = 0 then
+          ParamByName('pDtNotaFiscal').Value := 0
+        Else
+          ParamByName('pDtNotaFiscal').Value := FormatDateTime('YYYY-MM-DD',
+            pDtNotaFiscal);
+        if DebugHook <> 0 then
+          Sql.SaveToFile('EntradaPesquisar.Sql');
+        LQryRecebimentos.Open;
+        LreceBimentos.Data := LQryRecebimentos.Data;
+        LQryRecebimentos.Close;
+      end;
+      if LreceBimentos.IsEmpty then
       Begin
-        ObjEntrada := TEntrada.Create;
-        try
-          ObjEntrada.EntradaId := LreceBimentos.FieldByName('PedidoId')
-            .AsInteger;
-          ObjEntrada.OperacaoTipo.OperacaoTipoId :=
-            LreceBimentos.FieldByName('OperacaoTipoId').AsInteger;
-          ObjEntrada.OperacaoTipo.Descricao :=
-            LreceBimentos.FieldByName('OperacaoTipo').AsString;
-          ObjEntrada.Pessoa.PessoaId := LreceBimentos.FieldByName('PessoaId')
-            .AsInteger;
-          ObjEntrada.Pessoa.CodPessoa := LreceBimentos.FieldByName
-            ('CodPessoaERP').AsInteger;
-          ObjEntrada.Pessoa.Razao := LreceBimentos.FieldByName('Razao')
-            .AsString;
-          ObjEntrada.DocumentoNr := LreceBimentos.FieldByName
-            ('DocumentoNr').AsString;
-          ObjEntrada.DocumentoData := LreceBimentos.FieldByName('DocumentoData')
-            .AsDateTime;
-          ObjEntrada.RegistroERP := LreceBimentos.FieldByName
-            ('RegistroERP').AsString;
-          ObjEntrada.DtInclusao := LreceBimentos.FieldByName('DtInclusao')
-            .AsDateTime;
-          ObjEntrada.HrInclusao :=
-            StrToTime(Copy(LreceBimentos.FieldByName('HrInclusao')
-            .AsString, 1, 8));
-          ObjEntrada.ArmazemId := LreceBimentos.FieldByName('ArmazemId')
-            .AsInteger;
-          ObjEntrada.Status := LreceBimentos.FieldByName('Status').AsInteger;
-          ObjEntrada.ProcessoId := LreceBimentos.FieldByName('ProcessoId')
-            .AsInteger;
-          ObjEntrada.Processo := LreceBimentos.FieldByName('Processo').AsString;
-          with LQryItens do
-          begin
-            LQryItens.Close;
-            Sql.Clear;
-            Sql.Add('Declare @pPedido  Integer = ' +
-              ObjEntrada.EntradaId.ToString());
-            Sql.Add('Declare @ProdutoId Integer = 0');
-            Sql.Add('Declare @LoteId Integer    = 0');
-            Sql.Add(SqlEntradaItens);
-            Sql.Add('   and (@ProdutoId = 0 or Prd.IdProduto = @ProdutoId)');
-            Sql.Add('   and (@LoteId    = 0 or Pl.LoteId     = @LoteId) ');
-            Sql.Add('Order by PIt.PedidoId, PIt.PedidoItemId');
-            if DebugHook <> 0 then
-              Sql.SaveToFile('PedidoItens.Sql');
-            Open;
-            First;
-            LItens := TFDMemTable.Create(Nil);
-            LItens.Data := Data;
-            LItens.First;
-            Close;
+        Result := tJsonArray.Create;
+        Result.AddElement(TJsonObject.Create.AddPair('Erro',
+          TuEvolutConst.QrySemDados))
+      End
+      Else if pBasico then
+        Result := LreceBimentos.ToJSONArray
+      Else
+      Begin
+        Result := tJsonArray.Create;
+        while Not LreceBimentos.Eof do
+        Begin
+          ObjEntrada := TEntrada.Create;
+          try
+            ObjEntrada.EntradaId := LreceBimentos.FieldByName('PedidoId')
+              .AsInteger;
+            ObjEntrada.OperacaoTipo.OperacaoTipoId :=
+              LreceBimentos.FieldByName('OperacaoTipoId').AsInteger;
+            ObjEntrada.OperacaoTipo.Descricao :=
+              LreceBimentos.FieldByName('OperacaoTipo').AsString;
+            ObjEntrada.Pessoa.PessoaId := LreceBimentos.FieldByName('PessoaId')
+              .AsInteger;
+            ObjEntrada.Pessoa.CodPessoa := LreceBimentos.FieldByName
+              ('CodPessoaERP').AsInteger;
+            ObjEntrada.Pessoa.Razao := LreceBimentos.FieldByName
+              ('Razao').AsString;
+            ObjEntrada.DocumentoNr := LreceBimentos.FieldByName
+              ('DocumentoNr').AsString;
+            ObjEntrada.DocumentoData := LreceBimentos.FieldByName
+              ('DocumentoData').AsDateTime;
+            ObjEntrada.RegistroERP := LreceBimentos.FieldByName
+              ('RegistroERP').AsString;
+            ObjEntrada.DtInclusao := LreceBimentos.FieldByName('DtInclusao')
+              .AsDateTime;
+            ObjEntrada.HrInclusao :=
+              StrToTime(Copy(LreceBimentos.FieldByName('HrInclusao')
+              .AsString, 1, 8));
+            ObjEntrada.ArmazemId := LreceBimentos.FieldByName('ArmazemId')
+              .AsInteger;
+            ObjEntrada.Status := LreceBimentos.FieldByName('Status').AsInteger;
+            ObjEntrada.ProcessoId := LreceBimentos.FieldByName('ProcessoId')
+              .AsInteger;
+            ObjEntrada.Processo := LreceBimentos.FieldByName
+              ('Processo').AsString;
+            with LQryItens do
+            begin
+              LQryItens.Close;
+              Sql.Clear;
+              Sql.Add('Declare @pPedido  Integer = ' +
+                ObjEntrada.EntradaId.ToString());
+              Sql.Add('Declare @ProdutoId Integer = 0');
+              Sql.Add('Declare @LoteId Integer    = 0');
+              Sql.Add(SqlEntradaItens);
+              Sql.Add('   and (@ProdutoId = 0 or Prd.IdProduto = @ProdutoId)');
+              Sql.Add('   and (@LoteId    = 0 or Pl.LoteId     = @LoteId) ');
+              Sql.Add('Order by PIt.PedidoId, PIt.PedidoItemId');
+              if DebugHook <> 0 then
+                Sql.SaveToFile('PedidoItens.Sql');
+              Open;
+              First;
+              LItens := TFDMemTable.Create(Nil);
+              LItens.Data := Data;
+              LItens.First;
+              Close;
 
-          end;
-          vProdutoId := 0;
-
-          While Not LItens.Eof do
-          Begin
-            ObjEntradaItens := TEntradaItens.Create;
-            try
-              ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
-                .AsInteger;
-              ObjEntradaItens.EntradaItemId :=
-                LItens.FieldByName('PedidoItemId').AsInteger;
-              // ObjEntradaItens := TEntradaItens.Create;
-              // if vProdutoId <> LItens.FieldByName('ProdutoId').AsInteger then Begin
-              // ObjEntradaItens.ProdutoLotes.Produto.IdProduto := LItens.FieldByName('ProdutoId').AsInteger;
-              // vProdutoId := LItens.FieldByName('ProdutoId').AsInteger;
-              // End;
-              LServiceProduto := TServiceProduto.Create;
-              try
-                aQueryParamProduto := TDictionary<String, String>.Create;
-                aQueryParamProduto.Add('codigoerp',
-                  LItens.FieldByName('CodigoERP').AsString);
-                JsonArrayProduto := LServiceProduto.GetProduto
-                  (aQueryParamProduto);
-              finally
-                FreeAndNil(LServiceProduto);
-              end;
-              ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
-                .AsInteger;
-              ObjEntradaItens.EntradaItemId :=
-                LItens.FieldByName('PedidoItemId').AsInteger;
-              ObjEntradaItens.ProdutoLotes.Produto :=
-                tJson.JsonToObject<TProduto>
-                (JsonArrayProduto.Items[0] as TJsonObject);
-              ObjEntradaItens.ProdutoLotes.Lotes.LoteId :=
-                LItens.FieldByName('LoteId').AsInteger;
-              ObjEntradaItens.ProdutoLotes.Lotes.ProdutoId :=
-                LItens.FieldByName('ProdutoId').AsInteger;
-              ObjEntradaItens.ProdutoLotes.Lotes.CodigoERP :=
-                LItens.FieldByName('CodigoERP').AsInteger;
-              ObjEntradaItens.ProdutoLotes.Lotes.DescrLote :=
-                LItens.FieldByName('descrLote').AsString;
-              ObjEntradaItens.ProdutoLotes.Lotes.Fabricacao :=
-                LItens.FieldByName('Fabricacao').AsDateTime;
-              ObjEntradaItens.ProdutoLotes.Lotes.Vencimento :=
-                LItens.FieldByName('Vencimento').AsDateTime;
-              ObjEntradaItens.ProdutoLotes.Lotes.DtEntrada :=
-                LItens.FieldByName('DtEntrada').AsDateTime;
-              ObjEntradaItens.ProdutoLotes.Lotes.HrEntrada :=
-                StrToTime(Copy(LItens.FieldByName('HrEntrada').AsString, 1, 8));
-              ObjEntradaItens.ProdutoLotes.Lotes.QtdeDisponivel := 0;
-              // vQry.FieldByName('QtdeDisponivel').AsInteger;
-              ObjEntradaItens.QtdXml := LItens.FieldByName('QtdXml').AsInteger;
-              ObjEntradaItens.QtdCheckIn := LItens.FieldByName('QtdCheckIn')
-                .AsInteger;
-              ObjEntradaItens.QtdDevolvida := LItens.FieldByName('QtdDevolvida')
-                .AsInteger;
-              ObjEntradaItens.QtdSegregada := LItens.FieldByName('QtdSegregada')
-                .AsInteger;
-              ObjEntradaItens.PrintEtqControlado :=
-                LItens.FieldByName('PrintEtqControlado').AsInteger;
-              ObjEntrada.Itens.Add(ObjEntradaItens);
-            finally
-              LItens.Next;
             end;
+            vProdutoId := 0;
 
-          End;
-          Result.AddElement(tJson.ObjectToJsonObject(ObjEntrada,
-            [joDateFormatISO8601]));
-        finally
-          for I := 0 to Pred(ObjEntrada.Itens.Count) do
-            FreeAndNil(ObjEntrada.Itens[I]);
-          FreeAndNil(ObjEntrada);
-          FreeAndNil(LItens);
-        end;
-        LreceBimentos.Next;
+            While Not LItens.Eof do
+            Begin
+              ObjEntradaItens := TEntradaItens.Create;
+              try
+                ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
+                  .AsInteger;
+                ObjEntradaItens.EntradaItemId :=
+                  LItens.FieldByName('PedidoItemId').AsInteger;
+                // ObjEntradaItens := TEntradaItens.Create;
+                // if vProdutoId <> LItens.FieldByName('ProdutoId').AsInteger then Begin
+                // ObjEntradaItens.ProdutoLotes.Produto.IdProduto := LItens.FieldByName('ProdutoId').AsInteger;
+                // vProdutoId := LItens.FieldByName('ProdutoId').AsInteger;
+                // End;
+                LServiceProduto := TServiceProduto.Create;
+                try
+                  aQueryParamProduto := TDictionary<String, String>.Create;
+                  aQueryParamProduto.Add('codigoerp',
+                    LItens.FieldByName('CodigoERP').AsString);
+                  JsonArrayProduto := LServiceProduto.GetProduto
+                    (aQueryParamProduto);
+                finally
+                  FreeAndNil(LServiceProduto);
+                end;
+                ObjEntradaItens.EntradaId := LItens.FieldByName('PedidoId')
+                  .AsInteger;
+                ObjEntradaItens.EntradaItemId :=
+                  LItens.FieldByName('PedidoItemId').AsInteger;
+                ObjEntradaItens.ProdutoLotes.Produto :=
+                  tJson.JsonToObject<TProduto>
+                  (JsonArrayProduto.Items[0] as TJsonObject);
+                ObjEntradaItens.ProdutoLotes.Lotes.LoteId :=
+                  LItens.FieldByName('LoteId').AsInteger;
+                ObjEntradaItens.ProdutoLotes.Lotes.ProdutoId :=
+                  LItens.FieldByName('ProdutoId').AsInteger;
+                ObjEntradaItens.ProdutoLotes.Lotes.CodigoERP :=
+                  LItens.FieldByName('CodigoERP').AsInteger;
+                ObjEntradaItens.ProdutoLotes.Lotes.DescrLote :=
+                  LItens.FieldByName('descrLote').AsString;
+                ObjEntradaItens.ProdutoLotes.Lotes.Fabricacao :=
+                  LItens.FieldByName('Fabricacao').AsDateTime;
+                ObjEntradaItens.ProdutoLotes.Lotes.Vencimento :=
+                  LItens.FieldByName('Vencimento').AsDateTime;
+                ObjEntradaItens.ProdutoLotes.Lotes.DtEntrada :=
+                  LItens.FieldByName('DtEntrada').AsDateTime;
+                ObjEntradaItens.ProdutoLotes.Lotes.HrEntrada :=
+                  StrToTime(Copy(LItens.FieldByName('HrEntrada')
+                  .AsString, 1, 8));
+                ObjEntradaItens.ProdutoLotes.Lotes.QtdeDisponivel := 0;
+                // vQry.FieldByName('QtdeDisponivel').AsInteger;
+                ObjEntradaItens.QtdXml := LItens.FieldByName('QtdXml')
+                  .AsInteger;
+                ObjEntradaItens.QtdCheckIn := LItens.FieldByName('QtdCheckIn')
+                  .AsInteger;
+                ObjEntradaItens.QtdDevolvida :=
+                  LItens.FieldByName('QtdDevolvida').AsInteger;
+                ObjEntradaItens.QtdSegregada :=
+                  LItens.FieldByName('QtdSegregada').AsInteger;
+                ObjEntradaItens.PrintEtqControlado :=
+                  LItens.FieldByName('PrintEtqControlado').AsInteger;
+                ObjEntrada.Itens.Add(ObjEntradaItens);
+              finally
+                LItens.Next;
+              end;
+
+            End;
+            Result.AddElement(tJson.ObjectToJsonObject(ObjEntrada,
+              [joDateFormatISO8601]));
+          finally
+            for I := 0 to Pred(ObjEntrada.Itens.Count) do
+              FreeAndNil(ObjEntrada.Itens[I]);
+            FreeAndNil(ObjEntrada);
+            FreeAndNil(LItens);
+          end;
+          LreceBimentos.Next;
+        End;
+      End;
+      LreceBimentos.Close;
+    Except
+      On E: Exception do
+      Begin
+        LreceBimentos.Close;
+        raise Exception.Create(E.Message);
       End;
     End;
-    LreceBimentos.Close;
-  Except
-    On E: Exception do
-    Begin
-      LreceBimentos.Close;
-      raise Exception.Create(E.Message);
-    End;
+  Finally
+   // FreeAndNil(LQryRecebimentos);
+    FreeAndNil(LreceBimentos);
+   // FreeAndNil(LQryItens)
   End;
-  if assigned(LreceBimentos) then
-    FreeAndNil(LQryRecebimentos);
+
 end;
 
 function TServiceRecebimento.RegPrintEtqProduto(pPedidoId, pLoteId: Integer)

@@ -255,8 +255,8 @@ begin
   MService.SegregadoCausaCtrl.Registry;
   MService.MonitorLogCtrl.Registry;
 
-  THorse.MaxConnections := 1;
-  THorse.ListenQueue := 1;
+  THorse.MaxConnections := 10000;
+  THorse.ListenQueue := 10000;
   PortaServer := 8200;
 
   try

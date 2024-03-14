@@ -287,8 +287,12 @@ end;
 
 destructor TPedidoSaidaDao.Destroy;
 begin
-  PedidoSaida.ListProduto.Free;
-  PedidoSaida.Free;
+  try
+    PedidoSaida.ListProduto.Free;
+    PedidoSaida.Free;
+  except
+
+  end;
 
   inherited;
 end;
