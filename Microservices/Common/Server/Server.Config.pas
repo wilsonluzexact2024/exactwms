@@ -18,15 +18,8 @@ uses
   FireDAC.DApt.Intf,
   FireDAC.Stan.Async,
   FireDAC.DApt,
-
-  FireDAC.Phys.PGDef,
   FireDAC.Phys.MSSQLDef,
-  FireDAC.Phys.IBBase,
-  FireDAC.Phys.MSSQL,
-  FireDAC.Phys.PG,
   FireDAC.Comp.UI,
-  FireDAC.Phys.FB,
-
   Data.DB,
   FireDAC.Comp.DataSet,
   System.Classes,
