@@ -35,7 +35,7 @@ begin
       vQryVolumeParaExpedicao.SQL.Add( TScriptRepository.GetVolumeParaExpedicao );
       vQryVolumeParaExpedicao.Open;
       While Not vQryVolumeParaExpedicao.Eof do Begin
-
+        Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + 'Processando Volume: '+vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString);
         Try
           vQryLoteInexistente.Close;
           vQryLoteInexistente.SQL.Clear;
@@ -96,6 +96,7 @@ begin
     FreeAndNil(vQryLoteExistente);
     FreeAndNil(vQryLoteInexistente);
     FreeAndNil(vQryGerarKardex);
+    FreeAndNil(vQryBaixaEstoque);
     FreeAndNil(Con);
   end;
 end;

@@ -906,7 +906,7 @@ begin
   try
     MsgErro := '';
     if (pCaixaId = 0) and (pPedidoVolumeId = 0) and (pUsuarioId = 0) then
-      raise Exception.Create('Par�metro inv�lidos para a pesquisa!');
+      raise Exception.Create('Parâmetro(s) inválido(s) para a pesquisa!');
     // Informe a Amanda
     vQry := FConexao.GetQuery;
     if (pCaixaId > 0) and (pPedidoVolumeId = 0) then
@@ -928,7 +928,7 @@ begin
       vQry.Open;
       if (vQry.IsEmpty) or (vQry.FieldByName('CaixaEmbalagemId').AsInteger = 0)
       then
-        MsgErro := 'Caixa n�o encontrada!'
+        MsgErro := 'Caixa não encontrada!'
       Else if (vQry.FieldByName('Status').AsInteger = 0) then
         MsgErro := 'Caixa inativa!'
       Else if (vQry.FieldByName('UsuarioId').AsInteger <> 0) and
@@ -978,11 +978,11 @@ begin
         if vQry.FieldByName('ProcessoId').AsInteger < 3 then
           MsgErro := 'Imprima a etiqueta do volume!'
         Else if vQry.FieldByName('ProcessoId').AsInteger > 7 then
-          MsgErro := 'Separa��o n�o permitida. Processo Atual: ' +
+          MsgErro := 'Separação não permitida. Processo Atual: ' +
             vQry.FieldByName('Processo').AsString;
       End
       Else If (vQry.FieldByName('Operacao').AsInteger = 1) then
-        MsgErro := 'Separa��o de Volume j� conclu�da.'
+        MsgErro := 'Separa��o de Volume já conclu�da.'
       Else If (vQry.FieldByName('VolumeSeparacaoId').AsInteger <> 0) Then
       Begin
         If (pCaixaId <> vQry.FieldByName('caixaembalagemid').AsInteger) then
@@ -1016,6 +1016,7 @@ begin
           vQrySeparacao.Close;
           vQrySeparacao.Sql.Clear;
           vQrySeparacao.Sql.Add('Declare @VolumeSeparacaoId Integer = 0');
+          vQrySeparacao.SQL.Add('Update PedidoVolumes Set CaixaEmbalagemId = '+pCaixaId.ToString()+' where PedidoVolumeId = '+ pPedidoVolumeId.ToString());
           vQrySeparacao.Sql.Add('Insert into PedidoVolumeSeparacao Values (');
           vQrySeparacao.Sql.Add(pCaixaId.ToString() + ', ' +
             pPedidoVolumeId.ToString() + ', 0, 0, ' + pUsuarioId.ToString() +

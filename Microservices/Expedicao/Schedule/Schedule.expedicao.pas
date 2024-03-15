@@ -72,9 +72,9 @@ begin
       var ObjPedidoVolume := TServicePedidoVolume.create;
       try
         try
-          Writeln('Realizando baixa estoque expedicao');
+          Writeln(FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + 'Realizando baixa estoque expedicao');
           ObjPedidoVolume.BaixarEstoqueExpedicao;
-          Writeln('Baixa de estoque expedição realizada !');
+          Writeln(FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + 'Baixa de estoque expedição realizada !');
         except
           on e: exception do
             Writeln(e.Message)

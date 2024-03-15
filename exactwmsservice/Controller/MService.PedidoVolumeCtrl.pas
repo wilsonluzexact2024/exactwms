@@ -1069,8 +1069,8 @@ begin
   HrInicioLog := Time;
   Tutil.Gravalog('[1070-GetOpenVolumeParaSeparacao] terminal: ' +
     ClientIP(Req));
+  nTentativa := 0;
   Repeat
-    nTentativa := 0;
     Erro := True;
     Try
       Try
@@ -1093,8 +1093,7 @@ begin
         on E: Exception do
         Begin
           Inc(nTentativa);
-          if nTentativa > 3 then
-          Begin
+          if nTentativa > 3 then Begin
             Tutil.Gravalog('[GetOpenVolumeParaSeparacao] ' + E.Message);
             JsonArrayRetorno := TJsonArray.Create;
             JsonArrayRetorno.AddElement
@@ -1112,6 +1111,7 @@ begin
           End
           Else
           Begin
+            Inc(nTentativa);
             Sleep(500);
           End;
         End;
