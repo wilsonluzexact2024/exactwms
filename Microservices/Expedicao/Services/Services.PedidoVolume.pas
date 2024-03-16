@@ -79,10 +79,12 @@ begin
           End;
           vQryVolumeParaExpedicao.connection.Commit;
           Sleep(10);
-        Except
-          if vQryVolumeParaExpedicao.connection.InTransaction then Begin
+        Except On E: Exception do Begin
+          if vQryVolumeParaExpedicao.connection.InTransaction then
              vQryVolumeParaExpedicao.connection.RollBack;
-             Sleep(50);
+          Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + 'ERRO: Volume: '+
+                  vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString);
+          Sleep(50);
           End;
         End;
         vQryVolumeParaExpedicao.Next;
