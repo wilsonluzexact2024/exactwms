@@ -1,20 +1,24 @@
 inherited FrmEnderecamento: TFrmEnderecamento
   Caption = 'FrmEnderecamento'
   ClientHeight = 787
-  ExplicitTop = -122
+  ClientWidth = 1162
+  ExplicitWidth = 1164
   ExplicitHeight = 789
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Width = 1163
     Height = 732
     Properties.ActivePage = TabManutencaoEndereco
     ExplicitHeight = 732
     ClientRectBottom = 732
+    ClientRectRight = 1163
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
       ExplicitHeight = 708
       inherited LstCadastro: TAdvStringGrid
+        Width = 1143
         Height = 670
         ColCount = 12
         ColumnHeaders.Strings = (
@@ -50,6 +54,19 @@ inherited FrmEnderecamento: TFrmEnderecamento
         ExplicitHeight = 670
       end
       inherited PnlPesquisaCadastro: TPanel
+        Width = 1163
+        inherited BtnPesqConsGeral: TsImage
+          Left = 604
+        end
+        inherited LblClearFilter: TLabel
+          Left = 639
+        end
+        inherited LblRegTit: TLabel
+          Left = 843
+        end
+        inherited LblTotReg: TLabel
+          Left = 979
+        end
         inherited CbCampoPesq: TComboBox
           Items.Strings = (
             'Endere'#231'o Id'
@@ -58,6 +75,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
             'Estrutura'
             'Zona Id'
             'Zona')
+        end
+        inherited EdtConteudoPesq: TLabeledEdit
+          Width = 262
         end
       end
     end
@@ -796,6 +816,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
       ExplicitWidth = 1157
       ExplicitHeight = 708
       inherited DbgImporta: TDBGrid
+        Width = 1163
         Height = 504
       end
     end
@@ -804,6 +825,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
       Caption = 'Manuten'#231#227'o de Endere'#231'os'
       ImageIndex = 4
       OnShow = TabManutencaoEnderecoShow
+      ExplicitWidth = 1157
       object RgManutencao: TRadioGroup
         Left = 29
         Top = 14
@@ -826,23 +848,25 @@ inherited FrmEnderecamento: TFrmEnderecamento
       object PgcManutencao: TcxPageControl
         Left = 0
         Top = 122
-        Width = 1157
+        Width = 1163
         Height = 586
         CustomHint = BalloonHint1
         Align = alBottom
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 1
-        Properties.ActivePage = TabManutencaoTransferenciaPicking
+        Properties.ActivePage = TabCreateAddress
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 10
+        ExplicitWidth = 1157
         ClientRectBottom = 586
-        ClientRectRight = 1157
+        ClientRectRight = 1163
         ClientRectTop = 23
         object TabManutencaoAtivaDesativa: TcxTabSheet
           CustomHint = BalloonHint1
           Caption = 'Ativar / Desativar'
           ImageIndex = 0
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           object Label18: TLabel
             Left = 29
             Top = 30
@@ -2014,7 +2038,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           object LstManutencaoAtivaDesativa: TAdvStringGrid
             Left = 0
             Top = 146
-            Width = 1157
+            Width = 1163
             Height = 417
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -2251,6 +2275,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -2879,6 +2904,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Mudar Zona'
           ImageIndex = 1
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           object Label21: TLabel
             Left = 29
             Top = 30
@@ -4320,7 +4346,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           object LstManutencaoMudarZona: TAdvStringGrid
             Left = 0
             Top = 150
-            Width = 1157
+            Width = 1163
             Height = 413
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -4558,6 +4584,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -5110,6 +5137,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Cubagem'
           ImageIndex = 2
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           object Label20: TLabel
             Left = 29
             Top = 30
@@ -6528,7 +6556,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           object LstManutencaoCubagem: TAdvStringGrid
             Left = 0
             Top = 168
-            Width = 1157
+            Width = 1163
             Height = 395
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -6769,6 +6797,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -7031,6 +7060,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Excluir'
           ImageIndex = 3
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           object Label24: TLabel
             Left = 29
             Top = 30
@@ -8465,7 +8495,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           object LstManutencaoExcluir: TAdvStringGrid
             Left = 0
             Top = 146
-            Width = 1157
+            Width = 1163
             Height = 417
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -8703,6 +8733,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -8815,8 +8846,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Transfer'#234'ncia de Picking'
           ImageIndex = 4
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           DesignSize = (
-            1157
+            1163
             563)
           object Label17: TLabel
             Left = 29
@@ -9799,7 +9831,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             end
           end
           object SbSalvarTransferenciaPicking: TPanel
-            Left = 29
+            Left = 35
             Top = 282
             Width = 175
             Height = 29
@@ -9813,6 +9845,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             TabOrder = 3
             Visible = False
             OnClick = SbSalvarExcluirClick
+            ExplicitLeft = 29
             object sImage5: TsImage
               Left = 0
               Top = 0
@@ -9932,6 +9965,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Remover V'#237'nculo'
           ImageIndex = 5
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitWidth = 1157
           object Label35: TLabel
             Left = 29
             Top = 30
@@ -11460,7 +11494,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           object LstManutencaoRemoverVinculo: TAdvStringGrid
             Left = 0
             Top = 146
-            Width = 1157
+            Width = 1163
             Height = 417
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -11698,6 +11732,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -11719,6 +11754,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           CustomHint = BalloonHint1
           Caption = 'Manuten'#231#227'o'
           ImageIndex = 6
+          ExplicitWidth = 1157
           object Label8: TLabel
             Left = 450
             Top = 184
@@ -11739,6 +11775,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Cria'#231#227'o de M'#250'ltiplos Endere'#231'os'
           ImageIndex = 7
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 25
           object Label37: TLabel
             Left = 60
             Top = 147
@@ -12246,14 +12283,14 @@ inherited FrmEnderecamento: TFrmEnderecamento
           end
           object DbFaixaEnderecoCE: TGroupBox
             Left = 29
-            Top = 184
+            Top = 186
             Width = 480
             Height = 58
             CustomHint = BalloonHint1
             Caption = ' [ Faixa de Endere'#231'o ] '
             TabOrder = 4
             object Label46: TLabel
-              Left = 219
+              Left = 207
               Top = 25
               Width = 19
               Height = 17
@@ -12261,8 +12298,8 @@ inherited FrmEnderecamento: TFrmEnderecamento
               Caption = 'At'#233
             end
             object EdtFaixaInicialEndereco: TJvComboEdit
-              Left = 61
-              Top = 24
+              Left = 40
+              Top = 22
               Width = 116
               Height = 25
               CustomHint = BalloonHint1
@@ -12615,8 +12652,8 @@ inherited FrmEnderecamento: TFrmEnderecamento
               OnKeyUp = EdtEnderecoIniAtivaKeyUp
             end
             object BtnPesqEnderecoInicialCE: TBitBtn
-              Left = 178
-              Top = 22
+              Left = 159
+              Top = 23
               Width = 24
               Height = 24
               CustomHint = BalloonHint1
@@ -12697,6 +12734,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
                 0000000000000000000000000000000000000000000000000000}
               TabOrder = 1
               TabStop = False
+              Visible = False
             end
             object EdtFaixaFinalEndereco: TJvComboEdit
               Left = 257
@@ -13053,7 +13091,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
               OnKeyUp = EdtEnderecoIniAtivaKeyUp
             end
             object BtnPesqEnderecoFinalCE: TBitBtn
-              Left = 373
+              Left = 375
               Top = 22
               Width = 24
               Height = 24
@@ -13135,12 +13173,13 @@ inherited FrmEnderecamento: TFrmEnderecamento
                 0000000000000000000000000000000000000000000000000000}
               TabOrder = 3
               TabStop = False
+              Visible = False
             end
           end
           object LstCreateAddress: TAdvStringGrid
             Left = 524
             Top = 0
-            Width = 633
+            Width = 639
             Height = 563
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -13374,6 +13413,8 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
+            ExplicitLeft = 523
+            ExplicitWidth = 633
             ColWidths = (
               74
               118
@@ -13673,7 +13714,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             end
           end
           object GroupBox10: TGroupBox
-            Left = 29
+            Left = 30
             Top = 449
             Width = 1015
             Height = 61
@@ -14004,17 +14045,30 @@ inherited FrmEnderecamento: TFrmEnderecamento
       end
     end
   end
+  inherited PnHeader: TPanel
+    Width = 1162
+    inherited ImgClose: TImage
+      Left = 1129
+    end
+    inherited ImgMinimize: TImage
+      Left = 1109
+    end
+    inherited PanWin8: TPanel
+      Width = 1162
+    end
+  end
   inherited PnlImgObjeto: TPanel
-    Left = 1004
+    Left = 1010
     Top = -44
     ExplicitLeft = 1004
     ExplicitTop = -44
   end
   inherited PnlErro: TPanel
     Top = 765
+    Width = 1162
     ExplicitTop = 765
     inherited LblMensShowErro: TLabel
-      Width = 1156
+      Width = 1162
       Height = 22
     end
   end

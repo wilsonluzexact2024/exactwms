@@ -24,59 +24,39 @@ type
   public
     constructor Create; overload;
     Destructor Destroy; OverRide;
-    Function RegistrarDocumentoEtapa(pJsonDocumentoEtapa: TJsonObject)
-      : TJsonArray;
-    Function RegistrarDocumentoEtapaComBaixaEstoque(pJsonDocumentoEtapa
-      : TJsonObject): TJsonArray;
+    Function RegistrarDocumentoEtapa(pJsonDocumentoEtapa: TJsonObject) : TJsonArray;
+    Function RegistrarDocumentoEtapaComBaixaEstoque(pJsonDocumentoEtapa : TJsonObject): TJsonArray;
     Function Salvar: Boolean;
-    Function GetVolume(pPedidoId, pPedidoVolumeId, pSequencia, pOrdem: Integer;
-      pEmbalagem: String): TJsonArray;
+    Function GetVolume(pPedidoId, pPedidoVolumeId, pSequencia, pOrdem: Integer; pEmbalagem: String): TJsonArray;
     Function GetVolumeProduto(pPedidoVolumeId: Integer): TJsonArray;
-    Function GetVolumeProdutoReconferencia(pPedidoVolumeId: Integer)
-      : TJsonArray;
+    Function GetVolumeProdutoReconferencia(pPedidoVolumeId: Integer) : TJsonArray;
     Function GetVolumeProdutoSeparacao(pPedidoVolumeId: Integer): TJsonArray;
     Function GetVolumeLote(pPedidoVolumeId: Integer): TJsonArray;
     Function GetPedidoVolumeEtapas(pPedidoVolumeId: Integer): TJsonArray;
-    Function GetVolumeProdutoLotes(pPedidoVolumeId, pProdutoid: Integer)
-      : TJsonArray;
-    function GetPedidoVolumeSeparacao(pPedidoId: Integer;
-      pPedidoVolumeId: Integer): TJsonArray;
-    Function VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId: Integer)
-      : TJsonArray;
+    Function GetVolumeProdutoLotes(pPedidoVolumeId, pProdutoid: Integer) : TJsonArray;
+    function GetPedidoVolumeSeparacao(pPedidoId: Integer; pPedidoVolumeId: Integer): TJsonArray;
+    Function VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId: Integer) : TJsonArray;
     Function EtiquetaPorVolume(pPedidoVolumeId: Integer): TJsonArray;
     Function identificavolumecxafechada(pPedidoVolumeId: Integer): TJsonArray;
-    Function Cancelar(pConexao: TFDConnection; pJsonObject: TJsonObject)
-      : TJsonArray;
+    Function Cancelar(pConexao: TFDConnection; pJsonObject: TJsonObject) : TJsonArray;
     Function Delete: Boolean;
-    Function MapaSeparacao(pPedidoId: Integer; pPedidoVolumeId: Integer)
-      : TJsonArray;
+    Function MapaSeparacao(pPedidoId: Integer; pPedidoVolumeId: Integer) : TJsonArray;
     Function VolumeExpedicao: TJsonArray;
     Function VolumeExpedido: TJsonArray;
-    Function AtualizarConferencia(pJsonArray: TJsonArray;
-      pConneXactWMS: TFDConnection): TJsonArray;
-    Function AtualizarConferenciaSemLotes(pJsonArray: TJsonArray;
-      pConneXactWMS: TFDConnection): TJsonArray;
-    Function FinalizarConferenciaComRegistro(pJsonObjectFinalizar: TJsonObject;
-      pConneXactWMS: TFDConnection): TJsonArray;
+    Function AtualizarConferencia(pJsonArray: TJsonArray; pConneXactWMS: TFDConnection): TJsonArray;
+    Function AtualizarConferenciaSemLotes(pJsonArray: TJsonArray; pConneXactWMS: TFDConnection): TJsonArray;
+    Function FinalizarConferenciaComRegistro(pJsonObjectFinalizar: TJsonObject; pConneXactWMS: TFDConnection): TJsonArray;
     Function GerarVolumeExtra(pPedidoVolumeId, pUsuarioId: Integer): TJsonArray;
     Function SaveApanheProdutos(pJsonArray: TJsonArray): TJsonArray;
-    Function MapaSeparacaoLista(const AParams: TDictionary<string, string>)
-      : TJsonArray;
-    Function DshCheckOut(Const AParams: TDictionary<String, String>)
-      : TJsonArray;
-    function GetProducaoDiariaPorLoja(const AParams
-      : TDictionary<String, String>): TJsonObject;
-    Function GetProducaoDiariaPorRota(Const AParams
-      : TDictionary<String, String>): TJsonObject;
-    Function GetProducaoDiariaPorRua(Const AParams: TDictionary<String, String>)
-      : TJsonObject;
-    Function GetProducaoDiariaPorSetor(Const AParams
-      : TDictionary<String, String>): TJsonObject;
-    Function GetVolumeConsulta(Const AParams: TDictionary<String, String>)
-      : TJsonArray;
+    Function MapaSeparacaoLista(const AParams: TDictionary<string, string>) : TJsonArray;
+    Function DshCheckOut(Const AParams: TDictionary<String, String>) : TJsonArray;
+    function GetProducaoDiariaPorLoja(const AParams : TDictionary<String, String>): TJsonObject;
+    Function GetProducaoDiariaPorRota(Const AParams : TDictionary<String, String>): TJsonObject;
+    Function GetProducaoDiariaPorRua(Const AParams: TDictionary<String, String>) : TJsonObject;
+    Function GetProducaoDiariaPorSetor(Const AParams : TDictionary<String, String>): TJsonObject;
+    Function GetVolumeConsulta(Const AParams: TDictionary<String, String>) : TJsonArray;
 
-    Property ObjPedidoVolume: TPedidoVolume Read FPedidoVolume
-      Write FPedidoVolume;
+    Property ObjPedidoVolume: TPedidoVolume Read FPedidoVolume Write FPedidoVolume;
   end;
 
 implementation
@@ -226,10 +206,8 @@ begin
 end;
 
 // Identificação Etiqueta Volume Caixa Fracionada
-function TPedidoVolumeDao.EtiquetaPorVolume(pPedidoVolumeId: Integer)
-  : TJsonArray;
-var
-  ObjJson: TJsonObject;
+function TPedidoVolumeDao.EtiquetaPorVolume(pPedidoVolumeId: Integer) : TJsonArray;
+var ObjJson: TJsonObject;
 begin
   Result := TJsonArray.Create;
   try
@@ -240,37 +218,25 @@ begin
       With Fconexao.Query do
       Begin
         ObjJson := TJsonObject.Create;
-        ObjJson.AddPair('pedidoid', tjsonNumber.Create(FieldByName('PedidoId')
-          .AsInteger));
-        ObjJson.AddPair('documentooriginal',
-          tjsonNumber.Create(FieldByName('DocumentoOriginal').AsString));
-        ObjJson.AddPair('pedidovolumeid',
-          tjsonNumber.Create(FieldByName('PedidoVolumeId').AsInteger));
-        ObjJson.AddPair('dtpedido',
-          DateToStr(FieldByName('DtPedido').AsDateTime));
-        ObjJson.AddPair('sequencia', tjsonNumber.Create(FieldByName('sequencia')
-          .AsInteger));
-        ObjJson.AddPair('codpesssoaerp',
-          tjsonNumber.Create(FieldByName('CodPessoaERP').AsInteger));
+        ObjJson.AddPair('pedidoid', tjsonNumber.Create(FieldByName('PedidoId').AsInteger));
+        ObjJson.AddPair('documentooriginal', tjsonNumber.Create(FieldByName('DocumentoOriginal').AsString));
+        ObjJson.AddPair('pedidovolumeid', tjsonNumber.Create(FieldByName('PedidoVolumeId').AsInteger));
+        ObjJson.AddPair('dtpedido', DateToStr(FieldByName('DtPedido').AsDateTime));
+        ObjJson.AddPair('sequencia', tjsonNumber.Create(FieldByName('sequencia').AsInteger));
+        ObjJson.AddPair('codpesssoaerp', tjsonNumber.Create(FieldByName('CodPessoaERP').AsInteger));
         ObjJson.AddPair('razao', FieldByName('Razao').AsString);
         ObjJson.AddPair('fantasia', FieldByName('Fantasia').AsString);
-        ObjJson.AddPair('rotaid', tjsonNumber.Create(FieldByName('RotaId')
-          .AsInteger));
+        ObjJson.AddPair('rotaid', tjsonNumber.Create(FieldByName('RotaId').AsInteger));
         ObjJson.AddPair('rotas', FieldByName('Rotas').AsString);
-        ObjJson.AddPair('itens', tjsonNumber.Create(FieldByName('Itens')
-          .AsInteger));
-        ObjJson.AddPair('qtdsuprida',
-          tjsonNumber.Create(FieldByName('QtdSuprida').AsInteger));
+        ObjJson.AddPair('itens', tjsonNumber.Create(FieldByName('Itens').AsInteger));
+        ObjJson.AddPair('qtdsuprida', tjsonNumber.Create(FieldByName('QtdSuprida').AsInteger));
         ObjJson.AddPair('inicio', FieldByName('Inicio').AsString);
         ObjJson.AddPair('termino', FieldByName('Termino').AsString);
-        ObjJson.AddPair('processoid',
-          tjsonNumber.Create(FieldByName('ProcessoId').AsInteger));
+        ObjJson.AddPair('processoid', tjsonNumber.Create(FieldByName('ProcessoId').AsInteger));
         ObjJson.AddPair('processoetapa', FieldByName('ProcessoEtapa').AsString);
         ObjJson.AddPair('mascara', FieldByName('mascara').AsString);
-        ObjJson.AddPair('ordem', tjsonNumber.Create(FieldByName('Ordem')
-          .AsInteger));
-        ObjJson.AddPair('totalvolumes',
-          tjsonNumber.Create(FieldByName('TotalVolumes').AsInteger));
+        ObjJson.AddPair('ordem', tjsonNumber.Create(FieldByName('Ordem').AsInteger));
+        ObjJson.AddPair('totalvolumes', tjsonNumber.Create(FieldByName('TotalVolumes').AsInteger));
         Result.AddElement(ObjJson);
         Fconexao.Query.Next;
       End;
@@ -1386,10 +1352,8 @@ begin
 end;
 
 // Identificação Etiqueta Volume Caixa Fechada
-function TPedidoVolumeDao.identificavolumecxafechada(pPedidoVolumeId: Integer)
-  : TJsonArray;
-var
-  ObjJson: TJsonObject;
+function TPedidoVolumeDao.identificavolumecxafechada(pPedidoVolumeId: Integer) : TJsonArray;
+var ObjJson: TJsonObject;
 begin
   Result := TJsonArray.Create;
   try
@@ -1400,49 +1364,34 @@ begin
       With Fconexao.Query do
       Begin
         ObjJson := TJsonObject.Create;
-        ObjJson.AddPair('pedidoid', tjsonNumber.Create(FieldByName('PedidoId')
-          .AsInteger));
-        ObjJson.AddPair('documentooriginal', FieldByName('DocumentoOriginal')
-          .AsString);
-        ObjJson.AddPair('pedidovolumeid',
-          tjsonNumber.Create(FieldByName('PedidoVolumeId').AsInteger));
-        ObjJson.AddPair('dtpedido',
-          DateToStr(FieldByName('DtPedido').AsDateTime));
-        ObjJson.AddPair('sequencia', tjsonNumber.Create(FieldByName('sequencia')
-          .AsInteger));
-        ObjJson.AddPair('codpessoaerp',
-          tjsonNumber.Create(FieldByName('CodPessoaERP').AsInteger));
+        ObjJson.AddPair('pedidoid', tjsonNumber.Create(FieldByName('PedidoId').AsInteger));
+        ObjJson.AddPair('documentooriginal', FieldByName('DocumentoOriginal').AsString);
+        ObjJson.AddPair('pedidovolumeid', tjsonNumber.Create(FieldByName('PedidoVolumeId').AsInteger));
+        ObjJson.AddPair('dtpedido', DateToStr(FieldByName('DtPedido').AsDateTime));
+        ObjJson.AddPair('sequencia', tjsonNumber.Create(FieldByName('sequencia').AsInteger));
+        ObjJson.AddPair('codpessoaerp', tjsonNumber.Create(FieldByName('CodPessoaERP').AsInteger));
         ObjJson.AddPair('razao', FieldByName('Fantasia').AsString);
         ObjJson.AddPair('fantasia', FieldByName('Fantasia').AsString);
-        ObjJson.AddPair('rotaid', tjsonNumber.Create(FieldByName('RotaId')
-          .AsInteger));
+        ObjJson.AddPair('rotaid', tjsonNumber.Create(FieldByName('RotaId').AsInteger));
         ObjJson.AddPair('rotas', FieldByName('Rotas').AsString);
-        ObjJson.AddPair('Produtoid', tjsonNumber.Create(FieldByName('ProdutoId')
-          .AsInteger));
-        ObjJson.AddPair('codproduto',
-          tjsonNumber.Create(FieldByName('CodProduto').AsInteger));
+        ObjJson.AddPair('Produtoid', tjsonNumber.Create(FieldByName('ProdutoId').AsInteger));
+        ObjJson.AddPair('codproduto', tjsonNumber.Create(FieldByName('CodProduto').AsInteger));
         ObjJson.AddPair('descricao', FieldByName('Descricao').AsString);
         ObjJson.AddPair('picking', FieldByName('Picking').AsString);
         ObjJson.AddPair('lote', FieldByName('DescrLote').AsString);
-        ObjJson.AddPair('vencimento',
-          DateToStr(FieldByName('Vencimento').AsDateTime));
-        ObjJson.AddPair('qtdsuprida',
-          tjsonNumber.Create(FieldByName('QtdSuprida').AsInteger));
+        ObjJson.AddPair('vencimento', DateToStr(FieldByName('Vencimento').AsDateTime));
+        ObjJson.AddPair('qtdsuprida', tjsonNumber.Create(FieldByName('QtdSuprida').AsInteger));
         ObjJson.AddPair('endereco', FieldByName('Endereco').AsString);
         ObjJson.AddPair('zona', FieldByName('Zona').AsString);
-        ObjJson.AddPair('processoid',
-          tjsonNumber.Create(FieldByName('ProcessoId').AsInteger));
+        ObjJson.AddPair('processoid', tjsonNumber.Create(FieldByName('ProcessoId').AsInteger));
         ObjJson.AddPair('processoetapa', FieldByName('ProcessoEtapa').AsString);
+        ObjJson.AddPair('totalvolumes', tjsonNumber.Create(FieldByName('TotalVolumes').AsInteger));
         Result.AddElement(ObjJson);
         Fconexao.Query.Next;
       End;
-  Except
-    ON E: Exception do
-    Begin
-      raise Exception.Create('Tabela: Mapa Separação - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+  Except ON E: Exception do Begin
+    raise Exception.Create('Tabela: Mapa Separação - '+StringReplace(E.Message,
+          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
   Fconexao.Query.Close;

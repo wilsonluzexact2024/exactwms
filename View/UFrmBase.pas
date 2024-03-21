@@ -596,6 +596,7 @@ var
   N: TACBrETQOrigem;
   O: TACBrETQPaginaCodigo;
   ArqIni : TIniFile;
+  vTextoIni : String;
 begin
   inherited;
   CbModeloConfigPrinter.Items.Clear ;
@@ -614,13 +615,12 @@ begin
   CbPortaConfigPrinter.Items.Add(FrmeXactWMS.PathApp+'Relatorio\EtqVolume.Prn' );
   ArqIni := TIniFile.Create(ExtractFilePath( Application.ExeName )+'eXactWMS.Ini');
 
-{
-   If CbModeloConfigPrinter.Items.IndexOf(ArqIni.ReadString('PRINTER', 'EtqCodBarra_Modelo')) < 0 then
-      CbModeloConfigPrinter.Items.Add(ArqIni.ReadString('PRINTER', 'EtqCodBarra_Modelo'));
+   If CbModeloConfigPrinter.Items.IndexOf(FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra) < 0 then
+      CbModeloConfigPrinter.Items.Add(ArqIni.ReadString('PRINTER', 'EtqCodBarra_Modelo', FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra));
    If CbPortaConfigPrinter.Items.IndexOf(ArqIni.ReadString('PRINTER',  'EtqCodBarra_Porta' , FrmeXactWMS.ConfigWMS.ObjConfiguracao.PortaPrinterCodBarra)) < 0 then
-      CbPortaConfigPrinter.Items.Add(ArqIni.ReadString('PRINTER',  'EtqCodBarra_Porta'));
+      CbPortaConfigPrinter.Items.Add(ArqIni.ReadString('PRINTER',  'EtqCodBarra_Porta', FrmeXactWMS.ConfigWMS.ObjConfiguracao.PortaPrinterCodBarra));
 
-}
+
   if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra <> '' then Begin
      CbModeloConfigPrinter.ItemIndex := CbModeloConfigPrinter.Items.IndexOf(FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra);
      if CbModeloConfigPrinter.ItemIndex < 0 then

@@ -54,9 +54,8 @@ type
       pProcessoId: Integer; pRecebido, pCubagem, pEtiqueta, pPrintTag,
       pEmbalagem: Integer): TjSonArray;
     Function ProdutoSemPicking(pPedidoId: Integer; pDataIni, pDataFin: TDate;
-      pCodigoERP, pPessoaId: Integer;
-      pDocumentoNr, pRazao, pRegistroERP: String; pRotaId: Integer;
-      pRecebido, pCubagem, pEtiqueta: Integer): TjSonArray;
+      pCodigoERP, pPessoaId: Integer; pDocumentoNr, pRazao, pRegistroERP: String; pRotaId: Integer;
+      pRecebido, pCubagem, pEtiqueta, pverificarEstoque: Integer): TjSonArray;
     Function GetEstoqueCaixaFechada(pPedidoId: Integer): TjSonArray;
     Function CreateVolumeCaixaFechada(pJsonArray: TjSonArray): TjSonArray;
     Function GetLoteParaVolumeFracionado(pPedidoId: Integer): TjSonArray;
@@ -2571,24 +2570,22 @@ begin
   try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedidoPrintTag);
     if (pRotaId > 0) or (pRotaIdFinal > 0) then
-      FConexao.Query.SQL.Add('Order by Ped.RotaId, Ped.PedidoId')
+      FConexao.Query.SQL.Add('Order by RotaId, PedidoId')
     Else
-      FConexao.Query.SQL.Add('Order by Ped.DocumentoData, ped.PedidoId');
+      FConexao.Query.SQL.Add('Order by PedidoId');
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     FConexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
     FConexao.Query.ParamByName('pCodigoERP').Value := pCodigoERP;
     if pDataIni = 0 then
       FConexao.Query.ParamByName('pDataIni').Value := pDataIni
     Else
-      FConexao.Query.ParamByName('pDataIni').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataIni);
+      FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', pDataIni);
     if pDataFin = 0 then
       FConexao.Query.ParamByName('pDataFin').Value := pDataFin
     Else
-      FConexao.Query.ParamByName('pDataFin').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataFin);
-    FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
-    FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
+      FConexao.Query.ParamByName('pDataFin').Value := FormatDateTime('YYYY-MM-DD', pDataFin);
+    //FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
+    //FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
     FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
     FConexao.Query.ParamByName('pRotaIdFinal').Value := pRotaIdFinal;
     FConexao.Query.ParamByName('pZonaId').Value := pZonaId;
@@ -2757,7 +2754,7 @@ end;
 function TPedidoSaidaDao.ProdutoSemPicking(pPedidoId: Integer;
   pDataIni, pDataFin: TDate; pCodigoERP, pPessoaId: Integer;
   pDocumentoNr, pRazao, pRegistroERP: String; pRotaId, pRecebido, pCubagem,
-  pEtiqueta: Integer): TjSonArray;
+  pEtiqueta, pverificarEstoque: Integer): TjSonArray;
 begin
   try
     // ClipBoard.Astext := vSql;
@@ -2784,6 +2781,7 @@ begin
     FConexao.Query.ParamByName('pRecebido').Value := pRecebido;
     FConexao.Query.ParamByName('pCubagem').Value := 0; // pCubagem;
     FConexao.Query.ParamByName('pEtiqueta').Value := pEtiqueta;
+    FConexao.Query.ParamByName('pVerificarEstoque').Value := pverificarEstoque;
     // Clipboard.AsText := FConexao.Query.Text;
     If DebugHook <> 0 Then
       FConexao.Query.SQL.SaveToFile('ProdutoSemPicking.Sql');

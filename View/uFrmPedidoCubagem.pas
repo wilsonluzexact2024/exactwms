@@ -1720,6 +1720,7 @@ Var ObjPedidoFracCtrl         : TPedidoSaidaCtrl;
     jsonVolumeLote   : tjsonObject;
     ArrayJsonVolumeLotes, ArrayJsonVolumes, ArrayJsonRetorno : tJsonArray;
     vNumVolume, vLote, vBloqueado : Integer;
+    Teste : String;
 begin
   Result := True; //Retorno com Erro
   Try
@@ -1799,13 +1800,13 @@ begin
       //1 - Cubagem por Produto
 //            if (DebugHook<>0) and (FieldByName('ProdutoId').AsInteger = 2676) then
 //               showMessage('Acompanhar');
-            if  vProdutoId <> FieldByName('ProdutoId').AsInteger then Begin
+            if vProdutoId <> FieldByName('ProdutoId').AsInteger then Begin
                vProdutoId             := FieldByName('ProdutoId').AsInteger;
                vPesoProduto           := FieldByName('PesoLiquidoKg').AsFloat;
                if vPesoProduto <= 0 then vPesoProduto := 1;
                vVolumeProduto         := FieldByName('VolumeCm3').AsFloat;
                If vVolumeProduto <= 0 then vVolumeProduto := 512;
-               vSaldoQtdSolicitada    := FieldByName('QtdSolicitada').AsInteger;//*FieldByName('EmbalagemPadrao').AsInteger;
+               vSaldoQtdSolicitada    := QryEstoqueDisponivel_CaixaFracionada.FieldByName('QtdSolicitada').AsInteger;//*FieldByName('EmbalagemPadrao').AsInteger;
             End;
             //Verificar se Cabe na Caixa
             if (vPesoProduto>vSaldoCaixaPeso) or (vVolumeProduto>vSaldoCaixaVolume) or
@@ -2050,7 +2051,7 @@ begin
   End;
   ObjPedidoCtrl    := TPedidoSaidaCtrl.Create;
   JsonArrayProduto := ObjPedidoCtrl.PedidoProdutoSemPicking(StrToIntDef(EdtPedidoId.Text, 0), StrToIntDef(EdtDestinatario.Text, 0), 0, vDtInicio, vDtFInal,
-                                                   '', '', '', StrToIntDef(EdtRota.Text, 0), 0, 1, 1, 1, True);
+                                                   '', '', '', StrToIntDef(EdtRota.Text, 0), 0, 1, 1, 1, True, True);
   if JsonArrayProduto.Items[0].TryGetValue('Erro', vErro) then Begin
      ShowErro( '😢Erro: '+vErro);
   End;

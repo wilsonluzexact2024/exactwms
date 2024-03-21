@@ -33128,7 +33128,7 @@ inherited FrmPrintTag: TFrmPrintTag
                 'Pedido Id'
                 'Tipo Opera'#231#227'o'
                 'C'#243'digo ERP'
-                'Raz'#227'o'#9
+                'Destinat'#225'rio'
                 'Processo'
                 'Volumes'
                 'Rota'
@@ -33319,6 +33319,7 @@ inherited FrmPrintTag: TFrmPrintTag
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.4.2.2'
               WordWrap = False
+              ExplicitLeft = 1
               ColWidths = (
                 74
                 118
@@ -33756,7 +33757,7 @@ inherited FrmPrintTag: TFrmPrintTag
             Font.Style = []
             ParentFont = False
             ScrollBars = ssBoth
-            TabOrder = 0
+            TabOrder = 1
             HoverRowCells = [hcNormal, hcSelected]
             OnClickCell = LstTagArmazenagemClickCell
             OnDblClickCell = LstCadastroDblClickCell
@@ -34012,7 +34013,7 @@ inherited FrmPrintTag: TFrmPrintTag
             Height = 180
             CustomHint = BalloonHint1
             BevelOuter = bvLowered
-            TabOrder = 1
+            TabOrder = 2
             Visible = False
             object GbPeriodo: TGroupBox
               Left = 9
@@ -34361,14 +34362,14 @@ inherited FrmPrintTag: TFrmPrintTag
           end
           object PnlSelectionTypeEtq: TPanel
             Left = 0
-            Top = 0
+            Top = -1
             Width = 185
             Height = 180
             CustomHint = BalloonHint1
-            TabOrder = 2
+            TabOrder = 0
             object RbRecebimento: TRadioButton
               Left = 20
-              Top = 32
+              Top = 34
               Width = 145
               Height = 17
               CustomHint = BalloonHint1
@@ -34389,7 +34390,7 @@ inherited FrmPrintTag: TFrmPrintTag
           end
           object PnlEtqArmazenagemIndividual: TPanel
             Left = 185
-            Top = 0
+            Top = -1
             Width = 790
             Height = 180
             CustomHint = BalloonHint1
@@ -34423,9 +34424,9 @@ inherited FrmPrintTag: TFrmPrintTag
               CustomHint = BalloonHint1
               Caption = 'Estoque(Lote)'
             end
-            object BtnEtqIndividual: TsImage
-              Left = 594
-              Top = 142
+            object BtnEtqIndividualOld: TsImage
+              Left = 557
+              Top = 117
               Width = 30
               Height = 30
               Cursor = crHandPoint
@@ -39440,14 +39441,14 @@ inherited FrmPrintTag: TFrmPrintTag
               ShowHint = True
               Stretch = True
               Transparent = True
-              OnClick = BtnEtqIndividualClick
+              Visible = False
               Grayed = True
               SkinData.SkinSection = 'CHECKBOX'
               UseFullSize = True
             end
             object LblCountPrint: TLabel
-              Left = 634
-              Top = 146
+              Left = 683
+              Top = 138
               Width = 12
               Height = 17
               CustomHint = BalloonHint1
@@ -39461,7 +39462,7 @@ inherited FrmPrintTag: TFrmPrintTag
             end
             object GroupBox11: TGroupBox
               Left = 10
-              Top = 8
+              Top = 9
               Width = 749
               Height = 49
               CustomHint = BalloonHint1
@@ -39476,8 +39477,8 @@ inherited FrmPrintTag: TFrmPrintTag
                 Caption = 'C'#243'digo'
               end
               object LblProdutoEtqIndividual: TLabel
-                Left = 218
-                Top = 24
+                Left = 217
+                Top = 26
                 Width = 326
                 Height = 16
                 CustomHint = BalloonHint1
@@ -39492,7 +39493,7 @@ inherited FrmPrintTag: TFrmPrintTag
               end
               object EdtCodProdutoEtqIndividual: TEdit
                 Left = 58
-                Top = 20
+                Top = 25
                 Width = 130
                 Height = 24
                 CustomHint = BalloonHint1
@@ -39588,26 +39589,26 @@ inherited FrmPrintTag: TFrmPrintTag
               Font.Name = 'Tahoma'
               Font.Style = []
               ParentFont = False
-              TabOrder = 1
+              TabOrder = 5
               OnExit = EdtCodProdutoExit
             end
             object RgPrinterEtqIndividual: TRadioGroup
-              Left = 9
+              Left = 6
               Top = 95
               Width = 173
               Height = 79
               CustomHint = BalloonHint1
               Caption = ' [ Impress'#227'o Etiqueta ] '
+              ItemIndex = 0
               Items.Strings = (
                 'Cxa.Fechada'
                 'Fracionados')
-              TabOrder = 2
-              TabStop = True
+              TabOrder = 1
               OnClick = RgPrinterEtqIndividualClick
             end
             object DbgLotesEtqIndividual: TDBGrid
-              Left = 200
-              Top = 66
+              Left = 198
+              Top = 67
               Width = 354
               Height = 105
               Margins.Left = 6
@@ -39625,7 +39626,7 @@ inherited FrmPrintTag: TFrmPrintTag
               Font.Style = []
               Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
               ParentFont = False
-              TabOrder = 3
+              TabOrder = 6
               TitleFont.Charset = DEFAULT_CHARSET
               TitleFont.Color = clWindowText
               TitleFont.Height = -11
@@ -39672,12 +39673,13 @@ inherited FrmPrintTag: TFrmPrintTag
               Font.Name = 'Segoe UI'
               Font.Style = [fsBold]
               ParentFont = False
-              TabOrder = 4
+              TabOrder = 2
               DecimalPlacesAlwaysShown = False
+              OnKeyPress = EdtQtdEtiquetaIndividualKeyPress
             end
             object EdtQuantidadeEstIndividual: TJvCalcEdit
-              Left = 681
-              Top = 82
+              Left = 683
+              Top = 85
               Width = 77
               Height = 29
               CustomHint = BalloonHint1
@@ -39687,8 +39689,27 @@ inherited FrmPrintTag: TFrmPrintTag
               Font.Name = 'Segoe UI'
               Font.Style = [fsBold]
               ParentFont = False
-              TabOrder = 5
+              TabOrder = 3
               DecimalPlacesAlwaysShown = False
+              OnKeyPress = EdtQuantidadeEstIndividualKeyPress
+            end
+            object BtnEtqIndividual: TButton
+              Left = 576
+              Top = 138
+              Width = 101
+              Height = 27
+              CustomHint = BalloonHint1
+              Caption = 'Imprimir'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -16
+              Font.Name = 'Segoe UI'
+              Font.Style = []
+              ImageIndex = 5
+              Images = ImgListSimNao
+              ParentFont = False
+              TabOrder = 4
+              OnClick = BtnEtqIndividualClick
             end
           end
         end
@@ -39811,10 +39832,10 @@ inherited FrmPrintTag: TFrmPrintTag
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 934
-    Top = -52
-    ExplicitLeft = 934
-    ExplicitTop = -52
+    Left = 680
+    Top = 39
+    ExplicitLeft = 680
+    ExplicitTop = 39
     inherited LblLanguagePrinter: TLabel
       Color = clBtnFace
     end

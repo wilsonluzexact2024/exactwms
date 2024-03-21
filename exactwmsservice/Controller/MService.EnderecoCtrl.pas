@@ -31,25 +31,21 @@ procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetEndereco4D(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEnderecoToReposicao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEnderecoToReposicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetEstrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetZona(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure EnderecoBloquear(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure EnderecoBloquear(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetPickingMask(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MontarPaginacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure manutencao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure ExportFile(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetPadraoMovimentacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetPadraoMovimentacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetReUsoPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure PutDesvincularPicking(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure PutDesvincularPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -74,7 +70,8 @@ begin
     .Post('/endereco', Insert)
     .Put('/endereco/:enderecoid', Update)
     .Put('/endereco/bloquear', EnderecoBloquear)
-    .Delete('/endereco/:enderecoid', Delete).Get('/endereco/montarpaginacao', MontarPaginacao)
+    .Delete('/endereco/:enderecoid', Delete)
+    .Get('/endereco/montarpaginacao', MontarPaginacao)
     .Get('/endereco4D', GetEndereco4D)
     .Put('endereco/manutencao', manutencao)
     .Get('endereco/exportfile', ExportFile)

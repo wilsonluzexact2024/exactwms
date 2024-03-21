@@ -444,11 +444,10 @@ begin
     vCompl := '';
     vListaPedido := '';
     if pJsonObject.GetValue<TJsonArray>('pedido').Count > 0 then
-      vQry.Sql.Add('     And Pv.PedidoId in (');
+       vQry.Sql.Add('     And Pv.PedidoId in (');
     for xArray := 0 to Pred(pJsonObject.GetValue<TJsonArray>('pedido').Count) do
     Begin
-      vListaPedido := vListaPedido + vCompl + pJsonObject.GetValue<TJsonArray>
-        ('pedido').Items[xArray].GetValue<String>('pedidoid');
+      vListaPedido := vListaPedido + vCompl + pJsonObject.GetValue<TJsonArray>('pedido').Items[xArray].GetValue<String>('pedidoid');
       vCompl := ', ';
     End;
     if pJsonObject.Count > 0 then
@@ -461,26 +460,20 @@ begin
     Else
        vQry.Sql.Add('order by VL.Inicio, Ro.RotaId, vCxaFechada.CodProduto');
     if DebugHook <> 0 then
-      vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
+       vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
     vQry.Open;
     if vQry.IsEmpty then
-      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-        TuEvolutConst.QrySemDados)))
+       Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro', TuEvolutConst.QrySemDados)))
     Else
-      Result := vQry.ToJsonArray;
-  Except
-    ON E: Exception do
-    Begin
-      raise Exception.Create('Processo: Etiqueta Por Rua - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+       Result := vQry.ToJsonArray;
+  Except ON E: Exception do Begin
+    raise Exception.Create('Processo: Etiqueta Por Rua - ' + StringReplace(E.Message,
+                           '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
 
-function TServicePedidoVolume.FinalizarSeparacao(pJsonObject: TJsonObject)
-  : TJsonObject;
+function TServicePedidoVolume.FinalizarSeparacao(pJsonObject: TJsonObject) : TJsonObject;
 var
   vQry: TFdQuery;
   vVolumeSeparacaoId: Integer;
@@ -895,13 +888,11 @@ begin
   end;
 end;
 
-function TServicePedidoVolume.GetOpenVolumeParaSeparacao(pCaixaId,
-  pPedidoVolumeId, pUsuarioId: Integer; pTerminal: String): TJsonArray;
-var
-  vQry: TFdQuery;
-  vQrySeparacao: TFdQuery;
-  MsgErro: String;
-  vVolumeSeparacaoId: Integer;
+Function TServicePedidoVolume.GetOpenVolumeParaSeparacao(pCaixaId, pPedidoVolumeId, pUsuarioId: Integer; pTerminal: String): TJsonArray;
+var vQry: TFdQuery;
+    vQrySeparacao: TFdQuery;
+    MsgErro: String;
+    vVolumeSeparacaoId: Integer;
 begin
   try
     MsgErro := '';
@@ -916,38 +907,27 @@ begin
       vQry.Sql.Add('Declare @CaixaId Integer = :pCaixaId');
       vQry.Sql.Add('select vEC.*, PVS.PedidoVolumeId, PVS.UsuarioId');
       vQry.Sql.Add('from vEmbalagemCaixa vEC');
-      vQry.Sql.Add
-        ('Left Join (Select CaixaEmbalagemId, PedidoVolumeId, UsuarioId');
+      vQry.Sql.Add('Left Join (Select CaixaEmbalagemId, PedidoVolumeId, UsuarioId');
       vQry.Sql.Add('           From PedidoVolumeSeparacao');
-      vQry.Sql.Add
-        ('		   Where Operacao = 0) PVS on PVS.CaixaEmbalagemId = vEC.CaixaEmbalagemId');
+      vQry.Sql.Add('		   Where Operacao = 0) PVS on PVS.CaixaEmbalagemId = vEC.CaixaEmbalagemId');
       vQry.Sql.Add('where vEC.CaixaEmbalagemId = @CaixaId');
       vQry.ParamByName('pCaixaId').Value := pCaixaId;
       If DebugHook <> 0 then
         vQry.Sql.SaveToFile('CaixaParaSeparacao.Sql');
       vQry.Open;
-      if (vQry.IsEmpty) or (vQry.FieldByName('CaixaEmbalagemId').AsInteger = 0)
-      then
-        MsgErro := 'Caixa não encontrada!'
+      if (vQry.IsEmpty) or (vQry.FieldByName('CaixaEmbalagemId').AsInteger = 0) then
+         MsgErro := 'Caixa não encontrada!'
       Else if (vQry.FieldByName('Status').AsInteger = 0) then
-        MsgErro := 'Caixa inativa!'
-      Else if (vQry.FieldByName('UsuarioId').AsInteger <> 0) and
-        (vQry.FieldByName('UsuarioId').AsInteger <> pUsuarioId) then
-        MsgErro := 'Caixa em uso por outro Usu�rio(' +
-          vQry.FieldByName('UsuarioId').AsString + ')!';
-      if (MsgErro <> '') or (vQry.FieldByName('PedidoVolumeId').AsInteger = 0)
-      then
-      Begin
-        Result := TJsonArray.Create;
-        if MsgErro <> '' then
-          Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG',
-            MsgErro)))
-        Else
-          Result.AddElement
-            (TJsonObject.Create(tJsonPair.Create('caixaseparacao',
-            TJsonNumber.Create(pCaixaId))));
-
-        Exit;
+         MsgErro := 'Caixa inativa!'
+      Else if (vQry.FieldByName('UsuarioId').AsInteger <> 0) and (vQry.FieldByName('UsuarioId').AsInteger <> pUsuarioId) then
+         MsgErro := 'Caixa em uso por outro Usu�rio(' + vQry.FieldByName('UsuarioId').AsString + ')!';
+      if (MsgErro <> '') or (vQry.FieldByName('PedidoVolumeId').AsInteger = 0) then Begin
+         Result := TJsonArray.Create;
+         if MsgErro <> '' then
+            Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG', MsgErro)))
+         Else
+            Result.AddElement(TJsonObject.Create(tJsonPair.Create('caixaseparacao', TJsonNumber.Create(pCaixaId))));
+         Exit;
       End;
       pPedidoVolumeId := vQry.FieldByName('PedidoVolumeId').AsInteger;
     End;
@@ -957,116 +937,102 @@ begin
     // vQry.ParamByName('pCaixaId').Value        := pCaixaid;
     vQry.ParamByName('pPedidoVolumeid').Value := pPedidoVolumeId;
     vQry.ParamByName('pUsuarioId').Value := pUsuarioId;
-    if DebugHook <> 0 then
-      vQry.Sql.SaveToFile('OpenVolumeParaSeparacao.Sql');
+    if DebugHook <> 0 then vQry.Sql.SaveToFile('OpenVolumeParaSeparacao.Sql');
     vQry.Open;
-    if vQry.IsEmpty then
-    Begin
+    if vQry.IsEmpty then Begin
       Result := TJsonArray.Create;
       if pPedidoVolumeId <> 0 then
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG',
-          TuEvolutConst.QrySemDados)))
+         Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG', TuEvolutConst.QrySemDados)))
       Else
-        Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG',
-          'Caixa Dispon�vel!')))
+         Result.AddElement(TJsonObject.Create(tJsonPair.Create('MSG', 'Caixa Dispon�vel!')))
     End
     Else
     Begin
-      If (vQry.FieldByName('ProcessoId').AsInteger <> 3) and
-        (vQry.FieldByName('ProcessoId').AsInteger <> 7) Then
-      Begin
-        if vQry.FieldByName('ProcessoId').AsInteger < 3 then
-          MsgErro := 'Imprima a etiqueta do volume!'
-        Else if vQry.FieldByName('ProcessoId').AsInteger > 7 then
-          MsgErro := 'Separação não permitida. Processo Atual: ' +
-            vQry.FieldByName('Processo').AsString;
+      If (vQry.FieldByName('ProcessoId').AsInteger <> 3) and (vQry.FieldByName('ProcessoId').AsInteger <> 7) Then Begin
+         if vQry.FieldByName('ProcessoId').AsInteger < 3 then
+            MsgErro := 'Imprima a etiqueta do volume!'
+         Else if vQry.FieldByName('ProcessoId').AsInteger > 7 then
+            MsgErro := 'Separação não permitida. Processo Atual: ' + vQry.FieldByName('Processo').AsString;
       End
       Else If (vQry.FieldByName('Operacao').AsInteger = 1) then
-        MsgErro := 'Separa��o de Volume já conclu�da.'
-      Else If (vQry.FieldByName('VolumeSeparacaoId').AsInteger <> 0) Then
-      Begin
-        If (pCaixaId <> vQry.FieldByName('caixaembalagemid').AsInteger) then
-        Begin
-          If vQry.FieldByName('caixaembalagemid').AsInteger = 0 then
-            MsgErro := 'Volume Em Separa��o na Caixa(' +
-              vQry.FieldByName('caixaembalagemid').AsString + ' - Papel�o).'
-          Else
-            MsgErro := 'Volume Em Separa��o na Caixa(' +
-              vQry.FieldByName('caixaembalagemid').AsString + ').';
+         MsgErro := 'Separação de Volume já conclu�da.'
+      Else If (vQry.FieldByName('VolumeSeparacaoId').AsInteger <> 0) Then Begin
+        If (pCaixaId <> vQry.FieldByName('caixaembalagemid').AsInteger) then Begin
+           If vQry.FieldByName('caixaembalagemid').AsInteger = 0 then
+              MsgErro := 'Volume Em Separação na Caixa(' + vQry.FieldByName('caixaembalagemid').AsString + ' - Papel�o).'
+           Else
+              MsgErro := 'Volume Em Separação na Caixa(' + vQry.FieldByName('caixaembalagemid').AsString + ').';
         End
-        else If (vQry.FieldByName('UsuarioIdSeparacao').AsInteger <> 0) and
-          (pUsuarioId <> vQry.FieldByName('UsuarioIdSeparacao').AsInteger) then
-          MsgErro := 'Volume em separa��o por outro usu�rio(' +
-            vQry.FieldByName('UsuarioIdSeparacao').AsString + ').';
+        else If (vQry.FieldByName('UsuarioIdSeparacao').AsInteger <> 0) and (pUsuarioId <> vQry.FieldByName('UsuarioIdSeparacao').AsInteger) then
+           MsgErro := 'Volume em separação por outro usuário(' + vQry.FieldByName('UsuarioIdSeparacao').AsString + ').';
       End;
-      if MsgErro <> '' then
-      begin
-        Result := TJsonArray.Create;
-        Result.AddElement(TJsonObject.Create.AddPair('MSG', MsgErro));
+      if MsgErro <> '' then begin
+         Result := TJsonArray.Create;
+         Result.AddElement(TJsonObject.Create.AddPair('MSG', MsgErro));
       End
-      Else
-      Begin
-        vQrySeparacao := FConexao.GetQuery;;
-        vQrySeparacao.connection := vQry.connection;
-        // Evitar DeadLock com transacao menor e mais r�pida
-        vQrySeparacao.connection.StartTransaction;
-        vQrySeparacao.connection.TxOptions.Isolation := xiReadCommitted;
-        if vQry.FieldByName('VolumeSeparacaoId').AsInteger = 0 then
-        Begin
-          vQrySeparacao.Close;
-          vQrySeparacao.Sql.Clear;
-          vQrySeparacao.Sql.Add('Declare @VolumeSeparacaoId Integer = 0');
-          vQrySeparacao.SQL.Add('Update PedidoVolumes Set CaixaEmbalagemId = '+pCaixaId.ToString()+' where PedidoVolumeId = '+ pPedidoVolumeId.ToString());
-          vQrySeparacao.Sql.Add('Insert into PedidoVolumeSeparacao Values (');
-          vQrySeparacao.Sql.Add(pCaixaId.ToString() + ', ' +
-            pPedidoVolumeId.ToString() + ', 0, 0, ' + pUsuarioId.ToString() +
-            ', ' + TuEvolutConst.SqlDataAtual + ', ' +
-            TuEvolutConst.SqlHoraAtual + ', Null, Null, 0');
-          vQrySeparacao.Sql.Add(')');
-          vQrySeparacao.Sql.Add('Set @VolumeSeparacaoId = SCOPE_IDENTITY()');
-          vQrySeparacao.Sql.Add('Select @VolumeSeparacaoId As VolumeSeparacaoId');
-          vQrySeparacao.Open;
-          // Status do Volume
-          vQrySeparacao.Sql.Clear;
-          vQrySeparacao.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '+'PedidoVolumeId = ' + pPedidoVolumeId.ToString() + ')');
-          vQrySeparacao.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-          vQrySeparacao.ParamByName('pProcessoId').Value := 7;
-          vQrySeparacao.ParamByName('pUsuarioId').Value := pUsuarioId;
-          vQrySeparacao.ParamByName('pTerminal').Value := pTerminal;
-          vQrySeparacao.SQL.Add('Update PedidoVolumes Set CaixaEmbalagemId = '+pCaixaId.ToString());
-          vQrySeparacao.SQL.Add('Where pedidoVolumeId = '+pPedidoVolumeId.ToString());
-          If DebugHook <> 0 then
-            vQrySeparacao.Sql.SaveToFile('RegSeparacaoOpenSeparacao.Sql');
-          vQrySeparacao.ExecSQL;
-          vQrySeparacao.Close;
-          vQrySeparacao.Sql.Clear;
-          vQrySeparacao.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-          vQrySeparacao.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
-          vQrySeparacao.ParamByName('pUsuarioId').Value := pUsuarioId;
-          vQrySeparacao.ParamByName('pTerminal').Value := pTerminal;
-          If DebugHook <> 0 then
-            vQrySeparacao.Sql.SaveToFile('PedidoStatusOpenSeparacao.Sql');
-          vQrySeparacao.ExecSQL;
-          vQry.Close;
-          vQry.Open;
-        End
-        Else
-        Begin
-          vVolumeSeparacaoId := vQry.FieldByName('VolumeSeparacaoId').AsInteger;
-          vQrySeparacao.Close;
-          vQrySeparacao.Sql.Clear;
-          vQrySeparacao.Sql.Add('update PedidoVolumeSeparacao Set');
-          vQrySeparacao.Sql.Add('  UsuarioId = ' + pUsuarioId.ToString());
-          vQrySeparacao.Sql.Add('Where VolumeSeparacaoId = ' +
-            vVolumeSeparacaoId.ToString());
-          vQrySeparacao.ExecSQL;
-        End;
-        if vQrySeparacao.connection.InTransaction then
-          vQrySeparacao.connection.Commit;
-        vQrySeparacao.Close;
+      Else Begin
+         vQrySeparacao := FConexao.GetQuery;;
+         vQrySeparacao.connection := vQry.connection;
+         // Evitar DeadLock com transacao menor e mais r�pida
+         vQrySeparacao.connection.StartTransaction;
+         vQrySeparacao.connection.TxOptions.Isolation := xiReadCommitted;
+         if vQry.FieldByName('VolumeSeparacaoId').AsInteger = 0 then Begin
+           vQrySeparacao.Close;
+           vQrySeparacao.Sql.Clear;
+           vQrySeparacao.Sql.Add('Declare @VolumeSeparacaoId Integer = 0');
+           vQrySeparacao.Sql.Add('Insert into PedidoVolumeSeparacao Values (');
+           vQrySeparacao.Sql.Add(pCaixaId.ToString() + ', ' +
+             pPedidoVolumeId.ToString() + ', 0, 0, ' + pUsuarioId.ToString() +
+             ', ' + TuEvolutConst.SqlDataAtual + ', ' +
+             TuEvolutConst.SqlHoraAtual + ', Null, Null, 0');
+           vQrySeparacao.Sql.Add(')');
+           vQrySeparacao.Sql.Add('Set @VolumeSeparacaoId = SCOPE_IDENTITY()');
+           vQrySeparacao.Sql.Add('Select @VolumeSeparacaoId As VolumeSeparacaoId');
+           vQrySeparacao.Open;
+           // Status do Volume
+           vQrySeparacao.Sql.Clear;
+           vQrySeparacao.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '+'PedidoVolumeId = ' + pPedidoVolumeId.ToString() + ')');
+           vQrySeparacao.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+           vQrySeparacao.ParamByName('pProcessoId').Value := 7;
+           vQrySeparacao.ParamByName('pUsuarioId').Value := pUsuarioId;
+           vQrySeparacao.ParamByName('pTerminal').Value := pTerminal;
+           if pCaixaId > 0 then Begin
+              vQrySeparacao.SQL.Add('Update PedidoVolumes Set CaixaEmbalagemId = '+pCaixaId.ToString());
+              vQrySeparacao.SQL.Add('Where PedidoVolumeId = '+ pPedidoVolumeId.ToString());
+              vQrySeparacao.SQL.Add(' ');
+           End;
+           If DebugHook <> 0 then
+             vQrySeparacao.Sql.SaveToFile('RegSeparacaoOpenSeparacao.Sql');
+           vQrySeparacao.ExecSQL;
+           vQrySeparacao.Close;
+           vQrySeparacao.Sql.Clear;
+           vQrySeparacao.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
+           vQrySeparacao.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
+           vQrySeparacao.ParamByName('pUsuarioId').Value := pUsuarioId;
+           vQrySeparacao.ParamByName('pTerminal').Value := pTerminal;
+           If DebugHook <> 0 then
+             vQrySeparacao.Sql.SaveToFile('PedidoStatusOpenSeparacao.Sql');
+           vQrySeparacao.ExecSQL;
+           vQry.Close;
+           vQry.Open;
+         End
+         Else
+         Begin
+           vVolumeSeparacaoId := vQry.FieldByName('VolumeSeparacaoId').AsInteger;
+           vQrySeparacao.Close;
+           vQrySeparacao.Sql.Clear;
+           vQrySeparacao.Sql.Add('update PedidoVolumeSeparacao Set');
+           vQrySeparacao.Sql.Add('  UsuarioId = ' + pUsuarioId.ToString());
+           vQrySeparacao.Sql.Add('Where VolumeSeparacaoId = ' +
+             vVolumeSeparacaoId.ToString());
+           vQrySeparacao.ExecSQL;
+         End;
+         if vQrySeparacao.connection.InTransaction then
+           vQrySeparacao.connection.Commit;
+         vQrySeparacao.Close;
 
-        Result := vQry.ToJsonArray;
-      End;
+         Result := vQry.ToJsonArray;
+       End;
     End;
     if vQry.connection.InTransaction then
       vQry.connection.Commit;

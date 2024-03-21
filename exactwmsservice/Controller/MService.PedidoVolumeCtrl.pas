@@ -60,8 +60,7 @@ Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse;
 Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 // Identificacao para Etiqueta volume Caixa Fechada
-Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest;
@@ -131,74 +130,56 @@ uses MService.PedidoVolumeDAO, uFuncoes, Services.PedidoVolume;
 
 procedure Registry;
 begin
-  THorse.Group.Prefix('v1').Get('/pedidovolume', Get)
+  THorse.Group.Prefix('v1')
+    .Get('/pedidovolume', Get)
     .Get('/pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal', GetOpenVolumeParaSeparacao)
-    .Get('/pedidovolumeseparacao/:pedidovolumeid',
-    GetVolumeSeparacao).Get('/pedidovolumeseparacao/:pedidoid/:pedidovolumeid',
-    GetPedidoVolumeSeparacao)
-    .Get('/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid',
-    GetVolumeRegistrarExpedicao)
-    .Get('/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
-    GetVolume)
-    .Get('/volumeprinttag/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:zonaid/:printtag/:embalagem',
-    GetVolumePrintTag).Get('/pedidovolume/produto/:pedidovolumeid',
-    GetVolumeProduto).Get('/pedidovolume/produto/reconferencia/:pedidovolumeid',
-    GetVolumeProdutoReconferencia)
-    .Get('/pedidovolume/produtolote/:pedidoid/:codproduto',
-    GetPedidoVolumeProdutoLote)
-    .Get('/pedidovolume/produtoseparacao/:pedidovolumeid',
-    GetVolumeProdutoSeparacao) // GENILSON
+    .Get('/pedidovolumeseparacao/:pedidovolumeid', GetVolumeSeparacao)
+    .Get('/pedidovolumeseparacao/:pedidoid/:pedidovolumeid', GetPedidoVolumeSeparacao)
+    .Get('/pedidovolume/volumeregistrarexpedicao/:pedidovolumeid', GetVolumeRegistrarExpedicao)
+    .Get('/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid', GetVolume)
+    .Get('/volumeprinttag/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:zonaid/:printtag/:embalagem', GetVolumePrintTag)
+    .Get('/pedidovolume/produto/:pedidovolumeid', GetVolumeProduto)
+    .Get('/pedidovolume/produto/reconferencia/:pedidovolumeid', GetVolumeProdutoReconferencia)
+    .Get('/pedidovolume/produtolote/:pedidoid/:codproduto', GetPedidoVolumeProdutoLote)
+    .Get('/pedidovolume/produtoseparacao/:pedidovolumeid', GetVolumeProdutoSeparacao) // GENILSON
     .Get('/pedidovolume/lotes/:pedidovolumeid', GetVolumeLote)
-    .Get('/pedidovolume/produtolotes/:pedidovolumeid/:produtoid',
-    GetVolumeProdutoLotes).Get('/pedidovolume/etapas/:pedidovolumeid',
-    GetPedidoVolumeEtapas).Post('/pedidovolume/registrardocumentoetapa',
-    RegistrarDocumentoEtapa)
-    .Post('/pedidovolume/registrardocumentoetapacombaixaestoque',
-    RegistrarDocumentoEtapaComBaixaEstoque)
-    .Post('/pedidovolume/registrardocumentoetapasembaixaestoque',
-    RegistrarDocumentoEtapaSemBaixaEstoque).Put('/pedidovolume/:pedidovolumeid',
-    Update).Put('/pedidovolume/cancelar/:pedidovolumeid', Cancelar)
+    .Get('/pedidovolume/produtolotes/:pedidovolumeid/:produtoid', GetVolumeProdutoLotes)
+    .Get('/pedidovolume/etapas/:pedidovolumeid', GetPedidoVolumeEtapas)
+    .Post('/pedidovolume/registrardocumentoetapa', RegistrarDocumentoEtapa)
+    .Post('/pedidovolume/registrardocumentoetapacombaixaestoque', RegistrarDocumentoEtapaComBaixaEstoque)
+    .Post('/pedidovolume/registrardocumentoetapasembaixaestoque', RegistrarDocumentoEtapaSemBaixaEstoque)
+    .Put('/pedidovolume/:pedidovolumeid', Update)
+    .Put('/pedidovolume/cancelar/:pedidovolumeid', Cancelar)
     .Delete('/pedidovolume/:pedidovolumeid', Delete)
     .Get('/mapaseparacao/:pedidoid/:pedidovolumeid', MapaSeparacao)
-    .Get('/volumeparaetiquetas/:pedidoid/:pedidovolumeid/:zonaid/:printtag/:embalagem',
-    VolumeParaEtiquetas).Get('/etiquetaporvolume/:pedidovolumeid',
-    EtiquetaPorVolume) // Identificação Etiqueta Volume Caixa Fracionada
+    .Get('/volumeparaetiquetas/:pedidoid/:pedidovolumeid/:zonaid/:printtag/:embalagem', VolumeParaEtiquetas)
+    .Get('/etiquetaporvolume/:pedidovolumeid', EtiquetaPorVolume) // Identificação Etiqueta Volume Caixa Fracionada
     .Get('pedidovolume/etiquetaporrua', EtiquetaVolumePorRua)
-    .Get('/identificavolumecxafechada/:pedidovolumeid',
-    identificavolumecxafechada) // Identificação Etiqueta Volume Caixa Fechada
+    .Get('/identificavolumecxafechada/:pedidovolumeid', identificavolumecxafechada) // Identificação Etiqueta Volume Caixa Fechada
     .Get('/pedidovolume/expedicao', VolumeExpedicao)
     .Get('/pedidovolume/expedido', VolumeExpedido)
     .Put('/pedidovolume/saveapanheprodutos', SaveApanheProdutos)
     .Put('/pedidovolume/salvarcoletacomregistro', SalvarColetaComRegistro)
     .Put('/pedidovolume/atualizarconferencia', AtualizarConferencia)
-    .Put('/pedidovolume/atualizarconferenciasemlotes',
-    AtualizarConferenciaSemLotes)
-    .Put('/pedidovolume/finalizarconferenciacomregistro',
-    FinalizarConferenciaComRegistro)
+    .Put('/pedidovolume/atualizarconferenciasemlotes', AtualizarConferenciaSemLotes)
+    .Put('/pedidovolume/finalizarconferenciacomregistro', FinalizarConferenciaComRegistro)
     .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid', GerarVolumeExtra)
-    .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid',
-    GerarVolumeExtra2).Get('/pedidovolume/mapaseparacaolista',
-    MapaSeparacaoLista).Get('/pedidovolume/dshcheckout', DshCheckout)
+    .Post('/pedidovolume/gerarvolumeextra/:pedidovolumeid/:usuarioid', GerarVolumeExtra2).Get('/pedidovolume/mapaseparacaolista', MapaSeparacaoLista)
+    .Get('/pedidovolume/dshcheckout', DshCheckout)
     .Get('/pedidovolume/auditoriariavolume', GetAuditoriaVolumes)
     .Get('/pedidovolume/auditoriacorte/analitico', GetAuditoriaCorteAnalitico)
     .Put('/pedidovolume/lotesubstituicao', VolumeLoteSubstituicao)
     .Post('/caixaembalagem/:pedidovolumeid/:caixaembalagemid', CaixaSeparacao)
-    .Get('/pedidovolume/dshvolumeevolucao_quantidade',
-    Getdshvolumeevolucao_quantidade)
-    .Get('/pedidovolume/dshvolumeevolucao_Unidades',
-    Getdshvolumeevolucao_Unidades)
+    .Get('/pedidovolume/dshvolumeevolucao_quantidade', Getdshvolumeevolucao_quantidade)
+    .Get('/pedidovolume/dshvolumeevolucao_Unidades', Getdshvolumeevolucao_Unidades)
     .Put('/pedidovolume/resetseparacao/:pedidovolumeid', ResetSeparacao)
-    .Get('/pedidovolume/volumecomdivergencia/:pedidovolumeid',
-    GetVolumeComDivergencia).Get('/pedidovolume/producaodiariaporloja',
-    GetProducaoDiariaPorLoja).Get('/pedidovolume/producaodiariaporrua',
-    GetProducaoDiariaPorRua).Get('/pedidovolume/producaodiariaporsetor',
-    GetProducaoDiariaPorSetor).Get('/pedidovolume/producaodiariaporrota',
-    GetProducaoDiariaPorRota).Get('/pedidovolume/consulta', GetVolumeConsulta)
+    .Get('/pedidovolume/volumecomdivergencia/:pedidovolumeid', GetVolumeComDivergencia).Get('/pedidovolume/producaodiariaporloja', GetProducaoDiariaPorLoja)
+    .Get('/pedidovolume/producaodiariaporrua', GetProducaoDiariaPorRua)
+    .Get('/pedidovolume/producaodiariaporsetor', GetProducaoDiariaPorSetor).Get('/pedidovolume/producaodiariaporrota', GetProducaoDiariaPorRota)
+    .Get('/pedidovolume/consulta', GetVolumeConsulta)
     .Get('/pedidovolume/ean/:pedidovolumeid', GetVolumeEAN)
-    .Get('/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid',
-    salvarultimoenderecocoletado)
-    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
-    GetPedidoCxaFechadaCheckOut)
+    .Get('/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid', salvarultimoenderecocoletado)
+    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', GetPedidoCxaFechadaCheckOut)
 
 end;
 
@@ -582,29 +563,19 @@ begin
     LService := TServicePedidoVolume.Create;
     Tutil.Gravalog('[583 EtiquetaVolumePorRua] executando');
     Try
-      JsonArrayRetorno := LService.EtiquetaVolumePorRua
-        (TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0)
-        as TJSONObject);
+      JsonArrayRetorno := LService.EtiquetaVolumePorRua(TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSONObject);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-    Except
-      On E: Exception do
-      Begin
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except On E: Exception do Begin
         Tutil.Gravalog('[598 - EtiquetaVolumePorRua] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text),
-          Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                       '/v1/pedidovolume/etiquetaporrua', Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),
+                       Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -803,32 +774,21 @@ begin
     Tutil.Gravalog('[EtiquetaPorVolume] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
-      JsonArrayRetorno := PedidoVolumeDAO.EtiquetaPorVolume
-        (Req.Params.Items['pedidovolumeid'].ToInteger());
-      PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId :=
-        Req.Params.Items['pedidovolumeid'].ToInteger();
+      JsonArrayRetorno := PedidoVolumeDAO.EtiquetaPorVolume(Req.Params.Items['pedidovolumeid'].ToInteger());
+      PedidoVolumeDAO.ObjPedidoVolume.PedidoVolumeId := Req.Params.Items['pedidovolumeid'].ToInteger();
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/etiquetaporvolume/:pedidovolumeid', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 201, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-    Except
-      On E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/etiquetaporvolume/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      ' Registros.', 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except On E: Exception do
       Begin
         Tutil.Gravalog('[EtiquetaPorVolume] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/etiquetaporvolume/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/etiquetaporvolume/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                        ' Registros.', 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally

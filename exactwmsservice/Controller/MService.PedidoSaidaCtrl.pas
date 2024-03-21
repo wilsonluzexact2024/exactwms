@@ -2569,43 +2569,38 @@ end;
 procedure GetProdutoSemPicking(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 var
-  ObjPedidoSaidaDAO: TPedidoSaidaDAO;
-  AQueryParam: TDictionary<String, String>;
-  vDataIni, vDataFin: TDateTime;
+  ObjPedidoSaidaDAO  : TPedidoSaidaDAO;
+  AQueryParam        : TDictionary<String, String>;
+  vDataIni, vDataFin : TDateTime;
   vDocumentoNr, vRegistroERP, vRazao: String;
-  vPedidoId, vCodigoERP, vPessoaId, vRotaId, vRecebido, vCubagem,
-    vEtiqueta: Integer;
-  JsonArrayRetorno: TJSonArray;
-  HrInicioLog: TTime;
+  vPedidoId, vCodigoERP, vPessoaId, vRotaId, vRecebido, vCubagem, vEtiqueta, vverificarEstoque: Integer;
+  JsonArrayRetorno   : TJSonArray;
+  HrInicioLog        : TTime;
 begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
     Try
-      HrInicioLog := Time;
+      HrInicioLog  := Time;
       // Processos - Etapas dos Pedidos
-      vPedidoId := 0;
-      vDataIni := 0;
-      vDataFin := 0;
+      vPedidoId    := 0;
+      vDataIni     := 0;
+      vDataFin     := 0;
       vDocumentoNr := '';
       vRegistroERP := '';
-      vCodigoERP := 0;
-      vPessoaId := 0;
-      vRazao := '';
-      vRotaId := 0;
+      vCodigoERP   := 0;
+      vPessoaId    := 0;
+      vRazao       := '';
+      vRotaId      := 0;
+      vverificarEstoque := 0;
       AQueryParam := Req.Query.Dictionary;
       If AQueryParam.Count <= 0 then
       Begin
         JsonArrayRetorno := TJSonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          'Defina os parâmetros para cubagem!')));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/saida/produtosempicking', Trim(Req.Params.Content.Text),
-          Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
-          [rfReplaceAll]), 403, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Defina os parâmetros para cubagem!')));
+        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/saida/produtosempicking', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+                        [rfReplaceAll]), 403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
         FreeAndNil(ObjPedidoSaidaDAO);
         Exit;
       End;
@@ -2669,31 +2664,29 @@ begin
     End;
     Try
       if AQueryParam.ContainsKey('pedidoid') then
-        vPedidoId := StrToIntDef(AQueryParam.Items['pedidoid'], 0);
+         vPedidoId := StrToIntDef(AQueryParam.Items['pedidoid'], 0);
       if AQueryParam.ContainsKey('codigoerp') then
-        vCodigoERP := StrToIntDef(AQueryParam.Items['codigoerp'], 0);
+         vCodigoERP := StrToIntDef(AQueryParam.Items['codigoerp'], 0);
       if AQueryParam.ContainsKey('pessoaid') then
-        vPessoaId := StrToIntDef(AQueryParam.Items['pessoaid'], 0);
+         vPessoaId := StrToIntDef(AQueryParam.Items['pessoaid'], 0);
       if AQueryParam.ContainsKey('documentonr') then
-        vDocumentoNr := AQueryParam.Items['documentonr'];
+         vDocumentoNr := AQueryParam.Items['documentonr'];
       if AQueryParam.ContainsKey('razao') then
-        vRazao := AQueryParam.Items['razao'];
+         vRazao := AQueryParam.Items['razao'];
       if AQueryParam.ContainsKey('registroerp') then
-        vRegistroERP := AQueryParam.Items['registroerp'];
+         vRegistroERP := AQueryParam.Items['registroerp'];
       if AQueryParam.ContainsKey('rotaid') then
-        vRotaId := StrToIntDef(AQueryParam.Items['rotaid'], 0);
+         vRotaId := StrToIntDef(AQueryParam.Items['rotaid'], 0);
+      if AQueryParam.ContainsKey('verificarestoque') then
+         vverificarEstoque := StrToIntDef(AQueryParam.Items['verificarestoque'], 0);
 
       // Res.Send<TJSONObject>(tJsonObject.Create(TJSONPair.Create('Resultado', 'Cubagem realizada com sucesso!'))).Status(THTTPStatus.Created);
-      JsonArrayRetorno := ObjPedidoSaidaDAO.ProdutoSemPicking(vPedidoId,
-        vDataIni, vDataFin, vCodigoERP, vPessoaId, vDocumentoNr, vRazao,
-        vRegistroERP, vRotaId, vRecebido, vCubagem, vEtiqueta);
+      JsonArrayRetorno := ObjPedidoSaidaDAO.ProdutoSemPicking(vPedidoId, vDataIni, vDataFin, vCodigoERP, vPessoaId,
+                          vDocumentoNr, vRazao, vRegistroERP, vRotaId, vRecebido, vCubagem, vEtiqueta, vverificarEstoque);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/saida/produtosempicking', Trim(Req.Params.Content.Text), Req.Body,
-        '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/saida/produtosempicking', Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
     Except
       on E: Exception do
       Begin

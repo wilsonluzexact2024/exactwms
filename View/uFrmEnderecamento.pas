@@ -364,6 +364,7 @@ type
     Procedure mostraSimulacaoEndereco;
     Procedure MostraCreateAddress;
     Procedure limparCreateAddress;
+    Procedure ClearBlocoEnderecoCreate;
     Procedure HeaderLstManutencao(pLstManutencao : TAdvStringGrid);
     Procedure AtualizarTotal(pLstManutencao : TAdvStringGrid);
     Function CheckReserva(pEnderecoId : Integer) : Boolean;
@@ -722,6 +723,19 @@ begin
      SelAtivaDesativa :=  True;
      LstManutencaoAtivaDesativaClickCell(LstManutencaoAtivaDesativa, 0, 10);
   End;
+end;
+
+procedure TFrmEnderecamento.ClearBlocoEnderecoCreate;
+begin
+  limparCreateAddress;
+  EdtRuaInicialCE.Clear;
+  EdtRuaFinalCE.Clear;
+  EdtPredioInicialCE.Clear;
+  EdtPredioFinalCE.Clear;
+  EdtNivelInicialCE.Clear;
+  EdtNivelFinalCE.Clear;
+  EdtAptoInicialCE.Clear;
+  EdtAptoFinalCE.Clear;
 end;
 
 procedure TFrmEnderecamento.DefineField;
@@ -1542,6 +1556,8 @@ begin
        Alignments[9, 0] := taCenter;
      End;
   End
+  Else if PgcManutencao.ActivePage = TabCreateAddress then
+
   Else Begin
      With pLstManutencao do Begin
        ColWidths[ 0] :=  80;
@@ -1612,7 +1628,20 @@ end;
 procedure TFrmEnderecamento.EdtFaixaInicialEnderecoChange(Sender: TObject);
 begin
   inherited;
-  PnlBlocoEnderecoCreate.Visible := (EdtFaixaInicialEndereco.Text='') and (EdtFaixaFinalEndereco.text='');
+  //PnlBlocoEnderecoCreate.Visible := (EdtFaixaInicialEndereco.Text='') and (EdtFaixaFinalEndereco.text='');
+  ClearBlocoEnderecoCreate;
+  if EdtFaixaInicialEndereco.Text <> '' then Begin
+     EdtRuaInicialCE.Text    := Copy(EdtFaixaInicialEndereco.Text, 1, 2);
+     EdtPredioInicialCE.Text := Copy(EdtFaixaInicialEndereco.Text, 3, 2);
+     EdtNivelInicialCE.Text  := Copy(EdtFaixaInicialEndereco.Text, 5, 2);
+     EdtAptoInicialCE.Text   := Copy(EdtFaixaInicialEndereco.Text, 7, 3);
+  End;
+  if EdtFaixaFinalEndereco.Text <> '' then Begin
+     EdtRuaFinalCE.Text    := Copy(EdtFaixaFinalEndereco.Text, 1, 2);
+     EdtPredioFinalCE.Text := Copy(EdtFaixaFinalEndereco.Text, 3, 2);
+     EdtNivelFinalCE.Text  := Copy(EdtFaixaFinalEndereco.Text, 5, 2);
+     EdtAptoFinalCE.Text   := Copy(EdtFaixaFinalEndereco.Text, 7, 3);
+  End;
 end;
 
 procedure TFrmEnderecamento.Limpar;
@@ -2019,6 +2048,7 @@ begin
   inherited;
   ObjEnderecoCtrl := TEnderecoCtrl.Create;
   for xEndereco := 0 to Pred(LstCreateAddress.RowCount) do Begin
+    //Verificar no Grid se Endereço não existe para criar
     ObjEnderecoCtrl.ObjEndereco.EnderecoId := 0;
     ObjEnderecoCtrl.ObjEndereco.EnderecoEstrutura.EstruturaId := StrToIntDef(EdtEstruturaIdCE.Text, 0);
     ObjEnderecoCtrl.ObjEndereco.EnderecoRua.RuaId             := StrToIntDef(EdtRuaIdCE.Text, 0);

@@ -143,7 +143,7 @@ type
     FDMemProdutoLotesEtqArmazenagemSaldo: TIntegerField;
     imgAtivo: TImageList;
     FDMemProdutoLotesEtqArmazenagemVencimento: TStringField;
-    BtnEtqIndividual: TsImage;
+    BtnEtqIndividualOld: TsImage;
     FDMemProdutoLotesEtqArmazenagemLoteid: TIntegerField;
     FDMemProdutoLotesEtqArmazenagemFabricacao: TStringField;
     FDMemProdutoLotesEtqArmazenagemFatorConversao: TIntegerField;
@@ -161,6 +161,7 @@ type
     LblEtiquetas: TLabel;
     LblTotEtiquetasVolume: TLabel;
     LblCountPrint: TLabel;
+    BtnEtqIndividual: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnTagProdutoClick(Sender: TObject);
@@ -202,7 +203,6 @@ type
       const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
     procedure DbgLotesEtqIndividualCellClick(Column: TColumn);
-    procedure BtnEtqIndividualClick(Sender: TObject);
     procedure EdtRotaExit(Sender: TObject);
     procedure EdtDestinatarioExit(Sender: TObject);
     procedure BtnPesqRotaInicialClick(Sender: TObject);
@@ -212,6 +212,10 @@ type
     procedure DbgLotesEtqIndividualTitleClick(Column: TColumn);
     procedure BtnSearchLocalIniClick(Sender: TObject);
     procedure EdtEnderecoIniExit(Sender: TObject);
+    procedure EdtQuantidadeEstIndividualKeyPress(Sender: TObject;
+      var Key: Char);
+    procedure EdtQtdEtiquetaIndividualKeyPress(Sender: TObject; var Key: Char);
+    procedure BtnEtqIndividualClick(Sender: TObject);
   private
     { Private declarations }
     ObjPedidoCtrl      : TPedidoSaidaCtrl;
@@ -246,7 +250,7 @@ type
     Procedure Imprimir; OverRide;
     Procedure TagVolumeFracionado8x10etqEpl2(pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, pOrdem, vItens, vTotUnid : Integer;
                                              prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal : String;
-                                             pProcessoId, pRotaId : Integer);
+                                             pProcessoId, pRotaId, pTotalVolumes : Integer);
 
     Procedure TagVolumeCaixaFechada8x10etqEpl2(pPedidoVolumeId : Integer);  //Etiqueta Individual ????
     Procedure TagVolumeCaixaFechada_Address_8x10etqEpl2(pPedidoVolumeId : Integer);
@@ -271,6 +275,7 @@ Procedure TFrmPrintTag.PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
 Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
   Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
   Var Lin, EtqPrint : Integer;
+      vEndereco     : String;
   Begin
     Try
       ACBrETQConfig.DPI           := TACBrETQDPI(0);
@@ -304,25 +309,43 @@ Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
         ImprimirTexto(orNormal, 2, 2, 2, Lin+32, 74, Repl(' ',6-Length(pQuant.ToString))+pQuant.ToString, 0, False);
 
 //Fornecedor - Pedido
-        ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
+        if RbRecebimento.Checked then Begin
+           ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
 
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
 
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 7, 'Picking', 0, False);
-        ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 7, 'Picking', 0, False);
+           ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+        End
+        ELse
+        Begin
+           ImprimirTexto(orNormal, 3, 1, 1, Lin+40, 7, 'Picking', 0, False);
+           //ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+           vEndereco := EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True);
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47,  7, Copy(vEndereco, 1, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 23, Copy(vEndereco, 3, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 29, Copy(vEndereco, 4, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 46, Copy(vEndereco, 6, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 49, Copy(vEndereco, 7, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 68, Copy(vEndereco, 9, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 72, Copy(vEndereco, 10, 3), 0, False);
+        End;
 
         ImprimirTexto(orNormal, 2, 1, 1, 72, 82, 'eXactWMS®', 0, False);
 //DESATIVAR PARA BRASIL
         if Pos('BRASIL', UpperCase(FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa)) <= 0 then Begin
            if JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
-              ImprimirTexto(orNormal, 2, 2, 2, 75, 10, 'Fracionados', 0, False)
+              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Fracionados', 0, False)
            Else
-              ImprimirTexto(orNormal, 2, 2, 2, 75, 10, 'Cxa.Fechada', 0, False);
+              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Cxa.Fechada', 0, False);
         End;
         FinalizarEtiqueta;
         Imprimir(1, 0);
@@ -365,6 +388,19 @@ begin
      EdtQtdEtiquetaIndividual.SetFocus;
      Exit;
   End;
+  FDMemProdutoLotesEtqArmazenagem.Filter   := 'Impr = 1';
+  FDMemProdutoLotesEtqArmazenagem.Filtered := True;
+  if FDMemProdutoLotesEtqArmazenagem.IsEmpty then Begin
+     ShowErro('Selecione o(s) lote(s) para impressão!');
+     FDMemProdutoLotesEtqArmazenagem.Filter   := '';
+     FDMemProdutoLotesEtqArmazenagem.Filtered := False;
+     if RbIndividual.Checked then
+        EdtCodProdutoEtqIndividual.SetFocus
+     Else
+        EdtPedidoIdTag.SetFocus;
+     Exit;
+  End;
+  BtnEtqIndividual.Enabled := False;
   Start    := True;
   EtqPrint := 0;
   FDMemProdutoLotesEtqArmazenagem.First;
@@ -431,13 +467,17 @@ begin
     End;
     FDMemProdutoLotesEtqArmazenagem.Next;
   End;
-  ShowOk('Impressas '+EtqPrint.ToString+' etiquetas!');
+  if EtqPrint > 0 then
+     ShowOk('Impressas '+EtqPrint.ToString+' etiquetas!')
+  Else
+     ShowErro('Não foi possível imprimir etiqueta(s).');
   if PnlEtqArmazenagemIndividual.Visible then Begin
      EdtCodProdutoEtqIndividual.Clear;
      EdtCodProdutoEtqIndividual.SetFocus;
   End
   Else Begin
   End;
+  BtnEtqIndividual.Enabled := True;
 end;
 
 procedure TFrmPrintTag.BtnImprimirStandClick(Sender: TObject);
@@ -710,8 +750,11 @@ begin
   End
   Else If Sender = BtnTagCaixa then
     TbTagON(TbTagCaixa)
-  Else If (Sender = BtnTagArmazenagem) or (Sender = ImgTagArmazenagem) then
+  Else If (Sender = BtnTagArmazenagem) or (Sender = ImgTagArmazenagem) then Begin
     TbTagON(TbTagArmazenagem);
+    RbIndividual.Checked             := True;
+    RgPrinterEtqIndividual.ItemIndex := 0;
+  End;
 end;
 
 procedure TFrmPrintTag.EdtCodProdutoEtqIndividualChange(Sender: TObject);
@@ -724,7 +767,7 @@ begin
   If FDMemProdutoLotesEtqArmazenagem.Active then
      FDMemProdutoLotesEtqArmazenagem.EmptyDataSet;
   FDMemProdutoLotesEtqArmazenagem.Close;
-  BtnEtqIndividual.Grayed  := True;
+  //BtnEtqIndividual.Grayed  := True;
   BtnEtqIndividual.Enabled := False;
   LblCountPrint.Caption := '';
 end;
@@ -763,11 +806,23 @@ begin
   JsonProduto := Nil;
   ObjEstoqueCtrl   := TEstoqueCtrl.Create;
   JsonArrayEstoque := ObjEstoqueCtrl.GetEstoqueLotePorTipo(EdtPickingProdutoEtqIndividual.Tag, 0, 0 ,0, 2, 2, 'N', 'N');
-  if Not JsonArrayEstoque.Items[0].TryGetValue('Erro', vErro) then
+  if Not JsonArrayEstoque.Items[0].TryGetValue('Erro', vErro) then  Begin
      FDMemProdutoLotesEtqArmazenagem.LoadFromJSON(JsonArrayEstoque, False);
+     FDMemProdutoLotesEtqArmazenagem.First;
+     FDMemProdutoLotesEtqArmazenagem.Edit;
+     FDMemProdutoLotesEtqArmazenagem.FieldByName('Impr').AsInteger := 1;
+     FDMemProdutoLotesEtqArmazenagem.Post;
+  End
+  else Begin
+     ShowErro('Não foi encontrado lotes/estoque desse produto.');
+     EdtCodProdutoEtqIndividual.Clear;
+     EdtCodProdutoEtqIndividual.SetFocus;
+  End;
+  if Not RgPrinterEtqIndividual.ItemIndex < 0 then
+     RgPrinterEtqIndividual.SetFocus;
   JsonArrayEstoque := Nil;
   ObjEstoqueCtrl.Free;
-  BtnEtqIndividual.Grayed  := False;
+  //BtnEtqIndividual.Grayed  := False;
   BtnEtqIndividual.Enabled := True;
 end;
 
@@ -939,6 +994,40 @@ begin
      End;
   End;
   JsonArrayRetorno := Nil;
+end;
+
+procedure TFrmPrintTag.EdtQtdEtiquetaIndividualKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if (Key = #13) and (Not EdtQuantidadeEstIndividual.Visible) then Begin
+     If (StrToIntDef(EdtQtdEtiquetaIndividual.Text, 0)) < 0 then Begin
+        Key := #0;
+        ShowErro('Quantidade de Etiqueta inválida para impressão!');
+        EdtQtdEtiquetaIndividual.Clear;
+        EdtQtdEtiquetaIndividual.SetFocus;
+     End
+     Else Begin
+       BtnEtqIndividualClick(BtnEtqIndividual);
+     End;
+  End;
+end;
+
+procedure TFrmPrintTag.EdtQuantidadeEstIndividualKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if (Key = #13) then Begin
+     If (StrToIntDef(EdtQuantidadeEstIndividual.Text, 0)) < 0 then Begin
+        Key := #0;
+        ShowErro('Quantidade inválida para impressão!');
+        EdtQuantidadeEstIndividual.Clear;
+        EdtQuantidadeEstIndividual.SetFocus;
+     End
+     Else Begin
+       BtnEtqIndividualClick(BtnEtqIndividual);
+     End;
+  End;
 end;
 
 procedure TFrmPrintTag.EdtRotaExit(Sender: TObject);
@@ -1300,7 +1389,7 @@ Var xPedido, xVolumes, xEtiquetas, xEtiquetaPrint: Integer;
     ObjPedidoVolumeCtrl : TPedidoVOlumeCtrl;
     verro : String;
     vPedidoVolumeId, vCaixaEmbalagemId : Integer;
-    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, pProcessoId, pRotaId : Integer;
+    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, vTotalVolumes, pProcessoId, pRotaId : Integer;
     prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal : String;
     vPedidoErro : String;
     JsonArrayRetorno : TJsonArray;
@@ -1332,7 +1421,7 @@ Begin
        Memo1.Clear;
        Memo1.Text := JsonVolumesParaEtiqueta.ToString;
        if JsonVolumesParaEtiqueta.Count > 0 then Begin
-          if jsonVolumesParaEtiqueta.Get(0).tryGetValue<String>('Erro', vErro) then Begin
+          if jsonVolumesParaEtiqueta.Items[0].tryGetValue<String>('Erro', vErro) then Begin
              ShowMessage('Erro no Pedido: '+LstPedidosAdv.Cells[0, xPedido]+#13+'Erro: '+vErro);
              //raise Exception.Create('Erro: '+vErro);
           End
@@ -1364,10 +1453,11 @@ Begin
                         vPredFin           := copy(EnderecoMask(vPredFin, pMascara, True), 1, 5);
                         vItens             := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens');
                         vTotUnid           := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida');
+                        vTotalVolumes      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes');
                         if (pProcessoId < 13) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) <> 0) then
                            TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                                           jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), vItens,
-                                                          vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId);
+                                                          vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId, vTotalVolumes);
                      End;
                   End
                   Else If (vCaixaEmbalagemId = 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [0, 2])) then Begin
@@ -1510,7 +1600,7 @@ procedure TFrmPrintTag.LstVolumesFilterAdvClickCell(Sender: TObject; ARow,
 Var ObjPedidoVolumeCtrl    : TPedidoVolumeCtrl;
     JsonVolumeParaEtiqueta : TJsonArray;
     vPedidoVolumeId, vCaixaEmbalagemId : Integer;
-    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, pProcessoId, pRotaId : Integer;
+    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, pProcessoId, pRotaId, vTotalVolumes : Integer;
     prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal : String;
     pMascara, vErro : String;
 begin
@@ -1546,9 +1636,11 @@ begin
         vPredFin        := copy(EnderecoMask(vPredFin, pMascara, True), 1, 5);
         vItens          := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('itens');
         vTotUnid        := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('qtdsuprida');
+        vTotalVolumes   := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('totalvolumes');
         TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                        jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('ordem'), vItens,
-                                       vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId);
+                                       vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal,
+                                       pProcessoId, pRotaId, vTotalVolumes);
         jsonVolumeParaEtiqueta := Nil;
      End;
   end;
@@ -1606,7 +1698,7 @@ Begin
       LstPedidosAdv.Cells[0, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<String>('pedidoid');
       LstPedidosAdv.Cells[4, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<String>('processoetapa');
       LstPedidosAdv.AddDataImage(8, xRetorno+1, 0, TCellHAlign.haCenter, TCellVAlign.vaTop);
-      LstPedidosAdv.Cells[1, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<String>('operacaotipo');
+      LstPedidosAdv.Cells[1, xRetorno+1] := 'Ressuprimento'; //JsonPedidoCubagem.Items[xPedido].GetValue<String>('operacaotipo');
       LstPedidosAdv.Cells[2, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<String>('codpessoaerp');
       LstPedidosAdv.Cells[3, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<String>('fantasia');
       LstPedidosAdv.Cells[5, xRetorno+1] := JsonPedidoCubagem.Items[xPedido].GetValue<Integer>('qtdvolume').ToString();
@@ -1833,7 +1925,7 @@ Var xPedido, xEtiquetas, xEtiquetaPrint : Integer;
     ObjPedidoVolumeCtrl : TPedidoVOlumeCtrl;
     vErro : String;
     vPedidoVolumeId, vCaixaEmbalagemId : Integer;
-    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, pProcessoId, pRotaId : Integer;
+    pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, vItens, vTotUnid, pProcessoId, pRotaId, vTotalVolumes : Integer;
     prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pMascara : String;
 begin
   if RbProcesso.ItemIndex = 0 then
@@ -1901,9 +1993,11 @@ begin
                                                          FDMemEtiquetaVolumePorRua.FieldByName('mascara').AsString, True), 1, 5);
                  vItens             := FDMemEtiquetaVolumePorRua.FieldByName('itens').AsInteger;
                  vTotUnid           := FDMemEtiquetaVolumePorRua.FieldByName('qtdsuprida').AsInteger;
+                 vTotalVolumes      := FDMemEtiquetaVolumePorRua.FieldByName('totalvolumes').AsInteger;
                  TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                                 FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
-                                                vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId);
+                                                vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal,
+                                                pProcessoId, pRotaId, vTotalVolumes);
               End
               Else Begin
                 if FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then //Padrão eXactWMS
@@ -2495,7 +2589,7 @@ Var JsonArrayIdentVolume    : TJsonArray;
     vEndereco : String;
 begin
   ACBrETQConfig.DPI             := TACBrETQDPI(0);
-  AcbrEtqConfig.Temperatura     := 15;
+  AcbrEtqConfig.Temperatura     := vTemperatura; //15;
   ObjVolumeCxaFechadaCtrl := TPedidoVOlumeCtrl.Create;
   JsonArrayIdentVolume := ObjVolumeCxaFechadaCtrl.IdentificaVolumeCxaFechada( pPedidoVolumeId );
   if JsonArrayIdentVolume.Items[0].TryGetValue('Erro', vErroStr) then Begin
@@ -2511,12 +2605,15 @@ begin
         Ativar;
         Lin := 5;
         ImprimirTexto(orNormal, 2, 2, 2, Lin,  5, 'CAIXA FECHADA', 0, True);
-        if (FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString <> 'PULMAO') and
-           (FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString <> 'ARMAZENAGEM') then
-           ImprimirTexto(orNormal, 3, 1, 1, Lin, 54, FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString, 0, True);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+6, 5,  'Pedido/Vol:', 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 27,  JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid')+'/'+JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia'), 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 67,  JsonArrayIdentVolume.Items[0].GetValue<String>('dtpedido'), 0, False);
+//        if (FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString <> 'PULMAO') and
+//           (FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString <> 'ARMAZENAGEM') then
+//           ImprimirTexto(orNormal, 3, 1, 1, Lin, 54, FDMemEtiquetaVolumePorRua.FieldByName('zona').AsString, 0, True);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin+6, 5,  'Pedido Vol:', 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 27,  JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid')+' '+
+                                                     JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')+'/'+
+                                                     JsonArrayIdentVolume.Items[0].GetValue<String>('totalvolumes'), 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin, 55,  'Data: ', 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, Lin, 67,  JsonArrayIdentVolume.Items[0].GetValue<String>('dtpedido'), 0, False);
 
         ImprimirCaixa(Lin+11, 5, 93, 12, 1, 1);
         ImprimirTexto(orNormal, 2, 1, 1, Lin+13,  7, 'Destino:', 0, False);
@@ -2532,15 +2629,15 @@ begin
         ImprimirTexto(orNormal, 1, 2, 2, Lin+6, 7, '       '+COpy(JsonArrayIdentVolume.Items[0].GetValue<String>('descricao'), 31, 30), 0, False);
         ImprimirCaixa(Lin+10,  5, 32, 9, 0, 0);
         ImprimirCaixa(Lin+10, 40, 27, 9, 0, 0);
-        ImprimirCaixa(Lin+10, 64, 29, 9, 0, 0);
+        ImprimirCaixa(Lin+10, 70, 29, 9, 0, 0);
         ImprimirTexto(orNormal, 2, 1, 1, Lin+11,  7, 'Lote', 0, False);
         if Length(JsonArrayIdentVolume.Items[0].GetValue<String>('lote')) <= 10 then
            ImprimirTexto(orNormal, 2, 2, 2, Lin+14,  7, JsonArrayIdentVolume.Items[0].GetValue<String>('lote'), 0, False)
         Else ImprimirTexto(orNormal, 1, 2, 2, Lin+14,  7, JsonArrayIdentVolume.Items[0].GetValue<String>('lote'), 0, False);
         ImprimirTexto(orNormal, 2, 1, 1, Lin+11, 42, ' Vencto', 0, False);
         ImprimirTexto(orNormal, 2, 2, 2, Lin+14, 42, Copy(JsonArrayIdentVolume.Items[0].GetValue<String>('vencimento'), 4, 7), 0, False);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+11, 68, 'Qtd', 0, False);
-        ImprimirTexto(orNormal, 4, 2, 2, Lin+12, 78, FormatFloat('###0', JsonArrayIdentVolume.Items[0].GetValue<integer>('qtdsuprida')), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+11, 72, 'Qtd', 0, False);
+        ImprimirTexto(orNormal, 4, 2, 2, Lin+12, 82, FormatFloat('###0', JsonArrayIdentVolume.Items[0].GetValue<integer>('qtdsuprida')), 0, False);
 
         ImprimirTexto(orNormal, 2, 1, 1, Lin+20,  7, 'Rua  Prédio   Nível  Apto', 0, False);
         vEndereco := JsonArrayIdentVolume.Items[0].GetValue<String>('endereco');
@@ -2617,8 +2714,10 @@ begin
         Lin := 1;
         ImprimirTexto(orNormal, 2, 2, 2, Lin,  5, 'CAIXA FECHADA', 0, True);
         ImprimirTexto(orNormal, 3, 1, 1, Lin, 54, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+6, 5,  'Pedido/Vol:', 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 27,  JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid')+'/'+JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia'), 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin+6, 5,  'Pedido Vol:', 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 27,  JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid')+' '+
+                                                     JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')+'/'+
+                                                     JsonArrayIdentVolume.Items[0].GetValue<String>('totalvolumes'), 0, False);
         ImprimirTexto(orNormal, 2, 2, 2, Lin+6, 67,  JsonArrayIdentVolume.Items[0].GetValue<String>('dtpedido'), 0, False);
 
         ImprimirCaixa(Lin+11, 5, 93, 12, 1, 1);
@@ -2749,10 +2848,12 @@ begin
            (JsonArrayIdentVolume.Items[0].GetValue<String>('zona') <> 'ARMAZENAGEM') then
            ImprimirTexto(orNormal, 3, 1, 1, Lin, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
 
-        ImprimirTexto(orNormal, 3, 1, 1, Lin,   40, 'Pedido', 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin,   36, 'Pedido', 0, False);
         ImprimirTexto(orNormal, 3, 1, 1, Lin,   60, 'Volume', 0, False);
-        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 40, JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
-        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 57, Repl(' ', 4 - Length(JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')))+JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia'), 0, False);
+        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 36, JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
+        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 52, Repl(' ', 4 - Length(JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')))+
+                                                         JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')+'/'+
+                                                         JsonArrayIdentVolume.Items[0].GetValue<String>('totalvolumes'), 0, False);
 
 
         ImprimirTexto(orNormal, 3, 1, 1, Lin+4, 2,  'Data', 0, False);
@@ -2844,7 +2945,7 @@ begin
 end;
 
 procedure TFrmPrintTag.TagVolumeFracionado8x10etqEpl2(pPedidoId, pPedidoVolumeId, pSequencia, pCodPessoaERP, pOrdem, vItens, vTotUnid : Integer;
-    prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal : String; pProcessoId, pRotaId : Integer);
+    prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal : String; pProcessoId, pRotaId, pTotalVolumes : Integer);
 Var xEtq, Lin  : Integer;
     vErro : Boolean;
     ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
@@ -2898,12 +2999,13 @@ begin
                 ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+82, FormatFloat('###0', vTotUnid), 0, False);
 
                 //ImprimirBarras(orNormal, barEAN13, 2, 2, Lin+40,  1, '7896003701685', 10, becSIM);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+41, ColIni+14,  '  Pedido/Vol.', 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  ColIni+5,  '   '+pPedidoId.ToString+'/'+pSequencia.ToString(), 0, False);
+                ImprimirTexto(orNormal, 3, 1, 1, Lin+41, ColIni+7,  '  Pedido Vol.', 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  ColIni+2,  '   '+pPedidoId.ToString+' '+pSequencia.ToString()+'/'+
+                                                                           pTotalVolumes.ToString(), 0, False);
 
                 //ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  28,  '/01', 0, False);
 
-                ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+40, ColIni+49, pPedidoVolumeId.toString, 12, becSIM);
+                ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+40, ColIni+60, pPedidoVolumeId.toString, 12, becSIM);
                 ImprimirTexto(orNormal, 3, 1, 1, Lin+52,  ColIni+14, '    '+pDtPedido, 0, False);
                 if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then Begin
                    ImprimirCaixa(Lin+56, ColIni+5, 88, 17, 1, 1);
@@ -2961,11 +3063,11 @@ begin
                 Lin := 1;
                 ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+2, 'FRACIONADOS', 0, True);
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin,   65, 'Pedido', 0, False);
+                ImprimirTexto(orNormal, 3, 1, 1, Lin,   57, 'Pedido', 0, False);
                 ImprimirTexto(orNormal, 3, 1, 1, Lin,   88, 'Volume', 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 65, pPedidoId.ToString, 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 87, Repl(' ', 4 - Length(psequencia.ToString()))+
-                                                            pSequencia.ToString(), 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 57, pPedidoId.ToString, 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 75, Repl(' ', 4 - Length(psequencia.ToString()))+
+                                                            pSequencia.ToString()+'/'+pTotalVolumes.ToString, 0, False);
 
 
                 ImprimirTexto(orNormal, 3, 1, 1, Lin+6,  5,  'Data', 0, False);

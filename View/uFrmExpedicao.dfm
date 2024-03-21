@@ -5,9 +5,6 @@ inherited FrmExpedicao: TFrmExpedicao
   TextHeight = 17
   inherited PgcBase: TcxPageControl
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 4
         ColumnHeaders.Strings = (
@@ -414,11 +411,6 @@ inherited FrmExpedicao: TFrmExpedicao
         end
       end
     end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
     inherited TabimportacaoCSV: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -483,22 +475,11 @@ inherited FrmExpedicao: TFrmExpedicao
       end
     end
   end
-  inherited PnlErro: TPanel
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
-  end
   inherited PnlConfigPrinter: TPanel
     Left = 564
     Top = 104
     ExplicitLeft = 564
     ExplicitTop = 104
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited TmFrameWeb: TTimer
     Left = 298

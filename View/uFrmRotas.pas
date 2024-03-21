@@ -13,7 +13,7 @@ uses
   Vcl.Imaging.jpeg, dxGDIPlusClasses, Vcl.StdCtrls, acPNG, acImage, System.Math,
   AdvLookupBar, AdvGridLookupBar, Vcl.Grids, AdvObj, BaseGrid, cxPC
   , Generics.Collections, System.JSON, REST.Json, System.JSON.Types
-  , RotaCtrl, Vcl.Buttons, Vcl.Mask, JvExMask, JvSpin, uCEFSentinel,
+  , RotaCtrl, Vcl.Buttons, Vcl.Mask, JvExMask, JvSpin,
   dxSkinsCore, dxSkinsDefaultPainters, Vcl.ComCtrls, Vcl.DBGrids, JvToolEdit,
   JvBaseEdits, ACBrBase, ACBrETQ, dxCameraControl;
 
@@ -54,7 +54,6 @@ type
     procedure EdtDescricaoExit(Sender: TObject);
     procedure EdtRotaIdChange(Sender: TObject);
     procedure BtnOpenFrameWebClick(Sender: TObject);
-    procedure FrameNavigator1CEFSentinel1Close(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure LstAdvParticipantesClickCell(Sender: TObject; ARow,
       ACol: Integer);
@@ -404,12 +403,6 @@ begin
   ObjRotaCtrl.Destroy;
   inherited;
 
-end;
-
-procedure TFrmRotas.FrameNavigator1CEFSentinel1Close(Sender: TObject);
-begin
-  inherited;
-//
 end;
 
 procedure TFrmRotas.GetListaLstCadastro;

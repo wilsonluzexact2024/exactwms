@@ -567,8 +567,40 @@ Const PedidoAllResto =      '' + sLineBreak +
       '		        (@Cubagem=1 and P.ProcessoId in (2,21)) OR'+sLineBreak+
       '		        (@Etiqueta=1 and P.ProcessoId = 3) )';
 
+Const SqlPedidoPrintTag = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
+      'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+      'Declare @DataIni DateTime    = :pDataIni'+sLineBreak+
+      'Declare @DataFin DateTime    = :pDataFin'+sLineBreak+
+      'Declare @CodigoERP Integer   = :pCodigoERP'+sLineBreak+
+      'Declare @RotaId Integer      = :pRotaId'+sLineBreak+
+      'Declare @RotaIdFinal Integer = :pRotaIdFinal'+sLineBreak+
+      'Declare @ZonaId Integer      = :pZonaId'+sLineBreak+
+      'Declare @PrintTag Integer    = :pPrintTag  -- 0 N?o impresso   1 Reimpresso   2 Todos'+sLineBreak+
+      'Declare @Embalagem Integer   = :pEmbalagem -- 0 Cxa Fechada    1 Fracioandos  2 Todos'+sLineBreak+
+      'select Vlm.PedidoId, Ped.CodPessoaERP, Ped.Razao, Ped.Fantasia, '+sLineBreak+
+      '       Ped.Rotaid, Ped.Rota, Ped.ProcessoEtapa ProcessoEtapa, Count(Vlm.Pedidoid) QtdVolume'+sLineBreak+
+      'Into #PedidoVolume'+sLineBreak+
+      'From PedidoVolumes Vlm'+sLineBreak+
+      'Inner join vDocumentoEtapas DE On De.Documento = Vlm.Uuid'+sLineBreak+
+      'Inner join vPedidos ped on Ped.PedidoId = Vlm.PedidoId'+sLineBreak+
+      'Inner Join (select PedidoVolumeId, Count(*) VolZona'+sLineBreak+
+      '            From PedidoVolumeLotes Vl'+sLineBreak+
+      '	        Inner join vProdutoLotes Pl On Pl.LoteId = Vl.LoteId'+sLineBreak+
+      '	        Where (@ZonaId=0 or Pl.ZonaId = @ZonaId )'+sLineBreak+
+      '	        Group by Vl.PedidoVolumeId) VZ On Vz.PedidoVolumeId = Vlm.PedidoVolumeId'+sLineBreak+
+      'where ((@PrintTag=2 and De.ProcessoId in (2,3)) or (@PrintTag=0 and De.ProcessoId=2) or (@PrintTag=1 and De.ProcessoId=3))'+sLineBreak+
+      '  And (@Embalagem=2 or (@Embalagem=0 and Vlm.EmbalagemId Is null) or (@Embalagem=1 and Vlm.EmbalagemId Is Not Null))'+sLineBreak+
+      '  And (De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1))'+sLineBreak+
+      '  And (@PedidoId = 0 or Vlm.PedidoId = @PedidoId)'+sLineBreak+
+      '  And ((@PedidoVolumeId = 0) or (@PedidoVolumeId = Vlm.PedidoVolumeId))'+sLineBreak+
+      '  And (@DataIni=0 or Ped.DocumentoData >= @DataIni) and (@DataFin=0 or Ped.DocumentoData <= @DataFin)'+sLineBreak+
+      '  And (@CodigoERP=0 or @CodigoERP = Ped.CodPessoaERP)'+sLineBreak+
+      '  And (@RotaId = 0 or Ped.RotaId >= @RotaId) and (@RotaId = 0 or Ped.RotaId <= @RotaIdFinal)'+sLineBreak+
+      'Group by Vlm.PedidoId, Ped.CodPessoaERP, Ped.Razao, Ped.Fantasia, Ped.Rotaid, Ped.Rota, Ped.ProcessoEtapa'+sLineBreak+
+      'select * from #PedidoVolume';
+
   Const
-    SqlPedidoPrintTag = 'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
+    SqlPedidoPrintTagOLD = 'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
       'Declare @PedidoVolumeId Integer = :pPedidoVolumeId' + sLineBreak +
       'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
       'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
@@ -853,61 +885,39 @@ Const PedidoAllResto =      '' + sLineBreak +
       sLineBreak + 'Where PedidoId = @Pedido';
 
   Const
-    SqlReservaCorrecao = 'Delete From Estoque Where EstoqueTipoId = 6' +
-      sLineBreak +
-      'Insert Into Estoque select LoteId, EnderecoId, 6, QtdReserva, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))'
-      + sLineBreak +
-      '                           , (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), 1, Null, Null, Null'
-      + sLineBreak +
-      '                                                        From (' +
-      sLineBreak +
-      '														Select Vl.LoteId, Vl.EnderecoId, Sum(QtdSuprida) QtdReserva'
-      + sLineBreak + '														From PedidoVolumeLotes Vl' +
-      sLineBreak +
-      '														Inner Join PedidoVOlumes PV ON Pv.PedidoVolumeId = Vl.PedidoVolumeId'
-      + sLineBreak +
-      '														Inner Join vDocumentoEtapas De On De.Documento = Pv.uuid'
-      + sLineBreak +
-      '														where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1) and'
-      + sLineBreak +
-      '															 De.processoId > 2 and De.Processoid < 13' +
-      sLineBreak +
+    SqlReservaCorrecao = 'Delete From Estoque Where EstoqueTipoId = 6' + sLineBreak +
+      'Insert Into Estoque '+sLineBreak+
+      '       select LoteId, EnderecoId, 6, QtdReserva, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))' + sLineBreak +
+      '            , (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), 1, Null, Null, Null' + sLineBreak +
+      '       From (Select Vl.LoteId, Vl.EnderecoId, Sum(QtdSuprida) QtdReserva' + sLineBreak +
+      '													From PedidoVolumeLotes Vl' + sLineBreak +
+      '													Inner Join PedidoVOlumes PV ON Pv.PedidoVolumeId = Vl.PedidoVolumeId' + sLineBreak +
+      '													Inner Join vDocumentoEtapas De On De.Documento = Pv.uuid' + sLineBreak +
+      '													where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1) '+sLineBreak +
+      '															And De.processoId > 2 and De.Processoid < 13' + sLineBreak +
       '														Group by Vl.EnderecoId, Vl.LoteId) Res';
 
     // Cubagem de Pedidos - Estoque Dispon�vel para atender pedido Caixa Fechada
   Const
-    SqlEstoqueCubagemCxaFechada = 'Declare @PedidoId Integer = :pPedidoId' +
-      sLineBreak +
-      'Select  Ep.ProdutoId, Ep.CodigoERP, Ep.Produto, Ep.EmbPrim, Ep.FatorConversao, Ep.EmbSec,'
-      + sLineBreak +
-      '   	    Ep.MesSaidaMinima, Ep.LoteId, Ep.DescrLote, Ep.Fabricacao, Ep.Vencimento,'
-      + sLineBreak +
-      '	  	    Ep.EnderecoId,	Ep.Endereco, Ep.EstruturaId, Ep.Estrutura, Ep.PickingFixo	Status,'
-      + sLineBreak +
-      '	  	    Ep.ZonaID	Zona, Ep.QtdeProducao, Ep.QtdeReserva, Ep.EstoqueTipoId,'
-      + sLineBreak +
-      '        ((Ep.Qtde / Ep.FatorConversao) * Ep.FatorConversao)  Qtde,' +
-      sLineBreak +
-      '	  	    Ep.EstoqueTipo, Ep.DtEntrada, Ep.HrEntrada, Ep.Horario, Ep.Producao, Ep.Distribuicao,'
-      + sLineBreak +
-      '	       Ep.Ordem, Ep.UsuarioId, Ep.UnidadeId, Ep.UnidadeSecundariaId, Ep.UnidadeSecundariaSigla,'
-      + sLineBreak +
-      '	       Ep.UnidadeSigla, Ep.UnidadeDescricao, Ep.UnidadeSecundariaDescricao,'
-      + sLineBreak +
-      '        ((PP.Quantidade / Prd.FatorConversao) * Prd.FatorConversao) as QtdPedido,'
-      + sLineBreak +
-      '        PP.EmbalagemPadrao, PP.Quantidade / EmbSec as CxaFechada' +
-      sLineBreak + 'From Pedido Ped' + sLineBreak +
-      'Inner Join PedidoProdutos PP ON PP.PedidoId = Ped.PedidoId' + sLineBreak
-      + 'Inner Join Produto Prd on Prd.IdProduto = Pp.ProdutoId' + sLineBreak +
-      'Inner Join vEstoqueProducao EP ON Ep.ProdutoId = PP.ProdutoId and Ep.Qtde >= Ep.FatorConversao'
-      + sLineBreak + 'WHERE Ped.OperacaoTipoId = 2 and ' + sLineBreak +
-      '      ((PP.Quantidade / Ep.FatorConversao) > 0) And (EP.FatorConversao > 1 or Prd.SomenteCxaFechada = 1) and'
-      + sLineBreak +
+    SqlEstoqueCubagemCxaFechada = 'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
+      'Select  Ep.ProdutoId, Ep.CodigoERP, Ep.Produto, Ep.EmbPrim, Ep.FatorConversao, Ep.EmbSec,' + sLineBreak +
+      '   	    Ep.MesSaidaMinima, Ep.LoteId, Ep.DescrLote, Ep.Fabricacao, Ep.Vencimento,' + sLineBreak +
+      '	  	    Ep.EnderecoId,	Ep.Endereco, Ep.EstruturaId, Ep.Estrutura, Ep.PickingFixo	Status,' + sLineBreak +
+      '	  	    Ep.ZonaID	Zona, Ep.QtdeProducao, Ep.QtdeReserva, Ep.EstoqueTipoId,' + sLineBreak +
+      '        ((Ep.Qtde / Ep.FatorConversao) * Ep.FatorConversao)  Qtde,' + sLineBreak +
+      '	  	    Ep.EstoqueTipo, Ep.DtEntrada, Ep.HrEntrada, Ep.Horario, Ep.Producao, Ep.Distribuicao,' + sLineBreak +
+      '	       Ep.Ordem, Ep.UsuarioId, Ep.UnidadeId, Ep.UnidadeSecundariaId, Ep.UnidadeSecundariaSigla,' + sLineBreak +
+      '	       Ep.UnidadeSigla, Ep.UnidadeDescricao, Ep.UnidadeSecundariaDescricao,' + sLineBreak +
+      '        ((PP.Quantidade / Prd.FatorConversao) * Prd.FatorConversao) as QtdPedido,' + sLineBreak +
+      '        PP.EmbalagemPadrao, PP.Quantidade / EmbSec as CxaFechada' + sLineBreak + 'From Pedido Ped' + sLineBreak +
+      'Inner Join PedidoProdutos PP ON PP.PedidoId = Ped.PedidoId' + sLineBreak+
+      'Inner Join Produto Prd on Prd.IdProduto = Pp.ProdutoId' + sLineBreak +
+      'Inner Join vEstoqueProducao EP ON Ep.ProdutoId = PP.ProdutoId and Ep.Qtde >= Ep.FatorConversao' + sLineBreak +
+      'WHERE Ped.OperacaoTipoId = 2 and (Prd.FatorConversao = PP.EmbalagemPadrao or PP.EmbalagemPadrao = 1) ' + sLineBreak +
+      '  and ((PP.Quantidade / Ep.FatorConversao) > 0) And (EP.FatorConversao > 1 or Prd.SomenteCxaFechada = 1) ' + sLineBreak +
     // '	     (PP.EmbalagemPadrao=1 or PP.EmbalagemPadrao=EP.FatorConversao) and'+sLineBreak+
-      '      Vencimento > Cast(getdate()+(COALESCE (Ep.MesSaidaMinima, 0)*30) as date)'
-      + sLineBreak + '      and Distribuicao = 1 and Ped.PedidoId = @PedidoId' +
-      sLineBreak +
+      '  and Vencimento > Cast(getdate()+(COALESCE (Ep.MesSaidaMinima, 0)*30) as date)' + sLineBreak +
+      '  and Distribuicao = 1 and Ped.PedidoId = @PedidoId' + sLineBreak +
       'order by ProdutoId, Vencimento, Dtentrada, HrEntrada, Endereco';
 
     // https://pt.stackoverflow.com/questions/156661/como-concatenar-data-no-sql-server
@@ -2864,44 +2874,33 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
     SqlEtiquetaPorVolume = 'SET STATISTICS IO OFF' + sLineBreak +
       'SET STATISTICS TIME OFF' + sLineBreak +
       'Declare @PedidoVolumeId Integer = :pPedidoVolumeId' + sLineBreak +
-      'Select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pe.CodPessoaERP, Pe.Razao, pe.Fantasia, '
-      + sLineBreak +
-      '       Ro.RotaId, Ro.Descricao Rotas, Dp.Data as DtPedido, De.ProcessoId, De.Descricao ProcessoEtapa,'
-      + sLineBreak +
-      '	   Vl.Itens, PVL.QtdSuprida, LEnd.Inicio, LEnd.Termino, LEnd.Mascara, Pr.Ordem, TotalVolumes'
-      + sLineBreak + 'From PedidoVolumes Pv' + sLineBreak +
+      'Select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pe.CodPessoaERP, Pe.Razao, pe.Fantasia, '+sLineBreak+
+      '       Ro.RotaId, Ro.Descricao Rotas, Dp.Data as DtPedido, De.ProcessoId, De.Descricao ProcessoEtapa,'+sLineBreak +
+      '	   Vl.Itens, PVL.QtdSuprida, LEnd.Inicio, LEnd.Termino, LEnd.Mascara, Pr.Ordem, TotalVolumes'+sLineBreak+
+      'From PedidoVolumes Pv' + sLineBreak +
       'Inner join Pedido Pd On Pd.PedidoId = Pv.PedidoId' + sLineBreak +
       'Inner Join Pessoa Pe On Pe.PessoaId = Pd.PessoaId' + sLineBreak +
       'Inner Join RotaPessoas Pr on Pr.PessoaId = Pe.PessoaId' + sLineBreak +
       'Inner Join Rotas Ro On Ro.RotaId = Pr.RotaId' + sLineBreak +
       'Inner join Rhema_Data DP On Dp.IdData = Pd.DocumentoData' + sLineBreak +
-      'Inner Join (Select PedidoId, COUNT(*) TotalVolumes From PedidoVolumes Group by PedidoId) TPv ON TPv.PedidoId = Pd.PedidoId '
-      + sLineBreak + 'Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid' +
-      sLineBreak +
-      'Left Join (Select PedidoVolumeId, Sum(QtdSuprida) QtdSuprida From PedidoVolumeLotes'
-      + sLineBreak +
-      '           Group By PedidoVolumeId ) PVL ON Pvl.PedidoVolumeId = Pv.PedidoVolumeId'
-      + sLineBreak +
-      'Left Join (Select vPrd.PedidoVolumeId, Count(vPrd.ProdutoId) Itens' +
-      sLineBreak + '           From (Select PedidoVolumeId, Pl.ProdutoId' +
-      sLineBreak + '  		         From PedidoVolumeLotes VL' + sLineBreak +
-      '		         Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId' +
-      sLineBreak +
-      '		         Inner join Produto Prd on Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak + '		         Where Vl.PedidoVolumeId = @PedidoVolumeId' +
-      sLineBreak +
-      '                 Group By Vl.PedidoVolumeId, Pl.ProdutoId) As VPrd' +
-      sLineBreak +
-      '           Group by vPrd.PedidoVolumeId ) VL ON Vl.PedidoVolumeId = Pv.PedidoVolumeId'
-      + sLineBreak +
-      'Left Join (Select Pvl.PedidoVolumeId, Ee.Mascara, Min(TEnd.Descricao) Inicio, Max(TEnd.Descricao) Termino'
-      + sLineBreak + '           From PedidoVolumeLotes PVL' + sLineBreak +
-      '		   Inner Join Enderecamentos TEnd ON TEnd.EnderecoId = Pvl.EnderecoId'
-      + sLineBreak +
-      '     Inner Join EnderecamentoEstruturas EE On EE.EstruturaId = TEnd.EstruturaID'
-      + sLineBreak +
-      '		   Group By Pvl.PedidoVolumeId, Ee.Mascara) as LEnd On LEnd.PedidoVolumeId = Pv.PedidoVolumeId'
-      + sLineBreak + 'Where Pv.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
+      'Inner Join (Select PedidoId, COUNT(*) TotalVolumes From PedidoVolumes Group by PedidoId) TPv ON TPv.PedidoId = Pd.PedidoId '+sLineBreak +
+      'Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid' + sLineBreak +
+      'Left Join (Select PedidoVolumeId, Sum(QtdSuprida) QtdSuprida From PedidoVolumeLotes'+sLineBreak +
+      '           Group By PedidoVolumeId ) PVL ON Pvl.PedidoVolumeId = Pv.PedidoVolumeId'+ sLineBreak +
+      'Left Join (Select vPrd.PedidoVolumeId, Count(vPrd.ProdutoId) Itens' +sLineBreak +
+      '           From (Select PedidoVolumeId, Pl.ProdutoId' + sLineBreak +
+      '  		         From PedidoVolumeLotes VL' + sLineBreak +
+      '		         Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId' + sLineBreak +
+      '		         Inner join Produto Prd on Prd.IdProduto = Pl.ProdutoId' + sLineBreak +
+      '		         Where Vl.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
+      '                 Group By Vl.PedidoVolumeId, Pl.ProdutoId) As VPrd' + sLineBreak +
+      '           Group by vPrd.PedidoVolumeId ) VL ON Vl.PedidoVolumeId = Pv.PedidoVolumeId' + sLineBreak +
+      'Left Join (Select Pvl.PedidoVolumeId, Ee.Mascara, Min(TEnd.Descricao) Inicio, Max(TEnd.Descricao) Termino' + sLineBreak +
+      '           From PedidoVolumeLotes PVL' + sLineBreak +
+      '		   Inner Join Enderecamentos TEnd ON TEnd.EnderecoId = Pvl.EnderecoId' + sLineBreak +
+      '     Inner Join EnderecamentoEstruturas EE On EE.EstruturaId = TEnd.EstruturaID' + sLineBreak +
+      '		   Group By Pvl.PedidoVolumeId, Ee.Mascara) as LEnd On LEnd.PedidoVolumeId = Pv.PedidoVolumeId' + sLineBreak +
+      'Where Pv.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
       '   And DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)';
 
     // Indenficacao Etiqueta Volume Caixa Fechada
@@ -2909,28 +2908,28 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
     SqlIdentificaVolumeCxaFechada = 'SET STATISTICS IO OFF' + sLineBreak +
       'SET STATISTICS TIME OFF' + sLineBreak +
       'Declare @PedidoVolumeId Integer = :pPedidoVolumeId' + sLineBreak +
-      'Select Pv.PedidoId, Pd.documentooriginal, Pv.PedidoVolumeId, Pv.Sequencia,Pe.CodPessoaERP, Pe.Razao, Pe.Fantasia, '
-      + sLineBreak + '       Ro.RotaId, Ro.Descricao Rotas,' + sLineBreak +
-      '	      Dp.Data as DtPedido, Prd.IdProduto ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.EnderecoDescricao Picking,'
-      + sLineBreak + '       Pl.Descrlote, DL.Data as Vencimento,' + sLineBreak
-      + '	      PVl.QtdSuprida, Tend.Endereco, TEnd.Zona,' + sLineBreak +
-      '       De.ProcessoId, De.Descricao ProcessoEtapa' + sLineBreak +
+      'Select Pv.PedidoId, Pd.documentooriginal, Pv.PedidoVolumeId, Pv.Sequencia,Pe.CodPessoaERP, Pe.Razao, Pe.Fantasia, '+sLineBreak +
+      '       Ro.RotaId, Ro.Descricao Rotas,' + sLineBreak +
+      '	      Dp.Data as DtPedido, Prd.IdProduto ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.EnderecoDescricao Picking,'+sLineBreak +
+      '       Pl.Descrlote, DL.Data as Vencimento,' + sLineBreak+
+      '	      PVl.QtdSuprida, Tend.Endereco, TEnd.Zona,' + sLineBreak +
+      '       De.ProcessoId, De.Descricao ProcessoEtapa, TotalVolumes' + sLineBreak +
       'From PedidoVolumes Pv' + sLineBreak +
       'Inner join Pedido Pd On Pd.PedidoId = Pv.PedidoId' + sLineBreak +
       'Inner Join Pessoa Pe On Pe.PessoaId = Pd.PessoaId' + sLineBreak +
       'Inner Join RotaPessoas Pr on Pr.PessoaId = Pe.PessoaId' + sLineBreak +
       'Inner Join Rotas Ro On Ro.RotaId = Pr.RotaId' + sLineBreak +
       'Inner join Rhema_Data DP On Dp.IdData = Pd.DocumentoData' + sLineBreak +
-      'Inner join PedidoVolumeLotes PVL ON Pvl.PedidoVolumeId = Pv.PedidoVolumeId'
-      + sLineBreak + 'Inner Join ProdutoLotes PL ON Pl.LoteId = Pvl.LoteId' +
-      sLineBreak + 'Inner join vProduto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      'Inner Join vEnderecamentos TENd On Tend.EnderecoId = PVL.EnderecoId' +
-      sLineBreak + 'Inner join Rhema_Data DL On DL.IdData = PL.Vencimento' +
-      sLineBreak + 'Left Join vDocumentoEtapas DE On De.Documento = PV.uuid' +
-      sLineBreak + 'Where Pv.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
-      '      And DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)'
-      + sLineBreak + 'Order by Pv.PedidoVolumeId, Tend.Descricao';
+      'Inner join PedidoVolumeLotes PVL ON Pvl.PedidoVolumeId = Pv.PedidoVolumeId'+ sLineBreak +
+      'Inner Join ProdutoLotes PL ON Pl.LoteId = Pvl.LoteId' +sLineBreak +
+      'Inner join vProduto Prd On Prd.IdProduto = Pl.ProdutoId'+sLineBreak +
+      'Inner Join vEnderecamentos TENd On Tend.EnderecoId = PVL.EnderecoId' +sLineBreak +
+      'Inner join Rhema_Data DL On DL.IdData = PL.Vencimento' + sLineBreak +
+      'Inner Join (Select PedidoId, COUNT(*) TotalVolumes From PedidoVolumes Group by PedidoId) TPv ON TPv.PedidoId = Pd.PedidoId '+sLineBreak+
+      'Left Join vDocumentoEtapas DE On De.Documento = PV.uuid' + sLineBreak +
+      'Where Pv.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
+      '      And DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)'+ sLineBreak +
+      'Order by Pv.PedidoVolumeId, Tend.Descricao';
 
   Const
     SqlTopicos = 'Declare @TopicoId Integer      = :pTopicoId' + sLineBreak +
@@ -6518,44 +6517,45 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       '  and Pi.LoteId Is Null' + sLineBreak + 'Order by Ordem, Pl.Lote';
 
   Const
-    SqlGetProdutoSemPicking = 'Declare @PedidoId Integer = :pPedidoId' +
-      sLineBreak + 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
-      'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
-      'Declare @CodigoERP Integer = :pCodigoERP' + sLineBreak +
-      'Declare @PessoaId Integer = :pPessoaId' + sLineBreak +
-      'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' + sLineBreak +
-      'Declare @Razao VarChar(100) = :pRazao' + sLineBreak +
-      'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
-      'Declare @RotaId Integer = :pRotaId' + sLineBreak +
-      'Declare @Recebido Integer = :pRecebido' + sLineBreak +
-      'Declare @Cubagem Integer = :pCubagem' + sLineBreak +
-      'Declare @Etiqueta Integer = :pEtiqueta' + sLineBreak +
-      'Select PP.ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao Embalagem, Prd.Altura, Prd.Largura, Prd.Comprimento, Prd.PesoLiquido'
-      + sLineBreak + 'From PedidoProdutos PP' + sLineBreak +
+    SqlGetProdutoSemPicking = 'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
+      'Declare @DataIni DateTime         = :pDataIni' + sLineBreak +
+      'Declare @DataFin DateTime         = :pDataFin' + sLineBreak +
+      'Declare @CodigoERP Integer        = :pCodigoERP' + sLineBreak +
+      'Declare @PessoaId Integer         = :pPessoaId' + sLineBreak +
+      'Declare @DocumentoNr VarChar(20)  = :pDocumentoNr' + sLineBreak +
+      'Declare @Razao VarChar(100)       = :pRazao' + sLineBreak +
+      'Declare @RegistroERP VarChar(36)  = :pRegistroERP' + sLineBreak +
+      'Declare @RotaId Integer           = :pRotaId' + sLineBreak +
+      'Declare @Recebido Integer         = :pRecebido' + sLineBreak +
+      'Declare @Cubagem Integer          = :pCubagem' + sLineBreak +
+      'Declare @Etiqueta Integer         = :pEtiqueta' + sLineBreak +
+      'Declare @VerificarEstoque Integer = :pVerificarEstoque'+sLineBreak+
+      'Select PP.ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao Embalagem, '+sLineBreak+
+      '       Prd.Altura, Prd.Largura, Prd.Comprimento, Prd.PesoLiquido--, Sum(IsNull(Est.Qtde, 0)) Qtde'+sLineBreak +
+      'From PedidoProdutos PP' + sLineBreak +
       'Inner Join pedido Ped ON Ped.PedidoId = Pp.PedidoId' + sLineBreak +
       'Inner join Produto Prd On Prd.IdProduto = PP.ProdutoId' + sLineBreak +
-      'Inner Join OperacaoTipo Op ON OP.OperacaoTipoId = Ped.OperacaoTipoId' +
-      sLineBreak + 'Inner Join Pessoa P ON p.PessoaId     = Ped.PessoaId' +
-      sLineBreak + 'Left join RotaPessoas RP ON RP.PessoaId = P.PessoaId' +
-      sLineBreak + 'Left Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData' +
-      sLineBreak + 'Left Join vDocumentoEtapas DE On De.Documento = Ped.uuid' +
-      sLineBreak +
-      'Where (@DataIni=0 or Rd.Data >= @DataIni) and (@DataFin=0 or Rd.Data <= @DataFin) And Ped.OperacaoTipoId = 2 and'
-      + sLineBreak + '      (@PedidoId=0 or @PedidoId = Ped.PedidoId) and' +
-      sLineBreak + '      (@CodigoERP=0 or @CodigoERP = P.CodPessoaERP) and' +
-      sLineBreak + '      (@PessoaId = 0 or P.PessoaId = @PessoaId) and' +
-      sLineBreak + '      (@DocumentoNr = ' + #39 + #39 +
-      ' or @DocumentoNr=Ped.DocumentoNr) and' + sLineBreak + '	     (@Razao = '
-      + #39 + #39 + ' or P.Razao Like @Razao) and' + sLineBreak +
-      '	     (@Razao = ' + #39 + #39 + ' or P.Fantasia Like @Razao) and' +
-      sLineBreak + '	     (@RegistroERP =' + #39 + #39 +
-      ' or Ped.RegistroERP = @RegistroERP) and' + sLineBreak +
+      'Inner Join OperacaoTipo Op ON OP.OperacaoTipoId = Ped.OperacaoTipoId' +sLineBreak +
+      'Inner Join Pessoa P ON p.PessoaId     = Ped.PessoaId' + sLineBreak +
+      'Left join RotaPessoas RP ON RP.PessoaId = P.PessoaId' + sLineBreak +
+      'Left Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData' + sLineBreak +
+      'Left Join vDocumentoEtapas DE On De.Documento = Ped.uuid' + sLineBreak +
+      'Left Join (select ProdutoId, IsNull(sum(Qtde), 0) Qtde From vEstoque Where EstoqueTipoId in (1,4) Group by ProdutoId) Est On Est.ProdutoId = pp.ProdutoId'+sLineBreak+
+      'Where (@DataIni=0 or Rd.Data >= @DataIni) and (@DataFin=0 or Rd.Data <= @DataFin) And Ped.OperacaoTipoId = 2 and ' +sLineBreak +
+      '      (@PedidoId=0 or @PedidoId = Ped.PedidoId) and' + sLineBreak +
+      '      (@CodigoERP=0 or @CodigoERP = P.CodPessoaERP) and' + sLineBreak +
+      '      (@PessoaId = 0 or P.PessoaId = @PessoaId) and' + sLineBreak +
+      '      (@DocumentoNr = ' + #39 + #39 + ' or @DocumentoNr=Ped.DocumentoNr) and' + sLineBreak +
+      '	     (@Razao = ' + #39 + #39 + ' or P.Razao Like @Razao) and' + sLineBreak +
+      '	     (@Razao = ' + #39 + #39 + ' or P.Fantasia Like @Razao) and' + sLineBreak +
+      '	     (@RegistroERP =' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP) and' + sLineBreak +
       '      (@RotaId = 0 or @RotaId = RP.RotaId) and' + sLineBreak +
       '	     (De.ProcessoId in (1, 2, 3)) and' + sLineBreak +
-      '	     DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'
-      + sLineBreak + '      and Prd.EnderecoId is Null' + sLineBreak +
-      'Group by PP.ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao, Prd.Altura, Prd.Largura, Prd.Comprimento, Prd.PesoLiquido'
-      + sLineBreak + 'Order by Prd.Descricao';
+      '	     DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)' + sLineBreak +
+      '      and Prd.EnderecoId is Null' + sLineBreak +
+      '      And (@VerificarEstoque=0 or IsNull(Est.Qtde, 0) > 0)'+sLineBreak+
+      'Group by PP.ProdutoId, Prd.CodProduto, Prd.Descricao, Prd.FatorConversao, Prd.Altura, Prd.Largura, Prd.Comprimento, Prd.PesoLiquido'+sLineBreak +
+      'Order by Prd.Descricao';
 
   Const
     SqlGetEntradaProdutoSemPicking =

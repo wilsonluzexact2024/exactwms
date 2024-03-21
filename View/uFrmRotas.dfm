@@ -5,9 +5,6 @@ inherited FrmRotas: TFrmRotas
   TextHeight = 17
   inherited PgcBase: TcxPageControl
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 6
         ColumnHeaders.Strings = (
@@ -43,6 +40,9 @@ inherited FrmRotas: TFrmRotas
       end
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inherited ShCadastro: TShape
         Left = 140
         Top = 127
@@ -658,8 +658,8 @@ inherited FrmRotas: TFrmRotas
             AlignWithMargins = True
             Left = 3
             Top = 10
-            Width = 598
-            Height = 28
+            Width = 162
+            Height = 17
             Margins.Top = 10
             CustomHint = BalloonHint1
             Align = alClient
@@ -673,8 +673,6 @@ inherited FrmRotas: TFrmRotas
             Font.Style = [fsBold]
             ParentColor = False
             ParentFont = False
-            ExplicitWidth = 162
-            ExplicitHeight = 17
           end
         end
         object EdtDestinatario: TLabeledEdit
@@ -11235,24 +11233,12 @@ inherited FrmRotas: TFrmRotas
         OnClick = BtnUpOrdemClick
       end
     end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
-    inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
   end
   inherited PnHeader: TPanel
     inherited PanWin8: TPanel
       inherited BtnIncluir: TsImage
         Left = 78
-        Top = 6
         ExplicitLeft = 78
-        ExplicitTop = 6
       end
       inherited BtnCancelar: TsImage
         Top = 5
@@ -11269,8 +11255,8 @@ inherited FrmRotas: TFrmRotas
   end
   inherited PnlErro: TPanel
     inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
+      Width = 53
+      Height = 25
     end
   end
   inherited PnlConfigPrinter: TPanel
@@ -11280,7 +11266,7 @@ inherited FrmRotas: TFrmRotas
     ExplicitTop = 140
     inherited Panel7: TPanel
       inherited LblTitConfigPrinter: TLabel
-        Width = 313
+        Width = 253
       end
     end
   end

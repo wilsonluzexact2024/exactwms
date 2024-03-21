@@ -95,7 +95,7 @@ begin
   FProdutoId := 0;
   FCodProduto := 0;
   FCurva := '';
-  FStatus := 0;
+  FStatus := 1;
 end;
 
 destructor TEndereco.Destroy;

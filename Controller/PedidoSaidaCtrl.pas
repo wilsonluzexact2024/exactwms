@@ -38,7 +38,7 @@ Type
                              pRazao : String; pRotaId, pRotaIdFinal, pZonaId, pPrintTag, pEmbalagem : Integer) : TJsonArray;
     Function PedidoProdutoSemPicking(pPedidoId: Integer; pCodigoERP, pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
                              pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pProcessoId : Integer; pRecebido,
-                             pCubagem, pEtiqueta : Integer; pProcessar : Boolean) : TJsonArray;
+                             pCubagem, pEtiqueta : Integer; pProcessar, pVerificarEstoque : Boolean) : TJsonArray;
     Function GetPedidoResumoAtendimento(pPedidoId : Integer = 0; pDivergencia : Integer = 0; pDataInicial : TDate = 0; pDataFinal : TDate = 0) : TJsonArray;
     Function GetClientesRotaCarga(pPessoaId : Integer; pRazao : String; pDataIni, pDataFin : TDateTime;
                              pRotaId, pProcessoId : Integer) : TJsonArray;
@@ -860,12 +860,13 @@ end;
 function TPedidoSaidaCtrl.PedidoProdutoSemPicking(pPedidoId, pCodigoERP,
   pPessoaId: Integer; pDataIni, pDataFin: TDateTime; pDocumentoNr, pRazao,
   pRegistroERP: String; pRotaId, pProcessoId, pRecebido, pCubagem,
-  pEtiqueta: Integer; pProcessar: Boolean): TJsonArray;
+  pEtiqueta: Integer; pProcessar, pVerificarEstoque: Boolean): TJsonArray;
 Var ObjPedidoSaidaDAO : TPedidoSaidaDAO;
 begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
-    Result := ObjPedidoSaidaDAO.PedidoProdutoSemPicking(pPedidoId, pCodigoERP, pPessoaId, pDataIni, pDataFin, pDocumentoNr, pRazao, pRegistroERP, pRotaId, pProcessoId, pRecebido, pCubagem, pEtiqueta, pProcessar);
+    Result := ObjPedidoSaidaDAO.PedidoProdutoSemPicking(pPedidoId, pCodigoERP, pPessoaId, pDataIni, pDataFin, pDocumentoNr, pRazao, pRegistroERP,
+                                                        pRotaId, pProcessoId, pRecebido, pCubagem, pEtiqueta, pProcessar, pVerificarEstoque);
     ObjPedidoSaidaDAO.Free;
   Except ON E: Exception do Begin
     Result := TJsonArray.Create;

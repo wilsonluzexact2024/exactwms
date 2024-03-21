@@ -30404,6 +30404,9 @@ inherited FrmEntrada: TFrmEntrada
       CustomHint = BalloonHint1
       Caption = 'Produtos Sem Picking'
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         1178
         553)

@@ -215,7 +215,7 @@ begin
     End;
     if Not (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid') in [8, 10, 12]) then Begin
        EdtVolumeId.Text := '';
-       ShowErro('Operação não permitida! Etapa atual do Volume: '+ObjPedidoVolumeCtrl.ObjPedidoVolume.Processo, 'alarme');
+       ShowErro('Operação não permitida! Etapa atual do Volume: '+JsonArrayRetorno.Items[0].GetValue<String>('processo'), 'alarme');
        EdtVolumeId.SetFocus;
        JsonArrayRetorno := Nil;
        ObjVolumeCtrl.Free;

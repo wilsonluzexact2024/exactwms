@@ -15,8 +15,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     ExplicitHeight = 663
     ClientRectBottom = 663
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 639
       inherited LstCadastro: TAdvStringGrid
         Height = 601
@@ -66,7 +64,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Par'#226'metros para Processamento'
-      ExplicitTop = 26
       ExplicitHeight = 639
       DesignSize = (
         1157
@@ -21769,13 +21766,9 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 639
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
       ExplicitHeight = 639
       inherited DbgImporta: TDBGrid
         Top = 260

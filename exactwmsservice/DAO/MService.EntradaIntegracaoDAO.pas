@@ -72,33 +72,30 @@ Const
     + '        Values (@Nome, 1, NewId())' + #13 + #10 + 'End;';
 
 Const
-  SqlUnidadesInsert =
-    'If Not Exists (Select Id From Unidades Where Sigla = @Sigla) Begin' +
+  SqlUnidadesInsert = 'If Not Exists (Select Id From Unidades Where Sigla = @Sigla) Begin' +
     #13 + #10 +
   // 'If Not Exists (Select Id From Unidades Where Descricao = @Descricao) Begin'+#13+#10+
     '   Insert Into Unidades Values (@Sigla, @Descricao, 1)' + #13 +
     #10 + 'End;';
 
-Const
-  SqlProdutoInsert =
-    'If Not Exists (Select CodProduto From Produto Where CodProduto = @CodProduto) Begin'
-    + #13 + #10 +
-    ' 		insert into Produto (CodProduto, Descricao, DescrReduzida, RastroId, ProdutoTipoId, UnidadeId, QtdUnid, UnidadeSecundariaId, '
-    + #13 + #10 +
-    '          FatorConversao, LaboratorioId, PesoLiquido, Liquido, Perigoso, Inflamavel, Altura, '
-    + #13 + #10 +
-    '          Largura, Comprimento, MesEntradaMinima, MesSaidaMinima, Status, uuid)'
-    + #13 + #10 +
-    '        Values (@CodProduto, @Descricao, SubString(@Descricao, 1, 40), (Select CadRastroIdProdNovo From Configuracao), 1, (Select Id From Unidades where Sigla = @SiglaUnidPrimaria), '
-    + #13 + #10 +
-    '                @QtdUnidPrimaria, (Select Id From Unidades where Sigla = @SiglaUnidSecundaria), '
-    + #13 + #10 +
-    '                @QtdUnidSecundaria, (Case When @LaboratorioId = 0 Then Null Else (Select IdLaboratorio From Laboratorios Where IdLaboratorio = @LaboratorioId) End), @Peso, @Liquido, @Perigoso, @Inflamavel, '
-    + #13 + #10 +
-    '                @Altura, @Largura, @Comprimento, (Select ShelflifeRecebimento From Configuracao), (Select ShelflifeExpedicao From Configuracao), 1, NewId())'
-    + #13 + #10 + 'End' + #13 + #10 + 'Else Begin' + #13 + #10 +
-    '   Update Produto Set ' + #13 + #10 + '     Descricao = @Descricao' + #13 +
-    #10 + '   Where CodProduto = @CodProduto' + #13 + #10 + 'End;';
+Const SqlProdutoInsert =
+    'If Not Exists (Select CodProduto From Produto Where CodProduto = @CodProduto) Begin' + #13 + #10 +
+    ' 		insert into Produto (CodProduto, Descricao, DescrReduzida, RastroId, ProdutoTipoId, UnidadeId,'+ #13 + #10 +
+    '                        QtdUnid, UnidadeSecundariaId, FatorConversao, LaboratorioId, PesoLiquido, '+ #13 + #10 +
+    '                        Liquido, Perigoso, Inflamavel, Altura, Largura, Comprimento, MesEntradaMinima,'+ #13 + #10 +
+    '                        MesSaidaMinima, Status, uuid)' + #13 + #10 +
+    '   Values (@CodProduto, @Descricao, SubString(@Descricao, 1, 40), (Select CadRastroIdProdNovo From Configuracao), 1, '+ #13 + #10 +
+    '           (Select Id From Unidades where Sigla = @SiglaUnidPrimaria), @QtdUnidPrimaria,' + #13 + #10 +
+    '           (Select Id From Unidades where Sigla = @SiglaUnidSecundaria), ' + #13 + #10 +
+    '           @QtdUnidSecundaria, (Case When @LaboratorioId = 0 Then Null Else (Select IdLaboratorio '+ #13 + #10 +
+    '                                From Laboratorios Where IdLaboratorio = @LaboratorioId) End), @Peso, @Liquido, '+ #13 + #10 +
+    '           @Perigoso, @Inflamavel, @Altura, @Largura, @Comprimento, (Select ShelflifeRecebimento From Configuracao), '+ #13 + #10 +
+    '           (Select ShelflifeExpedicao From Configuracao), 1, NewId())'+ #13 + #10 +
+    'End' + #13 + #10 +
+    'Else Begin' + #13 + #10 +
+    '   Update Produto Set ' + #13 + #10 + '     Descricao = @Descricao' + #13 + #10 +
+    '   Where CodProduto = @CodProduto' + #13 + #10 +
+    'End;';
 
 Const
   SqlProdutoLotesInsert =

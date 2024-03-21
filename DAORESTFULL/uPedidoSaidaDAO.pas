@@ -29,7 +29,7 @@ Type
     Function PedidoPrintTag(pPedidoId, pPedidoVolumeId : Integer; pCodigoERP : Integer; pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
                            pRazao : String; pRotaId, pRotaIdFinal, pZonaId, pPrintTag, pEmbalagem : Integer) : tJsonArray;
     Function PedidoProdutoSemPicking(pPedidoId: Integer; pCodigoERP : Integer; pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
-                           pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pProcessoId : Integer; pRecebido, pCubagem, pEtiqueta : Integer; pProcessar : Boolean) : tJsonArray;
+                           pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pProcessoId : Integer; pRecebido, pCubagem, pEtiqueta : Integer; pProcessar, pVerificarEstoque : Boolean) : tJsonArray;
     Function PedidoResumoAtendimento(pPedidoId : Integer = 0; pDivergencia : Integer = 0; pDataInicial : TDate = 0; pDataFinal : TDate = 0) : TjsonArray;
     Function GetClientesRotaCarga(pPessoaId : Integer; pRazao : String; pDataIni, pDataFin : TDateTime; pRotaId, pProcessoId : Integer) : TJsonArray;
     Function GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId, pProdutoId : Integer; pSintetico : Integer) : TJsonArray;
@@ -1080,14 +1080,14 @@ begin
      vResourceURI := vResourceURI+'&pedidovolumeid='+pPedidoVolumeId.ToString();
   if pCodigoERP <> 0 then
      vResourceURI := vResourceURI+'&codigoerp='+pCodigoERP.ToString();
-  if pPessoaId <> 0 then
-     vResourceURI := vResourceURI+'&pessoaid='+pPessoaId.ToString();
+  //if pPessoaId <> 0 then
+  //   vResourceURI := vResourceURI+'&pessoaid='+pPessoaId.ToString();
   if pDataIni <> 0 then
      vResourceURI := vResourceURI+'&dataini='+DateToStr(pDataIni);
   if pDataFin <> 0 then
      vResourceURI := vResourceURI+'&datafin='+DateToStr(pDataFin);
-  if pRazao <> '' then
-     vResourceURI := vResourceURI+'&razao='+pRazao;
+  //if pRazao <> '' then
+  //   vResourceURI := vResourceURI+'&razao='+pRazao;
   if pRotaId <> 0 then
      vResourceURI := vResourceURI+'&rotaid='+pRotaId.ToString;
   if pRotaIdFinal <> 0 then
@@ -1172,7 +1172,7 @@ end;
 function TPedidoSaidaDao.PedidoProdutoSemPicking(pPedidoId, pCodigoERP,
   pPessoaId: Integer; pDataIni, pDataFin: TDateTime; pDocumentoNr, pRazao,
   pRegistroERP: String; pRotaId, pProcessoId, pRecebido, pCubagem,
-  pEtiqueta: Integer; pProcessar: Boolean): tJsonArray;
+  pEtiqueta: Integer; pProcessar, pVerificarEstoque : Boolean): tJsonArray;
 Var vResourceURI    : String;
 begin
   Result := TJsonArray.Create;
@@ -1207,6 +1207,10 @@ begin
      vResourceURI := vResourceURI + '&cubagem='+pCubagem.ToString();
      vResourceURI := vResourceURI + '&etiqueta='+pEtiqueta.ToString();
   End;
+  if pVerificarEstoque then
+     vResourceURI := vResourceURI + '&verificarestoque='+1.ToString()
+  Else
+     vResourceURI := vResourceURI + '&verificarestoque='+0.ToString();
   vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
   DmeXactWMS.RequestReport.Resource := vResourceURI;
   DmeXactWMS.RequestReport.Method   := RmGet;

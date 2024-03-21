@@ -140,7 +140,6 @@ uses
   uFrmExpedicao in 'View\uFrmExpedicao.pas' {FrmExpedicao},
   uFrmRelPlanilhaCega in 'Report\uFrmRelPlanilhaCega.pas' {FrmRelPlanilhaCega},
   uFrmCargaMontar in 'View\uFrmCargaMontar.pas' {FrmCargaMontar},
-  uCEFApplication,
   Providers.Models.Token in 'src\providers\models\Providers.Models.Token.pas',
   Providers.Request.Intf in 'src\providers\request\Providers.Request.Intf.pas',
   Providers.Request in 'src\providers\request\Providers.Request.pas',
@@ -267,21 +266,16 @@ uses
 
 Var HprevHist : HWND;
 begin
-  GlobalCEFApp := TCefApplication.Create;
-  if GlobalCEFApp.StartMainProcess then Begin
-     HprevHist := FindWindow(Nil, PChar('eXactWMS® - Rhemasys Soluções (63) 9 9240-6343'));
-     if HprevHist = 0 then begin
-        Application.Initialize;
-        Application.MainFormOnTaskbar := True;
-        Application.Title := 'eXactWMS® - Rhemasys Soluções (63) 9 9240-6343';
-        Application.Name  := 'eXactWMS';
-        Application.CreateForm(TDmeXactWMS, DmeXactWMS);
-  Application.CreateForm(TFrmeXactWMS, FrmeXactWMS);
-  Application.Run;
-     end
-     Else
-        MessageDlg('eXactWMS® já está ativado. Não pode ter mais de uma instância ativa!',MtInformation,[MbOk],0);
-  End;
-  GlobalCEFApp.Free;
-  GlobalCEFApp := nil;
+  HprevHist := FindWindow(Nil, PChar('eXactWMS® - Rhemasys Soluções (63) 9 9240-6343'));
+  if HprevHist = 0 then begin
+     Application.Initialize;
+     Application.MainFormOnTaskbar := True;
+     Application.Title := 'eXactWMS® - Rhemasys Soluções (63) 9 9240-6343';
+     Application.Name  := 'eXactWMS';
+     Application.CreateForm(TDmeXactWMS, DmeXactWMS);
+     Application.CreateForm(TFrmeXactWMS, FrmeXactWMS);
+     Application.Run;
+  end
+  Else
+     MessageDlg('eXactWMS® já está ativado. Não pode ter mais de uma instância ativa!',MtInformation,[MbOk],0);
 end.
