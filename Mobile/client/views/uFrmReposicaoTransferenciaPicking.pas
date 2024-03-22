@@ -386,9 +386,9 @@ procedure TFrmReposicaoTransferenciaPicking.EdtEnderecoTransferenciaExit(
 begin
   inherited;
   if EdtEnderecoTransferencia.Text <> '' then Begin
-     if EdtEnderecoTransferencia.Text <> FdMemReposicaoTransferencia.FieldByName('Endereco').AsString then Begin
+     if StringReplace(EdtEnderecoTransferencia.Text, ' ', '', [rfReplaceAll]) <> FdMemReposicaoTransferencia.FieldByName('Endereco').AsString then Begin
         SetCampoDefault('EdtEnderecoTransferencia');
-        ShowErro('Picking inválido para transferência!');
+        ShowErro('Picking inválido. correto: '+FdMemReposicaoTransferencia.FieldByName('Endereco').AsString);
      End
      Else  DelayEdSetFocus(EdtQtdTransferencia);
   End;
@@ -398,7 +398,7 @@ procedure TFrmReposicaoTransferenciaPicking.EdtEnderecoTransferenciaTyping(
   Sender: TObject);
 begin
   inherited;
-  if (EdtCodProdutoTransferencia.Text = '') then Begin
+  if (EdtCodProdutoTransferencia.Text = '') and (EdtEnderecoTransferencia.Text<>'') then Begin
      EdtEnderecoTransferencia.Text := '';
      SetCampoDefault('EdtCodProdutoTransferencia');
      ShowErro('Informe o Produto antes do Endereço.');
@@ -498,16 +498,27 @@ begin
 end;
 
 procedure TFrmReposicaoTransferenciaPicking.CbLoteTransferenciaExit(Sender: TObject);
+Var xRecno : Integer;
 begin
   inherited;
   LblVencimentoTransferencia.Text := '';
   If CbLoteTransferencia.ItemIndex < 0 then Exit;
+  xRecno := FdMemReposicaoTransferencia.RecNo;
   if CbLoteTransferencia.Items.Strings[CbLoteTransferencia.ItemIndex] <> '' then Begin
      If Not FdMemReposicaoTransferencia.Locate('IdProduto;Lote', VarArrayOf([EdtCodProdutoTransferencia.Tag, CbLoteTransferencia.Items.Strings[CbLoteTransferencia.ItemIndex]]), []) then Begin
         SetCampoDefault('CbLoteTransferencia');
         ShowErro('Lote inválido para transferência');
+        LblVencimentoTransferencia.Text := '';
+        FdMemReposicaoTransferencia.RecNo := xRecno;
+     End
+     else Begin
+        LblVencimentoTransferencia.Text := FdMemReposicaoTransferencia.FieldByName('Vencimento').AsString;
      End;
-     LblVencimentoTransferencia.Text := FdMemReposicaoTransferencia.FieldByName('Vencimento').AsString;
+  End
+  Else Begin
+    SetCampoDefault('CbLoteTransferencia');
+    ShowErro('Selecione o Lote');
+    FdMemReposicaoTransferencia.RecNo := xRecno;
   End;
 end;
 
@@ -543,11 +554,9 @@ begin
   MsgD.FormMsg := FrmeXactWMS;
   MsgD.Title   := 'Controle Coleta';
   MsgD.Text    := 'Deseja Movimentar '+EdtQtdApanhe.Text+' Unid.?';
-
   MsgD.ActionOk   := ActContrMovQtde;
   MsgD.ActionCancel := ActContrMovQtdeNegada;
   MsgD.TypeInfo   := tMsgDInformation;
-
   MsgD.Height      := 200;
   MsgD.ShowMsgD;
 end;
@@ -695,18 +704,34 @@ begin
 end;
 
 procedure TFrmReposicaoTransferenciaPicking.GetLoteTransferencia;
-Var xRecno     : Integer;
+Var xRecno, xRecno2     : Integer;
     vProdutoid : Integer;
 begin
-  xRecno     := FdMemReposicaoTransferencia.RecNo;
-  vProdutoId := FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger;
-  CbLoteTransferencia.Items.Clear;
-  while (Not FdMemReposicaoTransferencia.Eof) and (vProdutoId = FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger) do Begin
-    CbLoteTransferencia.Items.Add(FdMemReposicaoTransferencia.FieldByName('Lote').AsString);
-    FdMemReposicaoTransferencia.Next;
+  Try
+    xRecno     := FdMemReposicaoTransferencia.RecNo;
+    xRecno2    := FdMemReposicaoTransferencia.RecNo;
+    vProdutoId := FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger;
+    CbLoteTransferencia.Items.Clear;
+    FdMemReposicaoTransferencia.Filter   := 'IdProduto = '+vProdutoId.ToString();
+    FdMemReposicaoTransferencia.Filtered := True;
+    while (Not FdMemReposicaoTransferencia.Eof) do Begin //and (vProdutoId = FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger) do Begin
+      CbLoteTransferencia.Items.Add(FdMemReposicaoTransferencia.FieldByName('Lote').AsString);
+      FdMemReposicaoTransferencia.Next;
+    End;
+    FdMemReposicaoTransferencia.Filter   := 'IdProduto = '+vProdutoId.ToString();
+    FdMemReposicaoTransferencia.Filtered := False;
+    PosicionaLstTransferenciaEstoque;
+    FdMemReposicaoTransferencia.RecNo := xRecno;
+  Except On E: Exception do Begin
+    SetCampoDefault('EdtCodProdutoTransferencia');
+    ShowErro('Erro: '+E.Message);
+    End;
   End;
-  FdMemReposicaoTransferencia.RecNo := xRecno;
-  PosicionaLstTransferenciaEstoque;
+  if StringReplace(LblPickingTransferencia.Text, '.', '', [rfReplaceAll]) <> FdMemReposicaoTransferencia.FieldByName('Endereco').AsString then Begin
+     SetCampoDefault('EdtCodProdutoTransferencia');
+     ShowErro('Informe o produto. '+xRecno.ToString()+', '+xRecno2.ToString()+', '+
+              FdMemReposicaoTransferencia.RecNo.ToString() );
+  End;
 end;
 
 procedure TFrmReposicaoTransferenciaPicking.GetProdutoTransferencia;
@@ -934,7 +959,6 @@ begin
        //LstTransferenciaEstoque.Items.Item[xItem].Focused := true;
        Break;
     End;
-
   End;
 end;
 
@@ -1042,8 +1066,9 @@ end;
 
 procedure TFrmReposicaoTransferenciaPicking.SalvarTransferencia;
 begin
+//GSS 210324
   if ReposicaoTransferenciaPicking then Begin
-     if StrToIntDef(EdtqtdTransferencia.Text, 0) = FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger then Begin
+{     if StrToIntDef(EdtqtdTransferencia.Text, 0) = FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger then Begin
        FdMemReposicaoTransferencia.Delete;
      End
      Else Begin
@@ -1051,7 +1076,7 @@ begin
        FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger := FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger - StrToIntDef(EdtQtdTransferencia.Text, 0);
        FdMemReposicaoTransferencia.Post;
      End;
-     GetProdutoTransferencia;
+}     GetProdutoTransferencia;
      EdtCodProdutoTransferencia.Text := '';
      LimparTransferencia;
      DelayEdSetFocus(EdtCodProdutoTransferencia);

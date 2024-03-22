@@ -2848,9 +2848,9 @@ begin
            (JsonArrayIdentVolume.Items[0].GetValue<String>('zona') <> 'ARMAZENAGEM') then
            ImprimirTexto(orNormal, 3, 1, 1, Lin, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
 
-        ImprimirTexto(orNormal, 3, 1, 1, Lin,   36, 'Pedido', 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin,   30, 'Pedido', 0, False);
         ImprimirTexto(orNormal, 3, 1, 1, Lin,   60, 'Volume', 0, False);
-        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 36, JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
+        ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('pedidoid'), 0, False);
         ImprimirTexto(orNormal, 3, 2, 2, Lin+2, 52, Repl(' ', 4 - Length(JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')))+
                                                          JsonArrayIdentVolume.Items[0].GetValue<String>('sequencia')+'/'+
                                                          JsonArrayIdentVolume.Items[0].GetValue<String>('totalvolumes'), 0, False);
@@ -3063,9 +3063,9 @@ begin
                 Lin := 1;
                 ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+2, 'FRACIONADOS', 0, True);
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin,   57, 'Pedido', 0, False);
+                ImprimirTexto(orNormal, 3, 1, 1, Lin,   50, 'Pedido', 0, False);
                 ImprimirTexto(orNormal, 3, 1, 1, Lin,   88, 'Volume', 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 57, pPedidoId.ToString, 0, False);
+                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 50, pPedidoId.ToString, 0, False);
                 ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 75, Repl(' ', 4 - Length(psequencia.ToString()))+
                                                             pSequencia.ToString()+'/'+pTotalVolumes.ToString, 0, False);
 

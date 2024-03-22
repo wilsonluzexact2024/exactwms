@@ -1029,51 +1029,38 @@ begin
   HrInicioLog := Time;
   Tutil.Gravalog('[1070-GetOpenVolumeParaSeparacao] terminal: ' +
     ClientIP(Req));
-  nTentativa := 0;
+  nTentativa := 1;
   Repeat
     Erro := True;
     Try
       Try
         LService := TServicePedidoVolume.Create;
-        JsonArrayRetorno := LService.GetOpenVolumeParaSeparacao
-          (StrToIntDef(Req.Params.Items['caixaid'], 0),
-          StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
-          StrToIntDef(Req.Params.Items['usuarioid'], 0),
-          Req.Params.Items['terminal']);
+        JsonArrayRetorno := LService.GetOpenVolumeParaSeparacao(StrToIntDef(Req.Params.Items['caixaid'], 0),
+                            StrToIntDef(Req.Params.Items['pedidovolumeid'], 0), StrToIntDef(Req.Params.Items['usuarioid'], 0),
+                            Req.Params.Items['terminal']);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
+                        Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
+                        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
         Erro := False;
-      Except
-        on E: Exception do
-        Begin
+      Except on E: Exception do Begin
+        Inc(nTentativa);
+        if nTentativa > 3 then Begin
+           Tutil.Gravalog('[GetOpenVolumeParaSeparacao] ' + E.Message);
+           JsonArrayRetorno := TJsonArray.Create;
+           JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+           Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
+           Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                           '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
+                           Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '',
+                           [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+           Erro := False;
+        End
+        Else Begin
           Inc(nTentativa);
-          if nTentativa > 3 then Begin
-            Tutil.Gravalog('[GetOpenVolumeParaSeparacao] ' + E.Message);
-            JsonArrayRetorno := TJsonArray.Create;
-            JsonArrayRetorno.AddElement
-              (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-            Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-            Tutil.SalvarLog(Req.MethodType,
-              StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
-              ClientIP(Req), THorse.Port,
-              '/v1//pedidovolume/openvolumeparaseparacao/:caixaid/:pedidovolumeid/:usuarioid/:terminal',
-              Trim(Req.Params.Content.Text), Req.Body, '',
-              StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-              500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] +
-              '_V: ' + Req.Headers['versao']);
-            Erro := False;
-          End
-          Else
-          Begin
-            Inc(nTentativa);
-            Sleep(500);
-          End;
+          Sleep(500);
+        End;
         End;
       End;
     Finally

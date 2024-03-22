@@ -204,11 +204,19 @@ begin
        ObjVolumeCtrl.Free;
        Exit;
     End
+    Else If JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') = 0 then Begin
+       ShowErro('Volume Sem Produto coletado. Cancele o volume!', 'alarme');
+       EdtVolumeId.Clear;
+       edtvolumeId.setFocus;
+       JsonArrayRetorno := Nil;
+       ObjVolumeCtrl.Free;
+       Exit;
+    End
     Else Begin
        EdtPedidoId.Text      := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('pedidoid');
        EdtDocumentoData.Text := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('documentodata');
-       EdtDestino.Text       := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('pessoaid')+' '+
-                                JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('razao');
+       EdtDestino.Text       := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('codpessoaerp')+' '+
+                                JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('fantasia');
        EdtRota.Text          := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rotaid')+' '+
                                 JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rota');
        LblOrdem.Caption      := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('ordem');

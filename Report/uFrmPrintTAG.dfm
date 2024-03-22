@@ -33319,7 +33319,6 @@ inherited FrmPrintTag: TFrmPrintTag
               SortSettings.HeaderMirrorColorTo = 16182488
               Version = '8.4.2.2'
               WordWrap = False
-              ExplicitLeft = 1
               ColWidths = (
                 74
                 118

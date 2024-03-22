@@ -3925,49 +3925,50 @@ begin
   End;
 End;
 
-Procedure PutReposicaoTransferenciaPicking(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Var
-  LService: TServicePedidoSaida;
-  JsonTransferencia: TJSONObject;
-  JsonArrayRetorno: TJSonArray;
-  HrInicioLog: TTime;
+Procedure PutReposicaoTransferenciaPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var LService: TServicePedidoSaida;
+    JsonTransferencia: TJSONObject;
+    JsonArrayRetorno: TJSonArray;
+    HrInicioLog: TTime;
+    Erro: Boolean;
+    nTentativa: Integer;
 begin
-  Try
-    HrInicioLog := Time;
-    LService := TServicePedidoSaida.Create;
+  nTentativa := 1;
+  Repeat
+    Erro := True;
     Try
-      JsonTransferencia := TJSONObject.ParseJSONValue
-        (TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSONObject;
-      JsonArrayRetorno := LService.ReposicaoTransferenciaPicking
-        (JsonTransferencia);
-      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/reposicao/ReposicaoTransferenciaPicking',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
-      Begin
-        JsonArrayRetorno := TJSonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create.AddPair('Erro',
-          E.Message));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/reposicao/ReposicaoTransferenciaPicking',
-          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+      HrInicioLog := Time;
+      LService := TServicePedidoSaida.Create;
+      Try
+        JsonTransferencia := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSONObject;
+        JsonArrayRetorno := LService.ReposicaoTransferenciaPicking(JsonTransferencia);
+        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/reposicao/ReposicaoTransferenciaPicking', Trim(Req.Params.Content.Text), Req.Body, '',
+                        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201, ((Time - HrInicioLog) / 1000),
+                        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        Erro := False;
+      Except on E: Exception do Begin
+        //Inc(nTentativa);
+        if nTentativa > 3 then Begin
+           JsonArrayRetorno := TJSonArray.Create;
+           JsonArrayRetorno.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
+           Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
+           Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                           '/v1/reposicao/ReposicaoTransferenciaPicking', Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+                           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+           Erro := False;
+        End
+        Else Begin
+          Inc(nTentativa);
+          Sleep(500);
+        End;
+        End;
       End;
+    Finally
+      FreeAndNil(LService);
     End;
-  Finally
-    FreeAndNil(LService);
-  End;
+  Until (Erro = False);
 End;
 
 Procedure PutReposicaoSalvarItemColetado(Req: THorseRequest;

@@ -982,8 +982,7 @@ begin
   End
 end;
 
-function TServicePedidoSaida.ReposicaoTransferenciaPicking(pJsonTransferencia
-  : TJsonObject): TjSonArray;
+function TServicePedidoSaida.ReposicaoTransferenciaPicking(pJsonTransferencia : TJsonObject): TjSonArray;
 Var
   vQryTrasferecia: TFDQuery;
   vQryEstoqueTransf: TFDQuery;
@@ -996,78 +995,58 @@ begin
     vQryTrasferecia.connection.StartTransaction;
     // Baixar Estoque
     if (pJsonTransferencia.GetValue<Integer>('qtdrepo') > 0) and
-      (pJsonTransferencia.GetValue<String>('pickingid') <> '') and
-      (pJsonTransferencia.GetValue<String>('pickingid') <> '0') then
+       (pJsonTransferencia.GetValue<String>('pickingid') <> '') and
+       (pJsonTransferencia.GetValue<String>('pickingid') <> '0') then
     Begin
       // Pegar todos os lotes disponiveis e baixar proporcionalmente
       // ao Invés de baixar por lote, devemos baixar por produto, para reposicao sem lote
       vQryEstoqueTransf.Close;
       vQryEstoqueTransf.Sql.Clear;
       vQryEstoqueTransf.Sql.Add('Declare @LoteId Integer = :pLoteId');
-      vQryEstoqueTransf.Sql.Add
-        ('select * from reposicaoestoquetransferencia RT');
+      vQryEstoqueTransf.Sql.Add('select * from reposicaoestoquetransferencia RT');
       vQryEstoqueTransf.Sql.Add('where Rt.LoteId = @LoteId');
       vQryEstoqueTransf.Sql.Add('Order by RT.LoteId, RT.ReposicaoId');
-      vQryEstoqueTransf.ParamByName('pLoteId').Value :=
-        pJsonTransferencia.GetValue<Integer>('loteid');
+      vQryEstoqueTransf.ParamByName('pLoteId').Value := pJsonTransferencia.GetValue<Integer>('loteid');
       vQryEstoqueTransf.Open;
       vQtdBaixaLote := pJsonTransferencia.GetValue<Integer>('qtdrepo');
-      while ((vQtdBaixaLote > 0) and (Not vQryEstoqueTransf.Eof)) do
-      Begin
+      while ((vQtdBaixaLote > 0) and (Not vQryEstoqueTransf.Eof)) do Begin
         vQryTrasferecia.Close;
         vQryTrasferecia.Sql.Clear;
         vQryTrasferecia.Sql.Add(TuEvolutconst.SqlReposicaoEstoqueTransferencia);
-        vQryTrasferecia.ParamByName('pLoteId').Value :=
-          pJsonTransferencia.GetValue<Integer>('loteid');
-        vQryTrasferecia.ParamByName('pEnderecoId').Value :=
-          pJsonTransferencia.GetValue<Integer>('enderecoid');
-        vQryTrasferecia.ParamByName('pEstoqueTipoId').Value := 7;
-        vQryTrasferecia.ParamByName('pReposicaoId').Value :=
-          vQryEstoqueTransf.FieldByName('ReposicaoId').AsInteger;
-        vQryTrasferecia.ParamByName('pEnderecoOrigemId').Value :=
-          vQryEstoqueTransf.FieldByName('EnderecoOrigemId').AsInteger;
-        if vQtdBaixaLote > vQryEstoqueTransf.FieldByName('Qtde').AsInteger then
-        Begin
-          vBaixaEstoque := vQryEstoqueTransf.FieldByName('Qtde').AsInteger;
-          vQryTrasferecia.ParamByName('pQuantidade').Value :=
-            (vBaixaEstoque * -1);
-          vQtdBaixaLote := vQtdBaixaLote - vBaixaEstoque;
+        vQryTrasferecia.ParamByName('pLoteId').Value           := pJsonTransferencia.GetValue<Integer>('loteid');
+        vQryTrasferecia.ParamByName('pEnderecoId').Value       := pJsonTransferencia.GetValue<Integer>('enderecoid');
+        vQryTrasferecia.ParamByName('pEstoqueTipoId').Value    := 7;
+        vQryTrasferecia.ParamByName('pReposicaoId').Value      := vQryEstoqueTransf.FieldByName('ReposicaoId').AsInteger;
+        vQryTrasferecia.ParamByName('pEnderecoOrigemId').Value := vQryEstoqueTransf.FieldByName('EnderecoOrigemId').AsInteger;
+        if vQtdBaixaLote > vQryEstoqueTransf.FieldByName('Qtde').AsInteger then Begin
+           vBaixaEstoque := vQryEstoqueTransf.FieldByName('Qtde').AsInteger;
+           vQryTrasferecia.ParamByName('pQuantidade').Value := (vBaixaEstoque * -1);
+           vQtdBaixaLote := vQtdBaixaLote - vBaixaEstoque;
         End
-        Else
-        Begin
+        Else Begin
           vBaixaEstoque := vQtdBaixaLote;
-          vQryTrasferecia.ParamByName('pQuantidade').Value :=
-            (vQtdBaixaLote * -1);
+          vQryTrasferecia.ParamByName('pQuantidade').Value := (vQtdBaixaLote * -1);
           vQtdBaixaLote := 0;
         End;
-        vQryTrasferecia.ParamByName('pUsuarioId').Value :=
-          (pJsonTransferencia.GetValue<Integer>('usuarioid'));
-        vQryTrasferecia.ParamByName('pTerminal').Value :=
-          (pJsonTransferencia.GetValue<String>('terminal'));
+        vQryTrasferecia.ParamByName('pUsuarioId').Value := (pJsonTransferencia.GetValue<Integer>('usuarioid'));
+        vQryTrasferecia.ParamByName('pTerminal').Value  := (pJsonTransferencia.GetValue<String>('terminal'));
         if DebugHook <> 0 then
-          vQryTrasferecia.Sql.SaveToFile
-            ('SqlReposicaoBaixarTransferenciaPicking.Sql');
+          vQryTrasferecia.Sql.SaveToFile('SqlReposicaoBaixarTransferenciaPicking.Sql');
         vQryTrasferecia.ExecSql;
-
         // Transferir para o Picking
-        if pJsonTransferencia.GetValue<Integer>('qtdrepo') > 0 then
-        Begin
-          vQryTrasferecia.Close;
-          vQryTrasferecia.Sql.Clear;
-          vQryTrasferecia.Sql.Add('-- Transferir para o Picking');
-          vQryTrasferecia.Sql.Add(TuEvolutconst.SqlEstoque);
-          vQryTrasferecia.ParamByName('pLoteId').Value :=
-            pJsonTransferencia.GetValue<Integer>('loteid');
-          vQryTrasferecia.ParamByName('pEnderecoId').Value :=
-            pJsonTransferencia.GetValue<Integer>('pickingid');
-          vQryTrasferecia.ParamByName('pEstoqueTipoId').Value := 4;
-          vQryTrasferecia.ParamByName('pQuantidade').Value := vBaixaEstoque;
-          vQryTrasferecia.ParamByName('pUsuarioId').Value :=
-            pJsonTransferencia.GetValue<Integer>('usuarioid');
-          if DebugHook <> 0 then
-            vQryTrasferecia.Sql.SaveToFile
-              ('SqlReposicaoTransferenciaParaPicking.Sql');
-          vQryTrasferecia.ExecSql;
+        if pJsonTransferencia.GetValue<Integer>('qtdrepo') > 0 then Begin
+           vQryTrasferecia.Close;
+           vQryTrasferecia.Sql.Clear;
+           vQryTrasferecia.Sql.Add('-- Transferir para o Picking');
+           vQryTrasferecia.Sql.Add(TuEvolutconst.SqlEstoque);
+           vQryTrasferecia.ParamByName('pLoteId').Value     := pJsonTransferencia.GetValue<Integer>('loteid');
+           vQryTrasferecia.ParamByName('pEnderecoId').Value := pJsonTransferencia.GetValue<Integer>('pickingid');
+           vQryTrasferecia.ParamByName('pEstoqueTipoId').Value := 4;
+           vQryTrasferecia.ParamByName('pQuantidade').Value := vBaixaEstoque;
+           vQryTrasferecia.ParamByName('pUsuarioId').Value  := pJsonTransferencia.GetValue<Integer>('usuarioid');
+           if DebugHook <> 0 then
+              vQryTrasferecia.Sql.SaveToFile('SqlReposicaoTransferenciaParaPicking.Sql');
+           vQryTrasferecia.ExecSql;
         End;
         vQryEstoqueTransf.Next;
       End;
