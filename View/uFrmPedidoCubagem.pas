@@ -1800,7 +1800,7 @@ begin
       //1 - Cubagem por Produto
 //            if (DebugHook<>0) and (FieldByName('ProdutoId').AsInteger = 2676) then
 //               showMessage('Acompanhar');
-            if vProdutoId <> FieldByName('ProdutoId').AsInteger then Begin
+            if vProdutoId <> QryEstoqueDisponivel_CaixaFracionada.FieldByName('ProdutoId').AsInteger then Begin
                vProdutoId             := FieldByName('ProdutoId').AsInteger;
                vPesoProduto           := FieldByName('PesoLiquidoKg').AsFloat;
                if vPesoProduto <= 0 then vPesoProduto := 1;
@@ -1845,8 +1845,9 @@ begin
             vQtdProdVlmToCaixa  := Trunc(vSaldoCaixaVolume / vVolumeProduto) * FieldByName('EmbalagemPadrao').AsInteger;
             if vQtdProdVlmToCaixa < 1 then
                vQtdProdVlmToCaixa := FieldByName('EmbalagemPadrao').AsInteger;
-            if (vQtdProdVlmToCaixa>FieldByName('FatorConversao').AsInteger) then
-               vQtdProdVlmToCaixa := Trunc(vQtdProdVlmToCaixa / QryEstoqueDisponivel_CaixaFracionada.FieldByName('FatorConversao').AsInteger) * FieldByName('FatorConversao').AsInteger;
+            if (vQtdProdVlmToCaixa>FieldByName('EmbalagemPadrao').AsInteger) then
+               vQtdProdVlmToCaixa := Trunc(vQtdProdVlmToCaixa / QryEstoqueDisponivel_CaixaFracionada.FieldByName('EmbalagemPadrao').AsInteger) *
+                                     FieldByName('EmbalagemPadrao').AsInteger;
 
             //Desnecessário após implementar Procedimento para Produtos maior caixa
             if ((vPesoProduto)>vSaldoCaixaPeso) or  //((vPesoProduto*FieldByName('EmbalagemPadrao').AsInteger)>vSaldoCaixaPeso)

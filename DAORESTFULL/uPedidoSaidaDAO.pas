@@ -816,6 +816,7 @@ begin
   if pTipoVolume = 'FC' then
      DmeXactWMS.RESTRequestWMS.Resource := 'v1/saida/gerarvolumecaixafechada'
   Else DmeXactWMS.RESTRequestWMS.Resource := 'v1/saida/gerarvolumecaixafracionada';
+  DmeXactWMS.RESTRequestWMS.Timeout := 30000*5;
   DmeXactWMS.RestRequestWMS.ClearBody;
   DmeXactWMS.RestRequestWMS.AddBody(pjsonVolume.ToJson, ContentTypeFromString('application/json'));
   DmeXactWMS.RESTRequestWMS.Method := RmPost;

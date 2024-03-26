@@ -5,8 +5,8 @@
         <Name>CDI Indiana MG</Name>
     </Company>
     <Server>
-        <Ip>192.168.1.224</Ip>
-        <Port>8400</Port>
+        <Ip>192.168.1.31</Ip>
+        <Port>8300</Port>
     </Server>
     <Collector>
         <Brand>Honeywell</Brand>

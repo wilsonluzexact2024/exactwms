@@ -2343,6 +2343,7 @@ begin
   Try
 //    ConfigACBrETQ;
     With ACBrETQConfig do Begin
+      Temperatura   := vTemperatura;
       Ativar;
       For xEtq := 1 to Pred(LstEnderecoAdv.RowCount) do begin
         if LstEnderecoAdv.Cells[8, xEtq] = '1' then Begin
@@ -2362,11 +2363,19 @@ begin
                   //                                         L   C
                   if CbComposicao.ItemIndex = 1 then vLinha := 1
                   Else vLinha := 0;
-                  ImprimirTexto(orNormal, 2,           1, 1, vLinha  ,  6, 'Rua   Prédio  Nível  Apto', 0, False);
-                  ImprimirTexto(orNormal, 3,           2, 2, vLinha+1,  6, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  if CbComposicao.ItemIndex <> 4 then Begin
+                     ImprimirTexto(orNormal, 2,           1, 1, vLinha  ,  6, 'Rua   Prédio  Nível  Apto', 0, False);
+                     ImprimirTexto(orNormal, 3,           2, 2, vLinha+1,  6, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  End;
                   if CbComposicao.ItemIndex = 1 then Begin
                      ImprimirBarras(orNormal, barCODE128, 4, 4, vLinha+3,  6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
                      ImprimirTexto(orNormal, 2,           1, 1, vLinha+7, 18, 'eXactWMS®', 0, False);
+                  End
+                  Else if CbComposicao.ItemIndex = 4 then Begin
+                     ImprimirTexto(orNormal, 2,           1, 1, vLinha  ,  3, 'Rua            Prédio          Nível             Apto', 0, False);
+                     ImprimirTexto(orNormal, 4,           4, 4, vLinha+1,  1, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                     ImprimirBarras(orNormal, barCODE128, 3, 3, vLinha+5,  10, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
+                     ImprimirTexto(orNormal, 2,           1, 1, vLinha+8, 18, 'eXactWMS®', 0, False);
                   End
                   Else Begin
                      ImprimirBarras(orNormal, barCODE128, 4, 4, vLinha+3,  6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 3, becNAO);

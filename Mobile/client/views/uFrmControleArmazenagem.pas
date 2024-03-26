@@ -260,9 +260,13 @@ end;
 procedure TFrmControleArmazenagem.AtivaCampoDefault;
 begin
   inherited;
-  if CampoDefault = 'EdtEnderecoOrigem' then Begin
-     EdtEnderecoOrigem.Text := '';
-     DelayEdSetFocus(EdtEnderecoOrigem);
+  if (CampoDefault = 'EdtEnderecoOrigem') then Begin
+     if (TipoMovimentacao <> poRetidadaStage)  then Begin
+        EdtEnderecoOrigem.Text := '';
+        DelayEdSetFocus(EdtEnderecoOrigem);
+     End
+     Else
+        DelayEdSetFocus(EdtProduto);
   End
   Else if CampoDefault = 'EdtEnderecoDestino' then Begin
      EdtEnderecoDestino.Text := '';
@@ -668,12 +672,15 @@ begin
   JsonArrayRetorno := ObjEstoqueCtrl.GetEstoqueJson(ObjProdutoCtrl.ObjProduto.IdProduto, 0, 0, 0, 1, 1, 'N', 'N', 0);
   if Not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
      for xReturn := 0 to Pred(JsonArrayRetorno.Count) do Begin
-       if StrToDate(JsonArrayRetorno.Items[xReturn].GetValue<String>('vencimento')) < FdMemEstoqueOrigem.FieldByName('Vencimento').AsDateTime then Begin
-          ClearMovimentacao(EdtEnderecoDestino);
-          SetCampoDefault('CbLote');
-          ShowErro('Picking exige movimentar o lote com menor vencimento. End: '+JsonArrayRetorno.Items[xReturn].GetValue<String>('endereco')+' Lt: '+JsonArrayRetorno.Items[xReturn].GetValue<String>('descrlote'));
-          Result := False;
-          Break;
+       if (StrToDate(JsonArrayRetorno.Items[xReturn].GetValue<String>('vencimento')) < FdMemEstoqueOrigem.FieldByName('Vencimento').AsDateTime) then Begin
+          If TipoMovimentacao = poRetidadaStage then
+          Else Begin
+            ClearMovimentacao(EdtEnderecoDestino);
+            SetCampoDefault('CbLote');
+            ShowErro('Picking exige movimentar o lote com menor vencimento. End: '+JsonArrayRetorno.Items[xReturn].GetValue<String>('endereco')+' Lt: '+JsonArrayRetorno.Items[xReturn].GetValue<String>('descrlote'));
+            Result := False;
+            Break;
+          End;
        End;
      End;
   End;

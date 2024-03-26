@@ -30370,7 +30370,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagVolume
+        Properties.ActivePage = TbTagLocalizacao
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -30552,7 +30552,7 @@ inherited FrmPrintTag: TFrmPrintTag
           object CbComposicao: TComboBox
             Left = 201
             Top = 29
-            Width = 231
+            Width = 236
             Height = 25
             CustomHint = BalloonHint1
             Style = csDropDownList
@@ -30569,7 +30569,8 @@ inherited FrmPrintTag: TFrmPrintTag
               'Somente Localiza'#231#227'o'
               'Localiza'#231#227'o / C'#243'd.Barras'
               'Localiza'#231#227'o / C'#243'd.Barras / Produto'
-              'Localiza'#231#227'o / C'#243'd.Barras(Lateral)')
+              'Localiza'#231#227'o / C'#243'd.Barras(Lateral)'
+              'Localiza'#231#227'o(Destaque) / C'#243'd.Barras')
           end
           object CbFormato: TComboBox
             Left = 485
@@ -30617,7 +30618,7 @@ inherited FrmPrintTag: TFrmPrintTag
           object GroupBox2: TGroupBox
             Left = 15
             Top = 126
-            Width = 417
+            Width = 422
             Height = 66
             CustomHint = BalloonHint1
             Caption = '> Faixa de Endere'#231'o<'
@@ -32979,7 +32980,7 @@ inherited FrmPrintTag: TFrmPrintTag
             end
             object EdtPedidoVolumeId: TEdit
               Left = 7
-              Top = 36
+              Top = 38
               Width = 88
               Height = 24
               CustomHint = BalloonHint1
@@ -39831,10 +39832,10 @@ inherited FrmPrintTag: TFrmPrintTag
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 680
-    Top = 39
-    ExplicitLeft = 680
-    ExplicitTop = 39
+    Left = 720
+    Top = -3
+    ExplicitLeft = 720
+    ExplicitTop = -3
     inherited LblLanguagePrinter: TLabel
       Color = clBtnFace
     end

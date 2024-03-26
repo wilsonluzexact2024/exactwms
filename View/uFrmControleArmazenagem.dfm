@@ -20659,7 +20659,7 @@ inherited FrmControleArmazenagem: TFrmControleArmazenagem
           ParentFont = False
         end
         object EdtEnderecoOrigem: TLabeledEdit
-          Left = 115
+          Left = 114
           Top = 59
           Width = 110
           Height = 25
@@ -20706,7 +20706,7 @@ inherited FrmControleArmazenagem: TFrmControleArmazenagem
           OnKeyUp = EdtEnderecoOrigemKeyUp
         end
         object EdtEnderecoDestino: TLabeledEdit
-          Left = 115
+          Left = 114
           Top = 288
           Width = 152
           Height = 25

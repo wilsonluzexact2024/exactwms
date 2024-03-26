@@ -388,7 +388,7 @@ begin
   if EdtEnderecoTransferencia.Text <> '' then Begin
      if StringReplace(EdtEnderecoTransferencia.Text, ' ', '', [rfReplaceAll]) <> FdMemReposicaoTransferencia.FieldByName('Endereco').AsString then Begin
         SetCampoDefault('EdtEnderecoTransferencia');
-        ShowErro('Picking inválido. correto: '+FdMemReposicaoTransferencia.FieldByName('Endereco').AsString);
+        ShowErro('Picking inválido.', 'alerta'); //correto: '+FdMemReposicaoTransferencia.FieldByName('Endereco').AsString);
      End
      Else  DelayEdSetFocus(EdtQtdTransferencia);
   End;
@@ -710,7 +710,7 @@ begin
   Try
     xRecno     := FdMemReposicaoTransferencia.RecNo;
     xRecno2    := FdMemReposicaoTransferencia.RecNo;
-    vProdutoId := FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger;
+    vProdutoId := EdtCodProdutoTransferencia.Tag; //FdMemReposicaoTransferencia.FieldByName('IdProduto').Asinteger;
     CbLoteTransferencia.Items.Clear;
     FdMemReposicaoTransferencia.Filter   := 'IdProduto = '+vProdutoId.ToString();
     FdMemReposicaoTransferencia.Filtered := True;
@@ -718,7 +718,7 @@ begin
       CbLoteTransferencia.Items.Add(FdMemReposicaoTransferencia.FieldByName('Lote').AsString);
       FdMemReposicaoTransferencia.Next;
     End;
-    FdMemReposicaoTransferencia.Filter   := 'IdProduto = '+vProdutoId.ToString();
+    FdMemReposicaoTransferencia.Filter   := '';
     FdMemReposicaoTransferencia.Filtered := False;
     PosicionaLstTransferenciaEstoque;
     FdMemReposicaoTransferencia.RecNo := xRecno;

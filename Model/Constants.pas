@@ -588,7 +588,8 @@ Const SqlPedidoPrintTag = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
       '	        Inner join vProdutoLotes Pl On Pl.LoteId = Vl.LoteId'+sLineBreak+
       '	        Where (@ZonaId=0 or Pl.ZonaId = @ZonaId )'+sLineBreak+
       '	        Group by Vl.PedidoVolumeId) VZ On Vz.PedidoVolumeId = Vlm.PedidoVolumeId'+sLineBreak+
-      'where ((@PrintTag=2 and De.ProcessoId in (2,3)) or (@PrintTag=0 and De.ProcessoId=2) or (@PrintTag=1 and De.ProcessoId=3))'+sLineBreak+
+      'where ((@Pedidovolumeid > 0 and De.processoId<>15) or ((@PrintTag=2 and De.ProcessoId in (2,3)) or '+sLineBreak+
+      '       (@PrintTag=0 and De.ProcessoId=2) or (@PrintTag=1 and De.ProcessoId=3)))'+sLineBreak+
       '  And (@Embalagem=2 or (@Embalagem=0 and Vlm.EmbalagemId Is null) or (@Embalagem=1 and Vlm.EmbalagemId Is Not Null))'+sLineBreak+
       '  And (De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1))'+sLineBreak+
       '  And (@PedidoId = 0 or Vlm.PedidoId = @PedidoId)'+sLineBreak+
