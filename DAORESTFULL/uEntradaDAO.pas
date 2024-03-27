@@ -722,8 +722,6 @@ begin
        vResourceURI := vResourceURI+'&dtnotafiscal='+DateToStr(pDtNotaFiscal);
     //if pPendente <> 0 then
        vResourceURI := vResourceURI+'&pendente='+pPendente.ToString();
-    if pDtNotaFiscal <> 0 then
-       vResourceURI := vResourceURI+'&dtnotafiscal='+DateToStr(pDtNotaFiscal);
     vResourceURI := vResourceURI+'&codproduto='+pCodProduto;
     if pBasico then
        vResourceURI := vResourceURI+'&basico=1';

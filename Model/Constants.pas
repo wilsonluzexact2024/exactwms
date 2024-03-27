@@ -556,7 +556,7 @@ Const PedidoAllResto =      '' + sLineBreak +
       '   When Exists (Select Prd.EnderecoId'+sLineBreak+
       '                From PedidoProdutos PP'+sLineBreak+
       '                Inner join Produto Prd On Prd.IdProduto = PP.Produtoid'+sLineBreak+
-      '                left Join vEstoque Est On Est.CodigoERP = Prd.CodProduto'+sLineBreak+
+      '                left Join vEstoque Est On Est.CodigoERP = Prd.CodProduto and EstoqueTipoId in (1,4)'+sLineBreak+
       '				Where PP.PedidoId = P.PedidoId and Prd.EnderecoId Is Null and Est.CodigoERP is Not Null) then'+sLineBreak+
       '     0'+sLineBreak+
       '   Else 1'+sLineBreak+

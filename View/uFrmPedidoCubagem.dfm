@@ -15,6 +15,8 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     ExplicitHeight = 663
     ClientRectBottom = 663
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 639
       inherited LstCadastro: TAdvStringGrid
         Height = 601
@@ -16586,7 +16588,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
         end
       end
       object BtnProdutoSemPicking: TPanel
-        Left = 863
+        Left = 864
         Top = 483
         Width = 183
         Height = 29
@@ -21766,9 +21768,13 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 639
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 639
       inherited DbgImporta: TDBGrid
         Top = 260

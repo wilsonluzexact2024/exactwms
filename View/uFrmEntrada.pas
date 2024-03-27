@@ -434,7 +434,8 @@ type
     vTotalNotaAgrupada   : Integer;
     pAgrupamentoId       : Integer;
     Function GetListaEntrada(pPedidoId : Integer = 0; pPessoaId : Integer = 0; pDocumento : String = '';
-             pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0; pPendente : Integer = 1; pAgrupamentoId : Integer = 0) : Boolean;
+             pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0;
+             pPendente : Integer = 1; pAgrupamentoId : Integer = 0; pCodProduto : String = '0') : Boolean;
     Function GetProduto(pProdutoId : String) : TProduto;
     Procedure GetListaEntradaItens;
     Procedure PreencherListaItens;
@@ -1872,7 +1873,7 @@ begin
 end;
 
 Function TFrmEntrada.GetListaEntrada(pPedidoId : Integer = 0; pPessoaId: Integer = 0;
-                                     pDocumento : String = ''; pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0; pPendente : Integer = 1; pAgrupamentoId : Integer = 0): Boolean;
+                                     pDocumento : String = ''; pRazao : String = ''; pRegistroERP : String = ''; pDtNotaFiscal : TDateTime = 0; pPendente : Integer = 1; pAgrupamentoId : Integer = 0; pCodProduto : String = '0'): Boolean;
 Var xLista           : Integer;
     JsonArrayEntrada : TJsonArray;
     vErro            : String;
@@ -1882,7 +1883,8 @@ begin
     Result := False;
     LstCadastro.RowCount := 1;
     ObjEntradaCtrl       := TEntradaCtrl.Create;
-    JsonArrayEntrada     := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento, pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0);
+    JsonArrayEntrada     := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento, pRazao,
+                             pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0, pCodProduto);
     if JsonArrayEntrada.Items[0].TryGetValue('Erro', vErro) then begin
        ShowErro('Erro: '+vErro);
        JsonArrayEntrada := Nil;
@@ -2529,20 +2531,22 @@ begin
      Try
        if CbCampoPesq.ItemIndex = 0 then //0 Id
           if StrToIntDef(EdtConteudoPesq.Text, 0) > 0 then
-             Result := GetListaEntrada(StrToInt(EdtConteudoPesq.Text), 0, '', '', '', 0, 0)
+             Result := GetListaEntrada(StrToInt(EdtConteudoPesq.Text), 0, '', '', '', 0, 0, 0, '0')
           else raise Exception.Create('Id inválido para pesquisar!')
        Else if (CbCampoPesq.ItemIndex = 1) and (StrToIntDef(EdtConteudoPesq.Text, 0)>0) then //Código ERP
-          Result := GetListaEntrada(0, StrToInt(EdtConteudoPesq.Text), '', '', '', 0, 0)
+          Result := GetListaEntrada(0, StrToInt(EdtConteudoPesq.Text), '', '', '', 0, 0, 0, '0')
        Else if CbCampoPesq.ItemIndex = 2 then //Documento Nr
-          Result := GetListaEntrada(0, 0, EdtConteudoPesq.Text, '', '', 0, 0)
+          Result := GetListaEntrada(0, 0, EdtConteudoPesq.Text, '', '', 0, 0, 0, '0')
        Else if CbCampoPesq.ItemIndex = 3 then //Razao
-          Result := GetListaEntrada(0, 0, '', EdtConteudoPesq.Text, '', 0, 0)
+          Result := GetListaEntrada(0, 0, '', EdtConteudoPesq.Text, '', 0, 0, 0, '0')
        Else if CbCampoPesq.ItemIndex = 4 then //RegistroERP
-          Result := GetListaEntrada(0, 0, '', '', EdtConteudoPesq.Text, 0, 0)
+          Result := GetListaEntrada(0, 0, '', '', EdtConteudoPesq.Text, 0, 0, 0, '0')
        Else if CbCampoPesq.ItemIndex = 5 then //Data Nota Fiscal
-          Result := GetListaEntrada(0, 0, '', '', '', StrToDate(EdtConteudoPesq.Text), 0)
+          Result := GetListaEntrada(0, 0, '', '', '', StrToDate(EdtConteudoPesq.Text), 0, 0, '0')
        Else if CbCampoPesq.ItemIndex = 6 then //Data Nota Fiscal
-          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0));
+          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0), '0')
+       Else if CbCampoPesq.ItemIndex = 7 then //Agrupamento
+          Result := GetListaEntrada(0, 0, '', '', '', 0, 0, 0, EdtConteudoPesq.Text);
      Except On E: Exception do
         ShowErro('Erro: '+E.Message);
      End;
