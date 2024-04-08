@@ -26,6 +26,9 @@ type
       pRotaId, pRotaIdFinal, pZonaId, pProcessoId, pMontarCarga: Integer;
       pCodProduto: Int64; pPedidoPendente: Integer; pCargaId: Integer;
       pNotaFiscalERP: String): TjSonArray;
+    Function GetPedidoParaCargas(pPedidoId: Integer; pDataIni, pDataFin: TDate;
+      pCodigoERP, pPessoaId: Integer; pRazao, pDocumentoNr, pRegistroERP: String;
+      pRotaId, pRotaIdFinal, pZonaId, pMontarCarga: Integer; pCargaId: Integer) : TjSonArray;
     Function GetRelAtendimentoRota(pDataInicial, pDataFinal: TDateTime)
       : TjSonArray;
     Function GetRelAtendimentoDestinatario(pDataInicial, pDataFinal: TDateTime)
@@ -405,6 +408,48 @@ begin
         Result.AddElement(JsonRetorno);
         FConexao.Query.Next;
       End;
+  Except ON E: Exception do Begin
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro', StringReplace(E.Message,
+                        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]))));
+    End;
+  end;
+end;
+
+function TServicePedidoSaida.GetPedidoParaCargas(pPedidoId: Integer; pDataIni,
+  pDataFin: TDate; pCodigoERP, pPessoaId: Integer; pRazao, pDocumentoNr,
+  pRegistroERP: String; pRotaId, pRotaIdFinal, pZonaId, pMontarCarga,
+  pCargaId: Integer): TjSonArray;
+begin
+  Result := TjSonArray.Create;
+  try
+    FConexao.Query.Sql.Add(TuEvolutconst.SqlPedidoParaCargas);
+    FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
+    if pDataIni = 0 then
+      FConexao.Query.ParamByName('pDataIni').Value := pDataIni
+    Else
+      FConexao.Query.ParamByName('pDataIni').Value :=
+        FormatDateTime('YYYY-MM-DD', pDataIni);
+    if pDataFin = 0 then
+      FConexao.Query.ParamByName('pDataFin').Value := pDataFin
+    Else
+      FConexao.Query.ParamByName('pDataFin').Value      := FormatDateTime('YYYY-MM-DD', pDataFin);;
+    FConexao.Query.ParamByName('pCodigoERP').Value      := pCodigoERP;
+    FConexao.Query.ParamByName('pPessoaId').Value       := pPessoaId;
+    FConexao.Query.ParamByName('pDocumentoNr').Value    := pDocumentoNr;
+    FConexao.Query.ParamByName('pRazao').Value          := '%' + pRazao + '%';
+    FConexao.Query.ParamByName('pRegistroERP').Value    := pRegistroERP;
+    FConexao.Query.ParamByName('pRotaId').Value         := pRotaId;
+    FConexao.Query.ParamByName('pRotaIdFinal').Value    := pRotaIdFinal;
+    FConexao.Query.ParamByName('pZonaId').Value         := pZonaId;
+    FConexao.Query.ParamByName('pMontarCarga').Value    := pMontarCarga;
+    FConexao.Query.ParamByName('pCargaId').Value        := pCargaId;
+    if DebugHook <> 0 then
+      FConexao.Query.Sql.SaveToFile('PedidoParaCargas.Sql');
+    FConexao.Query.Open;
+    if FConexao.Query.Isempty then
+      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro', TuEvolutconst.QrySemDados)))
+    Else
+      Result := FConexao.Query.ToJsonArray;
   Except ON E: Exception do Begin
       Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro', StringReplace(E.Message,
                         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]))));

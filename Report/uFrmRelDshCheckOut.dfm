@@ -88,10 +88,10 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
         ParentFont = False
       end
       inherited PnlInfo: TPanel
-        TabOrder = 5
+        TabOrder = 4
       end
       inherited ChkCadastro: TCheckBox
-        TabOrder = 6
+        TabOrder = 5
       end
       inherited LstReport: TAdvStringGrid
         Top = 180
@@ -99,7 +99,7 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
         TabStop = False
         ColCount = 12
         FixedCols = 2
-        TabOrder = 4
+        TabOrder = 3
         ColumnHeaders.Strings = (
           'Data'
           'Embalagem'
@@ -195,7 +195,7 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
         Height = 55
         CustomHint = BalloonHint1
         Caption = '[ Usu'#225'rio ]'
-        TabOrder = 3
+        TabOrder = 2
         object Label11: TLabel
           Left = 40
           Top = 21
@@ -304,37 +304,6 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
           OnClick = BtnPesqUsuarioClick
         end
       end
-      object GroupBox2: TGroupBox
-        Left = 370
-        Top = 15
-        Width = 146
-        Height = 134
-        CustomHint = BalloonHint1
-        Caption = '[ Embalagem ]'
-        TabOrder = 2
-        object ChkCxaFechada: TCheckBox
-          Left = 12
-          Top = 40
-          Width = 110
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Caixa Fechada'
-          Enabled = False
-          TabOrder = 0
-          OnClick = ChkCxaFechadaClick
-        end
-        object ChkCxaFracionada: TCheckBox
-          Left = 12
-          Top = 88
-          Width = 118
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Caixa Fracionada'
-          Enabled = False
-          TabOrder = 1
-          OnClick = ChkCxaFechadaClick
-        end
-      end
       object GroupBox3: TGroupBox
         Left = 514
         Top = 69
@@ -343,7 +312,7 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
         CustomHint = BalloonHint1
         Caption = '[ Ind'#237'ces de Produtividade ]'
         Enabled = False
-        TabOrder = 7
+        TabOrder = 6
         TabStop = True
         object Bevel2: TBevel
           Left = 286
@@ -537,6 +506,20 @@ inherited FrmRelDshCheckOut: TFrmRelDshCheckOut
           TabOrder = 1
           OnChange = EdtInicioProducaoChange
         end
+      end
+      object RgEmbalagem: TRadioGroup
+        Left = 372
+        Top = 15
+        Width = 143
+        Height = 134
+        CustomHint = BalloonHint1
+        Caption = ' [ Embalagem ] '
+        Enabled = False
+        Items.Strings = (
+          'Cxa. Fechada'
+          'Cxa. Fracionada')
+        TabOrder = 7
+        OnClick = RgEmbalagemClick
       end
     end
   end

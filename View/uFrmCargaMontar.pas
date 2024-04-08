@@ -131,6 +131,8 @@ type
     FDMemResumoCarga: TFDMemTable;
     Label21: TLabel;
     LblQtdVolumeCarga: TLabel;
+    BtnProcessar: TPanel;
+    sImage1: TsImage;
     procedure FormCreate(Sender: TObject);
     procedure EdtCargaIdEnter(Sender: TObject);
     procedure EdtCargaIdExit(Sender: TObject);
@@ -169,6 +171,7 @@ type
     procedure RgCargaProcessoClick(Sender: TObject);
     procedure EdtdtCargaInicialChange(Sender: TObject);
     procedure LstCargaResumoClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure BtnProcessarClick(Sender: TObject);
   private
     { Private declarations }
     ObjCargaCtrl : TCargasCtrl;
@@ -399,6 +402,60 @@ begin
   end;
 end;
 
+procedure TFrmCargaMontar.BtnProcessarClick(Sender: TObject);
+begin
+  inherited;
+  if StrToIntDef(EdtRotaId.Text, 0) <= 0 then Begin
+     ShowErro('Informe a Rota...');
+     EdtRotaId.SetFocus;
+     Exit;
+  End;
+  if StrToIntDef(EdtTransportadoraId.Text, 0) <= 0 then Begin
+     ShowErro('Informe a Transportadora...');
+     EdtTransportadoraId.SetFocus;
+     Exit;
+  End;
+  if StrToIntDef(EdtVeiculoId.Text, 0) <= 0 then Begin
+     ShowErro('Informe o veículo...');
+     EdtVeiculoId.SetFocus;
+     Exit;
+  End;
+  if StrToIntDef(EdtMotoristaId.Text, 0) <= 0 then Begin
+     ShowErro('Informe o Motorista...');
+     EdtMotoristaId.SetFocus;
+     Exit;
+  End;
+  Try
+    StrToDate(EdtDtInicioMontagem.Text);
+  Except
+    EdtDtInicioMontagem.SetFocus;
+    Exit;
+  End;
+  Try
+    StrToDate(EdtDtTerminoMontagem.Text);
+  Except
+    EdtDtTerminoMontagem.SetFocus;
+    Exit;
+  End;
+  if EdtDtInicioMontagem.Text = '  /  /    ' then Begin
+     ShowErro('Informe a data Inicial para montagem da carga...');
+     EdtDtInicioMontagem.SetFocus;
+     Exit;
+  End;
+  if EdtDtTerminoMontagem.Text = '  /  /    ' then Begin
+     ShowErro('Informe a data Final para montagem da carga...');
+     EdtDtTerminoMontagem.SetFocus;
+     Exit;
+  End;
+  if StrToDate(EdtDtTerminoMontagem.Text) < StrToDate(EdtDtInicioMontagem.Text) then Begin
+     ShowErro('Data Final não pode ser inferior a data inicial.');
+     EdtDtTerminoMontagem.SetFocus;
+     Exit;
+  End;
+  GetClientesRotaCarga;
+  GetPedidoCarga(0);
+end;
+
 procedure TFrmCargaMontar.CalculaPesoVolume;
 Var vPesoGeral, vVolumeGeral, vPesoSel, vVolumeSel : Real;
     xPed, vQtdVolumes : Integer;
@@ -516,11 +573,12 @@ begin
      Try
        StrToDate(TEdit(Sender).Text);
      Except
+       ShowErro('Data inválida!');
        TEdit(Sender).SetFocus;
        ExitFocus(Sender);
      End;
-     GetClientesRotaCarga;
-     GetPedidoCarga(0);
+     //GetClientesRotaCarga;
+     //GetPedidoCarga(0);
   End;
   ExitFocus(Sender);
 end;
@@ -960,11 +1018,14 @@ begin
   TDialogMessage.ShowWaitMessage('Buscando Dados, conectado com servidor...',
     procedure
     begin
-
       ObjPedCtrl := TPedidoSaidaCtrl.Create;
       Try
-        JsonArrayRet := ObjPedCtrl.PedidoProcessar(0, 0, 0, vDtInicio, vDtFinal,
-                                                       '', '', '', StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtRotaId.Text, 0), 0, 13, 1, 1, 1, False, pMontagemCarga, 0, 0, StrToIntDef(EdtcargaId.Text, 0), '', 2, 2);
+//        JsonArrayRet := ObjPedCtrl.PedidoProcessar(0, 0, 0, vDtInicio, vDtFinal,
+//                                                   '', '', '', StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtRotaId.Text, 0), 0, 13, 1, 1, 1, False, pMontagemCarga, 0, 0, StrToIntDef(EdtcargaId.Text, 0), '', 2, 2);
+        JsonArrayRet := ObjPedCtrl.PedidoParaCargas(0, 0, 0, vDtInicio, vDtFinal,
+                                                   '', '', '', StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtRotaId.Text, 0), 0,
+                                                   pMontagemCarga, StrToIntDef(EdtcargaId.Text, 0));
+
       Except
       End;
       if JsonArrayRet.Get(0).tryGetValue<String>('Erro', vErro) then Begin

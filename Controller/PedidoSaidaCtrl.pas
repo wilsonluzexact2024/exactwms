@@ -34,6 +34,8 @@ Type
                              pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pRotaIdFinal, pZonaId, pProcessoId : Integer; pRecebido,
                              pCubagem, pEtiqueta : Integer; pProcessar : Boolean; pMontarCarga : Integer; pCodProduto : Int64;
                              pPedidoPendente : Integer; pCargaId : Integer; pNotaFiscalERP : String; pPrintTag, pEmbalagem : Integer) : TJsonArray;
+    Function PedidoParaCargas(pPedidoId: Integer; pCodigoERP, pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
+                             pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pRotaIdFinal, pZonaId, pMontarCarga : Integer; pCargaId : Integer) : TJsonArray;
     Function PedidoPrintTag(pPedidoId, pPedidoVolumeId : Integer; pCodigoERP, pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
                              pRazao : String; pRotaId, pRotaIdFinal, pZonaId, pPrintTag, pEmbalagem : Integer) : TJsonArray;
     Function PedidoProdutoSemPicking(pPedidoId: Integer; pCodigoERP, pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
@@ -794,6 +796,25 @@ begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
     Result := ObjPedidoSaidaDAO.PedidoCubagemVolume_CaixaFracionada(pPedidoId);
+    ObjPedidoSaidaDAO.Free;
+  Except ON E: Exception do Begin
+    Result := TJsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+    ObjPedidoSaidaDAO.Free;
+    End;
+  End;
+end;
+
+function TPedidoSaidaCtrl.PedidoParaCargas(pPedidoId, pCodigoERP,
+  pPessoaId: Integer; pDataIni, pDataFin: TDateTime; pDocumentoNr, pRazao,
+  pRegistroERP: String; pRotaId, pRotaIdFinal, pZonaId, pMontarCarga,
+  pCargaId: Integer): TJsonArray;
+Var ObjPedidoSaidaDAO : TPedidoSaidaDAO;
+begin
+  Try
+    ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
+    Result := ObjPedidoSaidaDAO.PedidoParaCargas(pPedidoId, pCodigoERP, pPessoaId, pDataIni, pDataFin, pDocumentoNr,
+                                pRazao, pRegistroERP, pRotaId, pRotaIdFinal, pZonaId, pMontarCarga, pCargaId);
     ObjPedidoSaidaDAO.Free;
   Except ON E: Exception do Begin
     Result := TJsonArray.Create;

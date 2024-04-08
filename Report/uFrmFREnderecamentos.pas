@@ -589,20 +589,22 @@ begin
         vProduto : String;
     begin
       if CbDias.ItemIndex = 0 then
-         vDias := 20
+         vDias := 0
       Else if CbDias.ItemIndex = 1 then
-         vDias := 30
+         vDias := 20
       Else if CbDias.ItemIndex = 2 then
-         vDias := 60
+         vDias := 30
       Else if CbDias.ItemIndex = 3 then
-         vDias := 120
+         vDias := 60
       Else if CbDias.ItemIndex = 4 then
-         vDias := 180
+         vDias := 120
       Else if CbDias.ItemIndex = 5 then
-         vDias := 240
+         vDias := 180
       Else if CbDias.ItemIndex = 6 then
-         vDias := 360
+         vDias := 240
       Else if CbDias.ItemIndex = 7 then
+         vDias := 360
+      Else if CbDias.ItemIndex = 8 then
          vDias := 361;
       ObjEnderecoCtrl   := TEnderecoCtrl.Create;
       ArrayJsonEndereco := ObjEnderecoCtrl.GetReUsoPicking(StrToIntDef(EdtZonaIdReUso.Text, 0), vDias);

@@ -99,12 +99,10 @@ begin
   inherited;
 end;
 
-function TPedidoVolumeDao.DshCheckOut(const AParams
-  : TDictionary<String, String>): TJsonArray;
-var
-  ObjJson: TJsonObject;
-  vDataIni, vDataFin: TDateTime;
-  vParamsOk: Integer;
+function TPedidoVolumeDao.DshCheckOut(const AParams : TDictionary<String, String>): TJsonArray;
+var ObjJson: TJsonObject;
+    vDataIni, vDataFin: TDateTime;
+    vParamsOk: Integer;
 begin
   vDataIni := 0;
   vDataFin := 0;
@@ -170,13 +168,11 @@ begin
     Else
       Fconexao.Query.ParamByName('pDataFinalProducao').Value := 0;
     if AParams.ContainsKey('usuarioid') then
-      Fconexao.Query.ParamByName('pUsuarioId').Value :=
-        AParams.Items['usuarioid'].ToInteger()
+      Fconexao.Query.ParamByName('pUsuarioId').Value := AParams.Items['usuarioid'].ToInteger()
     Else
       Fconexao.Query.ParamByName('pUsuarioId').Value := 0;
     if AParams.ContainsKey('embalagemid') then
-      Fconexao.Query.ParamByName('pEmbalagemId').Value :=
-        AParams.Items['embalagemid'].ToInteger()
+       Fconexao.Query.ParamByName('pEmbalagemId').Value := AParams.Items['embalagemid'].ToInteger()
     Else
       Fconexao.Query.ParamByName('pEmbalagemId').Value := 99;
     if DebugHook <> 0 then

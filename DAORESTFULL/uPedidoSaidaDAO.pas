@@ -26,6 +26,8 @@ Type
                            pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pRotaIdFinal, pZonaId, pProcessoId : Integer; pRecebido, pCubagem,
                            pEtiqueta : Integer; pProcessar : Boolean; pMontarCarga : Integer; pCodProduto : Int64;
                            pPedidoPendente : Integer; pCargaId : Integer; pNotaFiscalERP : String; pPrintTag, pEmbalagem : Integer) : tJsonArray;
+    Function PedidoParaCargas(pPedidoId, pCodigoERP, pPessoaId: Integer; pDataIni, pDataFin: TDateTime; pDocumentoNr, pRazao,
+                              pRegistroERP: String; pRotaId, pRotaIdFinal, pZonaId, pMontarCarga, pCargaId: Integer): TJsonArray;
     Function PedidoPrintTag(pPedidoId, pPedidoVolumeId : Integer; pCodigoERP : Integer; pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
                            pRazao : String; pRotaId, pRotaIdFinal, pZonaId, pPrintTag, pEmbalagem : Integer) : tJsonArray;
     Function PedidoProdutoSemPicking(pPedidoId: Integer; pCodigoERP : Integer; pPessoaId : Integer; pDataIni, pDataFin : TDateTime;
@@ -1026,6 +1028,52 @@ begin
   End;
 end;
 
+function TPedidoSaidaDao.PedidoParaCargas(pPedidoId, pCodigoERP,
+  pPessoaId: Integer; pDataIni, pDataFin: TDateTime; pDocumentoNr, pRazao,
+  pRegistroERP: String; pRotaId, pRotaIdFinal, pZonaId, pMontarCarga,
+  pCargaId: Integer): TJsonArray;
+Var vResourceURI : String;
+begin
+  Result := TJsonArray.Create;
+  DmeXactWMS.ResetRest;
+  DmeXactWMS.RESTRequestWMS.Timeout := 60000;
+  vResourceURI := 'v1/saida/pedidoparacargas?';
+  if pPedidoId <> 0 then
+     vResourceURI := vResourceURI+'&pedidoid='+pPedidoId.ToString();
+  if pCodigoERP <> 0 then
+     vResourceURI := vResourceURI+'&codigoerp='+pCodigoERP.ToString();
+  if pPessoaId <> 0 then
+     vResourceURI := vResourceURI+'&pessoaid='+pPessoaId.ToString();
+  if pDataIni <> 0 then
+     vResourceURI := vResourceURI+'&dataini='+DateToStr(pDataIni);
+  if pDataFin <> 0 then
+     vResourceURI := vResourceURI+'&datafin='+DateToStr(pDataFin);
+  if pDocumentoNR <> '' then
+     vResourceURI := vResourceURI+'&documentonr='+pDocumentoNr;
+  if pRazao <> '' then
+     vResourceURI := vResourceURI+'&razao='+pRazao;
+  if pRegistroERP <> '' then
+     vResourceURI := vResourceURI+'&registroerp='+pRegistroERP;
+  if pRotaId <> 0 then
+     vResourceURI := vResourceURI+'&rotaid='+pRotaId.ToString;
+  if pRotaIdFinal <> 0 then
+     vResourceURI := vResourceURI+'&rotaidfinal='+pRotaIdFinal.ToString;
+  if pZonaId <> 0 then
+     vResourceURI := vResourceURI+'&zonaid='+pZonaId.ToString;
+  vResourceURI := vResourceURI+'&montarcarga='+pmontarCarga.ToString;
+  if pCargaId <> 0 then
+     vResourceURI := vResourceURI+'&cargaid='+pCargaId.ToString;
+  vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
+  DmeXactWMS.RequestReport.Resource := vResourceURI;
+  DmeXactWMS.RequestReport.Method   := RmGet;
+  //DmExactWMS.RequestReport.Timeout := 30000*5;
+  DmeXactWMS.RequestReport.Execute;
+  if (DmeXactWMS.ResponseReport.StatusCode = 200) or (DmeXactWMS.ResponseReport.StatusCode = 201) Then
+     Result := DmeXactWMS.ResponseReport.JSONValue as TJSONArray
+  Else
+     raise Exception.Create('Erro: '+DmeXactWMS.ResponseReport.StatusText);
+end;
+
 function TPedidoSaidaDao.PedidoParaProcessamento(pPedidoId, pCodigoERP: Integer;
   pDataIni, pDataFin: TDateTime; pProcessoId, pRotaId, pRotaIdFinal, pZonaId, pRecebido, pCubagem,
   pEtiqueta: Integer): TJsonArray;
@@ -1113,7 +1161,7 @@ Var vResourceURI : String;
 begin
   Result := TJsonArray.Create;
   DmeXactWMS.ResetRest;
-  DmeXactWMS.RESTRequestWMS.Timeout := 60000;
+  DmeXactWMS.RESTRequestWMS.Timeout := 90000;
   ///v1/saida/cubagem?DataIni=01/05/2021&DataFin=21/05/21
   if pProcessar then
      vResourceURI := 'v1/saida/cubagem?'

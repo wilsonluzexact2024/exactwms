@@ -252,8 +252,7 @@ function TEstoqueCtrl.GetEstoquePreOrVencido(pCodProduto, pZonaId: Integer;
 Var ObjEstoqueDAO : TEstoqueDAO;
 begin
   ObjEstoqueDAO := TEstoqueDAO.Create;
-  Result        := ObjEstoqueDAO.GetEstoquePreOrVencido(pCodProduto, pZonaId,
-                   pPreVencido, pVencido, pDataInicial, pDataFinal);
+  Result        := ObjEstoqueDAO.GetEstoquePreOrVencido(pCodProduto, pZonaId, pPreVencido, pVencido, pDataInicial, pDataFinal);
   ObjEstoqueDAO.Free;
 end;
 

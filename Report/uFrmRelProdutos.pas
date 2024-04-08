@@ -637,7 +637,7 @@ begin
         Else
            ExcelWorksheet.cells[Linha,17] := 'Não';
         FDMemPesqGeral.Next;
-        LstReport.Row := Linha;
+        LstReport.Row := Linha-1;
         Inc(Linha);
         LblExportando.Caption := 'Exportando Registro: '+Linha.ToString()+' de '+FdMemPesqGeral.RecordCount.ToString;
         Application.ProcessMessages;

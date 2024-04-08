@@ -31,8 +31,8 @@ procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetPedidoAll(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetClientesRotaCarga(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure GetPedidoParaCargas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetClientesRotaCarga(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetPendente(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetDocumento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -178,6 +178,7 @@ begin
     .Get('/saida/documento/:documentonr/:pessoaid', GetDocumento)
     .Get('/saida/estrutura', Estrutura)
     .Get('/saida/pedido', GetPedidoAll)
+    .Get('/saida/pedidoparacargas', GetPedidoParaCargas)
     .Get('/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal', GetPedidoResumoAtendimento)
     .Get('/saida/clientesrotacarga', GetClientesRotaCarga)
     .Post('/saida', Insert)
@@ -1269,6 +1270,197 @@ begin
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '',
+          E.Message, 500, ((Time - HrInicioLog) / 1000),
+          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+      End;
+    end;
+  Finally
+    FreeAndNil(LService);
+  End;
+End;
+
+Procedure GetPedidoParaCargas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  PedidoSaidaDAO: TPedidoSaidaDAO;
+  TestePedido: TPedidoSaidaDAO;
+  AQueryParam: TDictionary<String, String>;
+  vDataIni, vDataFin: TDateTime;
+  vDocumentoNr, vRegistroERP, vRazao : String;
+  vPedidoId, vCodigoERP, vPessoaId, vRotaId, vRotaIdfinal, vZonaId: Integer;
+  vMontarCarga, vCargaId, vParamsOk : Integer;
+  JsonErro: TJSonArray;
+
+  LService: TServicePedidoSaida;
+  JsonArrayRetorno: TJSonArray;
+  HrInicioLog: TTime;
+begin
+  Try
+    LService := TServicePedidoSaida.Create;
+    HrInicioLog := Time;
+    try
+      vPedidoId := 0;
+      vDataIni := 0;
+      vDataFin := 0;
+      vDocumentoNr := '';
+      vRegistroERP := '';
+      vCodigoERP := 0;
+      vPessoaId := 0;
+      vRazao := '';
+      vRotaId := 0;
+      vRotaIdfinal := 0;
+      vZonaId := 0;
+      vMontarCarga := 0;
+      vCargaId := 0;
+      AQueryParam := Req.Query.Dictionary;
+      If AQueryParam.Count <= 0 then
+      Begin
+        JsonErro := TJSonArray.Create();
+        JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          'Parâmetros da consulta não definidos!')));
+        Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '',
+          StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]), 403,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
+        FreeAndNil(LService);
+        Exit;
+      End;
+      vParamsOk := 0;
+      if AQueryParam.ContainsKey('dataini') then
+      Begin
+        Try
+          vDataIni := StrToDate(AQueryParam.Items['dataini']);
+          vParamsOk := vParamsOk + 1;
+        Except
+          JsonErro := TJSonArray.Create;
+          JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+            'Data Inicial dos Pedidos é inválida!')));
+          Res.Send<TJSonArray>(JsonErro)
+            .Status(THttpStatus.InternalServerError);
+          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+            0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+            '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '',
+            StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]), 403,
+            ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+            Req.Headers['versao']);
+          FreeAndNil(LService);
+          Exit;
+        End;
+      End;
+      if AQueryParam.ContainsKey('datafin') then
+      Begin
+        Try
+          vDataFin := StrToDate(AQueryParam.Items['datafin']);
+          vParamsOk := vParamsOk + 1;
+        Except
+          JsonErro := TJSonArray.Create;
+          JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+            'Data Final dos Pedidos é inválida!')));
+          Res.Send<TJSonArray>(JsonErro)
+            .Status(THttpStatus.InternalServerError);
+          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+            0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+            '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '',
+            StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]), 403,
+            ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+            Req.Headers['versao']);
+          FreeAndNil(LService);
+          Exit;
+        End;
+      End;
+      if AQueryParam.ContainsKey('pedidoid') then
+      Begin
+        vPedidoId := StrToIntDef(AQueryParam.Items['pedidoid'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('codigoerp') then
+      Begin
+        vCodigoERP := StrToIntDef(AQueryParam.Items['codigoerp'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('pessoaid') then
+      Begin
+        vPessoaId := StrToIntDef(AQueryParam.Items['pessoaid'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('documentonr') then
+      Begin
+        vDocumentoNr := AQueryParam.Items['documentonr'];
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('razao') then
+      Begin
+        vRazao := AQueryParam.Items['razao'];
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('registroerp') then
+      Begin
+        vRegistroERP := AQueryParam.Items['registroerp'];
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('rotaid') then
+      Begin
+        vRotaId := StrToIntDef(AQueryParam.Items['rotaid'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('rotaidfinal') then
+      Begin
+        vRotaIdfinal := StrToIntDef(AQueryParam.Items['rotaidfinal'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('zonaid') then
+      Begin
+        vZonaId := StrToIntDef(AQueryParam.Items['zonaid'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('montarcarga') then
+      Begin
+        vMontarCarga := StrToIntDef(AQueryParam.Items['montarcarga'], 0);
+        vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('cargaid') then
+      Begin
+        vCargaId := StrToInt64Def(AQueryParam.Items['cargaid'], 0);
+        Inc(vParamsOk);
+      End;
+
+      if vParamsOk <> AQueryParam.Count then
+      Begin
+        JsonErro := TJSonArray.Create();
+        JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          'Parâmetros da consulta definidos incorretamente!')));
+        Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.Forbidden);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '',
+          StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]), 403,
+          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+          Req.Headers['versao']);
+        FreeAndNil(LService);
+        Exit;
+      End;
+      JsonArrayRetorno := LService.GetPedidoParaCargas(vPedidoId, vDataIni, vDataFin,
+        vCodigoERP, vPessoaId, vRazao, vDocumentoNr, vRegistroERP, vRotaId,
+        vRotaIdfinal, vZonaId, vMontarCarga, vCargaId);
+      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
+        Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/saida/pedidoparacargas',
+        Trim(Req.Params.Content.Text), Req.Body, '',
+        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
+        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
+        Req.Headers['versao']);
+    Except
+      On E: Exception do
+      Begin
+        JsonErro := TJSonArray.Create;
+        JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
+          E.Message)));
+        Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
+          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+          '/v1/saida/pedidoparacargas', Trim(Req.Params.Content.Text), Req.Body, '',
           E.Message, 500, ((Time - HrInicioLog) / 1000),
           Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;

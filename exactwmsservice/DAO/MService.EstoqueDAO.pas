@@ -644,8 +644,11 @@ begin
     Else
        FConexao.Query.Sql.Add('Order by EET.ProdutoId, Ve.Endereco');
     End;
-    If DebugHook <> 0 Then
-       FConexao.Query.Sql.SaveToFile('EstoqueEndTipoDetalhe.Sql');
+    If DebugHook <> 0 Then Begin
+       if (AParams.ContainsKey('estoquetipoid')) and (AParams.Items['estoquetipoid'].ToInteger = 6) then
+          FConexao.Query.Sql.SaveToFile('EstoqueEndTipoDetalheReserva.Sql')
+       Else FConexao.Query.Sql.SaveToFile('EstoqueEndTipoDetalhe.Sql');
+    End;
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then Begin
        Result := TJsonArray.Create;

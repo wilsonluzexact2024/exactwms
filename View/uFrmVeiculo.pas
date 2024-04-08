@@ -231,7 +231,7 @@ begin
     CbAnoFabricacao.Items.Add(xAno.ToString);
     CbAnoModelo.Items.Add(xAno.ToString);
   End;
-  GetListaVeiculos(0, '', 0, 0);
+//  GetListaVeiculos(0, '', 0, 0);
 end;
 
 procedure TFrmVeiculo.FormDestroy(Sender: TObject);
@@ -267,19 +267,19 @@ begin
        LstCadastro.AddDataImage(10, xReturn, 0, haCenter, vaTop);
      For xReturn := 0 To ReturnJsonArray.Count-1 do begin
        LstCadastro.Cells[0, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<Integer>('veiculoid').ToString();
-       LstCadastro.Cells[1, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('placa');
-       LstCadastro.Cells[2, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('cor');
-       LstCadastro.Cells[3, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('tipo');
-       LstCadastro.Cells[4, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<String>('marca');
+       LstCadastro.Cells[1, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('placa', '');
+       LstCadastro.Cells[2, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('cor', '');
+       LstCadastro.Cells[3, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('tipo', '');
+       LstCadastro.Cells[4, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<String>('marca', '');
        LstCadastro.Cells[5, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<string>('carroceriatipo');
-       LstCadastro.Cells[6, xReturn+1] := FormatFloat('0.00', ReturnJsonArray.Get(xReturn).GetValue<Double>('altura')*
-                                                              ReturnJsonArray.Get(xReturn).GetValue<Double>('largura')*
-                                                              ReturnJsonArray.Get(xReturn).GetValue<Double>('comprimento'));
-       LstCadastro.Cells[7, xReturn+1] := FormatFloat('0.00', ReturnJsonArray.Get(xReturn).GetValue<Double>('aproveitamento'));
-       LstCadastro.Cells[8, xReturn+1] := FormatFloat('0.000', ReturnJsonArray.Get(xReturn).GetValue<Double>('capacidadekg'));
-       LstCadastro.Cells[9, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<String>('transportadoraid')+ ' '+
-                                          ReturnJsonArray.Get(xReturn).GetValue<String>('transportadora');
-       LstCadastro.Cells[10, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<Integer>('status').ToString;
+       LstCadastro.Cells[6, xReturn+1] := FormatFloat('0.00', ReturnJsonArray.Get(xReturn).GetValue<Double>('altura', 8)*
+                                                              ReturnJsonArray.Get(xReturn).GetValue<Double>('largura', 8)*
+                                                              ReturnJsonArray.Get(xReturn).GetValue<Double>('comprimento', 8));
+       LstCadastro.Cells[7, xReturn+1] := FormatFloat('0.00', ReturnJsonArray.Get(xReturn).GetValue<Double>('aproveitamento', 100));
+       LstCadastro.Cells[8, xReturn+1] := FormatFloat('0.000', ReturnJsonArray.Get(xReturn).GetValue<Double>('capacidadekg', 0));
+       LstCadastro.Cells[9, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<String>('transportadoraid', '')+ ' '+
+                                          ReturnJsonArray.Get(xReturn).GetValue<String>('transportadora', '');
+       LstCadastro.Cells[10, xReturn+1] := ReturnJsonArray.Get(xReturn).GetValue<Integer>('status', 1).ToString;
        LstCadastro.Alignments[0, xReturn+1] := taRightJustify;
        LstCadastro.FontStyles[0, xReturn+1] := [FsBold];
        LstCadastro.Alignments[6, xReturn+1] := taRightJustify;
@@ -373,47 +373,52 @@ end;
 
 function TFrmVeiculo.SalvarReg: Boolean;
 begin
-  ObjVeiculoCtrl.ObjVeiculo.VeiculoId        := StrToIntDef(EdtVeiculoId.Text, 0);
-  if CbProcedencia.ItemIndex = 0 then
-     ObjVeiculoCtrl.ObjVeiculo.Procedencia := 'I'
-  Else ObjVeiculoCtrl.ObjVeiculo.Procedencia := 'N';
-//  ObjVeiculoCtrl.ObjVeiculo.ProcedenciaDescr := '';
-  ObjVeiculoCtrl.ObjVeiculo.Placa            := EdtPlaca.Text;
-  ObjVeiculoCtrl.ObjVeiculo.Tipo             := CbTipo.Text;
-  ObjVeiculoCtrl.ObjVeiculo.Marca            := CbMarca.Text;
-  ObjVeiculoCtrl.ObjVeiculo.Modelo           := CbModelo.Text;
-  ObjVeiculoCtrl.ObjVeiculo.AnoFabricacaoModelo := CbAnoFabricacao.Text+CbAnoModelo.Text;
-  ObjVeiculoCtrl.ObjVeiculo.ChassiTipo       := CbChassiTipo.Text; //1 Monobloco - 2 Monobloco Estrutura   3 Chassi Tunel Central   4 Chassi de Longarina   5 Subchassi
-//  ObjVeiculoCtrl.ObjVeiculo.ChassiTipoDescr  := ;
-  ObjVeiculoCtrl.ObjVeiculo.ChassiNumero     := EdtChassiNumero.Text;
-  ObjVeiculoCtrl.ObjVeiculo.CarroceriaTipo   := CbCarroceria.Text;
-//  ObjVeiculoCtrl.ObjVeiculo.CarroceriaDescr  := ;
-  ObjVeiculoCtrl.ObjVeiculo.Renavam          := EdtRenavam.Text;
-  ObjVeiculoCtrl.ObjVeiculo.MotorNumero      := EdtMotoNumero.Text;
-  ObjVeiculoCtrl.ObjVeiculo.Cor              := CbCor.Text;
-  if CbCombustivel.ItemIndex = 0 then
-     ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'E'
-  Else if CbCombustivel.ItemIndex = 1 then
-     ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'D'
-  Else If CbCombustivel.ItemIndex = 2 then
-     ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'F'
-  Else if CbCombustivel.ItemIndex = 3 then
-     ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'G';
-  ObjVeiculoCtrl.ObjVeiculo.TaraKg           := EdtTara.Value;
-  ObjVeiculoCtrl.ObjVeiculo.Capacidadekg     := EdtCapacidade.Value;
-  ObjVeiculoCtrl.ObjVeiculo.Altura           := EdtAltura.Value;
-  ObjVeiculoCtrl.ObjVeiculo.Largura          := EdtLargura.Value;
-  ObjVeiculoCtrl.ObjVeiculo.Comprimento      := EdtComprimento.Value;
-  //ObjVeiculoCtrl.ObjVeiculo.Volume           := ;
-  ObjVeiculoCtrl.ObjVeiculo.Aproveitamento   := EdtAproveitamento.Value;
-  ObjVeiculoCtrl.ObjVeiculo.Rastreado        := Ord(ChkRastreado.Checked);
-  ObjVeiculoCtrl.ObjVeiculo.Segurado         := Ord(ChkSegurado.Checked);
-  ObjVeiculoCtrl.ObjVeiculo.TransportadoraId := StrToIntDef(EdtTransportadoraId.Text, 0);
-  ObjVeiculoCtrl.ObjVeiculo.DtInclusao       := now();
-  ObjVeiculoCtrl.ObjVeiculo.HrInclusao       := Time();
-  ObjVeiculoCtrl.ObjVeiculo.Status           := Ord(ChkCadastro.Checked);
-  Result := ObjVeiculoCtrl.Salvar;
-  if Result then ObjVeiculoCtrl.ObjVeiculo.VeiculoId := 0;
+  Try
+    ObjVeiculoCtrl.ObjVeiculo.VeiculoId        := StrToIntDef(EdtVeiculoId.Text, 0);
+    if CbProcedencia.ItemIndex = 0 then
+       ObjVeiculoCtrl.ObjVeiculo.Procedencia := 'I'
+    Else ObjVeiculoCtrl.ObjVeiculo.Procedencia := 'N';
+  //  ObjVeiculoCtrl.ObjVeiculo.ProcedenciaDescr := '';
+    ObjVeiculoCtrl.ObjVeiculo.Placa            := EdtPlaca.Text;
+    ObjVeiculoCtrl.ObjVeiculo.Tipo             := CbTipo.Text;
+    ObjVeiculoCtrl.ObjVeiculo.Marca            := CbMarca.Text;
+    ObjVeiculoCtrl.ObjVeiculo.Modelo           := CbModelo.Text;
+    ObjVeiculoCtrl.ObjVeiculo.AnoFabricacaoModelo := CbAnoFabricacao.Text+CbAnoModelo.Text;
+    ObjVeiculoCtrl.ObjVeiculo.ChassiTipo       := CbChassiTipo.Text; //1 Monobloco - 2 Monobloco Estrutura   3 Chassi Tunel Central   4 Chassi de Longarina   5 Subchassi
+  //  ObjVeiculoCtrl.ObjVeiculo.ChassiTipoDescr  := ;
+    ObjVeiculoCtrl.ObjVeiculo.ChassiNumero     := EdtChassiNumero.Text;
+    ObjVeiculoCtrl.ObjVeiculo.CarroceriaTipo   := CbCarroceria.Text;
+  //  ObjVeiculoCtrl.ObjVeiculo.CarroceriaDescr  := ;
+    ObjVeiculoCtrl.ObjVeiculo.Renavam          := EdtRenavam.Text;
+    ObjVeiculoCtrl.ObjVeiculo.MotorNumero      := EdtMotoNumero.Text;
+    ObjVeiculoCtrl.ObjVeiculo.Cor              := CbCor.Text;
+    if CbCombustivel.ItemIndex = 0 then
+       ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'E'
+    Else if CbCombustivel.ItemIndex = 1 then
+       ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'D'
+    Else If CbCombustivel.ItemIndex = 2 then
+       ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'F'
+    Else
+       ObjVeiculoCtrl.ObjVeiculo.CombustivelTipo := 'G';
+    ObjVeiculoCtrl.ObjVeiculo.TaraKg           := EdtTara.Value;
+    ObjVeiculoCtrl.ObjVeiculo.Capacidadekg     := EdtCapacidade.Value;
+    ObjVeiculoCtrl.ObjVeiculo.Altura           := EdtAltura.Value;
+    ObjVeiculoCtrl.ObjVeiculo.Largura          := EdtLargura.Value;
+    ObjVeiculoCtrl.ObjVeiculo.Comprimento      := EdtComprimento.Value;
+    //ObjVeiculoCtrl.ObjVeiculo.Volume           := ;
+    ObjVeiculoCtrl.ObjVeiculo.Aproveitamento   := EdtAproveitamento.Value;
+    ObjVeiculoCtrl.ObjVeiculo.Rastreado        := Ord(ChkRastreado.Checked);
+    ObjVeiculoCtrl.ObjVeiculo.Segurado         := Ord(ChkSegurado.Checked);
+    ObjVeiculoCtrl.ObjVeiculo.TransportadoraId := StrToIntDef(EdtTransportadoraId.Text, 0);
+    ObjVeiculoCtrl.ObjVeiculo.DtInclusao       := now();
+    ObjVeiculoCtrl.ObjVeiculo.HrInclusao       := Time();
+    ObjVeiculoCtrl.ObjVeiculo.Status           := Ord(ChkCadastro.Checked);
+    Result := ObjVeiculoCtrl.Salvar;
+    if Result then ObjVeiculoCtrl.ObjVeiculo.VeiculoId := 0;
+  Except On E: Exception do Begin
+    ShowErro('Erro: '+E.Message);
+    End;
+  End;
 end;
 
 procedure TFrmVeiculo.ShowDados;

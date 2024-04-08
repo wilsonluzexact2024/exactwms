@@ -91,15 +91,18 @@ end;
 function TVeiculoCtrl.Salvar: Boolean;
 Var ObjVeiculoDAO : TVeiculoDAO;
 Begin
-  if Not VerificaDados then
-     Exit;
-  ObjVeiculoDAO := TVeiculoDAO.Create;
-//  ObjVeiculoDAO.ObjVeiculo := ObjVeiculo;
-  Result := ObjVeiculoDAO.Salvar(ObjVeiculo);
-  if Result then
-     Self.ObjVeiculo.VeiculoId := 0;
-  ObjVeiculoDAO := Nil;
-  ObjVeiculoDAO.DisposeOf;
+  Try
+    if Not VerificaDados then
+       Exit;
+    ObjVeiculoDAO := TVeiculoDAO.Create;
+    Result := ObjVeiculoDAO.Salvar(ObjVeiculo);
+    if Result then
+       Self.ObjVeiculo.VeiculoId := 0;
+    ObjVeiculoDAO := Nil;
+    ObjVeiculoDAO.DisposeOf;
+  Except On E: Exception do
+    raise Exception.Create(E.Message);
+  End;
 end;
 
 End.

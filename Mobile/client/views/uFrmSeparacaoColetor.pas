@@ -392,6 +392,7 @@ type
     function ValidarColetaProduto: Boolean;
     procedure VerificarFinalizacaoOrContinuidadeSeparacao(pForcado : Boolean);
     Function ValidarColetaLote : Boolean;
+    procedure ConfirmarResetVolume;
   Protected
     Procedure PermitirAcessoCtrlSeg; OverRide;
     Procedure LiberarFuncaoBloqueada; OverRide;
@@ -1048,6 +1049,9 @@ begin
     4: Begin
        ShowOk('Vc deve clicar em SIM para Finalizar!');
     End;
+    5: Begin
+       PgcPrincipal.ActiveTab := TabDetalhes;
+    End
     Else
        ChgTabDet.Execute;
   end;
@@ -1095,6 +1099,11 @@ begin
 
        End;
     End;
+    5: Begin
+       ConfirmaResetVolume(StrToIntDef(EdtVolumeId.Text, 0));
+       PgcPrincipal.ActiveTab := TabDetalhes;
+       ShowOk('Reset realizado!');
+    End
     Else
        ChgTabDet.Execute; //PgcPrincipal.ActiveTab := TabDetalhes;
   end;
@@ -1152,6 +1161,17 @@ begin
   LblTituloFoot.Text        := 'Divergência(s) e não coletados serão lançadas em novo volume.';
   LblMensagem1.Text := 'Gerar Volume Extra de Excesso?';
   LblMensagem2.Text := 'Volume será gerado devido excesso na caixa.';
+  //PgcPrincipal.ActiveTab := TabConfirmacao;
+  ChgTabConfirmacao.Execute;
+end;
+
+procedure TFrmSeparacaoColetor.ConfirmarResetVolume;
+begin
+  CodConfirmacao := 5;
+  LblTituloConfirmacao.Text := 'Resetar Volume';
+  LblTituloFoot.Text        := 'Produtos já coletar retornar ao Picking.';
+  LblMensagem1.Text := 'Resetar Volume?';
+  LblMensagem2.Text := 'Toda a coleta será desfeita.';
   //PgcPrincipal.ActiveTab := TabConfirmacao;
   ChgTabConfirmacao.Execute;
 end;
@@ -3203,6 +3223,11 @@ begin
      ShowErro('Usuário não autorizado!', 'alarme');
      Exit;
   End;
+
+  CodConfirmacao := 5;
+  ConfirmarResetVolume;
+  exit;
+
   TDialogService.MessageDialog('Resetar o volume('+EdtVolumeId.Text+')?',
                TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0,
    procedure(const AResult: TModalResult)

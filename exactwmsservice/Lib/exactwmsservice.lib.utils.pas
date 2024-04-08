@@ -478,6 +478,7 @@ begin
 end;
 
 class procedure Tutil.Gravalog(mensagem: string);
+var Teste : String;
 begin
   Try
     TTask.Create(
@@ -504,6 +505,7 @@ begin
               Append(F);
             Writeln(F, LSaida);
           except
+            Teste := 'Erro Aqui';
           end;
         finally
           Closefile(F);

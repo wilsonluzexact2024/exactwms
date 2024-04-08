@@ -3,6 +3,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabReUsoPicking
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -1529,16 +1530,6 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
           OnClick = EdtEnderecoIniChange
         end
       end
-    end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
-    inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
     end
     object TabReUsoPicking: TcxTabSheet
       CustomHint = BalloonHint1

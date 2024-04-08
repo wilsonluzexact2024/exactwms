@@ -429,11 +429,9 @@ Begin
   Try
     try
       EnderecoDAO := TEnderecoDAO.Create;
-      Res.Send<TJSonArray>(EnderecoDAO.GetReUsoPicking
-        (StrToIntDef(Req.Params.Items['zonaid'], 0),
-        StrToIntDef(Req.Params.Items['dias'], 0))).Status(THttpStatus.Created);
-    Except
-      on E: Exception do
+      Res.Send<TJSonArray>(EnderecoDAO.GetReUsoPicking(StrToIntDef(Req.Params.Items['zonaid'], 0),
+                           StrToIntDef(Req.Params.Items['dias'], 0))).Status(THttpStatus.Created);
+    Except on E: Exception do
       Begin
         JsonArrayErro := TJSonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',

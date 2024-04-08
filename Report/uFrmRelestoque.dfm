@@ -30,11 +30,12 @@ inherited FrmRelEstoque: TFrmRelEstoque
         Top = 208
         Height = 316
         TabStop = False
-        ColCount = 16
+        ColCount = 18
         TabOrder = 7
         ColumnHeaders.Strings = (
           'C'#243'd.ERP'
           'Descri'#231#227'o'
+          'Picking'
           'Embalagem'
           'Endere'#231'o'
           'Estrutura'
@@ -51,11 +52,13 @@ inherited FrmRelEstoque: TFrmRelEstoque
           'Expedi'#231#227'o'
           'Ult.Movimento')
         ExplicitLeft = -1
-        ExplicitTop = 248
+        ExplicitTop = 208
         ExplicitHeight = 316
         ColWidths = (
           74
           118
+          74
+          74
           74
           74
           74
@@ -620,7 +623,7 @@ inherited FrmRelEstoque: TFrmRelEstoque
         TabOrder = 4
         object CbEstoqueTipo: TComboBox
           Left = 13
-          Top = 20
+          Top = 21
           Width = 176
           Height = 22
           CustomHint = BalloonHint1
@@ -1749,7 +1752,7 @@ inherited FrmRelEstoque: TFrmRelEstoque
     end
   end
   inherited FdMemPesqGeral: TFDMemTable
-    Top = 279
+    Top = 281
     object FdMemPesqGeralProdutoId: TIntegerField
       FieldName = 'ProdutoId'
     end
@@ -1828,6 +1831,18 @@ inherited FrmRelEstoque: TFrmRelEstoque
     end
     object FdMemPesqGeralAnoVencimento: TIntegerField
       FieldName = 'AnoVencimento'
+    end
+    object FdMemPesqGeralPicking: TStringField
+      FieldName = 'Picking'
+      Size = 11
+    end
+    object FdMemPesqGeralmascara: TStringField
+      FieldName = 'mascara'
+      Size = 14
+    end
+    object FdMemPesqGeralmascarapicking: TStringField
+      FieldName = 'mascarapicking'
+      Size = 14
     end
   end
   inherited frxReport1: TfrxReport

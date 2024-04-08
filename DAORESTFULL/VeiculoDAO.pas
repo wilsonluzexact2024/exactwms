@@ -93,7 +93,6 @@ begin
   Else
      DmeXactWMS.RESTRequestWMS.Method := rmPut;
   DmeXactWMS.RESTRequestWMS.Execute;
-  FreeAndNil(jSonVeiculo);
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
      Result := True
   Else

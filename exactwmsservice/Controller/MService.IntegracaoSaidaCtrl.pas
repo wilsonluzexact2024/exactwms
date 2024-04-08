@@ -49,12 +49,16 @@ uses MService.SaidaIntegracaoDAO, uFuncoes;
 
 procedure Registry;
 begin
-  THorse.Group.Prefix('v1').Get('/saidaintegracao/consulta', Consulta)
-    .Put('/saidaintegracao', Insert).Put('/saidaintegracao/retorno/:pedido',
-    Retorno).Prefix('v2').Get('/saidaintegracao/consulta', ConsultaV2)
-    .Put('/saidaintegracao', InsertV2).Put('/saidaintegracao/retorno/:pedido',
-    RetornoV2).Prefix('v3').Get('/saidaintegracao/consulta', ConsultaV3)
-    .Put('/saidaintegracao/retorno/:pedido', RetornoV3)
+  THorse.Group.Prefix('v1')
+        .Get('/saidaintegracao/consulta', Consulta)
+        .Put('/saidaintegracao', Insert)
+        .Put('/saidaintegracao/retorno/:pedido', Retorno)
+        .Prefix('v2')
+        .Get('/saidaintegracao/consulta', ConsultaV2)
+        .Put('/saidaintegracao', InsertV2)
+        .Put('/saidaintegracao/retorno/:pedido', RetornoV2)
+        .Prefix('v3').Get('/saidaintegracao/consulta', ConsultaV3)
+        .Put('/saidaintegracao/retorno/:pedido', RetornoV3)
 end;
 
 procedure Consulta(Req: THorseRequest; Res: THorseResponse; Next: TProc);

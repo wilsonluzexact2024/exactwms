@@ -3,12 +3,6 @@ inherited FrmRelProdutos: TFrmRelProdutos
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Properties.ActivePage = TabPrincipal
-    inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -545,15 +539,13 @@ inherited FrmRelProdutos: TFrmRelProdutos
         TabOrder = 8
       end
     end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
-    end
-    inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
+  end
+  inherited PnHeader: TPanel
+    inherited PanWin8: TPanel
+      inherited BtnExportarStand: TsImage
+        Top = 5
+        ExplicitTop = 5
+      end
     end
   end
   inherited PnlImgObjeto: TPanel

@@ -125,6 +125,9 @@ type
     Label6: TLabel;
     FdMemPesqGeralMesVencimento: TIntegerField;
     FdMemPesqGeralAnoVencimento: TIntegerField;
+    FdMemPesqGeralPicking: TStringField;
+    FdMemPesqGeralmascara: TStringField;
+    FdMemPesqGeralmascarapicking: TStringField;
     procedure BtnSchProdutoClick(Sender: TObject);
     procedure EdtProdutoIdExit(Sender: TObject);
     procedure EdtProdutoIdChange(Sender: TObject);
@@ -341,12 +344,13 @@ procedure TFrmRelEstoque.CbEstoqueTipoChange(Sender: TObject);
 begin
   inherited;
   Limpar;
-  LstReport.UnHideColumn(8);
+{  LstReport.UnHideColumn(8);
   LstReport.UnHideColumn(10);
   LstReport.UnHideColumn(11);
   LstReport.UnHideColumn(12);
   LstReport.UnHideColumn(13);
   LstReport.UnHideColumn(14);
+}  LstReport.UnHideColumnsAll;
   if CbEstoqueTipo.ItemIndex > 0 then Begin
      If CbEstoqueTipo.ItemIndex <> 2 then
         LstReport.HideColumn(13);
@@ -605,33 +609,34 @@ begin
   inherited;
   LstReport.ColWidths[0]  :=  90;
   LstReport.ColWidths[1]  := 300;
-  LstReport.ColWidths[2]  :=  80;
-  LstReport.ColWidths[3]  := 100;
+  LstReport.ColWidths[2]  := 100;
+  LstReport.ColWidths[3]  :=  80;
   LstReport.ColWidths[4]  := 100;
-  LstReport.ColWidths[5]  := 120;
+  LstReport.ColWidths[5]  := 100;
   LstReport.ColWidths[6]  := 120;
-  LstReport.ColWidths[7]  :=  80; //Vencimento
-  LstReport.ColWidths[8]  :=  60;
-  LstReport.ColWidths[9]  :=  70;
-  LstReport.ColWidths[10] :=  70;
+  LstReport.ColWidths[7]  := 120;
+  LstReport.ColWidths[8]  :=  80; //Vencimento
+  LstReport.ColWidths[9]  :=  60;
+  LstReport.ColWidths[10]  :=  70;
   LstReport.ColWidths[11] :=  70;
-  LstReport.ColWidths[12] :=  90;
-  LstReport.ColWidths[13] :=  80;
+  LstReport.ColWidths[12] :=  70;
+  LstReport.ColWidths[13] :=  90;
   LstReport.ColWidths[14] :=  80;
-  LstReport.ColWidths[15] :=  100;
+  LstReport.ColWidths[15] :=  80;
+  LstReport.ColWidths[16] :=  100;
   LstReport.Alignments[ 0, 0] := taRightJustify;
   LstReport.FontStyles[ 0, 0] := [FsBold];
-  LstReport.Alignments[ 7, 0]  := taCenter;
-  LstReport.Alignments[ 8, 0]  := taRightJustify;
+  LstReport.Alignments[ 8, 0]  := taCenter;
   LstReport.Alignments[ 9, 0]  := taRightJustify;
   LstReport.Alignments[10, 0]  := taRightJustify;
   LstReport.Alignments[11, 0]  := taRightJustify;
   LstReport.Alignments[12, 0]  := taRightJustify;
-  LstReport.FontStyles[13, 0] := [FsBold];
   LstReport.Alignments[13, 0]  := taRightJustify;
+  LstReport.FontStyles[14, 0] := [FsBold];
   LstReport.Alignments[14, 0]  := taRightJustify;
   LstReport.Alignments[15, 0]  := taRightJustify;
-  LstReport.Alignments[16, 0]  := taCenter;
+  LstReport.Alignments[16, 0]  := taRightJustify;
+  LstReport.Alignments[17, 0]  := taCenter;
   LstReport.RowCount      := 1;
   CbEstoqueTipo.ItemIndex := 4;
   RbEstoque.ItemIndex     := 0;
@@ -779,52 +784,55 @@ begin
   xProd := 0;
   if //(RbEstoque.itemIndex = 2) or
      (RbEstoque.itemIndex = 3) then begin
-     LstReport.HideColumns(3, 11);
-     LstReport.HideColumns(13, 15);
-     LstReport.Cells[2, 0]  := 'Vencimento';
-     LstReport.ColWidths[2] :=  120;
+     LstReport.HideColumns(4, 12);
+     LstReport.HideColumns(14, 16);
+     LstReport.Cells[3, 0]  := 'Vencimento';
+     LstReport.ColWidths[3] :=  120;
   end
   Else Begin
-     LstReport.Cells[2, 0]  := 'Embalagem';
-     LstReport.ColWidths[2] :=  80;
+     LstReport.Cells[3, 0]  := 'Embalagem';
+     LstReport.ColWidths[3] :=  80;
   End;
   While Not FdMemPesqGeral.Eof do Begin
     //LstReport.Cells[0, xProd+1]  := FdMemPesqGeral.FieldByName('produtoid').AsString;
     LstReport.Cells[0, xProd+1]  := FdMemPesqGeral.FieldByName('codproduto').AsString;
     LstReport.Cells[1, xProd+1]  := FdMemPesqGeral.FieldByName('descricao').AsString;
-    LstReport.Cells[2, xProd+1]  := FdMemPesqGeral.FieldByName('Embalagem').AsString;
+    LstReport.Cells[2, xProd+1]  := EnderecoMask(FdMemPesqGeral.FieldByName('picking').AsString,
+                                                 FdMemPesqGeral.FieldByName('mascarapicking').AsString, True);
+    LstReport.Cells[3, xProd+1]  := FdMemPesqGeral.FieldByName('Embalagem').AsString;
     if (RbEstoque.itemIndex = 3) then
-       LstReport.Cells[2, xProd+1]  := NomeMes(FdMemPesqGeral.FieldByName('MesVencimento').AsInteger, 0)+'/'+
+       LstReport.Cells[3, xProd+1]  := NomeMes(FdMemPesqGeral.FieldByName('MesVencimento').AsInteger, 0)+'/'+
                                        FdMemPesqGeral.FieldByName('AnoVencimento').AsString
     Else
-       LstReport.Cells[2, xProd+1] := FdMemPesqGeral.FieldByName('Embalagem').AsString;
+       LstReport.Cells[3, xProd+1] := FdMemPesqGeral.FieldByName('Embalagem').AsString;
 
-    LstReport.Cells[3, xProd+1]  := FdMemPesqGeral.FieldByName('endereco').AsString;
-    LstReport.Cells[4, xProd+1]  := FdMemPesqGeral.FieldByName('estrutura').AsString;
-    LstReport.Cells[5, xProd+1]  := FdMemPesqGeral.FieldByName('zona').AsString;
-    LstReport.Cells[6, xProd+1]  := FdMemPesqGeral.FieldByName('descrlote').AsString;
-    LstReport.Cells[7, xProd+1]  := FdMemPesqGeral.FieldByName('vencimento').AsString;
-    LstReport.Cells[8, xProd+1] := FdMemPesqGeral.FieldByName('qtdespera').AsString;
-    LstReport.Cells[9, xProd+1] := FdMemPesqGeral.FieldByName('QtdeTransfPicking').AsString;
-    LstReport.Cells[10, xProd+1] := FdMemPesqGeral.FieldByName('qtdproducao').AsString;
-    LstReport.Cells[11, xProd+1] := FdMemPesqGeral.FieldByName('reserva').AsString;
-    LstReport.Cells[12, xProd+1] := FdMemPesqGeral.FieldByName('saldo').AsString;
-    LstReport.Cells[13, xProd+1] := FdMemPesqGeral.FieldByName('qtdcrosdocking').AsString;
-    LstReport.Cells[14, xProd+1] := FdMemPesqGeral.FieldByName('segregado').AsString;
-    LstReport.Cells[15, xProd+1] := FdMemPesqGeral.FieldByName('Expedicao').AsString;
-    LstReport.Cells[16, xProd+1] := FdMemPesqGeral.FieldByName('DtUltimaMovimentacao').AsString;
+    LstReport.Cells[4, xProd+1]  := EnderecoMask(FdMemPesqGeral.FieldByName('endereco').AsString,
+                                     FdMemPesqGeral.FieldByName('mascara').AsString, True);
+    LstReport.Cells[5, xProd+1]  := FdMemPesqGeral.FieldByName('estrutura').AsString;
+    LstReport.Cells[6, xProd+1]  := FdMemPesqGeral.FieldByName('zona').AsString;
+    LstReport.Cells[7, xProd+1]  := FdMemPesqGeral.FieldByName('descrlote').AsString;
+    LstReport.Cells[8, xProd+1]  := FdMemPesqGeral.FieldByName('vencimento').AsString;
+    LstReport.Cells[9, xProd+1] := FdMemPesqGeral.FieldByName('qtdespera').AsString;
+    LstReport.Cells[10, xProd+1] := FdMemPesqGeral.FieldByName('QtdeTransfPicking').AsString;
+    LstReport.Cells[11, xProd+1] := FdMemPesqGeral.FieldByName('qtdproducao').AsString;
+    LstReport.Cells[12, xProd+1] := FdMemPesqGeral.FieldByName('reserva').AsString;
+    LstReport.Cells[13, xProd+1] := FdMemPesqGeral.FieldByName('saldo').AsString;
+    LstReport.Cells[14, xProd+1] := FdMemPesqGeral.FieldByName('qtdcrosdocking').AsString;
+    LstReport.Cells[15, xProd+1] := FdMemPesqGeral.FieldByName('segregado').AsString;
+    LstReport.Cells[16, xProd+1] := FdMemPesqGeral.FieldByName('Expedicao').AsString;
+    LstReport.Cells[17, xProd+1] := FdMemPesqGeral.FieldByName('DtUltimaMovimentacao').AsString;
     LstReport.Alignments[0, xProd+1]  := taRightJustify;
-    LstReport.Alignments[7, xProd+1]  := taCenter;
-    LstReport.Alignments[8, xProd+1] := taRightJustify;
-    LstReport.Alignments[9, xProd+1] := taRightJustify; //Transferencia de Picking
-    LstReport.Alignments[10, xProd+1] := taRightJustify;
+    LstReport.Alignments[8, xProd+1]  := taCenter;
+    LstReport.Alignments[9, xProd+1] := taRightJustify;
+    LstReport.Alignments[10, xProd+1] := taRightJustify; //Transferencia de Picking
     LstReport.Alignments[11, xProd+1] := taRightJustify;
     LstReport.Alignments[12, xProd+1] := taRightJustify;
-    LstReport.FontStyles[12, xProd+1] := [FsBold];
     LstReport.Alignments[13, xProd+1] := taRightJustify;
+    LstReport.FontStyles[13, xProd+1] := [FsBold];
     LstReport.Alignments[14, xProd+1] := taRightJustify;
     LstReport.Alignments[15, xProd+1] := taRightJustify;
-    LstReport.Alignments[16, xProd+1] := taCenter;
+    LstReport.Alignments[16, xProd+1] := taRightJustify;
+    LstReport.Alignments[17, xProd+1] := taCenter;
     Inc(xProd);
     FdMemPesqGeral.Next;
   End;
@@ -976,11 +984,11 @@ begin
   LstReport.UnHideColumnsAll;
   if CbEstoqueTipo.ItemIndex > 0 then Begin
      If CbEstoqueTipo.ItemIndex <> 2 then
-        LstReport.HideColumn(13);
+        LstReport.HideColumn(15);
      If CbEstoqueTipo.ItemIndex <> 3 then
-        LstReport.HideColumn(14);
+        LstReport.HideColumn(16);
      if CbEstoqueTipo.ItemIndex = 3 then Begin
-        LstReport.HideColumns(9, 12);
+        LstReport.HideColumns(11, 14);
      End;
   End;
   GbVencimento.Visible := (RbEstoque.ItemIndex = 3);

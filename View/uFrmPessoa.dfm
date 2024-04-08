@@ -101,103 +101,7 @@ inherited FrmPessoa: TFrmPessoa
         CustomHint = BalloonHint1
         Caption = 'M'#234's(es)'
       end
-      object EdtHomePage: TLabeledEdit [6]
-        Left = 598
-        Top = 134
-        Width = 410
-        Height = 24
-        CustomHint = BalloonHint1
-        Anchors = [akLeft, akTop, akRight]
-        Ctl3D = True
-        EditLabel.Width = 68
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Home Page'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 8
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-      end
-      object EdtRazao: TLabeledEdit [7]
-        Left = 89
-        Top = 52
-        Width = 369
-        Height = 24
-        CustomHint = BalloonHint1
-        Anchors = [akLeft, akTop, akRight]
-        CharCase = ecUpperCase
-        Ctl3D = True
-        EditLabel.Width = 74
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Raz'#227'o Social'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 3
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-      end
-      object CbTipoPessoa: TComboBox [8]
-        Left = 596
-        Top = 10
-        Width = 211
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 2
-        TabStop = False
-        Visible = False
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object EdtFantasia: TLabeledEdit [9]
-        Left = 596
-        Top = 52
-        Width = 410
-        Height = 24
-        CustomHint = BalloonHint1
-        Anchors = [akLeft, akTop, akRight]
-        CharCase = ecUpperCase
-        Ctl3D = True
-        EditLabel.Width = 47
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Fantasia'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 4
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-      end
-      object EdtCNPJCPF: TLabeledEdit [10]
+      object EdtCNPJCPF: TLabeledEdit [6]
         Left = 89
         Top = 93
         Width = 166
@@ -222,7 +126,362 @@ inherited FrmPessoa: TFrmPessoa
         OnExit = EdtCNPJCPFExit
         OnKeyPress = EdtFoneKeyPress
       end
-      object PgcEndereco: TcxPageControl [11]
+      object EdtID: TLabeledEdit [7]
+        Left = 348
+        Top = 8
+        Width = 117
+        Height = 24
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 16
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'ID '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 0
+        Visible = False
+        OnChange = EdtIDChange
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtIDExit
+        OnKeyPress = EdtIDKeyPress
+      end
+      object edtCodigoErp: TLabeledEdit [8]
+        Left = 89
+        Top = 8
+        Width = 117
+        Height = 24
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 47
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'C'#243'digo '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 1
+        OnChange = EdtIDChange
+        OnEnter = EdtHomePageEnter
+        OnExit = edtCodigoErpExit
+        OnKeyPress = EdtIDKeyPress
+      end
+      object EdtFone: TLabeledEdit [9]
+        Left = 596
+        Top = 93
+        Width = 211
+        Height = 24
+        CustomHint = BalloonHint1
+        Anchors = [akLeft, akTop, akRight]
+        Ctl3D = True
+        EditLabel.Width = 28
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Fone'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 6
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtHomePageExit
+        OnKeyPress = EdtFoneKeyPress
+      end
+      object GroupBox2: TGroupBox [10]
+        Left = 11
+        Top = 367
+        Width = 1168
+        Height = 116
+        CustomHint = BalloonHint1
+        Caption = '  Telefones de Contato   '
+        TabOrder = 14
+        object Label23: TLabel
+          Left = 13
+          Top = 15
+          Width = 26
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Tipo'
+        end
+        object Label25: TLabel
+          Left = 148
+          Top = 15
+          Width = 49
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Telefone'
+        end
+        object Label26: TLabel
+          Left = 265
+          Top = 15
+          Width = 46
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Contato'
+        end
+        object Label27: TLabel
+          Left = 585
+          Top = 15
+          Width = 190
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Dados Adicionais / Observa'#231#245'es'
+        end
+        object CbTpFone1: TComboBox
+          Left = 13
+          Top = 34
+          Width = 101
+          Height = 22
+          CustomHint = BalloonHint1
+          Style = csOwnerDrawFixed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnExit = EdtHomePageExit
+          Items.Strings = (
+            ''
+            'Fixo'
+            'Fixo(Recado)'
+            'Celular'
+            'Fax')
+        end
+        object CbTpFone2: TComboBox
+          Left = 13
+          Top = 59
+          Width = 101
+          Height = 22
+          CustomHint = BalloonHint1
+          Style = csOwnerDrawFixed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 4
+          OnExit = EdtHomePageExit
+          Items.Strings = (
+            ''
+            'Fixo'
+            'Fixo(Recado)'
+            'Celular'
+            'Fax')
+        end
+        object CbTpFone3: TComboBox
+          Left = 13
+          Top = 85
+          Width = 101
+          Height = 22
+          CustomHint = BalloonHint1
+          Style = csOwnerDrawFixed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 8
+          OnExit = EdtHomePageExit
+          Items.Strings = (
+            ''
+            'Fixo'
+            'Fixo(Recado)'
+            'Celular'
+            'Fax')
+        end
+        object EdtFone1: TEdit
+          Left = 149
+          Top = 33
+          Width = 95
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 11
+          ParentFont = False
+          TabOrder = 1
+          OnExit = EdtHomePageExit
+          OnKeyPress = EdtCepKeyPress
+        end
+        object EdtFone2: TEdit
+          Left = 149
+          Top = 59
+          Width = 95
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 11
+          ParentFont = False
+          TabOrder = 5
+          OnExit = EdtHomePageExit
+          OnKeyPress = EdtCepKeyPress
+        end
+        object EdtFone3: TEdit
+          Left = 149
+          Top = 85
+          Width = 95
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 11
+          ParentFont = False
+          TabOrder = 9
+          OnExit = EdtHomePageExit
+          OnKeyPress = EdtCepKeyPress
+        end
+        object EdtContato3: TEdit
+          Left = 265
+          Top = 85
+          Width = 300
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 60
+          ParentFont = False
+          TabOrder = 10
+          OnExit = EdtHomePageExit
+        end
+        object EdtContato2: TEdit
+          Left = 265
+          Top = 59
+          Width = 300
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 60
+          ParentFont = False
+          TabOrder = 6
+          OnExit = EdtHomePageExit
+        end
+        object EdtContato1: TEdit
+          Left = 265
+          Top = 33
+          Width = 300
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 60
+          ParentFont = False
+          TabOrder = 2
+          OnExit = EdtHomePageExit
+        end
+        object EdtObs1: TEdit
+          Left = 585
+          Top = 33
+          Width = 470
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 100
+          ParentFont = False
+          TabOrder = 3
+          OnExit = EdtHomePageExit
+        end
+        object EdtObs2: TEdit
+          Left = 585
+          Top = 59
+          Width = 470
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 100
+          ParentFont = False
+          TabOrder = 7
+          OnExit = EdtHomePageExit
+        end
+        object EdtObs3: TEdit
+          Left = 585
+          Top = 85
+          Width = 470
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          MaxLength = 100
+          ParentFont = False
+          TabOrder = 11
+          OnExit = EdtHomePageExit
+        end
+      end
+      object EdtEmail: TLabeledEdit [11]
+        Left = 89
+        Top = 134
+        Width = 408
+        Height = 24
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 31
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Email'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 7
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtHomePageExit
+      end
+      object PgcEndereco: TcxPageControl [12]
         Left = 11
         Top = 215
         Width = 1168
@@ -860,347 +1119,19 @@ inherited FrmPessoa: TFrmPessoa
           end
         end
       end
-      object EdtEmail: TLabeledEdit [12]
-        Left = 89
-        Top = 134
-        Width = 408
-        Height = 24
-        CustomHint = BalloonHint1
-        Anchors = [akLeft, akTop, akRight]
-        Ctl3D = True
-        EditLabel.Width = 31
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Email'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 7
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-      end
-      object EdtID: TLabeledEdit [13]
-        Left = 348
-        Top = 8
-        Width = 117
-        Height = 24
-        CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 16
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'ID '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 0
-        Visible = False
-        OnChange = EdtIDChange
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtIDExit
-        OnKeyPress = EdtIDKeyPress
-      end
-      object GroupBox2: TGroupBox [14]
-        Left = 11
-        Top = 367
-        Width = 1168
-        Height = 116
-        CustomHint = BalloonHint1
-        Caption = '  Telefones de Contato   '
-        TabOrder = 14
-        object Label23: TLabel
-          Left = 13
-          Top = 15
-          Width = 26
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Tipo'
-        end
-        object Label25: TLabel
-          Left = 148
-          Top = 15
-          Width = 49
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Telefone'
-        end
-        object Label26: TLabel
-          Left = 265
-          Top = 15
-          Width = 46
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Contato'
-        end
-        object Label27: TLabel
-          Left = 585
-          Top = 15
-          Width = 190
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Dados Adicionais / Observa'#231#245'es'
-        end
-        object CbTpFone1: TComboBox
-          Left = 13
-          Top = 34
-          Width = 101
-          Height = 22
-          CustomHint = BalloonHint1
-          Style = csOwnerDrawFixed
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          OnExit = EdtHomePageExit
-          Items.Strings = (
-            ''
-            'Fixo'
-            'Fixo(Recado)'
-            'Celular'
-            'Fax')
-        end
-        object CbTpFone2: TComboBox
-          Left = 13
-          Top = 59
-          Width = 101
-          Height = 22
-          CustomHint = BalloonHint1
-          Style = csOwnerDrawFixed
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 4
-          OnExit = EdtHomePageExit
-          Items.Strings = (
-            ''
-            'Fixo'
-            'Fixo(Recado)'
-            'Celular'
-            'Fax')
-        end
-        object CbTpFone3: TComboBox
-          Left = 13
-          Top = 85
-          Width = 101
-          Height = 22
-          CustomHint = BalloonHint1
-          Style = csOwnerDrawFixed
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 8
-          OnExit = EdtHomePageExit
-          Items.Strings = (
-            ''
-            'Fixo'
-            'Fixo(Recado)'
-            'Celular'
-            'Fax')
-        end
-        object EdtFone1: TEdit
-          Left = 149
-          Top = 33
-          Width = 95
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 11
-          ParentFont = False
-          TabOrder = 1
-          OnExit = EdtHomePageExit
-          OnKeyPress = EdtCepKeyPress
-        end
-        object EdtFone2: TEdit
-          Left = 149
-          Top = 59
-          Width = 95
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 11
-          ParentFont = False
-          TabOrder = 5
-          OnExit = EdtHomePageExit
-          OnKeyPress = EdtCepKeyPress
-        end
-        object EdtFone3: TEdit
-          Left = 149
-          Top = 85
-          Width = 95
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 11
-          ParentFont = False
-          TabOrder = 9
-          OnExit = EdtHomePageExit
-          OnKeyPress = EdtCepKeyPress
-        end
-        object EdtContato3: TEdit
-          Left = 265
-          Top = 85
-          Width = 300
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 60
-          ParentFont = False
-          TabOrder = 10
-          OnExit = EdtHomePageExit
-        end
-        object EdtContato2: TEdit
-          Left = 265
-          Top = 59
-          Width = 300
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 60
-          ParentFont = False
-          TabOrder = 6
-          OnExit = EdtHomePageExit
-        end
-        object EdtContato1: TEdit
-          Left = 265
-          Top = 33
-          Width = 300
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 60
-          ParentFont = False
-          TabOrder = 2
-          OnExit = EdtHomePageExit
-        end
-        object EdtObs1: TEdit
-          Left = 585
-          Top = 33
-          Width = 470
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 100
-          ParentFont = False
-          TabOrder = 3
-          OnExit = EdtHomePageExit
-        end
-        object EdtObs2: TEdit
-          Left = 585
-          Top = 59
-          Width = 470
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 100
-          ParentFont = False
-          TabOrder = 7
-          OnExit = EdtHomePageExit
-        end
-        object EdtObs3: TEdit
-          Left = 585
-          Top = 85
-          Width = 470
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          MaxLength = 100
-          ParentFont = False
-          TabOrder = 11
-          OnExit = EdtHomePageExit
-        end
-      end
-      object EdtFone: TLabeledEdit [15]
+      object EdtFantasia: TLabeledEdit [13]
         Left = 596
-        Top = 93
-        Width = 211
+        Top = 52
+        Width = 410
         Height = 24
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight]
-        Ctl3D = True
-        EditLabel.Width = 28
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Fone'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 6
-        OnEnter = EdtHomePageEnter
-        OnExit = EdtHomePageExit
-        OnKeyPress = EdtFoneKeyPress
-      end
-      object edtCodigoErp: TLabeledEdit [16]
-        Left = 89
-        Top = 8
-        Width = 117
-        Height = 24
-        CustomHint = BalloonHint1
+        CharCase = ecUpperCase
         Ctl3D = True
         EditLabel.Width = 47
         EditLabel.Height = 17
         EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'C'#243'digo '
+        EditLabel.Caption = 'Fantasia'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
@@ -1209,12 +1140,79 @@ inherited FrmPessoa: TFrmPessoa
         LabelPosition = lpLeft
         ParentCtl3D = False
         ParentFont = False
-        ReadOnly = True
-        TabOrder = 1
-        OnChange = EdtIDChange
+        TabOrder = 4
         OnEnter = EdtHomePageEnter
-        OnExit = edtCodigoErpExit
-        OnKeyPress = EdtIDKeyPress
+        OnExit = EdtHomePageExit
+      end
+      object CbTipoPessoa: TComboBox [14]
+        Left = 596
+        Top = 10
+        Width = 211
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 2
+        TabStop = False
+        Visible = False
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtHomePageExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object EdtRazao: TLabeledEdit [15]
+        Left = 89
+        Top = 52
+        Width = 408
+        Height = 24
+        CustomHint = BalloonHint1
+        CharCase = ecUpperCase
+        Ctl3D = True
+        EditLabel.Width = 74
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Raz'#227'o Social'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 3
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtHomePageExit
+      end
+      object EdtHomePage: TLabeledEdit [16]
+        Left = 598
+        Top = 134
+        Width = 410
+        Height = 24
+        CustomHint = BalloonHint1
+        Anchors = [akLeft, akTop, akRight]
+        Ctl3D = True
+        EditLabel.Width = 68
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Home Page'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 8
+        OnEnter = EdtHomePageEnter
+        OnExit = EdtHomePageExit
       end
       inherited PnlInfo: TPanel
         Left = 818

@@ -155,58 +155,7 @@ inherited FrmProduto: TFrmProduto
         ExplicitLeft = 61
         ExplicitTop = 506
       end
-      object EdtLaboratorioId: TLabeledEdit [5]
-        Left = 84
-        Top = 123
-        Width = 37
-        Height = 25
-        CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 60
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Fabricante'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 6
-        OnChange = EdtLaboratorioIdChange
-        OnEnter = edtDescricaoEnter
-        OnExit = EdtLaboratorioIdExit
-        OnKeyPress = EdtLaboratorioIdKeyPress
-      end
-      object edtCodProduto: TLabeledEdit [6]
-        Left = 85
-        Top = 23
-        Width = 111
-        Height = 25
-        CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 47
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'C'#243'digo '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 0
-        OnChange = edtCodProdutoChange
-        OnEnter = edtDescricaoEnter
-        OnExit = edtCodProdutoExit
-        OnKeyPress = edtCodProdutoKeyPress
-      end
-      object BitBtn4: TBitBtn [7]
+      object BitBtn4: TBitBtn [5]
         Left = 121
         Top = 123
         Width = 24
@@ -291,7 +240,1021 @@ inherited FrmProduto: TFrmProduto
         TabStop = False
         OnClick = BtnPesqFabricante
       end
-      object GroupBox2: TGroupBox [8]
+      object edtDescricao: TLabeledEdit [6]
+        Left = 84
+        Top = 75
+        Width = 457
+        Height = 25
+        CustomHint = BalloonHint1
+        TabStop = False
+        Ctl3D = True
+        EditLabel.Width = 57
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Descri'#231#227'o'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 4
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+      end
+      object ChkImportado: TCheckBox [7]
+        Left = 103
+        Top = 227
+        Width = 91
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'Importado'
+        TabOrder = 11
+      end
+      object ChkInflamavel: TCheckBox [8]
+        Left = 199
+        Top = 227
+        Width = 91
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'Inflam'#225'vel'
+        TabOrder = 12
+      end
+      object CbRastroTipo: TComboBox [9]
+        Left = 877
+        Top = 24
+        Width = 146
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 3
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object EdtDescricaoRed: TLabeledEdit [10]
+        Left = 655
+        Top = 75
+        Width = 368
+        Height = 25
+        CustomHint = BalloonHint1
+        CharCase = ecUpperCase
+        Ctl3D = True
+        EditLabel.Width = 97
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Descri'#231#227'o Usual '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 5
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+      end
+      object btnPesquisar: TBitBtn [11]
+        Left = 194
+        Top = 24
+        Width = 24
+        Height = 24
+        CustomHint = BalloonHint1
+        Glyph.Data = {
+          36090000424D3609000000000000360000002800000018000000180000000100
+          2000000000000009000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000004390FFE24390FFE20000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+          0000000000000000000000000000000000000000000000000000000000004792
+          FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000004792FFDB277F
+          FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+          FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+          FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+          FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+          FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+          FF40000000000000000000000000000000000000000000000000000000004390
+          FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+          0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+          FF42000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+          FFE3000000000000000000000000000000000000000000000000000000000000
+          000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+          00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+          FFFE000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+          FFFF000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+          FFFF000000000000000000000000000000000000000000000000000000000000
+          000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+          000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+          FFFE000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+          FFE3000000000000000000000000000000000000000000000000000000004390
+          FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+          0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+          FF3B00000000000000004390FFE200000000000000000000000000000000277F
+          FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+          FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+          0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+          FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+          000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+          0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+        TabOrder = 26
+        TabStop = False
+        Visible = False
+      end
+      object CbProdutoTipo: TComboBox [12]
+        Left = 325
+        Top = 24
+        Width = 176
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object GroupBox1: TGroupBox [13]
+        Left = 177
+        Top = 480
+        Width = 713
+        Height = 68
+        CustomHint = BalloonHint1
+        Caption = ' [ E.R.P. ] '
+        TabOrder = 23
+        Visible = False
+        object EdtCdProdutoERP: TLabeledEdit
+          Left = 53
+          Top = 29
+          Width = 140
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 43
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'C'#243'digo'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 0
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtVariacaoERP: TLabeledEdit
+          Left = 337
+          Top = 29
+          Width = 80
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 50
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Varia'#231#227'o'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 1
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtTamanhoERP: TLabeledEdit
+          Left = 585
+          Top = 30
+          Width = 80
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 53
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Tamanho'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 2
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+      end
+      object EdtCodigoMS: TLabeledEdit [14]
+        Left = 608
+        Top = 226
+        Width = 123
+        Height = 21
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 72
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Registro MS'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        MaxLength = 13
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 15
+        Visible = False
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+      end
+      object ChkPerigoso: TCheckBox [15]
+        Left = 295
+        Top = 227
+        Width = 91
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'Perigoso'
+        TabOrder = 13
+      end
+      object ChkMedicamento: TCheckBox [16]
+        Left = 391
+        Top = 227
+        Width = 103
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'medicamento'
+        TabOrder = 14
+        OnClick = ChkMedicamentoClick
+      end
+      object chkLiquido: TCheckBox [17]
+        Left = 8
+        Top = 227
+        Width = 91
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'L'#237'quido'
+        TabOrder = 10
+      end
+      object GbEnderecoPicking: TGroupBox [18]
+        Left = 9
+        Top = 250
+        Width = 1015
+        Height = 60
+        CustomHint = BalloonHint1
+        Caption = '[ Endere'#231'amento ] '
+        TabOrder = 18
+        object lblEndereco: TLabel
+          Left = 33
+          Top = 27
+          Width = 40
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Picking'
+        end
+        object LblZonaArmazenagem: TLabel
+          Left = 670
+          Top = 32
+          Width = 12
+          Height = 16
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object LblPicking: TLabel
+          Left = 192
+          Top = 34
+          Width = 285
+          Height = 16
+          CustomHint = BalloonHint1
+          AutoSize = False
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EdtZonaArmazenagemId: TLabeledEdit
+          Left = 614
+          Top = 23
+          Width = 29
+          Height = 25
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 119
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Setor Armazenagem'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 1
+          OnChange = EdtZonaArmazenagemIdChange
+          OnEnter = EdtZonaArmazenagemIdEnter
+          OnExit = EdtZonaArmazenagemIdExit
+          OnKeyPress = EdtLaboratorioIdKeyPress
+        end
+        object BitBtn3: TBitBtn
+          Left = 643
+          Top = 24
+          Width = 24
+          Height = 24
+          CustomHint = BalloonHint1
+          Glyph.Data = {
+            36090000424D3609000000000000360000002800000018000000180000000100
+            2000000000000009000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000004390FFE24390FFE20000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+            0000000000000000000000000000000000000000000000000000000000004792
+            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000000000000000000000000004792FFDB277F
+            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+            FF40000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+            FF42000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+            FF3B00000000000000004390FFE200000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000}
+          TabOrder = 2
+          TabStop = False
+          OnClick = BitBtn3Click
+        end
+        object EdtPicking: TEdit
+          Left = 84
+          Top = 30
+          Width = 102
+          Height = 25
+          CustomHint = BalloonHint1
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+          OnChange = EdtPickingChange
+          OnEnter = EdtPickingEnter
+          OnExit = EdtPickingExit
+        end
+      end
+      object ChkSNGPC: TCheckBox [19]
+        Left = 766
+        Top = 227
+        Width = 76
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'S.N.G.P.C.'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 16
+      end
+      object grpEstoqueReposicao: TGroupBox [20]
+        Left = 8
+        Top = 402
+        Width = 572
+        Height = 68
+        CustomHint = BalloonHint1
+        Caption = ' [ Capacidade Picking ] '
+        TabOrder = 20
+        object Label13: TLabel
+          Left = 218
+          Top = 33
+          Width = 46
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'M'#225'xima'
+        end
+        object Label14: TLabel
+          Left = 12
+          Top = 33
+          Width = 43
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'M'#237'nima'
+        end
+        object Label15: TLabel
+          Left = 376
+          Top = 33
+          Width = 76
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = '% Reposi'#231#227'o'
+        end
+        object EdtMaxPicking: TJvCalcEdit
+          Left = 273
+          Top = 29
+          Width = 54
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 0
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtMinPicking: TJvCalcEdit
+          Left = 61
+          Top = 29
+          Width = 54
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 1
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtPercReposicao: TJvCalcEdit
+          Left = 460
+          Top = 29
+          Width = 54
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 2
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+      end
+      object GroupBox4: TGroupBox [21]
+        Left = 496
+        Top = 162
+        Width = 528
+        Height = 52
+        CustomHint = BalloonHint1
+        Caption = ' [ Caixa de Embarque / Master ] '
+        TabOrder = 9
+        object LblUnidadeSecundaria: TLabel
+          Left = 120
+          Top = 21
+          Width = 12
+          Height = 16
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EdtUnidadeSecundariaId: TLabeledEdit
+          Left = 62
+          Top = 17
+          Width = 29
+          Height = 25
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 49
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Unidade'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 0
+          OnChange = EdtUnidadeSecundariaIdChange
+          OnEnter = edtDescricaoEnter
+          OnExit = EdtUnidadeSecundariaIdExit
+          OnKeyPress = EdtLaboratorioIdKeyPress
+        end
+        object BtnPesqUnidadeSecundaria: TBitBtn
+          Left = 92
+          Top = 18
+          Width = 24
+          Height = 24
+          CustomHint = BalloonHint1
+          Glyph.Data = {
+            36090000424D3609000000000000360000002800000018000000180000000100
+            2000000000000009000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000004390FFE24390FFE20000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+            0000000000000000000000000000000000000000000000000000000000004792
+            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000000000000000000000000004792FFDB277F
+            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+            FF40000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+            FF42000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+            FF3B00000000000000004390FFE200000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000}
+          TabOrder = 1
+          TabStop = False
+          OnClick = BtnPesqUnidadePrimariaClick
+        end
+        object EdtFatorConversao: TLabeledEdit
+          Left = 454
+          Top = 18
+          Width = 61
+          Height = 25
+          CustomHint = BalloonHint1
+          Alignment = taRightJustify
+          Ctl3D = True
+          EditLabel.Width = 68
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Quantidade'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 2
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+          OnKeyPress = EdtLaboratorioIdKeyPress
+        end
+      end
+      object grpValidadeMinima: TGroupBox [22]
+        Left = 598
+        Top = 402
+        Width = 425
+        Height = 68
+        CustomHint = BalloonHint1
+        Caption = 
+          ' [ Controle Recebimento x Expedi'#231#227'o -  Shelf Life M'#237'nimo - Meses' +
+          ') ] '
+        TabOrder = 21
+        object Label17: TLabel
+          Left = 7
+          Top = 33
+          Width = 76
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Recebimento'
+        end
+        object Label16: TLabel
+          Left = 231
+          Top = 33
+          Width = 60
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Expedi'#231#227'o'
+        end
+        object EdtMesEntradaMinima: TJvCalcEdit
+          Left = 91
+          Top = 29
+          Width = 65
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 0
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtMesSaidaMinima: TJvCalcEdit
+          Left = 295
+          Top = 29
+          Width = 65
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 1
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+      end
+      object CbMedicamentoTipo: TComboBox [23]
+        Left = 654
+        Top = 24
+        Width = 111
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 2
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object GroupBox3: TGroupBox [24]
+        Left = 8
+        Top = 162
+        Width = 478
+        Height = 52
+        CustomHint = BalloonHint1
+        Caption = ' [ Embalagem Prim'#225'ria ] '
+        TabOrder = 8
+        object LblUnidade: TLabel
+          Left = 123
+          Top = 21
+          Width = 12
+          Height = 16
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
+        object EdtUnidadeId: TLabeledEdit
+          Left = 64
+          Top = 18
+          Width = 29
+          Height = 25
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 49
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Unidade'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 0
+          OnChange = EdtUnidadeIdChange
+          OnEnter = edtDescricaoEnter
+          OnExit = EdtUnidadeIdExit
+          OnKeyPress = EdtLaboratorioIdKeyPress
+        end
+        object BtnPesqUnidadePrimaria: TBitBtn
+          Left = 93
+          Top = 18
+          Width = 24
+          Height = 24
+          CustomHint = BalloonHint1
+          Glyph.Data = {
+            36090000424D3609000000000000360000002800000018000000180000000100
+            2000000000000009000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000004390FFE24390FFE20000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+            0000000000000000000000000000000000000000000000000000000000004792
+            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000000000000000000000000004792FFDB277F
+            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+            FF40000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+            FF42000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+            FFFF000000000000000000000000000000000000000000000000000000000000
+            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+            FFFE000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+            FFE3000000000000000000000000000000000000000000000000000000004390
+            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+            FF3B00000000000000004390FFE200000000000000000000000000000000277F
+            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000}
+          TabOrder = 1
+          TabStop = False
+          OnClick = BtnPesqUnidadePrimariaClick
+        end
+        object EdtQtdUnid: TLabeledEdit
+          Left = 395
+          Top = 18
+          Width = 61
+          Height = 25
+          CustomHint = BalloonHint1
+          Alignment = taRightJustify
+          Ctl3D = True
+          EditLabel.Width = 56
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Qtd Unid.'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 2
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+          OnKeyPress = EdtLaboratorioIdKeyPress
+        end
+      end
+      object GroupBox2: TGroupBox [25]
         Left = 8
         Top = 325
         Width = 1015
@@ -528,1019 +1491,56 @@ inherited FrmProduto: TFrmProduto
           OnClick = BtnCapturarPesoClick
         end
       end
-      object edtDescricao: TLabeledEdit [9]
-        Left = 84
-        Top = 75
-        Width = 457
-        Height = 25
-        CustomHint = BalloonHint1
-        TabStop = False
-        Ctl3D = True
-        EditLabel.Width = 57
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Descri'#231#227'o'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 4
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-      end
-      object ChkImportado: TCheckBox [10]
-        Left = 103
-        Top = 227
-        Width = 91
-        Height = 17
-        CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'Importado'
-        TabOrder = 11
-      end
-      object ChkInflamavel: TCheckBox [11]
-        Left = 199
-        Top = 227
-        Width = 91
-        Height = 17
-        CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'Inflam'#225'vel'
-        TabOrder = 12
-      end
-      object CbRastroTipo: TComboBox [12]
-        Left = 877
-        Top = 24
-        Width = 146
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object GroupBox3: TGroupBox [13]
-        Left = 8
-        Top = 162
-        Width = 478
-        Height = 52
-        CustomHint = BalloonHint1
-        Caption = ' [ Embalagem Prim'#225'ria ] '
-        TabOrder = 8
-        object LblUnidade: TLabel
-          Left = 123
-          Top = 21
-          Width = 12
-          Height = 16
-          CustomHint = BalloonHint1
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4227327
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object EdtUnidadeId: TLabeledEdit
-          Left = 64
-          Top = 18
-          Width = 29
-          Height = 25
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 49
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Unidade'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 0
-          OnChange = EdtUnidadeIdChange
-          OnEnter = edtDescricaoEnter
-          OnExit = EdtUnidadeIdExit
-          OnKeyPress = EdtLaboratorioIdKeyPress
-        end
-        object BtnPesqUnidadePrimaria: TBitBtn
-          Left = 93
-          Top = 18
-          Width = 24
-          Height = 24
-          CustomHint = BalloonHint1
-          Glyph.Data = {
-            36090000424D3609000000000000360000002800000018000000180000000100
-            2000000000000009000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000000000004390FFE24390FFE20000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
-            0000000000000000000000000000000000000000000000000000000000004792
-            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            00000000000000000000000000000000000000000000000000004792FFDB277F
-            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
-            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
-            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
-            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
-            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
-            FF40000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
-            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
-            FF42000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
-            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
-            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
-            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
-            FF3B00000000000000004390FFE200000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
-            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
-            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
-            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
-            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
-            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000}
-          TabOrder = 1
-          TabStop = False
-          OnClick = BtnPesqUnidadePrimariaClick
-        end
-        object EdtQtdUnid: TLabeledEdit
-          Left = 395
-          Top = 18
-          Width = 61
-          Height = 25
-          CustomHint = BalloonHint1
-          Alignment = taRightJustify
-          Ctl3D = True
-          EditLabel.Width = 56
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Qtd Unid.'
-          Enabled = False
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 2
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-          OnKeyPress = EdtLaboratorioIdKeyPress
-        end
-      end
-      object EdtDescricaoRed: TLabeledEdit [14]
-        Left = 655
-        Top = 75
-        Width = 368
-        Height = 25
-        CustomHint = BalloonHint1
-        CharCase = ecUpperCase
-        Ctl3D = True
-        EditLabel.Width = 97
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Descri'#231#227'o Usual '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 5
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-      end
-      object btnPesquisar: TBitBtn [15]
-        Left = 194
-        Top = 24
-        Width = 24
-        Height = 24
-        CustomHint = BalloonHint1
-        Glyph.Data = {
-          36090000424D3609000000000000360000002800000018000000180000000100
-          2000000000000009000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000004390FFE24390FFE20000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
-          0000000000000000000000000000000000000000000000000000000000004792
-          FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-          00000000000000000000000000000000000000000000000000004792FFDB277F
-          FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
-          FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
-          FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
-          FFFF4390FFE2000000000000000000000000000000000000000000000000277F
-          FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
-          FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
-          FF40000000000000000000000000000000000000000000000000000000004390
-          FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
-          0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
-          FF42000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
-          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-          FFE3000000000000000000000000000000000000000000000000000000000000
-          000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
-          00000000000000000000000000000000000000000000599DFF99277FFFFF2980
-          FFFE000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-          FFFF000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-          FFFF000000000000000000000000000000000000000000000000000000000000
-          000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
-          000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
-          FFFE000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
-          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-          FFE3000000000000000000000000000000000000000000000000000000004390
-          FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
-          0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
-          FF3B00000000000000004390FFE200000000000000000000000000000000277F
-          FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
-          FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
-          0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
-          FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
-          000000000000000000000000000000000000000000004792FFDB277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
-          0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000}
-        TabOrder = 26
-        TabStop = False
-        Visible = False
-      end
-      object CbProdutoTipo: TComboBox [16]
-        Left = 325
-        Top = 24
-        Width = 176
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object GroupBox1: TGroupBox [17]
-        Left = 177
-        Top = 480
-        Width = 713
-        Height = 68
-        CustomHint = BalloonHint1
-        Caption = ' [ E.R.P. ] '
-        TabOrder = 23
-        Visible = False
-        object EdtCdProdutoERP: TLabeledEdit
-          Left = 53
-          Top = 29
-          Width = 140
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 43
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'C'#243'digo'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 0
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtVariacaoERP: TLabeledEdit
-          Left = 337
-          Top = 29
-          Width = 80
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 50
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Varia'#231#227'o'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 1
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtTamanhoERP: TLabeledEdit
-          Left = 585
-          Top = 30
-          Width = 80
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 53
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Tamanho'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 2
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-      end
-      object CbMedicamentoTipo: TComboBox [18]
-        Left = 654
-        Top = 24
+      object edtCodProduto: TLabeledEdit [26]
+        Left = 85
+        Top = 23
         Width = 111
-        Height = 22
+        Height = 25
         CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
+        Ctl3D = True
+        EditLabel.Width = 47
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'C'#243'digo '
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 2
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object EdtCodigoMS: TLabeledEdit [19]
-        Left = 608
-        Top = 226
-        Width = 123
-        Height = 21
-        CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 72
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Registro MS'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
         Font.Name = 'Segoe UI'
         Font.Style = []
         LabelPosition = lpLeft
-        MaxLength = 13
         ParentCtl3D = False
         ParentFont = False
-        TabOrder = 15
-        Visible = False
+        ReadOnly = True
+        TabOrder = 0
+        OnChange = edtCodProdutoChange
         OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
+        OnExit = edtCodProdutoExit
+        OnKeyPress = edtCodProdutoKeyPress
       end
-      object ChkPerigoso: TCheckBox [20]
-        Left = 295
-        Top = 227
-        Width = 91
-        Height = 17
+      object EdtLaboratorioId: TLabeledEdit [27]
+        Left = 84
+        Top = 123
+        Width = 37
+        Height = 25
         CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'Perigoso'
-        TabOrder = 13
-      end
-      object ChkMedicamento: TCheckBox [21]
-        Left = 391
-        Top = 227
-        Width = 103
-        Height = 17
-        CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'medicamento'
-        TabOrder = 14
-        OnClick = ChkMedicamentoClick
-      end
-      object chkLiquido: TCheckBox [22]
-        Left = 8
-        Top = 227
-        Width = 91
-        Height = 17
-        CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'L'#237'quido'
-        TabOrder = 10
-      end
-      object GbEnderecoPicking: TGroupBox [23]
-        Left = 9
-        Top = 250
-        Width = 1015
-        Height = 60
-        CustomHint = BalloonHint1
-        Caption = '[ Endere'#231'amento ] '
-        TabOrder = 18
-        object lblEndereco: TLabel
-          Left = 33
-          Top = 27
-          Width = 40
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Picking'
-        end
-        object LblZonaArmazenagem: TLabel
-          Left = 670
-          Top = 32
-          Width = 12
-          Height = 16
-          CustomHint = BalloonHint1
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4227327
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object LblPicking: TLabel
-          Left = 192
-          Top = 34
-          Width = 285
-          Height = 16
-          CustomHint = BalloonHint1
-          AutoSize = False
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4227327
-          Font.Height = -12
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object EdtZonaArmazenagemId: TLabeledEdit
-          Left = 614
-          Top = 23
-          Width = 29
-          Height = 25
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 119
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Setor Armazenagem'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 1
-          OnChange = EdtZonaArmazenagemIdChange
-          OnEnter = EdtZonaArmazenagemIdEnter
-          OnExit = EdtZonaArmazenagemIdExit
-          OnKeyPress = EdtLaboratorioIdKeyPress
-        end
-        object BitBtn3: TBitBtn
-          Left = 643
-          Top = 24
-          Width = 24
-          Height = 24
-          CustomHint = BalloonHint1
-          Glyph.Data = {
-            36090000424D3609000000000000360000002800000018000000180000000100
-            2000000000000009000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000000000004390FFE24390FFE20000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
-            0000000000000000000000000000000000000000000000000000000000004792
-            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            00000000000000000000000000000000000000000000000000004792FFDB277F
-            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
-            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
-            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
-            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
-            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
-            FF40000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
-            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
-            FF42000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
-            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
-            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
-            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
-            FF3B00000000000000004390FFE200000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
-            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
-            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
-            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
-            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
-            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000}
-          TabOrder = 2
-          TabStop = False
-          OnClick = BitBtn3Click
-        end
-        object EdtPicking: TEdit
-          Left = 84
-          Top = 28
-          Width = 102
-          Height = 25
-          CustomHint = BalloonHint1
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          TabOrder = 0
-          OnChange = EdtPickingChange
-          OnEnter = EdtPickingEnter
-          OnExit = EdtPickingExit
-        end
-      end
-      object ChkSNGPC: TCheckBox [24]
-        Left = 766
-        Top = 227
-        Width = 76
-        Height = 17
-        CustomHint = BalloonHint1
-        TabStop = False
-        Caption = 'S.N.G.P.C.'
+        Ctl3D = True
+        EditLabel.Width = 60
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Fabricante'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
         Font.Name = 'Segoe UI'
-        Font.Style = [fsBold]
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
         ParentFont = False
-        TabOrder = 16
-      end
-      object grpEstoqueReposicao: TGroupBox [25]
-        Left = 8
-        Top = 402
-        Width = 572
-        Height = 68
-        CustomHint = BalloonHint1
-        Caption = ' [ Capacidade Picking ] '
-        TabOrder = 20
-        object Label13: TLabel
-          Left = 218
-          Top = 33
-          Width = 46
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'M'#225'xima'
-        end
-        object Label14: TLabel
-          Left = 12
-          Top = 33
-          Width = 43
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'M'#237'nima'
-        end
-        object Label15: TLabel
-          Left = 376
-          Top = 33
-          Width = 76
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = '% Reposi'#231#227'o'
-        end
-        object EdtMaxPicking: TJvCalcEdit
-          Left = 273
-          Top = 29
-          Width = 54
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 0
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtMinPicking: TJvCalcEdit
-          Left = 61
-          Top = 29
-          Width = 54
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 1
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtPercReposicao: TJvCalcEdit
-          Left = 460
-          Top = 29
-          Width = 54
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 2
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-      end
-      object GroupBox4: TGroupBox [26]
-        Left = 496
-        Top = 162
-        Width = 528
-        Height = 52
-        CustomHint = BalloonHint1
-        Caption = ' [ Caixa de Embarque / Master ] '
-        TabOrder = 9
-        object LblUnidadeSecundaria: TLabel
-          Left = 120
-          Top = 21
-          Width = 12
-          Height = 16
-          CustomHint = BalloonHint1
-          Caption = '...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = 4227327
-          Font.Height = -13
-          Font.Name = 'Tahoma'
-          Font.Style = []
-          ParentFont = False
-        end
-        object EdtUnidadeSecundariaId: TLabeledEdit
-          Left = 62
-          Top = 17
-          Width = 29
-          Height = 25
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 49
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Unidade'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 0
-          OnChange = EdtUnidadeSecundariaIdChange
-          OnEnter = edtDescricaoEnter
-          OnExit = EdtUnidadeSecundariaIdExit
-          OnKeyPress = EdtLaboratorioIdKeyPress
-        end
-        object BtnPesqUnidadeSecundaria: TBitBtn
-          Left = 92
-          Top = 18
-          Width = 24
-          Height = 24
-          CustomHint = BalloonHint1
-          Glyph.Data = {
-            36090000424D3609000000000000360000002800000018000000180000000100
-            2000000000000009000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000000000004390FFE24390FFE20000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
-            0000000000000000000000000000000000000000000000000000000000004792
-            FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            00000000000000000000000000000000000000000000000000004792FFDB277F
-            FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
-            FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
-            FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
-            FFFF4390FFE2000000000000000000000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
-            FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
-            FF40000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
-            0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
-            FF42000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
-            00000000000000000000000000000000000000000000599DFF99277FFFFF2980
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-            000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-            FFFF000000000000000000000000000000000000000000000000000000000000
-            000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
-            000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
-            FFFE000000000000000000000000000000000000000000000000000000000000
-            00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
-            000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-            FFE3000000000000000000000000000000000000000000000000000000004390
-            FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
-            0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
-            FF3B00000000000000004390FFE200000000000000000000000000000000277F
-            FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
-            FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
-            0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
-            FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
-            000000000000000000000000000000000000000000004792FFDB277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
-            FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
-            0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
-            FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000000000000000000}
-          TabOrder = 1
-          TabStop = False
-          OnClick = BtnPesqUnidadePrimariaClick
-        end
-        object EdtFatorConversao: TLabeledEdit
-          Left = 454
-          Top = 18
-          Width = 61
-          Height = 25
-          CustomHint = BalloonHint1
-          Alignment = taRightJustify
-          Ctl3D = True
-          EditLabel.Width = 68
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Quantidade'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 2
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-          OnKeyPress = EdtLaboratorioIdKeyPress
-        end
-      end
-      object grpValidadeMinima: TGroupBox [27]
-        Left = 598
-        Top = 402
-        Width = 425
-        Height = 68
-        CustomHint = BalloonHint1
-        Caption = 
-          ' [ Controle Recebimento x Expedi'#231#227'o -  Shelf Life M'#237'nimo - Meses' +
-          ') ] '
-        TabOrder = 21
-        object Label17: TLabel
-          Left = 7
-          Top = 33
-          Width = 76
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Recebimento'
-        end
-        object Label16: TLabel
-          Left = 231
-          Top = 33
-          Width = 60
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Expedi'#231#227'o'
-        end
-        object EdtMesEntradaMinima: TJvCalcEdit
-          Left = 91
-          Top = 29
-          Width = 65
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 0
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtMesSaidaMinima: TJvCalcEdit
-          Left = 295
-          Top = 29
-          Width = 65
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 1
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
+        TabOrder = 6
+        OnChange = EdtLaboratorioIdChange
+        OnEnter = edtDescricaoEnter
+        OnExit = EdtLaboratorioIdExit
+        OnKeyPress = EdtLaboratorioIdKeyPress
       end
       inherited PnlInfo: TPanel
         Left = 921

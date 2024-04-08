@@ -30,9 +30,6 @@ type
     Lblusuario: TLabel;
     EdtUsuarioId: TEdit;
     BtnPesqUsuario: TBitBtn;
-    GroupBox2: TGroupBox;
-    ChkCxaFechada: TCheckBox;
-    ChkCxaFracionada: TCheckBox;
     Label4: TLabel;
     LblTPedido: TLabel;
     Label6: TLabel;
@@ -57,13 +54,14 @@ type
     Label15: TLabel;
     EdtInicioPedido: TJvDateEdit;
     EdtTerminoPedido: TJvDateEdit;
+    RgEmbalagem: TRadioGroup;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure EdtInicioProducaoChange(Sender: TObject);
-    procedure ChkCxaFechadaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure EdtUsuarioIdExit(Sender: TObject);
     procedure BtnPesqUsuarioClick(Sender: TObject);
+    procedure RgEmbalagemClick(Sender: TObject);
   public
     { Public declarations }
   private
@@ -98,15 +96,6 @@ begin
   finally
     FreeAndNil(FrmPesquisaUsuario);
   end;
-end;
-
-procedure TFrmRelDshCheckOut.ChkCxaFechadaClick(Sender: TObject);
-begin
-  inherited;
-  LimparLstAdvReport;
-  LblTPedido.Caption  := '0';
-  LblTVolume.Caption  := '0';
-  LblTUnidade.Caption := '0';
 end;
 
 procedure TFrmRelDshCheckOut.EdtInicioProducaoChange(Sender: TObject);
@@ -187,13 +176,12 @@ begin
   EdtInicioProducao.Clear;
   EdtTerminoProducao.Clear;
   EdtUsuarioId.Clear;
-  Lblusuario.Caption       := '';
-  ChkCxaFechada.Checked    := True;
-  ChkCxaFracionada.Checked := True;
+  Lblusuario.Caption    := '';
+  RgEmbalagem.ItemIndex := -1;
   LimparLstAdvReport;
-  LblTPedido.Caption  := '0';
-  LblTVolume.Caption  := '0';
-  LblTUnidade.Caption := '0';
+  LblTPedido.Caption    := '0';
+  LblTVolume.Caption    := '0';
+  LblTUnidade.Caption   := '0';
 end;
 
 //procedure TFrmRelDshCheckOut.MontaListaDshCheckOut;
@@ -308,7 +296,7 @@ begin
      EdtInicioProducao.SetFocus;
      Exit;
   End;
-  if (not ChkCxaFechada.Checked) And (Not ChkCxaFracionada.Checked) then Begin
+  if (RgEmbalagem.ItemIndex < 0) then Begin
      ShowErro('Informe o tipo de embalagem para análise.');
      EdtInicioProducao.SetFocus;
      Exit;
@@ -325,9 +313,8 @@ begin
   if EdtTerminoProducao.Text = '  /  /    ' then
      vDataFinalProducao := 0
   Else vDataFinalProducao := StrToDate(EdtTerminoProducao.Text);
-  if (ChkCxaFechada.Checked) and (ChkCxaFracionada.Checked) then
-     vEmbalagemId := 99
-  Else if (ChkCxaFechada.Checked) then
+  vEmbalagemId := 99;
+  if (RgEmbalagem.ItemIndex = 0) then
      vEmbalagemId := 0
   Else vEmbalagemId := 1;
   TDialogMessage.ShowWaitMessage('Buscando Dados, conectado com servidor...',
@@ -352,6 +339,15 @@ begin
       JsonArrayRetorno := Nil;
       ObjPedidoVolumeCtrl.Free;
     End);
+end;
+
+procedure TFrmRelDshCheckOut.RgEmbalagemClick(Sender: TObject);
+begin
+  inherited;
+  LimparLstAdvReport;
+  LblTPedido.Caption  := '0';
+  LblTVolume.Caption  := '0';
+  LblTUnidade.Caption := '0';
 end;
 
 end.

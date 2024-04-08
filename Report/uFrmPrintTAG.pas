@@ -455,6 +455,7 @@ begin
        JsonEtqIndividual.AddPair('mascara', '99.99.99.999');
        JsonArrayEtqIndividual.AddElement(JsonEtqIndividual);
        PrintTagArmazenagem8x10etqEpl2( JsonArrayEtqIndividual );
+       Inc(EtqPrint);
 {
         if EdtQuantidadeEstIndividual.Value > 0 then Begin
            for EtqPrint := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
@@ -467,6 +468,8 @@ begin
     End;
     FDMemProdutoLotesEtqArmazenagem.Next;
   End;
+  FDMemProdutoLotesEtqArmazenagem.Filter   := '';
+  FDMemProdutoLotesEtqArmazenagem.Filtered := False;
   if EtqPrint > 0 then
      ShowOk('Impressas '+EtqPrint.ToString+' etiquetas!')
   Else
@@ -807,7 +810,11 @@ begin
   ObjEstoqueCtrl   := TEstoqueCtrl.Create;
   JsonArrayEstoque := ObjEstoqueCtrl.GetEstoqueLotePorTipo(EdtPickingProdutoEtqIndividual.Tag, 0, 0 ,0, 2, 2, 'N', 'N');
   if Not JsonArrayEstoque.Items[0].TryGetValue('Erro', vErro) then  Begin
+     if FDMemProdutoLotesEtqArmazenagem.Active then
+        FDMemProdutoLotesEtqArmazenagem.EmptyDataSet;
+     FDMemProdutoLotesEtqArmazenagem.Close;
      FDMemProdutoLotesEtqArmazenagem.LoadFromJSON(JsonArrayEstoque, False);
+     FDMemProdutoLotesEtqArmazenagem.Open;
      FDMemProdutoLotesEtqArmazenagem.First;
      FDMemProdutoLotesEtqArmazenagem.Edit;
      FDMemProdutoLotesEtqArmazenagem.FieldByName('Impr').AsInteger := 1;

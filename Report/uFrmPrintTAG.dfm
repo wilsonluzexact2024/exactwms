@@ -30370,7 +30370,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagLocalizacao
+        Properties.ActivePage = TbTagArmazenagem
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -39493,7 +39493,7 @@ inherited FrmPrintTag: TFrmPrintTag
               end
               object EdtCodProdutoEtqIndividual: TEdit
                 Left = 58
-                Top = 25
+                Top = 26
                 Width = 130
                 Height = 24
                 CustomHint = BalloonHint1
@@ -39607,7 +39607,7 @@ inherited FrmPrintTag: TFrmPrintTag
               OnClick = RgPrinterEtqIndividualClick
             end
             object DbgLotesEtqIndividual: TDBGrid
-              Left = 198
+              Left = 197
               Top = 67
               Width = 354
               Height = 105
@@ -40178,7 +40178,6 @@ inherited FrmPrintTag: TFrmPrintTag
     Top = 299
   end
   object FDMemProdutoLotesEtqArmazenagem: TFDMemTable
-    AfterClose = FdMemPesqGeralAfterClose
     FetchOptions.AssignedValues = [evMode]
     FetchOptions.Mode = fmAll
     ResourceOptions.AssignedValues = [rvSilentMode]
@@ -40187,7 +40186,7 @@ inherited FrmPrintTag: TFrmPrintTag
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     Left = 535
-    Top = 231
+    Top = 233
     object FDMemProdutoLotesEtqArmazenagemImpr: TIntegerField
       FieldName = 'Impr'
     end
@@ -40215,7 +40214,7 @@ inherited FrmPrintTag: TFrmPrintTag
   end
   object DsProdutoLotesEtqArmazenagem: TDataSource
     DataSet = FDMemProdutoLotesEtqArmazenagem
-    Left = 533
+    Left = 535
     Top = 278
   end
   object imgAtivo: TImageList

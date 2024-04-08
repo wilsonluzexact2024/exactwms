@@ -6171,9 +6171,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
         ExplicitLeft = 532
       end
       inherited BtnPesquisarStand: TsImage
-        Left = 75
+        Left = 77
         Top = 6
-        ExplicitLeft = 75
+        ExplicitLeft = 77
         ExplicitTop = 6
       end
       inherited BtnImprimirStand: TsImage

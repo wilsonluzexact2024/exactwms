@@ -73,26 +73,24 @@ uses MService.EstoqueDAO, uFuncoes, Horse.Utils.ClientIP,
 procedure Registry;
 begin
   THorse.Group.Prefix('v1')
-    .Get('/estoque/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
-    Get).Get('/estoque/kardex', ConsultaKardex)
+    .Get('/estoque/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo', Get)
+    .Get('/estoque/kardex', ConsultaKardex)
     .Get('/estoqueenderecoportipodetalhes', GetEstoqueEnderecoPorTipoDetalhes)
-    .Get('/estoque/saldo', GetRelEstoqueSaldo).Get('/estoque/preorvencido',
-    GetRelEstoquePreOrVencido)
-    .Get('/estoqueloteportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
-    GetEstoqueLotePorTipo)
-    .Get('/estoque/lote/:produtoid/:loteid/:enderecoid/:zonaid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo/:ordem',
-    GetRelEstoqueLotePorTipo).Get('/estoque/produto', GetEstoqueProduto)
-    .Get('/estoqueenderecoportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo',
-    GetEstoqueEnderecoPorTipo).Put('/estoque', Update).Put('/estoque/checklist',
-    SalvarEstoqueChecklist)
+    .Get('/estoque/saldo', GetRelEstoqueSaldo)
+    .Get('/estoque/preorvencido', GetRelEstoquePreOrVencido)
+    .Get('/estoqueloteportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo', GetEstoqueLotePorTipo)
+    .Get('/estoque/lote/:produtoid/:loteid/:enderecoid/:zonaid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo/:ordem', GetRelEstoqueLotePorTipo)
+    .Get('/estoque/produto', GetEstoqueProduto)
+    .Get('/estoqueenderecoportipo/:produtoid/:loteid/:enderecoid/:estoquetipoid/:producao/:distribuicao/:zerado/:negativo', GetEstoqueEnderecoPorTipo)
+    .Put('/estoque', Update)
+    .Put('/estoque/checklist', SalvarEstoqueChecklist)
     .Delete('/estoque/:loteid/:enderecoid/:estoquetipoid', Delete)
     .Get('/estoque/movimentacaointerna', GetMovimentacaoInterna)
     .Get('/estoque/listatransferencia', GetListaTransferencia)
-    .Get('/estoque/motivomovimentacaosegregado/:ativo',
-    GetMotivoMovimentacaoSegregado).Get('/estoquesempicking',
-    GetEstoqueSemPicking).Get('/estoque/validarmovimentacaopallet',
-    ValidarMovimentacaoPallet).Get('/estoque/controlearmazenagem',
-    GetControleArmazenagem)
+    .Get('/estoque/motivomovimentacaosegregado/:ativo', GetMotivoMovimentacaoSegregado)
+    .Get('/estoquesempicking', GetEstoqueSemPicking)
+    .Get('/estoque/validarmovimentacaopallet', ValidarMovimentacaoPallet)
+    .Get('/estoque/controlearmazenagem', GetControleArmazenagem)
 
 end;
 

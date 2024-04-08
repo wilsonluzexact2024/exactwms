@@ -2,11 +2,11 @@
 <config>
     <Instalacao>1</Instalacao>
     <Company>
-        <Name>Farmácias São Paulo</Name>
+        <Name>Droga Fuji</Name>
     </Company>
     <Server>
-        <Ip>10.1.101.204</Ip>
-        <Port>8400</Port>
+        <Ip>10.1.1.199</Ip>
+        <Port>8300</Port>
     </Server>
     <Collector>
         <Brand>Honeywell</Brand>
