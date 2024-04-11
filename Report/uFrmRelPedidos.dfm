@@ -6125,6 +6125,22 @@ inherited FrmRelPedidos: TFrmRelPedidos
             'Cxa.Fechada')
         end
       end
+      object ChkVolumePendente: TCheckBox
+        Left = 926
+        Top = 181
+        Width = 174
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = 'Somente Pendentes'
+        Enabled = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 4227327
+        Font.Height = -13
+        Font.Name = 'Roboto'
+        Font.Style = [fsBold]
+        ParentFont = False
+        TabOrder = 16
+      end
     end
   end
   inherited PnHeader: TPanel
@@ -6171,9 +6187,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
         ExplicitLeft = 532
       end
       inherited BtnPesquisarStand: TsImage
-        Left = 77
+        Left = 80
         Top = 6
-        ExplicitLeft = 77
+        ExplicitLeft = 80
         ExplicitTop = 6
       end
       inherited BtnImprimirStand: TsImage

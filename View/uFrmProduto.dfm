@@ -155,92 +155,7 @@ inherited FrmProduto: TFrmProduto
         ExplicitLeft = 61
         ExplicitTop = 506
       end
-      object BitBtn4: TBitBtn [5]
-        Left = 121
-        Top = 123
-        Width = 24
-        Height = 24
-        CustomHint = BalloonHint1
-        Glyph.Data = {
-          36090000424D3609000000000000360000002800000018000000180000000100
-          2000000000000009000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000004390FFE24390FFE20000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
-          0000000000000000000000000000000000000000000000000000000000004792
-          FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-          00000000000000000000000000000000000000000000000000004792FFDB277F
-          FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
-          FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
-          FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
-          FFFF4390FFE2000000000000000000000000000000000000000000000000277F
-          FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
-          FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
-          FF40000000000000000000000000000000000000000000000000000000004390
-          FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
-          0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
-          FF42000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
-          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-          FFE3000000000000000000000000000000000000000000000000000000000000
-          000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
-          00000000000000000000000000000000000000000000599DFF99277FFFFF2980
-          FFFE000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-          FFFF000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
-          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
-          FFFF000000000000000000000000000000000000000000000000000000000000
-          000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
-          000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
-          FFFE000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
-          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
-          FFE3000000000000000000000000000000000000000000000000000000004390
-          FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
-          0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
-          FF3B00000000000000004390FFE200000000000000000000000000000000277F
-          FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
-          FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
-          0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
-          FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
-          000000000000000000000000000000000000000000004792FFDB277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
-          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
-          0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
-          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000}
-        TabOrder = 24
-        TabStop = False
-        OnClick = BtnPesqFabricante
-      end
-      object edtDescricao: TLabeledEdit [6]
+      object edtDescricao: TLabeledEdit [5]
         Left = 84
         Top = 75
         Width = 457
@@ -264,7 +179,7 @@ inherited FrmProduto: TFrmProduto
         OnEnter = edtDescricaoEnter
         OnExit = edtDescricaoExit
       end
-      object ChkImportado: TCheckBox [7]
+      object ChkImportado: TCheckBox [6]
         Left = 103
         Top = 227
         Width = 91
@@ -274,7 +189,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'Importado'
         TabOrder = 11
       end
-      object ChkInflamavel: TCheckBox [8]
+      object ChkInflamavel: TCheckBox [7]
         Left = 199
         Top = 227
         Width = 91
@@ -284,27 +199,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'Inflam'#225'vel'
         TabOrder = 12
       end
-      object CbRastroTipo: TComboBox [9]
-        Left = 877
-        Top = 24
-        Width = 146
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object EdtDescricaoRed: TLabeledEdit [10]
+      object EdtDescricaoRed: TLabeledEdit [8]
         Left = 655
         Top = 75
         Width = 368
@@ -328,7 +223,7 @@ inherited FrmProduto: TFrmProduto
         OnEnter = edtDescricaoEnter
         OnExit = edtDescricaoExit
       end
-      object btnPesquisar: TBitBtn [11]
+      object btnPesquisar: TBitBtn [9]
         Left = 194
         Top = 24
         Width = 24
@@ -413,7 +308,7 @@ inherited FrmProduto: TFrmProduto
         TabStop = False
         Visible = False
       end
-      object CbProdutoTipo: TComboBox [12]
+      object CbProdutoTipo: TComboBox [10]
         Left = 325
         Top = 24
         Width = 176
@@ -433,86 +328,7 @@ inherited FrmProduto: TFrmProduto
           'Cliente'
           'Fornecedor')
       end
-      object GroupBox1: TGroupBox [13]
-        Left = 177
-        Top = 480
-        Width = 713
-        Height = 68
-        CustomHint = BalloonHint1
-        Caption = ' [ E.R.P. ] '
-        TabOrder = 23
-        Visible = False
-        object EdtCdProdutoERP: TLabeledEdit
-          Left = 53
-          Top = 29
-          Width = 140
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 43
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'C'#243'digo'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 0
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtVariacaoERP: TLabeledEdit
-          Left = 337
-          Top = 29
-          Width = 80
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 50
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Varia'#231#227'o'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 1
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtTamanhoERP: TLabeledEdit
-          Left = 585
-          Top = 30
-          Width = 80
-          Height = 21
-          CustomHint = BalloonHint1
-          Ctl3D = True
-          EditLabel.Width = 53
-          EditLabel.Height = 17
-          EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Tamanho'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -11
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          LabelPosition = lpLeft
-          ParentCtl3D = False
-          ParentFont = False
-          TabOrder = 2
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-      end
-      object EdtCodigoMS: TLabeledEdit [14]
+      object EdtCodigoMS: TLabeledEdit [11]
         Left = 608
         Top = 226
         Width = 123
@@ -537,7 +353,7 @@ inherited FrmProduto: TFrmProduto
         OnEnter = edtDescricaoEnter
         OnExit = edtDescricaoExit
       end
-      object ChkPerigoso: TCheckBox [15]
+      object ChkPerigoso: TCheckBox [12]
         Left = 295
         Top = 227
         Width = 91
@@ -547,7 +363,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'Perigoso'
         TabOrder = 13
       end
-      object ChkMedicamento: TCheckBox [16]
+      object ChkMedicamento: TCheckBox [13]
         Left = 391
         Top = 227
         Width = 103
@@ -558,7 +374,7 @@ inherited FrmProduto: TFrmProduto
         TabOrder = 14
         OnClick = ChkMedicamentoClick
       end
-      object chkLiquido: TCheckBox [17]
+      object chkLiquido: TCheckBox [14]
         Left = 8
         Top = 227
         Width = 91
@@ -568,7 +384,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'L'#237'quido'
         TabOrder = 10
       end
-      object GbEnderecoPicking: TGroupBox [18]
+      object GbEnderecoPicking: TGroupBox [15]
         Left = 9
         Top = 250
         Width = 1015
@@ -741,7 +557,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = EdtPickingExit
         end
       end
-      object ChkSNGPC: TCheckBox [19]
+      object ChkSNGPC: TCheckBox [16]
         Left = 766
         Top = 227
         Width = 76
@@ -757,7 +573,7 @@ inherited FrmProduto: TFrmProduto
         ParentFont = False
         TabOrder = 16
       end
-      object grpEstoqueReposicao: TGroupBox [20]
+      object grpEstoqueReposicao: TGroupBox [17]
         Left = 8
         Top = 402
         Width = 572
@@ -850,7 +666,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = edtDescricaoExit
         end
       end
-      object GroupBox4: TGroupBox [21]
+      object GroupBox4: TGroupBox [18]
         Left = 496
         Top = 162
         Width = 528
@@ -859,7 +675,7 @@ inherited FrmProduto: TFrmProduto
         Caption = ' [ Caixa de Embarque / Master ] '
         TabOrder = 9
         object LblUnidadeSecundaria: TLabel
-          Left = 120
+          Left = 168
           Top = 21
           Width = 12
           Height = 16
@@ -873,16 +689,16 @@ inherited FrmProduto: TFrmProduto
           ParentFont = False
         end
         object EdtUnidadeSecundariaId: TLabeledEdit
-          Left = 62
+          Left = 110
           Top = 17
           Width = 29
           Height = 25
           CustomHint = BalloonHint1
           Ctl3D = True
-          EditLabel.Width = 49
+          EditLabel.Width = 99
           EditLabel.Height = 17
           EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Unidade'
+          EditLabel.Caption = 'Tipo Embalagem'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -898,7 +714,7 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
         object BtnPesqUnidadeSecundaria: TBitBtn
-          Left = 92
+          Left = 140
           Top = 18
           Width = 24
           Height = 24
@@ -1008,7 +824,7 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
       end
-      object grpValidadeMinima: TGroupBox [22]
+      object grpValidadeMinima: TGroupBox [19]
         Left = 598
         Top = 402
         Width = 425
@@ -1075,7 +891,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = edtDescricaoExit
         end
       end
-      object CbMedicamentoTipo: TComboBox [23]
+      object CbMedicamentoTipo: TComboBox [20]
         Left = 654
         Top = 24
         Width = 111
@@ -1095,7 +911,7 @@ inherited FrmProduto: TFrmProduto
           'Cliente'
           'Fornecedor')
       end
-      object GroupBox3: TGroupBox [24]
+      object GroupBox3: TGroupBox [21]
         Left = 8
         Top = 162
         Width = 478
@@ -1104,7 +920,7 @@ inherited FrmProduto: TFrmProduto
         Caption = ' [ Embalagem Prim'#225'ria ] '
         TabOrder = 8
         object LblUnidade: TLabel
-          Left = 123
+          Left = 169
           Top = 21
           Width = 12
           Height = 16
@@ -1118,16 +934,16 @@ inherited FrmProduto: TFrmProduto
           ParentFont = False
         end
         object EdtUnidadeId: TLabeledEdit
-          Left = 64
+          Left = 110
           Top = 18
           Width = 29
           Height = 25
           CustomHint = BalloonHint1
           Ctl3D = True
-          EditLabel.Width = 49
+          EditLabel.Width = 99
           EditLabel.Height = 17
           EditLabel.CustomHint = BalloonHint1
-          EditLabel.Caption = 'Unidade'
+          EditLabel.Caption = 'Tipo Embalagem'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13
@@ -1143,7 +959,7 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
         object BtnPesqUnidadePrimaria: TBitBtn
-          Left = 93
+          Left = 139
           Top = 18
           Width = 24
           Height = 24
@@ -1228,7 +1044,7 @@ inherited FrmProduto: TFrmProduto
           OnClick = BtnPesqUnidadePrimariaClick
         end
         object EdtQtdUnid: TLabeledEdit
-          Left = 395
+          Left = 407
           Top = 18
           Width = 61
           Height = 25
@@ -1254,7 +1070,58 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
       end
-      object GroupBox2: TGroupBox [25]
+      object EdtLaboratorioId: TLabeledEdit [22]
+        Left = 84
+        Top = 123
+        Width = 37
+        Height = 25
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 60
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Fabricante'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 6
+        OnChange = EdtLaboratorioIdChange
+        OnEnter = edtDescricaoEnter
+        OnExit = EdtLaboratorioIdExit
+        OnKeyPress = EdtLaboratorioIdKeyPress
+      end
+      object edtCodProduto: TLabeledEdit [23]
+        Left = 85
+        Top = 23
+        Width = 111
+        Height = 25
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 47
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'C'#243'digo '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 0
+        OnChange = edtCodProdutoChange
+        OnEnter = edtDescricaoEnter
+        OnExit = edtCodProdutoExit
+        OnKeyPress = edtCodProdutoKeyPress
+      end
+      object GroupBox2: TGroupBox [24]
         Left = 8
         Top = 325
         Width = 1015
@@ -1491,56 +1358,189 @@ inherited FrmProduto: TFrmProduto
           OnClick = BtnCapturarPesoClick
         end
       end
-      object edtCodProduto: TLabeledEdit [26]
-        Left = 85
-        Top = 23
-        Width = 111
-        Height = 25
+      object GroupBox1: TGroupBox [25]
+        Left = 177
+        Top = 480
+        Width = 713
+        Height = 68
         CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 47
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'C'#243'digo '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 0
-        OnChange = edtCodProdutoChange
-        OnEnter = edtDescricaoEnter
-        OnExit = edtCodProdutoExit
-        OnKeyPress = edtCodProdutoKeyPress
+        Caption = ' [ E.R.P. ] '
+        TabOrder = 23
+        Visible = False
+        object EdtCdProdutoERP: TLabeledEdit
+          Left = 53
+          Top = 29
+          Width = 140
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 43
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'C'#243'digo'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 0
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtVariacaoERP: TLabeledEdit
+          Left = 337
+          Top = 29
+          Width = 80
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 50
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Varia'#231#227'o'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 1
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtTamanhoERP: TLabeledEdit
+          Left = 585
+          Top = 30
+          Width = 80
+          Height = 21
+          CustomHint = BalloonHint1
+          Ctl3D = True
+          EditLabel.Width = 53
+          EditLabel.Height = 17
+          EditLabel.CustomHint = BalloonHint1
+          EditLabel.Caption = 'Tamanho'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          LabelPosition = lpLeft
+          ParentCtl3D = False
+          ParentFont = False
+          TabOrder = 2
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
       end
-      object EdtLaboratorioId: TLabeledEdit [27]
-        Left = 84
-        Top = 123
-        Width = 37
-        Height = 25
+      object CbRastroTipo: TComboBox [26]
+        Left = 877
+        Top = 24
+        Width = 146
+        Height = 22
         CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 60
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Fabricante'
+        Style = csOwnerDrawFixed
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
         Font.Name = 'Segoe UI'
         Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
         ParentFont = False
-        TabOrder = 6
-        OnChange = EdtLaboratorioIdChange
+        TabOrder = 3
         OnEnter = edtDescricaoEnter
-        OnExit = EdtLaboratorioIdExit
-        OnKeyPress = EdtLaboratorioIdKeyPress
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object BitBtn4: TBitBtn [27]
+        Left = 121
+        Top = 123
+        Width = 24
+        Height = 24
+        CustomHint = BalloonHint1
+        Glyph.Data = {
+          36090000424D3609000000000000360000002800000018000000180000000100
+          2000000000000009000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000004390FFE24390FFE20000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000004792FFDB277FFFFF277FFFFF4490FFE10000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE7000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00004792FFDB277FFFFF277FFFFF277FFFFF408EFFE70000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF408EFFE700000000000000000000
+          0000000000000000000000000000000000000000000000000000000000004792
+          FFDB277FFFFF277FFFFF277FFFFF408EFFE7000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000004792FFDB277F
+          FFFF277FFFFF277FFFFF408EFFE700000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000067A5FF40438FFFE32A81
+          FFFE277FFFFF277FFFFF2A81FFFE4490FFE168A5FF3B68A5FF3B277FFFFF277F
+          FFFF277FFFFF4390FFE20000000000000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000005399FFB6277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF4390FFE2000000000000000000000000000000000000000000000000277F
+          FFFF4390FFE200000000000000005399FFB6277FFFFF277FFFFF3185FFFA5A9D
+          FF976AA7FF236AA7FF23599DFF993185FFFA277FFFFF277FFFFF277FFFFF67A5
+          FF40000000000000000000000000000000000000000000000000000000004390
+          FFE2000000000000000067A5FF42277FFFFF277FFFFF4591FFDD000000000000
+          0000000000000000000000000000000000004591FFDF277FFFFF277FFFFF67A5
+          FF42000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000428FFFE5277FFFFF3285FFFA00000000000000000000
+          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+          FFE3000000000000000000000000000000000000000000000000000000000000
+          000000000000000000002880FFFF277FFFFF5A9DFF9600000000000000000000
+          00000000000000000000000000000000000000000000599DFF99277FFFFF2980
+          FFFE000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+          FFFF000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000277FFFFF277FFFFF6AA7FF2300000000000000000000
+          000000000000000000000000000000000000000000006AA7FF26277FFFFF277F
+          FFFF000000000000000000000000000000000000000000000000000000000000
+          000000000000000000002980FFFF277FFFFF5A9DFF9400000000000000000000
+          000000000000000000000000000000000000000000005A9DFF97277FFFFF2A81
+          FFFE000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000418EFFE6277FFFFF3286FFF900000000000000000000
+          000000000000000000000000000000000000000000003185FFFA277FFFFF438F
+          FFE3000000000000000000000000000000000000000000000000000000004390
+          FFE2000000000000000066A4FF47277FFFFF277FFFFF4792FFDB000000000000
+          0000000000000000000000000000000000004591FFDD277FFFFF277FFFFF68A5
+          FF3B00000000000000004390FFE200000000000000000000000000000000277F
+          FFFF4390FFE200000000000000005198FFBB277FFFFF277FFFFF3286FFF95A9D
+          FF946BA7FF206BA7FF205A9DFF963285FFFA277FFFFF277FFFFF5399FFB40000
+          0000000000004390FFE2277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000005298FFB8277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF5399FFB4000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000066A5FF45428FFFE52980
+          FFFF277FFFFF277FFFFF2A81FFFE428FFFE467A5FF3D00000000000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE100000000000000000000
+          000000000000000000000000000000000000000000004792FFDB277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF4490FFE1000000000000
+          0000000000000000000000000000000000004792FFDB277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+        TabOrder = 24
+        TabStop = False
+        OnClick = BtnPesqFabricante
       end
       inherited PnlInfo: TPanel
         Left = 921
@@ -1557,8 +1557,8 @@ inherited FrmProduto: TFrmProduto
         ExplicitTop = 510
       end
       object PnlCapturarPeso: TPanel
-        Left = 678
-        Top = -38
+        Left = 710
+        Top = -180
         Width = 874
         Height = 259
         CustomHint = BalloonHint1

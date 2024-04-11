@@ -1057,8 +1057,7 @@ begin
   end;
 end;
 
-function TPedidoVolumeDao.GetVolumeConsulta(const AParams
-  : TDictionary<String, String>): TJsonArray;
+function TPedidoVolumeDao.GetVolumeConsulta(const AParams : TDictionary<String, String>): TJsonArray;
 begin
   try
     Fconexao.Query.Sql.Add(TuEvolutConst.SqlGetVolumeConsulta);
@@ -1106,6 +1105,10 @@ begin
        Fconexao.Query.ParamByName('pZonaId').Value := AParams.Items['zonaid'].ToInteger()
     Else
        Fconexao.Query.ParamByName('pZonaId').Value := 0;
+    if AParams.ContainsKey('pendente') then
+       Fconexao.Query.ParamByName('pPendente').Value := AParams.Items['pendente'].ToInteger()
+    Else
+       Fconexao.Query.ParamByName('pPendente').Value := 0;
     if AParams.ContainsKey('embalagem') then
        Fconexao.Query.ParamByName('pEmbalagem').Value := AParams.Items['embalagem']
     Else

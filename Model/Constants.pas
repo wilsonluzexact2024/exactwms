@@ -2217,7 +2217,7 @@ Const SqlVolume = 'Declare @PedidoId Int  = :pPedidoId' + sLineBreak +
       '       Coalesce(Cast(tara as Numeric(10)), 0) tara, Pv.sequencia, Coalesce(Pv.volumecaixa, 0) volumecaixa, Pv.processoid, Pv.processo, Pv.usuarioid, Pv.usuario,'+ sLineBreak +
       '	      Pv.pedidoid ' + #39 + 'pedido.pedidoid' + #39 +
       '     , Pv.documentonr as ' + #39 + 'pedido.documentonr' + #39 + sLineBreak +
-      '     , Pv.documentodata ' + #39 + 'pedido.documentodata' + #39 + ', ' +sLineBreak +
+      '     , Pv.documentodata ' + #39 + 'pedido.documentodata' + #39 + ', Pv.processoidped '+#39+'pedido.processoidped'+#39+', '+sLineBreak +
       '   	   Pv.pessoaid ' + #39 + 'destino.pessoaid' + #39 + ', Pv.razao ' + #39 + 'destino.razao' + #39 + ', ' + sLineBreak +
       '       Pv.CodPessoaERP '+#39+'destino.codpessoaerp'+#39+', Pv.Fantasia '+#39+'destino.fantasia'+#39+', '+sLineBreak+
       '       Pv.Rotaid ' + #39 + 'rota.rotaid' + #39 + ', ' + sLineBreak +
@@ -2230,19 +2230,21 @@ Const SqlVolume = 'Declare @PedidoId Int  = :pPedidoId' + sLineBreak +
       '             VE.Descricao, VE.Identificacao, VE.Tara,' + sLineBreak +
       '   	         Vlm.Sequencia, Vlm.CaixaEmbalagemId VolumeCaixa,' + sLineBreak +
       '             DE.ProcessoId, DE.Descricao as Processo, De.UsuarioId, U.Nome Usuario'+ sLineBreak +
-      '           , PEd.DocumentoNr, Rd.Data As DocumentoData' + sLineBreak +
+      '           , PEd.DocumentoNr, Rd.Data As DocumentoData, DePed.ProcessoId ProcessoIdPed' + sLineBreak +
       '           , P.PessoaId, P.Razao, P.CodPessoaERP, P.Fantasia' + sLineBreak +
       '	          , Rp.Rotaid, R.Descricao Rota, Rp.Ordem' + sLineBreak +
       '      From PedidoVolumes Vlm' + sLineBreak +
       '      Left Join VolumeEmbalagem VE ON VE.EmbalagemId = Vlm.EmbalagemId' + sLineBreak +
       '      Left join vDocumentoEtapas DE On De.Documento = Vlm.Uuid' + sLineBreak +
       '      Inner join Pedido Ped ON Ped.PedidoId = Vlm.PedidoId' + sLineBreak +
+      '      Left join vDocumentoEtapas DEPed On DePed.Documento = Ped.Uuid'+sLineBreak+
       '      Inner join Rhema_Data RD on Rd.IdData = Ped.DocumentoData' + sLineBreak +
       '      Inner join Pessoa P On P.Pessoaid = Ped.PessoaId ' + sLineBreak +
       '      Inner Join RotaPessoas Rp On Rp.PessoaId = P.PessoaId' + sLineBreak +
       '      Inner Join Rotas R On R.RotaId = Rp.RotaId' +sLineBreak +
       '      Inner Join Usuarios U On U.UsuarioId = De.UsuarioId' + sLineBreak +
       '      Where De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1)'+ sLineBreak +
+      '        And DePed.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+sLineBreak+
       '            and (@PedidoId = 0 or Vlm.PedidoId = @PedidoId) and (@PedidoVolumeId = 0 or Vlm.PedidoVolumeId = @PedidoVolumeId)'+ sLineBreak +
       '            and (@Embalagem = ' + #39 + 'T' + #39 + ' or (@Embalagem = ' + #39 + 'F' + #39 + ' and Vlm.EmbalagemId Is Not Null) or ' + sLineBreak +
       '                (@Embalagem=' + #39 + 'B' + #39 + ' and Vlm.EmbalagemId Is Null)) ' + sLineBreak +
@@ -2290,6 +2292,7 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Declare @CodProduto int          = :pCodProduto' + sLineBreak +
       'Declare @Ordem Int               = :pOrdem' + sLineBreak +
       'Declare @Embalagem Char(1)       = :pEmbalagem' + sLineBreak +
+      'Declare @Pendente Integer        = :pPendente' + sLineBreak +
     // <T>odos <F>racionado <B>ox Cxa Fechada
       'Declare @ZonaId Integer          = :pZonaId' + sLineBreak +
       'Drop table if exists #Volumes'+sLineBreak+
@@ -2297,17 +2300,23 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Drop table if exists #MS'+sLineBreak+
       'Drop table if exists #Carregamento'+sLineBreak+
       'select Vlm.PedidoId, Vlm.PedidoVolumeId, Coalesce(Vlm.EmbalagemId, 0) VolumeTipo, (case When Vlm.EmbalagemId IS Null then'+sLineBreak+
-      '             '+#39+'Caixa Fechada'+#39+' else '+#39+'Fracionado'+#39+' End) Embalagem,'+sLineBreak+
-      '             VE.Descricao, VE.Identificacao, VE.Tara, Vlm.Sequencia, Coalesce(Vlm.CaixaEmbalagemId, 0) VolumeCaixa,'+sLineBreak+
-      '             DE.ProcessoId, DE.Descricao as Processo, De.UsuarioId, U.Nome Usuario'+sLineBreak+
-      '           , PEd.DocumentoNr, Ped.DocumentoData, Ped.CodPessoaERP, Ped.Razao, Ped.Rotaid, Ped.Rota--, Rp.Ordem'+sLineBreak+
+      '       '+#39+'Caixa Fechada'+#39+' else '+#39+'Fracionado'+#39+' End) Embalagem,'+sLineBreak+
+      '       VE.Descricao, VE.Identificacao, VE.Tara, Vlm.Sequencia, Coalesce(Vlm.CaixaEmbalagemId, 0) VolumeCaixa,'+sLineBreak+
+      '       DE.ProcessoId, DE.Descricao as Processo, De.UsuarioId, U.Nome Usuario, '+sLineBreak+
+      '       PEd.DocumentoNr, Ped.DocumentoData, Pes.CodPessoaERP, Pes.Razao, Rp.Rotaid, '+sLineBreak+
+      '       Ro.Descricao Rota, DePed.ProcessoId processoidped  --, Rp.Ordem'+sLineBreak+
       'Into #Volumes'+sLineBreak+
       'From PedidoVolumes Vlm'+sLineBreak+
       'Left Join VolumeEmbalagem VE ON VE.EmbalagemId = Vlm.EmbalagemId'+sLineBreak+
       'Left join vDocumentoEtapas DE On De.Documento = Vlm.Uuid'+sLineBreak+
-      'Inner join vPedidos Ped ON Ped.PedidoId = Vlm.PedidoId'+sLineBreak+
+      'Inner join Pedido Ped ON Ped.PedidoId = Vlm.PedidoId'+sLineBreak+
+      'Left join vDocumentoEtapas DePed On DePed.Documento = Ped.Uuid'+sLineBreak+
+      'Inner join Pessoa Pes On Pes.Pessoaid = Ped.pessoaid'+sLineBreak+
+      'Left Join RotaPessoas Rp On Rp.pessoaid = Pes.PessoaId '+sLineBreak+
+      'Left Join Rotas Ro On Ro.RotaId = Rp.RotaId'+sLineBreak+
       'Inner Join Usuarios U On U.UsuarioId = De.UsuarioId'+sLineBreak+
       'Where De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Vlm.uuid and Status = 1)'+sLineBreak+
+      '  and DePed.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+sLineBreak+
       '  and (@PedidoId = 0 or Vlm.PedidoId = @PedidoId)'+sLineBreak+
       '  and (@PedidoVolumeId = 0 or Vlm.PedidoVolumeId = @PedidoVolumeId)'+sLineBreak+
       '  and (@Embalagem = '+#39+'T'+#39+' or (@Embalagem = '+#39+'F'+#39+' and Vlm.EmbalagemId Is Not Null) or (@Embalagem='#39_'B'+#39+' and Vlm.EmbalagemId Is Null))'+sLineBreak+
@@ -2318,9 +2327,10 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       '  And (@DataFinal = 0 or Ped.DocumentoData <= @DataFinal)'+sLineBreak+
       '  And (@DocumentoNr = '+#39+#39+' or Ped.DocumentoNr = @DocumentoNr)'+sLineBreak+
       '  And (@Sequencia = 0 or Vlm.Sequencia = @Sequencia)'+sLineBreak+
-      '  And (@CodPessoa = 0 Or ped.CodPessoaERP = @CodPessoa)'+sLineBreak+
+      '  And (@CodPessoa = 0 Or Pes.CodPessoaERP = @CodPessoa)'+sLineBreak+
       '  And (@ProcessoId = 0 or De.ProcessoId = @ProcessoId)'+sLineBreak+
-      '  And (@Rotaid = 0 or Ped.RotaId = @RotaId)'+sLineBreak+
+      '  And (@Rotaid = 0 or Rp.RotaId = @RotaId)'+sLineBreak+
+      '  And (@Pendente = 0 or (@Pendente = 1 and DE.ProcessoId < 13))'+sLineBreak+
       '  And (@CodProduto = 0 or (@CodProduto <> 0 and Exists (Select CodProduto From PedidoVolumeLotes Vl'+sLineBreak+
       '                                         Inner join vProdutolotes Pl On Pl.Loteid=Vl.LoteId'+sLineBreak+
       '					                                    Where Vl.PedidoVOlumeid = Vlm.PedidoVolumeId and Pl.CodProduto = @CodProduto)))'+sLineBreak+
@@ -2344,8 +2354,9 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       'Inner join #Volumes Pv On Pv.PedidoVolumeId = Cc.PedidoVolumeId'+sLineBreak+
       ''+sLineBreak+
       'Select Pv.PedidoId, Pv.PedidoVolumeId, Pv.VolumeTipo, Pv.Embalagem, Pv.Descricao, Pv.Identificacao, Pv.Tara, Pv.Sequencia, Pv.VolumeCaixa,'+sLineBreak+
-      '      Pv.ProcessoId, Pv.Processo, Pv.UsuarioId, Pv.Usuario, Pv.DocumentoNr, Pv.DocumentoData, Pv.CodPessoaERP, Pv.Razao, Pv.Rotaid, Pv.Rota,'+sLineBreak+
-      '       VL.Demanda, VL.QtdSuprida, Ms.Zona, Ms.RuaId, Ms.Rua, SUBSTRING(Ms.Endereco, 1, 2)+'+#39+'.'+#39+'+SUBSTRING(Ms.Endereco, 3, 2) PredioInicial, IsNull(Cc.CargaId, 0) CargaId'+sLineBreak+
+      '       Pv.ProcessoId, Pv.Processo, Pv.UsuarioId, Pv.Usuario, Pv.DocumentoNr, Pv.DocumentoData, Pv.CodPessoaERP, Pv.Razao, Pv.Rotaid, Pv.Rota,'+sLineBreak+
+      '       VL.Demanda, VL.QtdSuprida, Ms.Zona, Ms.RuaId, Ms.Rua, SUBSTRING(Ms.Endereco, 1, 2)+'+#39+'.'+#39+'+SUBSTRING(Ms.Endereco, 3, 2) '+sLineBreak+
+      '       PredioInicial, IsNull(Cc.CargaId, 0) CargaId, Pv.ProcessoIdPed'+sLineBreak+
       'From #Volumes Pv'+sLineBreak+
       'Left Join #VolumeLotes Vl On Vl.PedidoVOlumeId = PV.PedidoVOlumeId'+sLineBreak+
       'Left join #MS MS On MS.PedidoVOlumeId = Pv.PedidoVOlumeId'+sLineBreak+

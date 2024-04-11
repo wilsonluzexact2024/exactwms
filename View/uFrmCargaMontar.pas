@@ -131,7 +131,7 @@ type
     FDMemResumoCarga: TFDMemTable;
     Label21: TLabel;
     LblQtdVolumeCarga: TLabel;
-    BtnProcessar: TPanel;
+    BtnFiltro: TPanel;
     sImage1: TsImage;
     procedure FormCreate(Sender: TObject);
     procedure EdtCargaIdEnter(Sender: TObject);
@@ -171,7 +171,7 @@ type
     procedure RgCargaProcessoClick(Sender: TObject);
     procedure EdtdtCargaInicialChange(Sender: TObject);
     procedure LstCargaResumoClickCell(Sender: TObject; ARow, ACol: Integer);
-    procedure BtnProcessarClick(Sender: TObject);
+    procedure BtnFiltroClick(Sender: TObject);
   private
     { Private declarations }
     ObjCargaCtrl : TCargasCtrl;
@@ -206,6 +206,7 @@ type
     Function DeleteReg : Boolean;  OverRide;
     Procedure GetListaLstCadastro; OverRide;
     Function SalvarReg : Boolean;  OverRide;
+    Procedure AfterCancelar; OverRide;
     Procedure Limpar; OverRide;
     Procedure Imprimir; OverRide;
   public
@@ -240,6 +241,11 @@ begin
   finally
     FreeAndNil(FrmPesquisaRotas);
   end;
+end;
+
+procedure TFrmCargaMontar.AfterCancelar;
+begin
+  BtnFiltro.Visible := False;
 end;
 
 procedure TFrmCargaMontar.AtualizarStatus(pLinha, pProcessoId: Integer);
@@ -306,6 +312,7 @@ procedure TFrmCargaMontar.BtnEditarClick(Sender: TObject);
 begin
   inherited;
   EdtRotaId.SetFocus;
+  BtnFiltro.Visible := True;
 //  PnlListaCliPedidos.Enabled := True;
 end;
 
@@ -320,6 +327,7 @@ procedure TFrmCargaMontar.BtnIncluirClick(Sender: TObject);
 begin
   inherited;
   EdtRotaId.SetFocus;
+  BtnFiltro.Visible := True;
 //  PnlListaCliPedidos.Enabled := True;
 end;
 
@@ -402,7 +410,7 @@ begin
   end;
 end;
 
-procedure TFrmCargaMontar.BtnProcessarClick(Sender: TObject);
+procedure TFrmCargaMontar.BtnFiltroClick(Sender: TObject);
 begin
   inherited;
   if StrToIntDef(EdtRotaId.Text, 0) <= 0 then Begin
@@ -1806,6 +1814,7 @@ begin
   End;
   JsonListaPedidos := Nil;
   FreeAndNil(JsonCarga);
+  BtnFiltro.Visible := False;
   //FreeAndNil(JsonListaPedidos);
 end;
 

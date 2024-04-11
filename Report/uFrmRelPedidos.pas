@@ -238,6 +238,7 @@ type
     LblTotVolumeExpedidoPerc: TLabel;
     GroupBox13: TGroupBox;
     CbEmbalagem: TComboBox;
+    ChkVolumePendente: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure BtnPesquisarStandClick(Sender: TObject);
@@ -2087,7 +2088,8 @@ begin
     LstVolumesAdv.Cells[5, xVol+1]    := pJsonArray.Get(xVol).GetValue<String>('tara');
     LstVolumesAdv.Cells[6, xVol+1]    := pJsonArray.Get(xVol).GetValue<String>('volumecaixa');
     LstVolumesAdv.Cells[7, xVol+1]    := pJsonArray.Get(xVol).GetValue<String>('processo');
-    if pJsonArray.Get(xVol).GetValue<Integer>('processoid') < 15 then
+    if (pJsonArray.Get(xVol).GetValue<Integer>('processoid') < 15) And
+       (pJsonArray.Items[xVol].GetValue<TJsonObject>('pedido').GetValue<Integer>('processoidped') < 13) then
        LstVolumesAdv.Cells[8, xVol+1]    := '2'
     Else LstVolumesAdv.Cells[8, xVol+1]    := '3';
     if pJsonArray.Get(xVol).GetValue<Integer>('carregamentoid') > 0 then
@@ -2154,7 +2156,8 @@ begin
        LstVolumeConsulta.Cells[6, xVol+1]    := pJsonArrayRetorno.Get(xVol).GetValue<String>('volumecaixa')
     Else LstVolumeConsulta.Cells[6, xVol+1]  := '';
     LstVolumeConsulta.Cells[7, xVol+1]    := pJsonArrayRetorno.Get(xVol).GetValue<String>('processo');
-    if pJsonArrayRetorno.Get(xVol).GetValue<Integer>('processoid') < 15 then
+    if (pJsonArrayRetorno.Get(xVol).GetValue<Integer>('processoid') < 15) and
+       (pJsonArrayRetorno.Get(xVol).GetValue<Integer>('processoidped') < 13) then
        LstVolumeConsulta.Cells[8, xVol+1]    := '2'
     Else LstVolumeConsulta.Cells[8, xVol+1]    := '3';
     if pJsonArrayRetorno.Get(xVol).GetValue<Integer>('cargaid') > 0 then
@@ -2263,6 +2266,7 @@ procedure TFrmRelPedidos.PesquisarVolumes;
 Var ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
     JsonObjectRetorno   : TJsonObject;
     vEstruturaId        : Integer;
+    vVolumePendente     : Integer;
     vErro : String;
 begin
   if (not ChkResumoPorVolume.Checked) and (not ChkAnalisePorRua.Checked)  and (not ChkAnalisePorSetor.Checked)  and
@@ -2283,11 +2287,15 @@ begin
      vEstruturaId := 1
   Else if (ChkPicking.Checked) then
      vEstruturaId := 2;
+  if ChkvolumePendente.Checked then
+     vVolumePendente := 1
+  Else
+     vVolumePendente := 0;
   if ChkResumoPorVolume.Checked then Begin
      TDialogMessage.ShowWaitMessage('Buscando Dados dos Volumes...',
        procedure
           procedure GetVolumeConsulta(pDataInicial, pDataFinal : TDateTime; pPedidoId, pPedidoVolumeId : Integer;
-                                        pDocumentoNr : String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto : Integer);
+                                      pDocumentoNr : String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto , pPendente : Integer);
           Var JsonArrayRetorno    : TJsonArray;
               ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
               pEmbalagem : String;
@@ -2299,7 +2307,8 @@ begin
               2: pEmbalagem := 'B';
             end;
             JsonArrayRetorno := ObjPedidoVolumeCtrl.GetVolumeConsulta(pDataInicial, pDataFinal, pPedidoId, pPedidoVolumeId,
-                                        pDocumentoNr, pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto, StrToIntDef(EdtZonaId_Volume.Text, 0), pEmbalagem);
+                                        pDocumentoNr, pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto,
+                                        StrToIntDef(EdtZonaId_Volume.Text, 0), pPendente, pEmbalagem);
             if JsonArrayRetorno.Items[0].tryGetValue<String>('Erro', vErro) then Begin
                LstVolumeConsulta.ClearRect(0, 1, LstVolumeConsulta.ColCount-1, LstVolumeConsulta.RowCount-1);
                LstVolumeConsulta.RowCount := 1;
@@ -2316,7 +2325,7 @@ begin
                            StrToIntDef(EdtPedido_AnalRua.Text, 0), StrToIntDef(EdtPedidoVolumeId.Text, 0),
                            EdtDocumentoNr_AnalRua.Text, 0, StrToIntDef(EdtDestinatario_AnalRua.Text, 0),
                            StrToIntDef(EdtProcessoId_AnalRua.Text, 0), StrToIntDef(EdtRotaId_AnalRua.Text, 0),
-                           vCodProdutoVolume );
+                           vCodProdutoVolume, vVolumePendente );
        End);
   End;
   if ChkAnalisePorRua.Checked then Begin

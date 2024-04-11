@@ -273,6 +273,7 @@ uses EnderecamentoZonaClass, EnderecamentoZonaCtrl, EnderecoEstruturaClass, Ende
 
 Procedure TFrmPrintTag.PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
 Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
+    vTipoEtiqueta : String;
   Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
   Var Lin, EtqPrint : Integer;
       vEndereco     : String;
@@ -342,7 +343,7 @@ Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
         ImprimirTexto(orNormal, 2, 1, 1, 72, 82, 'eXactWMS®', 0, False);
 //DESATIVAR PARA BRASIL
         if Pos('BRASIL', UpperCase(FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa)) <= 0 then Begin
-           if JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
+           if (vTipoEtiqueta = 'F') Then // JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
               ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Fracionados', 0, False)
            Else
               ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Cxa.Fechada', 0, False);
@@ -360,10 +361,13 @@ Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
 Begin
   for xJsonEtq := 0 to Pred(pJsonArray.Count) do Begin
     //Caixa Fechada
-    for EtqCxaFechada := 1 to pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdcxafechada') do
+    for EtqCxaFechada := 1 to pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdcxafechada') do Begin
+      vTipoEtiqueta := 'C'; //Caixa Fechada
       PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('fatorconversao'));
+    End;
     //Fracionados
     if pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada') > 0 then Begin
+       vTipoEtiqueta := 'F'; //Caixa Fracionada
        for EtqCxaFechada := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
          PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada'));
     End;

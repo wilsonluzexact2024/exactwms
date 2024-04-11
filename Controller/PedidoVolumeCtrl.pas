@@ -71,7 +71,8 @@ Type
     Function GetProducaoDiariaPorRua(pDataInicial, pDataFinal : TDateTime; pEstruturaId : Integer) : TJsonObject;
     Function GetProducaoDiariaPorSetor(pDataInicial, pDataFinal : TDateTime; pEstruturaId : Integer) : TJsonObject;
     Function GetVolumeConsulta(pDataInicial, pDataFinal : TDateTime; pPedidoId, pPedidoVolumeId : Integer;
-                                  pDocumentoNr : String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId : Integer; pEmbalagem : String) : TJsonArray;
+                                  pDocumentoNr : String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto,
+                                  pZonaId, pPendente : Integer; pEmbalagem : String) : TJsonArray;
     Function GetVolumeProdutosParaSeparacao(pPedidoId, pPedidoVolumeId : Integer) : TJsonArray;
     Function GetVolumeEAn(pPedidoVolumeId : Integer) : TJsonArray;
     Function SalvarColetaComRegistro(pJsonColetaRegistro : TJsonObject) : TJsonArray;
@@ -294,13 +295,13 @@ end;
 function TPedidoVolumeCtrl.GetVolumeConsulta(pDataInicial,
   pDataFinal: TDateTime; pPedidoId, pPedidoVolumeId: Integer;
   pDocumentoNr: String; pSequencia, pCodPessoa, pProcessoId, pRotaId,
-  pCodProduto, pZonaId : Integer; pEmbalagem : String): TJsonArray;
+  pCodProduto, pZonaId, pPendente : Integer; pEmbalagem : String): TJsonArray;
 Var ObjPedidoVolumeDAO : TPedidoVolumeDAO;
 begin
   Try
     ObjPedidoVolumeDAO := TPedidoVolumeDAO.Create;
     Result := ObjPedidoVolumeDAO.GetVolumeConsulta(pDataInicial, pDataFinal, pPedidoId, pPedidoVolumeId,
-              pDocumentoNr, pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId, pEmbalagem);
+              pDocumentoNr, pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId, pPendente, pEmbalagem);
     ObjPedidoVolumeDAO.Free;
   Except On E: Exception do Begin
     Result := TJsonArray.Create();

@@ -291,7 +291,6 @@ class procedure Tutil.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
   pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
 
 begin
-  exit;
   TTask.Create(
     procedure()
     Var

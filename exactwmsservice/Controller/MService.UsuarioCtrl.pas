@@ -359,13 +359,9 @@ begin
   Try
     Try
       UsuarioDAO := TUsuarioDao.Create;
-      Res.Status(200).Send<tJsonObject>
-        (UsuarioDAO.GetUsuario4D(Req.Query.Dictionary)).Status(THTTPStatus.Ok);
-    Except
-      On E: Exception do
-      Begin
-        Res.Status(500).Send<tJsonObject>
-          (tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
+      Res.Status(200).Send<tJsonObject>(UsuarioDAO.GetUsuario4D(Req.Query.Dictionary)).Status(THTTPStatus.Ok);
+    Except On E: Exception do Begin
+        Res.Status(500).Send<tJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;
     End;
   Finally

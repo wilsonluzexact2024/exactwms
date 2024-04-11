@@ -10,7 +10,7 @@ inherited FrmEntrada: TFrmEntrada
   inherited PgcBase: TcxPageControl
     Width = 1178
     Height = 577
-    Properties.ActivePage = TabListagem
+    Properties.ActivePage = TabProdutoSemPicking
     ExplicitWidth = 1178
     ExplicitHeight = 577
     ClientRectBottom = 577
@@ -17914,7 +17914,7 @@ inherited FrmEntrada: TFrmEntrada
         end
         object EdtEntradaId: TLabeledEdit
           Left = 81
-          Top = 33
+          Top = 32
           Width = 111
           Height = 24
           CustomHint = BalloonHint1
@@ -18070,8 +18070,8 @@ inherited FrmEntrada: TFrmEntrada
             Caption = 'Data'
           end
           object EdtDocumentoNr: TLabeledEdit
-            Left = 86
-            Top = 22
+            Left = 88
+            Top = 24
             Width = 111
             Height = 24
             CustomHint = BalloonHint1
@@ -30536,9 +30536,9 @@ inherited FrmEntrada: TFrmEntrada
           TabOrder = 0
           OnChange = EdtInicioChange
         end
-        object Edit2: TEdit
-          Left = 203
-          Top = 19
+        object EdtDoctoNrPSP: TEdit
+          Left = 204
+          Top = 21
           Width = 104
           Height = 24
           CustomHint = BalloonHint1
@@ -30577,7 +30577,7 @@ inherited FrmEntrada: TFrmEntrada
         end
         object EdtCodPessoa: TLabeledEdit
           Left = 55
-          Top = 31
+          Top = 33
           Width = 68
           Height = 24
           CustomHint = BalloonHint1
@@ -30843,9 +30843,9 @@ inherited FrmEntrada: TFrmEntrada
       end
       inherited BtnPesquisarStand: TsImage
         Left = 167
-        Top = 3
+        Top = 2
         ExplicitLeft = 167
-        ExplicitTop = 3
+        ExplicitTop = 2
       end
       inherited BtnImprimirStand: TsImage
         Left = 214

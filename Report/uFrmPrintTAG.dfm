@@ -34390,7 +34390,7 @@ inherited FrmPrintTag: TFrmPrintTag
           end
           object PnlEtqArmazenagemIndividual: TPanel
             Left = 185
-            Top = -1
+            Top = -4
             Width = 790
             Height = 180
             CustomHint = BalloonHint1
@@ -39807,11 +39807,11 @@ inherited FrmPrintTag: TFrmPrintTag
         ExplicitTop = 2
       end
       inherited BtnPrinterSetup: TsImage
-        Left = 152
-        Top = 4
+        Left = 155
+        Top = 5
         Visible = True
-        ExplicitLeft = 152
-        ExplicitTop = 4
+        ExplicitLeft = 155
+        ExplicitTop = 5
       end
     end
   end

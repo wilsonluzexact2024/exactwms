@@ -597,6 +597,7 @@ function TCargasDAO.GetCargaCarregarPedidos(const pCarga: Integer): TJSonArray;
 begin
   FConexao.Query.SQL.Add(TuEvolutConst.SqlCargaCarregarPedido);
   FConexao.Query.ParamByName('CargaId').Value := pCarga;
+  FConexao.Query.SQL.SaveToFile('CargaCarregarPedidos.Sql');
   FConexao.Query.Open();
   if FConexao.Query.IsEmpty then
   Begin

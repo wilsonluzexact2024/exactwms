@@ -2033,15 +2033,18 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
         OnClick = BtnPesqZonaClick
       end
       object CbDias: TComboBox
-        Left = 383
+        Left = 384
         Top = 38
         Width = 238
         Height = 25
         CustomHint = BalloonHint1
         Style = csDropDownList
+        ItemIndex = 0
         TabOrder = 2
+        Text = '   0 Dias'
         OnChange = CbDiasChange
         Items.Strings = (
+          '   0 Dias'
           ' 20 Dias'
           ' 30 Dias'
           ' 60 Dias'
@@ -2431,6 +2434,12 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
     inherited PanWin8: TPanel
       inherited BtnPesquisarStand: TsImage
         Top = 6
+        ExplicitTop = 6
+      end
+      inherited BtnImprimirStand: TsImage
+        Left = 118
+        Top = 6
+        ExplicitLeft = 118
         ExplicitTop = 6
       end
     end

@@ -30,47 +30,32 @@ Type
 procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Get4D(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetCargaCarregarPedidos(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetCargaCarregarClientes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetCargaCarregarVolumes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetCargaCarregarVolumesPessoa(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure GetCargaCarregarPedidos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetCargaCarregarClientes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetCargaCarregarVolumes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetCargaCarregarVolumesPessoa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure CancelarCarregamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure CancelarConferencia(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure CancelarCarregamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure CancelarConferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure CancelarCarga(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
-Procedure CargaCarregamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure CargaCarregamentoFinalizar(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure CargaCarregamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure CargaCarregamentoFinalizar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetCargaHearder(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetCargaPessoas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetCargaPedidos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetCargaPedidosRomaneio(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetCargaNotaFiscal(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetCargaPedidoVolumes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetCargaPedidosRomaneio(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetCargaNotaFiscal(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetCargaPedidoVolumes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetMapaCarga(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure CargaLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure PedidosParaCargas(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure PedidosParaCargasNFs(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetRelAnaliseConsolidada(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure PedidosParaCargas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure PedidosParaCargasNFs(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelAnaliseConsolidada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetResumoCarga(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure PutAtualizarStatus(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure PutAtualizarStatus(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -543,12 +528,9 @@ begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPedidos
-        (StrToIntDef(Req.Params.Items['cargaid'], 0),
-        StrToIntDef(Req.Params.Items['pessoaid'], 0),
-        Req.Params.Items['processo'])).Status(THTTPStatus.OK);
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPedidos(StrToIntDef(Req.Params.Items['cargaid'], 0),
+                           StrToIntDef(Req.Params.Items['pessoaid'], 0), Req.Params.Items['processo'])).Status(THTTPStatus.OK);
+    Except on E: Exception do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);
@@ -622,12 +604,9 @@ begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPedidosRomaneio
-        (StrToIntDef(Req.Params.Items['cargaid'], 0),
-        StrToIntDef(Req.Params.Items['pessoaid'], 0),
-        Req.Params.Items['processo'])).Status(THTTPStatus.Ok);
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPedidosRomaneio(StrToIntDef(Req.Params.Items['cargaid'], 0),
+                           StrToIntDef(Req.Params.Items['pessoaid'], 0), Req.Params.Items['processo'])).Status(THTTPStatus.Ok);
+    Except on E: Exception do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);

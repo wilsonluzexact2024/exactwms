@@ -1167,9 +1167,8 @@ function TServicePedidoVolume.GetVolume(pPedidoId, pPedidoVolumeId, pSequencia,
   pOrdem: Integer; pEmbalagem: String; pZonaId: Integer): TJsonArray;
 var
   vQry: TFdQuery;
-  JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
+  //JsonVolume, JsonPedido, JsonDestino, JsonRota: TJsonObject;
 begin
-
   try
     vQry := FConexao.GetQuery;
     Result := TJsonArray.Create;
@@ -1195,12 +1194,6 @@ begin
   Except
     ON E: Exception do
     Begin
-
-      Try
-        If Assigned(JsonVolume) Then
-          JsonVolume.Free;
-      Except
-      End;
       FConexao.DB.Connected := False;
       raise Exception.Create('Processo: GetVolume - ' + StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',

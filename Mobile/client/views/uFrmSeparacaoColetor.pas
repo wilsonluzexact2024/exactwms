@@ -307,13 +307,13 @@ type
     procedure RctF7Click(Sender: TObject);
     procedure LblF3Click(Sender: TObject);
     procedure RctF8Click(Sender: TObject);
-    procedure LblF9Click(Sender: TObject);
     procedure EdtLoteSubstituirKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure EdtLoteSubstituirExit(Sender: TObject);
     procedure RctF9Click(Sender: TObject);
     procedure EdtQtdeApanheLoteF3Validate(Sender: TObject; var Text: string);
     procedure EdtVolumeIdTyping(Sender: TObject);
+    procedure RctF3Click(Sender: TObject);
   private
     { Private declarations }
     LogOffCaixa            : Boolean;
@@ -2534,24 +2534,6 @@ begin
   End;
 end;
 
-procedure TFrmSeparacaoColetor.LblF9Click(Sender: TObject);
-begin
-  inherited;
-  If (Not GetVolumeComDivergencia) then Begin
-     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then Begin
-        ConfirmarCancelamentoDeVolume;
-        Exit;
-     End
-     Else if (Not LytLoteApanhe.Visible) or (EdtProduto.Text='') then
-        SetCampoDefault('EdtProduto')
-     Else SetCampoDefault('EdtLoteSeparacao');
-     ShowErro('Volume Extra não permitido!');
-     Exit;
-  End;
-  If (pPanelDigitarProduto) then
-     ConfirmarGeracaoVolumeExtra;
-end;
-
 procedure TFrmSeparacaoColetor.LiberarFuncaoBloqueada;
 begin
   inherited;
@@ -3048,6 +3030,27 @@ begin
   DelayEdSetFocus(EdtProduto);
 end;
 
+procedure TFrmSeparacaoColetor.RctF3Click(Sender: TObject);
+begin
+  inherited;
+  if ((FrmeXactWMS.ConfigWMS.ApanheConsolidado = 0) or (FrmeXactWMS.ConfigWMS.BeepProdIndividual = 0) or
+     ((FrmeXactWMS.ConfigWMS.BeepProdIndividual = 1) and (StrToIntDef(EdtQtdDemanda.Text,0)>FrmeXactWMS.ConfigWMS.BeepIndividualLimiteUnid))) then Begin
+     F3Press := True;
+     if LytLoteApanhe.Visible then Begin
+       EdtQtdeApanheLoteF3.ReadOnly := False;
+       DelayedSetFocus(EdtQtdeApanheLoteF3);
+       EdtProduto.ReadOnly       := False;
+       EdtLoteSeparacao.ReadOnly := False;
+     End
+     Else Begin
+       EdtQtdApanhe.ReadOnly := False;
+       DelayedSetFocus(EdtQtdApanhe);
+       EdtProduto.ReadOnly       := False;
+       EdtLoteSeparacao.ReadOnly := False;
+     End;
+  End;
+end;
+
 procedure TFrmSeparacaoColetor.RctF5Click(Sender: TObject);
 begin
   inherited;
@@ -3081,15 +3084,14 @@ begin
      if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then Begin
         ConfirmarCancelamentoDeVolume;
         Exit;
-     End
-     Else if (Not LytLoteApanhe.Visible) or (EdtProduto.Text='') then
-        SetCampoDefault('EdtProduto')
-     Else SetCampoDefault('EdtLoteSeparacao');
-     ShowErro('Volume Extra não permitido!');
-     Exit;
+     End;
   End;
-  If (pPanelDigitarProduto) then
-     ConfirmarGeracaoVolumeExtraForcado;
+  If (pPanelDigitarProduto) then Begin
+     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then
+        ConfirmarCancelamentoDeVolume
+     Else
+        ConfirmarGeracaoVolumeExtraForcado;
+  End;
 end;
 
 procedure TFrmSeparacaoColetor.RedistribuirApanheParaLotes;

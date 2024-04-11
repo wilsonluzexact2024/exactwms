@@ -739,8 +739,8 @@ Begin
           vDataFinal := 0;
         if AQueryParam.ContainsKey('pedidoid') then
           vPedidoId := StrToIntDef(AQueryParam.Items['pedidoid'], 0);
-        if AQueryParam.ContainsKey('codpessoa') then
-          vCodPessoaERP := StrToIntDef(AQueryParam.Items['codpessoa'], 0);
+        if AQueryParam.ContainsKey('codpessoaerp') then
+          vCodPessoaERP := StrToIntDef(AQueryParam.Items['codpessoaerp'], 0);
         if AQueryParam.ContainsKey('documentonr') then
           vDocumentoNr := AQueryParam.Items['documentonr'];
         JsonArrayRetorno := LService.GetEntradaProdutoSemPicking(vDataInicial,

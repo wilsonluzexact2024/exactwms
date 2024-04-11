@@ -980,35 +980,22 @@ begin
     Tutil.Gravalog('[GetVolume] terminal ' + ClientIP(Req));
     Try
       LService := TServicePedidoVolume.Create;
-      JsonArrayRetorno := LService.GetVolume
-        (StrToIntDef(Req.Params.Items['pedidoid'], 0),
-        StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
-        StrToIntDef(Req.Params.Items['sequencia'], 0),
-        StrToIntDef(Req.Params.Items['ordem'], 0),
-        Req.Params.Items['embalagem'],
-        StrToIntDef(Req.Params.Items['zonaid'], 0));
-      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      JsonArrayRetorno := LService.GetVolume(StrToIntDef(Req.Params.Items['pedidoid'], 0), StrToIntDef(Req.Params.Items['pedidovolumeid'], 0),
+                                             StrToIntDef(Req.Params.Items['sequencia'], 0), StrToIntDef(Req.Params.Items['ordem'], 0),
+                                             Req.Params.Items['embalagem'], StrToIntDef(Req.Params.Items['zonaid'], 0));
+                                             Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid', Trim(Req.Params.Content.Text), Req.Body, '',
+                      'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
+    Except on E: Exception do
       Begin
         Tutil.Gravalog('[GetVolume] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid',
-          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/:pedidoid/:pedidovolumeid/:sequencia/:ordem/:embalagem/:zonaid', Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
+                        ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
       End;
     End;
   Finally
@@ -1720,31 +1707,20 @@ begin
     Tutil.Gravalog('[1770-GetVolumeConsulta]  terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
-      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeConsulta
-        (Req.Query.Dictionary);
-      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
-        .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body,
-        '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeConsulta(Req.Query.Dictionary);
+      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
+    Except on E: Exception do
       Begin
-        Tutil.Gravalog('[1770-GetVolumeConsulta] ' + E.Message + ' terminal ' +
-          ClientIP(Req));
+        Tutil.Gravalog('[1770-GetVolumeConsulta] ' + E.Message + ' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body,
-          '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/consulta', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
       End;
     End;
   Finally

@@ -1278,7 +1278,9 @@ begin
 end;
 
 procedure TFrmBase.AfterCancelar;
+var teste : String;
 begin
+  teste := '';
   //
 end;
 

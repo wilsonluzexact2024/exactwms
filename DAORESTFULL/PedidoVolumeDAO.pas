@@ -58,7 +58,8 @@ Type
     Function GetProducaoDiariaPorRua(pDataInicial, pDataFinal: TDateTime; pEstruturaId: Integer): TJsonObject;
     Function GetProducaoDiariaPorSetor(pDataInicial, pDataFinal: TDateTime; pEstruturaId: Integer): TJsonObject;
     Function GetVolumeConsulta(pDataInicial, pDataFinal: TDateTime; pPedidoId, pPedidoVolumeId: Integer;
-                               pDocumentoNr: String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId : Integer; pEmbalagem : String): TJsonArray;
+                               pDocumentoNr: String; pSequencia, pCodPessoa, pProcessoId, pRotaId, pCodProduto,
+                               pZonaId , pPendente : Integer; pEmbalagem : String): TJsonArray;
     Function GetVolumeProdutosParaSeparacao(pPedidoId, pPedidoVolumeId: Integer): TJsonArray;
     Function GetVolumeEAN(pPedidoVolumeId: Integer): TJsonArray;
     Function SaveApanheProduto(pJsonApanhe: TJsonArray): TJsonArray;
@@ -258,7 +259,7 @@ end;
 
 function TPedidoVolumeDao.GetVolumeConsulta(pDataInicial, pDataFinal: TDateTime;
   pPedidoId, pPedidoVolumeId: Integer; pDocumentoNr: String; pSequencia,
-  pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId : Integer; pEmbalagem : String): TJsonArray;
+  pCodPessoa, pProcessoId, pRotaId, pCodProduto, pZonaId, pPendente : Integer; pEmbalagem : String): TJsonArray;
 Var vResourceURI : String;
 begin
   Try
@@ -286,6 +287,7 @@ begin
        vResourceURI := vResourceURI+'&codproduto='+pCodProduto.ToString();
     if pZonaId <> 0 then
        vResourceURI := vResourceURI+'&zonaid='+pZonaId.ToString();
+    vResourceURI := vResourceURI+'&pendente='+pPendente.ToString();
     vResourceURI := vResourceURI+'&embalagem='+pEmbalagem;
     vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
     DmeXactWMS.RESTRequestWMS.Resource := vResourceURI;

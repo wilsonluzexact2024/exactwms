@@ -738,6 +738,7 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
                       Size.Height = 20.000000000000000000
                       Size.PlatformDefault = False
                       Stroke.Color = claNull
+                      OnClick = RctF3Click
                       object LblF3: TLabel
                         Align = Client
                         AutoSize = True
@@ -825,7 +826,6 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
                         TextSettings.Font.Size = 10.000000000000000000
                         Text = 'F9 Vol.Extra'
                         TabOrder = 0
-                        OnClick = LblF9Click
                       end
                     end
                     object RctF5: TRectangle

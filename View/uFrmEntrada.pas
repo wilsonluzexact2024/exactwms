@@ -217,7 +217,7 @@ type
     Label53: TLabel;
     Label54: TLabel;
     EdtPedidoId: TEdit;
-    Edit2: TEdit;
+    EdtDoctoNrPSP: TEdit;
     GroupBox15: TGroupBox;
     EdtCodPessoa: TLabeledEdit;
     BtnPesqFornecedor: TBitBtn;
@@ -2592,7 +2592,7 @@ begin
     begin
       LblTotRegSemPicking.Caption := '';
       ObjEntradaCtrl   := TEntradaCtrl.Create;
-      JsonArrayRetorno := ObjEntradaCtrl.GetProdutoSemPicking(vDataInicial, vDataFinal, StrToIntDef(EdtPedidoId.Text, 0), StrToIntDef(EdtPessoaId.Text, 0), EdtDocumentoNr.Text);
+      JsonArrayRetorno := ObjEntradaCtrl.GetProdutoSemPicking(vDataInicial, vDataFinal, StrToIntDef(EdtPedidoId.Text, 0), StrToIntDef(EdtCodPessoa.Text, 0), EdtDoctoNrPSP.Text);
       if JsonArrayRetorno.Items[0].tryGetValue<String>('Erro', vErro) then Begin
          ShowErro('😢Erro: '+vErro);
          BtnImprimirStand.Grayed := False;
