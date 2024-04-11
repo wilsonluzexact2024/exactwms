@@ -761,43 +761,35 @@ begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlRelCargaAnaliseConsolidada);
     if AParams.ContainsKey('datainicial') then
-      FConexao.Query.ParamByName('pdatainicial').Value :=
-        FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datainicial']))
+      FConexao.Query.ParamByName('pdatainicial').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datainicial']))
     Else
       FConexao.Query.ParamByName('pdatainicial').Value := 0;
     if AParams.ContainsKey('datafinal') then
-      FConexao.Query.ParamByName('pdatafinal').Value :=
-        FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datafinal']))
+      FConexao.Query.ParamByName('pdatafinal').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datafinal']))
     Else
       FConexao.Query.ParamByName('pdatafinal').Value := 0;
     if AParams.ContainsKey('rotainicialid') then
-      FConexao.Query.ParamByName('pRotaInicial').AsInteger :=
-        AParams.Items['rotainicialid'].Tointeger
+      FConexao.Query.ParamByName('pRotaInicial').AsInteger := AParams.Items['rotainicialid'].Tointeger
     Else
       FConexao.Query.ParamByName('pRotaInicial').AsInteger := 0;
     if AParams.ContainsKey('rotafinalid') then
-      FConexao.Query.ParamByName('pRotaFinal').AsInteger :=
-        AParams.Items['rotafinalid'].Tointeger
+      FConexao.Query.ParamByName('pRotaFinal').AsInteger := AParams.Items['rotafinalid'].Tointeger
     Else
       FConexao.Query.ParamByName('pRotaFinal').AsInteger := 0;
     if AParams.ContainsKey('zonaid') then
-      FConexao.Query.ParamByName('pZonaId').AsInteger :=
-        AParams.Items['zonaid'].Tointeger
+      FConexao.Query.ParamByName('pZonaId').AsInteger := AParams.Items['zonaid'].Tointeger
     Else
       FConexao.Query.ParamByName('pZonaId').AsInteger := 0;
     if AParams.ContainsKey('codpessoa') then
-      FConexao.Query.ParamByName('pCodPessoa').AsInteger :=
-        AParams.Items['codpessoa'].Tointeger
+      FConexao.Query.ParamByName('pCodPessoa').AsInteger := AParams.Items['codpessoa'].Tointeger
     Else
       FConexao.Query.ParamByName('pCodPessoa').AsInteger := 0;
     if AParams.ContainsKey('somenteexpedido') then
-      FConexao.Query.ParamByName('pSomenteExpedido').Value :=
-        AParams.Items['somenteexpedido'].Tointeger()
+      FConexao.Query.ParamByName('pSomenteExpedido').Value := AParams.Items['somenteexpedido'].Tointeger()
     Else
       FConexao.Query.ParamByName('pSomenteExpedido').Value := 0;
     if AParams.ContainsKey('ordem') then
-      FConexao.Query.ParamByName('pOrdem').Value := AParams.Items['ordem']
-        .Tointeger()
+      FConexao.Query.ParamByName('pOrdem').Value := AParams.Items['ordem'].Tointeger()
     Else
       FConexao.Query.ParamByName('pOrdem').Value := 0;
     // if AParams.ContainsKey('limit') then begin
@@ -812,8 +804,7 @@ begin
     if FConexao.Query.IsEmpty then
     Begin
       Result := TJSonArray.Create();
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        TuEvolutConst.QrySemDados));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
     End
     Else
       Result := FConexao.Query.ToJSONArray();

@@ -597,17 +597,17 @@ Const SqlPedidoParaCargas = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
                             'Left Join (select Pv.PedidoId, SUM(Vl.QtdSuprida) QtdSuprida,'+sLineBreak+
                             '                  Sum((Case When De.ProcessoId < 13 then vl.QtdSuprida Else 0 End)) Processado,'+sLineBreak+
                             '             	    Sum((Case When De.ProcessoId >= 13 and De.ProcessoId Not in (15, 31) then vl.QtdSuprida Else 0 End)) Concluido'+sLineBreak+
-                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemid Is Null) Then'+sLineBreak+
+                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemid Is Null)) Then'+sLineBreak+
                             '				               vl.Peso'+sLineBreak+
                             '							Else'+sLineBreak+
                             '							   Vl.Peso+(Ve.Tara/1000)'+sLineBreak+
                             '							End) Peso'+sLineBreak+
-                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemid Is Null) Then'+sLineBreak+
+                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemid Is Null)) Then'+sLineBreak+
                             '				               VolCm3'+sLineBreak+
                             '							Else'+sLineBreak+
                             '							   Ve.Altura*Ve.Largura*Ve.Comprimento'+sLineBreak+
                             '							End) VolCm3'+sLineBreak+
-                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemid Is Null) Then'+sLineBreak+
+                            '				 , SUM(Case When (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemid Is Null)) Then'+sLineBreak+
                             '				               Volm3'+sLineBreak+
                             '							Else'+sLineBreak+
                             '							   Ve.Altura*Ve.Largura*Ve.Comprimento'+sLineBreak+
@@ -3887,9 +3887,9 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       + sLineBreak +
     // '				             , Sum(Case when (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemId Is Null) then 0 Else Ve.Tara End) PesoCaixa'+sLineBreak+
     // '				             , Sum(Case when (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemId Is Null) then 0 Else (Ve.Altura*Ve.Largura*Ve.Comprimento) End) VolumeCaixa'+sLineBreak+
-      '				             , Sum(Case when (Pv.EmbalagemId Is Null or (Pv.CaixaEmbalagemId Is Null And De.ProcessoId < 13)) then 0'
+      '				             , Sum(Case when (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemId Is Null And De.ProcessoId < 13)) then 0'
       + sLineBreak + '							Else Ve.Tara End) PesoCaixa' + sLineBreak
-      + '				 , Sum(Case when (Pv.EmbalagemId Is Null or (Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then 0'
+      + '				 , Sum(Case when (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then 0'
       + sLineBreak +
       '							Else (Ve.Altura*Ve.Largura*Ve.Comprimento) End) VolumeCaixa'
       + sLineBreak +
@@ -3899,11 +3899,11 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
     // '				                        Else Vl.PesoProduto+Ve.Tara End) PesoTotal'+sLineBreak+
     // '				             , Sum(Case when (Pv.EmbalagemId Is Null or Pv.CaixaEmbalagemId Is Null) then Vl.CubagemProduto'+sLineBreak+
     // '				                        Else (Ve.Altura*Ve.Largura*Ve.Comprimento) End) CubagemTotal'+sLineBreak+
-      '	           			 , Sum(Case when (Pv.EmbalagemId Is Null or (Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then Vl.PesoProduto'
+      '	           			 , Sum(Case when (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then Vl.PesoProduto'
       + sLineBreak +
       '				                       Else Vl.PesoProduto+Ve.Tara End) PesoTotal'
       + sLineBreak +
-      '				            , Sum(Case when (Pv.EmbalagemId Is Null or (Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then Vl.CubagemProduto'
+      '				            , Sum(Case when (Pv.EmbalagemId Is Null or (1=2 and Pv.CaixaEmbalagemId Is Null And De.ProcessoId >= 13)) then Vl.CubagemProduto'
       + sLineBreak +
       '				                       Else (Ve.Altura*Ve.Largura*Ve.Comprimento) End) CubagemTotal'
       + sLineBreak + '			         From PedidoVolumes Pv' + sLineBreak +

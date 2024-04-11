@@ -149,10 +149,8 @@ begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      Res.Send<TJsonArray>(ObjCargaDAO.GetRelAnaliseConsolidada
-        (Req.Query.Dictionary)).Status(THTTPStatus.OK);
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(ObjCargaDAO.GetRelAnaliseConsolidada(Req.Query.Dictionary)).Status(THTTPStatus.OK);
+    Except on E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
