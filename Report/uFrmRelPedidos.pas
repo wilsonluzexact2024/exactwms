@@ -2032,6 +2032,14 @@ begin
   for xProd := 0 to Pred(pJsonArray.Count) do Begin
     LstPedidoResumoAdv.Cells[0, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('produtoid');
     LstPedidoResumoAdv.Cells[1, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('codproduto');
+    if (EdtCodProduto.Text<>'') and (StrToIntDef(EdtCodproduto.Text, 0)=pJsonArray.Get(xProd).GetValue<Integer>('codproduto')) then Begin
+        LstPedidoResumoAdv.FontColors[1, xProd+1] := $004080FF;
+        LstPedidoResumoAdv.FontStyles[1, xProd+1] := [FsBold];
+        End
+    Else Begin
+        LstPedidoResumoAdv.FontColors[1, xProd+1] := LstPedidoResumoAdv.FontColors[0, xProd+1];
+        LstPedidoResumoAdv.FontStyles[1, xProd+1] := [];
+    End;
     LstPedidoResumoAdv.Cells[2, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('descricao');
     LstPedidoResumoAdv.Cells[3, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('picking');
     LstPedidoResumoAdv.Cells[4, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('zonadescricao');

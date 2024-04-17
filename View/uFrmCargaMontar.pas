@@ -475,9 +475,9 @@ begin
   vQtdVolumes  := 0;
   for xPed := 1 to Pred(LstAdvPedidos.RowCount) do Begin
     if LstAdvPedidos.Cells[10, xPed] = '1' then Begin
-       vPesoSel     := vPesoSel   + StrToFloat(LstAdvPedidos.Cells[8, xPed]);
-       vVolumeSel   := vVolumeSel + StrToFloat(LstAdvPedidos.Cells[9, xPed]);
-       vQtdVolumes  := vQtdVolumes  + (StrToInt(LstAdvPedidos.Cells[5, xPed])+StrToInt(LstAdvPedidos.Cells[6, xPed]));
+       vPesoSel     := vPesoSel    + StrToFloat(LstAdvPedidos.Cells[8, xPed]);
+       vVolumeSel   := vVolumeSel  + StrToFloat(LstAdvPedidos.Cells[9, xPed]);
+       vQtdVolumes  := vQtdVolumes + (StrToInt(LstAdvPedidos.Cells[5, xPed]));//+StrToInt(LstAdvPedidos.Cells[6, xPed]));
     End;
     vPesoGeral   := vPesoGeral   + StrToFloat(LstAdvPedidos.Cells[8, xPed]);
     vVolumeGeral := vVolumeGeral + StrToFloat(LstAdvPedidos.Cells[9, xPed]);
@@ -1028,26 +1028,18 @@ begin
     begin
       ObjPedCtrl := TPedidoSaidaCtrl.Create;
       Try
-//        JsonArrayRet := ObjPedCtrl.PedidoProcessar(0, 0, 0, vDtInicio, vDtFinal,
-//                                                   '', '', '', StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtRotaId.Text, 0), 0, 13, 1, 1, 1, False, pMontagemCarga, 0, 0, StrToIntDef(EdtcargaId.Text, 0), '', 2, 2);
         JsonArrayRet := ObjPedCtrl.PedidoParaCargas(0, 0, 0, vDtInicio, vDtFinal,
                                                    '', '', '', StrToIntDef(EdtRotaId.Text, 0), StrToIntDef(EdtRotaId.Text, 0), 0,
                                                    pMontagemCarga, StrToIntDef(EdtcargaId.Text, 0));
-
-      Except
+       Except
       End;
       if JsonArrayRet.Get(0).tryGetValue<String>('Erro', vErro) then Begin
          ShowErro('😢Erro: '+vErro);
-         //Player('toast4');
          LstAdvPedidos.ClearRect(0, 1, LstAdvPedidos.ColCount-1, LstAdvPedidos.RowCount-1);
          LstAdvPedidos.RowCount := 1;
       End
       Else Begin
          MontaPedidoCarga(JsonArrayRet);
-    //     If FdMemPesqGeral.Active then
-    //        FdmemPesqGeral.EmptyDataSet;
-    //     FdMemPesqGeral.Close;
-    //     FdMemPesqGeral.loadFromJson(JsonArrayRet, False);
       End;
       JsonArrayRet := Nil;
       ObjPedCtrl.Free;
@@ -1240,6 +1232,7 @@ begin
   TotVolume.Caption           := '0 m3';
   LblPesoCarga.Caption        := '0 Kg';
   LblVolumeCarga.Caption      := '0 m3';
+  LblQtdVolumeCarga.Caption   := '0';
   LstAdvClientesRota.ClearRect(0, 1, LstAdvClientesRota.ColCount-1, LstAdvClientesRota.RowCount-1);
   LstAdvClientesRota.RowCount := 1;
   LstAdvPedidos.ClearRect(0, 1, LstAdvPedidos.ColCount-1, LstAdvPedidos.RowCount-1);

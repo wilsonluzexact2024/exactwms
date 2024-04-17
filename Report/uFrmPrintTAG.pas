@@ -528,6 +528,7 @@ begin
 end;
 
 procedure TFrmPrintTag.BtnPesqProdutoClick(Sender: TObject);
+Var vSender : TObject;
 begin
   inherited;
   if EdtCodProduto.ReadOnly then Exit;
@@ -536,16 +537,20 @@ begin
   try
     if (FrmPesquisaProduto.ShowModal = mrOk) then Begin
        if Sender = EdtCodProduto then Begin
+          vSender :=  EdtCodProduto;
           EdtCodProduto.Text := FrmPesquisaProduto.Tag.ToString();
           EdtCodProdutoExit(EdtCodProduto);
        End
        Else Begin
+          vSender := EdtCodProdutoEtqIndividual;
           EdtCodProdutoEtqIndividual.Text := FrmPesquisaProduto.Tag.ToString();
           EdtCodProdutoEtqIndividualExit(EdtCodProdutoEtqIndividual);
        End;
     End;
   finally
     FreeAndNil(FrmPesquisaProduto);
+    if (vSender = EdtCodProdutoEtqIndividual) and (EdtCodProdutoEtqIndividual.Text='')then
+       ShowErro('Não foi encontrado lotes/estoque desse produto.');
   end;
 end;
 
@@ -823,18 +828,18 @@ begin
      FDMemProdutoLotesEtqArmazenagem.Edit;
      FDMemProdutoLotesEtqArmazenagem.FieldByName('Impr').AsInteger := 1;
      FDMemProdutoLotesEtqArmazenagem.Post;
+     if Not RgPrinterEtqIndividual.ItemIndex < 0 then
+        RgPrinterEtqIndividual.SetFocus;
+     BtnEtqIndividual.Enabled := True;
   End
   else Begin
-     ShowErro('Não foi encontrado lotes/estoque desse produto.');
      EdtCodProdutoEtqIndividual.Clear;
      EdtCodProdutoEtqIndividual.SetFocus;
+     //ShowErro('Não foi encontrado lotes/estoque desse produto.');
   End;
-  if Not RgPrinterEtqIndividual.ItemIndex < 0 then
-     RgPrinterEtqIndividual.SetFocus;
   JsonArrayEstoque := Nil;
   ObjEstoqueCtrl.Free;
   //BtnEtqIndividual.Grayed  := False;
-  BtnEtqIndividual.Enabled := True;
 end;
 
 procedure TFrmPrintTag.EdtCodProdutoExit(Sender: TObject);

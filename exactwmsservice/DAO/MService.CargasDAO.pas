@@ -1046,50 +1046,42 @@ begin
 end;
 
 function TCargasDAO.PedidosParaCargas(const AParams : TDictionary<string, string>): TJSonArray;
-var
-  JsonCargas: TJsonObject;
+var JsonCargas: TJsonObject;
 begin
   FConexao.Query.SQL.Add(TuEvolutConst.SqlRelPedidosParaCargas);
   if AParams.ContainsKey('datainicial') then
-    FConexao.Query.ParamByName('pdatainicial').Value :=
-      FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datainicial']))
+     FConexao.Query.ParamByName('pdatainicial').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datainicial']))
   Else
-    FConexao.Query.ParamByName('pdatainicial').Value := 0;
+     FConexao.Query.ParamByName('pdatainicial').Value := 0;
   if AParams.ContainsKey('datafinal') then
-    FConexao.Query.ParamByName('pdatafinal').Value :=
-      FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datafinal']))
+     FConexao.Query.ParamByName('pdatafinal').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(AParams.Items['datafinal']))
   Else
-    FConexao.Query.ParamByName('pdatafinal').Value := 0;
+     FConexao.Query.ParamByName('pdatafinal').Value := 0;
   if AParams.ContainsKey('codpessoaerp') then
-    FConexao.Query.ParamByName('pCodPessoaERP').AsInteger :=
-      AParams.Items['codpessoaerp'].Tointeger
+    FConexao.Query.ParamByName('pCodPessoaERP').AsInteger := AParams.Items['codpessoaerp'].Tointeger
   Else
     FConexao.Query.ParamByName('pCodPessoaERP').AsInteger := 0;
   if AParams.ContainsKey('rotaid') then
-    FConexao.Query.ParamByName('protaid').AsInteger := AParams.Items['rotaid']
-      .Tointeger
+     FConexao.Query.ParamByName('protaid').AsInteger := AParams.Items['rotaid'].Tointeger
   Else
-    FConexao.Query.ParamByName('protaid').AsInteger := 0;
+     FConexao.Query.ParamByName('protaid').AsInteger := 0;
   if AParams.ContainsKey('zonaid') then
-    FConexao.Query.ParamByName('pzonaid').AsInteger := AParams.Items['zonaid']
-      .Tointeger
+     FConexao.Query.ParamByName('pzonaid').AsInteger := AParams.Items['zonaid'].Tointeger
   Else
-    FConexao.Query.ParamByName('pzonaid').AsInteger := 0;
+     FConexao.Query.ParamByName('pzonaid').AsInteger := 0;
   if AParams.ContainsKey('processoid') then
-    FConexao.Query.ParamByName('pprocessoid').Value :=
-      AParams.Items['processoid'].Tointeger()
+     FConexao.Query.ParamByName('pprocessoid').Value := AParams.Items['processoid'].Tointeger()
   Else
-    FConexao.Query.ParamByName('pprocessoid').Value := 0;
+     FConexao.Query.ParamByName('pprocessoid').Value := 0;
   if DebugHook <> 0 then
      FConexao.Query.SQL.SaveToFile('PedidoParaCargas.Sql');
   FConexao.Query.Open();
-  if FConexao.Query.IsEmpty then
-  Begin
-    Result := TJSonArray.Create();
-    Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
+  if FConexao.Query.IsEmpty then Begin
+     Result := TJSonArray.Create();
+     Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
   End
   Else
-    Result := FConexao.Query.ToJSONArray();
+     Result := FConexao.Query.ToJSONArray();
 end;
 
 function TCargasDAO.PedidosParaCargasNFs(const AParams

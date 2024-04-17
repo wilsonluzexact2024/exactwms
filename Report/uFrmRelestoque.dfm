@@ -83,8 +83,8 @@ inherited FrmRelEstoque: TFrmRelEstoque
         Caption = ' [ Produto ] '
         TabOrder = 0
         object LblProduto: TLabel
-          Left = 173
-          Top = 21
+          Left = 172
+          Top = 23
           Width = 12
           Height = 16
           CustomHint = BalloonHint1
@@ -183,7 +183,7 @@ inherited FrmRelEstoque: TFrmRelEstoque
         end
         object EdtProdutoId: TEdit
           Left = 17
-          Top = 15
+          Top = 17
           Width = 130
           Height = 25
           CustomHint = BalloonHint1

@@ -312,7 +312,7 @@ begin
   FrmPesquisaProduto := TFrmPesquisaProduto.Create(Application);
   try
     if (FrmPesquisaProduto.ShowModal = mrOk) then  Begin
-       if Sender = EdtProdutoid then Begin
+       if Sender = BtnSchProduto then Begin
           EdtProdutoId.Text := FrmPesquisaProduto.Tag.ToString();
           EdtProdutoIdExit(EdtProdutoId);
        End

@@ -3,7 +3,6 @@ inherited FrmCargaMontar: TFrmCargaMontar
   ClientHeight = 690
   ClientWidth = 1278
   OnDestroy = FormDestroy
-  ExplicitLeft = -413
   ExplicitWidth = 1280
   ExplicitHeight = 692
   PixelsPerInch = 96
@@ -16,6 +15,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
     ClientRectBottom = 635
     ClientRectRight = 1279
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1279
       ExplicitHeight = 611
       inherited LstCadastro: TAdvStringGrid
@@ -6310,7 +6310,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
             end
             object Label18: TLabel
               Left = 4
-              Top = 121
+              Top = 118
               Width = 87
               Height = 16
               CustomHint = BalloonHint1
@@ -6339,7 +6339,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
               ParentFont = False
             end
             object LblVolumeCarga: TLabel
-              Left = 194
+              Left = 196
               Top = 122
               Width = 31
               Height = 16
@@ -6456,10 +6456,12 @@ inherited FrmCargaMontar: TFrmCargaMontar
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1279
       ExplicitHeight = 611
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1279
       ExplicitHeight = 611
       inherited DbgImporta: TDBGrid
@@ -7135,13 +7137,19 @@ inherited FrmCargaMontar: TFrmCargaMontar
     ExplicitWidth = 1278
     inherited LblMensShowErro: TLabel
       Width = 1278
+      Height = 22
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 991
-    Top = 342
-    ExplicitLeft = 991
-    ExplicitTop = 342
+    Left = 986
+    Top = 398
+    ExplicitLeft = 986
+    ExplicitTop = 398
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited TmFrameWeb: TTimer
     Left = 287

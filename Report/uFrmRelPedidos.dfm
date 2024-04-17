@@ -460,7 +460,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabVolumes
+        Properties.ActivePage = TabResumo
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 522
@@ -2423,7 +2423,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
           Caption = 'C'#243'digo'
         end
         object LblProduto: TLabel
-          Left = 160
+          Left = 158
           Top = 24
           Width = 326
           Height = 16
@@ -2443,6 +2443,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
           Width = 72
           Height = 24
           CustomHint = BalloonHint1
+          Color = clWhite
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -13

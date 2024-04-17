@@ -30,50 +30,34 @@ type
     Function Cancelar(pConexao: TFdConnection; pJsonObject: TJsonObject)
       : TJsonArray;
     Function EtiquetaVolumePorRua(pJsonObject: TJsonObject): TJsonArray;
-    Function RegistrarDocumentoEtapa(pJsonDocumentoEtapa: TJsonObject)
-      : TJsonArray;
-    Function RegistrarDocumentoEtapaComBaixaEstoque(pJsonDocumentoEtapa
-      : TJsonObject): TJsonArray;
-    Function RegistrarDocumentoEtapaSemBaixaEstoque(pJsonDocumentoEtapa
-      : TJsonObject): TJsonArray;
-    Function VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId, pZonaId, pPrintTag,
-      pEmbalagem: Integer): TJsonArray;
+    Function RegistrarDocumentoEtapa(pJsonDocumentoEtapa: TJsonObject)  : TJsonArray;
+    Function RegistrarDocumentoEtapaComBaixaEstoque(pJsonDocumentoEtapa : TJsonObject): TJsonArray;
+    Function RegistrarDocumentoEtapaSemBaixaEstoque(pJsonDocumentoEtapa : TJsonObject): TJsonArray;
+    Function VolumeParaEtiquetas(pPedidoId, pPedidoVolumeId, pZonaId, pPrintTag, pEmbalagem: Integer): TJsonArray;
     Function VolumeExpedicao: TJsonArray;
     Function VolumeExpedido: TJsonArray;
-    Function GetVolume(pPedidoId, pPedidoVolumeId, pSequencia, pOrdem: Integer;
-      pEmbalagem: String; pZonaId: Integer): TJsonArray;
-    Function GetOpenVolumeParaSeparacao(pCaixaId, pPedidoVolumeId,
-      pUsuarioId: Integer; pTerminal: String): TJsonArray;
+    Function GetVolume(pPedidoId, pPedidoVolumeId, pSequencia, pOrdem: Integer; pEmbalagem: String; pZonaId: Integer): TJsonArray;
+    Function GetOpenVolumeParaSeparacao(pCaixaId, pPedidoVolumeId, pUsuarioId: Integer; pTerminal: String): TJsonArray;
     Function GetVolumeRegistrarExpedicao(pPedidoVolumeId: Integer): TJsonArray;
-    Function GetVolumePrintTag(pPedidoId, pPedidoVolumeId, pSequencia,
-      pOrdem: Integer; pZonaId: Integer; pPrintTag: Integer;
+    Function GetVolumePrintTag(pPedidoId, pPedidoVolumeId, pSequencia, pOrdem: Integer; pZonaId: Integer; pPrintTag: Integer;
       pEmbalagem: Integer): TJsonArray;
-    Function GerarVolumeExtra(pPedidoVolumeId, pUsuarioId: Integer;
-      pJsonArrayProdutoCortes: TJsonArray): TJsonArray;
-    Function GetAuditoriaVolumes(const AParams: TDictionary<string, string>)
-      : TJsonArray;
-    Function GetAuditoriaCorteAnalitico(const AParams
-      : TDictionary<string, string>): TJsonArray;
+    Function GerarVolumeExtra(pPedidoVolumeId, pUsuarioId: Integer; pJsonArrayProdutoCortes: TJsonArray): TJsonArray;
+    Function GetAuditoriaVolumes(const AParams: TDictionary<string, string>) : TJsonArray;
+    Function GetAuditoriaCorteAnalitico(const AParams : TDictionary<string, string>): TJsonArray;
     Function VolumeLoteSubstituicao(pJsonObjectLotes: TJsonObject): TJsonArray;
-    Function CaixaSeparacao(pPedidoVolumeId, pCaixaEmbalagemId: Integer)
-      : TJsonArray;
-    Function Getdshvolumeevolucao_quantidade(pDataIni: TDateTime;
-      pRotaId, pZonaId, pCodPessoaERP: Integer): TJsonArray;
-    Function Getdshvolumeevolucao_Unidades(pDataIni: TDateTime;
-      pRotaId, pZonaId, pCodPessoaERP: Integer): TJsonArray;
+    Function CaixaSeparacao(pPedidoVolumeId, pCaixaEmbalagemId: Integer) : TJsonArray;
+    Function Getdshvolumeevolucao_quantidade(pDataIni: TDateTime; pRotaId, pZonaId, pCodPessoaERP: Integer): TJsonArray;
+    Function Getdshvolumeevolucao_Unidades(pDataIni: TDateTime; pRotaId, pZonaId, pCodPessoaERP: Integer): TJsonArray;
     Function ResetSeparacao(pPedidoVolumeId: Integer): TJsonArray;
     Function FinalizarSeparacao(pJsonObject: TJsonObject): TJsonObject;
     Function GetVolumeComDivergencia(pPedidoVolumeId: Integer): TJsonArray;
-    Function GetPedidoVolumeProdutoLote(pPedidoId, pCodProduto: Integer)
-      : TJsonArray;
+    Function GetPedidoVolumeProdutoLote(pPedidoId, pCodProduto: Integer) : TJsonArray;
     Function GetVolumeEAN(pPedidoVolumeId: Integer): TJsonArray;
     Function SaveApanheProdutos(pJsonArray: TJsonArray): TJsonArray;
-    Function SalvarColetaComRegistro(pJsonColetaRegistro: TJsonObject)
-      : TJsonArray;
-    Function salvarultimoenderecocoletado(pPedidoVolumeId, pEnderecoId: Integer)
-      : TJsonArray;
+    Function SalvarColetaComRegistro(pJsonColetaRegistro: TJsonObject) : TJsonArray;
+    Function salvarultimoenderecocoletado(pPedidoVolumeId, pEnderecoId: Integer) : TJsonArray;
     Function BaixarEstoqueExpedicao: Boolean;
-    Function GetPedidoCxaFechadaCheckOut(pPedidoVolumeId: Integer): TJsonObject;
+    Function GetPedidoCxaFechadaCheckOut(pPedidoVolumeId, pUsuarioId : Integer; pTerminal : String): TJsonObject;
 
     constructor Create; overload;
     destructor Destroy; override;
@@ -1054,11 +1038,8 @@ begin
   end;
 end;
 
-function TServicePedidoVolume.GetPedidoCxaFechadaCheckOut(pPedidoVolumeId
-  : Integer): TJsonObject;
-Var
-  vErro: String;
-
+function TServicePedidoVolume.GetPedidoCxaFechadaCheckOut(pPedidoVolumeId, pUsuarioId : Integer; pTerminal : String): TJsonObject;
+Var vErro: String;
 Begin
   if (pPedidoVolumeId = 0) then
     raise Exception.Create('Informe o volume para CheckOut!');
@@ -1069,28 +1050,20 @@ Begin
     FConexao.Query.Sql.Add(TuEvolutConst.SqlPedidoCxaFechadaCheckOut);
     FConexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
     if DebugHook <> 0 then
-      FConexao.Query.Sql.SaveToFile('GetPedidoCxaFechadaCheckOut.Sql');
+       FConexao.Query.Sql.SaveToFile('GetPedidoCxaFechadaCheckOut.Sql');
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
-    Begin
-      Result.AddPair('Erro', 'Volume n�o encontrado!');
-    End
+      Result.AddPair('Erro', 'Volume não encontrado!')
     Else
     Begin
       vErro := '';
       case FConexao.Query.FieldByName('ProcessoId').AsInteger of
-        2:
-          vErro := 'Imprima a Etiqueta.';
-        10, 11, 12, 13:
-          vErro := 'Situa��o Volume: ' + FConexao.Query.FieldByName
-            ('Processo').AsString;
-        15:
-          vErro := 'Volume Cancelado.';
+        2: vErro := 'Imprima a Etiqueta.';
+        10, 11, 12, 13: vErro := 'Processo Volume: ' + FConexao.Query.FieldByName('Processo').AsString;
+        15: vErro := 'Volume Cancelado.';
       end;
       if vErro <> '' then
-      Begin
-        Result.AddPair('Erro', vErro);
-      End
+        Result.AddPair('Erro', vErro)
       Else
       Begin
         Result.AddPair('volume', FConexao.Query.ToJsonArray);
@@ -1116,6 +1089,17 @@ Begin
           FConexao.Query.Open();
           Result.AddPair('codbarras', FConexao.Query.ToJsonArray);
         End;
+        //Registrar Inicio do Processo de CheckOut
+        FConexao.Query.Close;
+        FConexao.Query.Sql.Clear;
+        FConexao.Query.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
+        FConexao.Query.Sql.Add('                                  where ' + 'PedidoVolumeId = ' +
+                     pPedidoVolumeId.ToString() + ')');
+        FConexao.Query.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+        FConexao.Query.ParamByName('pProcessoId').Value := 9;
+        FConexao.Query.ParamByName('pUsuarioId').Value  := pusuarioid;
+        FConexao.Query.ParamByName('pTerminal').Value   := pTerminal;
+        FConexao.Query.ExecSQL;
       End;
     End;
   Except
@@ -1527,44 +1511,41 @@ begin
     vQryPedStatus := FConexao.GetQuery;
     vQryPedStatus.connection := vQry.connection;
     vQry.connection.StartTransaction;
-    vQry.Sql.Add
-      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
-    vQry.Sql.Add('                                  where ' +
-      'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
-      ('pedidovolumeid').ToString() + ')');
+    vQry.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
+    vQry.Sql.Add('                                  where ' + 'PedidoVolumeId = ' +
+                 pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid').ToString() + ')');
+    //Registrar Finalização do Checkout com Expedicao Automática
     vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-    vQry.ParamByName('pProcessoId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('processoid');
-    vQry.ParamByName('pUsuarioId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>
-      ('estacao');
+    vQry.ParamByName('pProcessoId').Value := 10;
+    vQry.ParamByName('pUsuarioId').Value  := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQry.ExecSQL;
+    vQry.Close;
+    vQry.Sql.Clear;
+    vQry.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
+    vQry.Sql.Add('                                  where ' + 'PedidoVolumeId = ' +
+                 pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid').ToString() + ')');
+    vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+    vQry.ParamByName('pProcessoId').Value := pJsonDocumentoEtapa.GetValue<Integer>('processoid');
+    vQry.ParamByName('pUsuarioId').Value  := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>('estacao');
     vQry.ExecSQL;
     vQryPedStatus.Close;
+    vQryPedStatus.Sql.Clear;
     vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-    vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
-    vQryPedStatus.ParamByName('pUsuarioId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-    vQryPedStatus.ParamByName('pTerminal').Value :=
-      pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQryPedStatus.ParamByName('pPedidoVolumeId').Value := pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
+    vQryPedStatus.ParamByName('pUsuarioId').Value      := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQryPedStatus.ParamByName('pTerminal').Value       := pJsonDocumentoEtapa.GetValue<String>('estacao');
     vQryPedStatus.ExecSQL;
     vQry.connection.Commit;
-    Result.AddElement(TJsonObject.Create.AddPair('pedidovolumeid',
-      TJsonNumber.Create(pJsonDocumentoEtapa.GetValue<Integer>
-      ('pedidovolumeid'))));
-  Except
-    ON E: Exception do
+    Result.AddElement(TJsonObject.Create.AddPair('pedidovolumeid', TJsonNumber.Create(pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid'))));
+  Except ON E: Exception do
     Begin
       vQry.connection.Rollback;
-      raise Exception.Create
-        ('Tabela_Service: RegistrarDocumentoEtapaSemBaixaEstoque - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela_Service: RegistrarDocumentoEtapaSemBaixaEstoque - ' + StringReplace(E.Message,
+                             '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
-
 end;
 
 function TServicePedidoVolume.ResetSeparacao(pPedidoVolumeId: Integer)

@@ -63,18 +63,13 @@ Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse;
 Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
-Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
+Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure VolumeExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure VolumeExpedido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure SaveApanheProdutos(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure AtualizarConferencia(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure SaveApanheProdutos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure AtualizarConferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure AtualizarConferenciaSemLotes(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Procedure FinalizarConferenciaComRegistro(Req: THorseRequest;
@@ -179,7 +174,7 @@ begin
     .Get('/pedidovolume/consulta', GetVolumeConsulta)
     .Get('/pedidovolume/ean/:pedidovolumeid', GetVolumeEAN)
     .Get('/pedidovolume/salvarultimoenderecocoletado/:pedidovolumeid/:enderecoid', salvarultimoenderecocoletado)
-    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', GetPedidoCxaFechadaCheckOut)
+    .Get('/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid/:usuarioid/:terminal', GetPedidoCxaFechadaCheckOut)
 
 end;
 
@@ -1741,30 +1736,23 @@ begin
       ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
-      JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut
-        (Req.Params.Items['pedidovolumeid'].ToInteger());
+      JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut(Req.Params.Items['pedidovolumeid'].ToInteger(),
+                           Req.Params.Items['usuarioid'].ToInteger(),
+                           Req.Params.Items['terminal']);
       Res.Status(200).Send<TJSONObject>(JsonObjectRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonObjectRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
+                      'Retorno: ' + JsonObjectRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+                      Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except on E: Exception do
       Begin
-        Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] ' + E.Message +
-          'terminal ' + ClientIP(Req));
+        Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] ' + E.Message + 'terminal ' + ClientIP(Req));
         JsonObjectRetorno := TJSONObject.Create;
         JsonObjectRetorno.AddPair('Erro', E.Message);
         Res.Status(500).Send<TJSONObject>(JsonObjectRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 200,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/getpedidocxafechadacheckout/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
+                        E.Message, 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -2171,27 +2159,22 @@ Var
   nTentativa: Integer;
 begin
   HrInicioLog := Time;
+  nTentativa := 0;
   Repeat
-    nTentativa := 0;
     Erro := True;
     Tutil.Gravalog('[2240-RegistrarDocumentoEtapaSemBaixaEstoque] terminal ' +
       ClientIP(Req));
     Try
       Try
         LService := TServicePedidoVolume.Create;
-        JsonArrayRetorno := LService.RegistrarDocumentoEtapaSemBaixaEstoque
-          (Req.Body<TJSONObject>);
+        JsonArrayRetorno := LService.RegistrarDocumentoEtapaSemBaixaEstoque(Req.Body<TJSONObject>);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/registrardocumentoetapacombaixaestoque', Trim(Req.Params.Content.Text), Req.Body, '',
+                        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000),
+                        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
         Erro := False;
-      Except
-        on E: Exception do
+      Except on E: Exception do
         Begin
           Inc(nTentativa);
           if nTentativa > 3 then

@@ -284,7 +284,9 @@ begin
     ObjVolumeCtrl := TPedidoVolumeCtrl.Create;
     ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := StrToIntDef(EdtVolumeId.Text, 0);
     if Operacao = opCheckOut then Begin
-       ObjVolumeCtrl.RegistrarDocumentoEtapa(10);
+       If (FrmeXactWMS.ConfigWMS.ExpedicaoOffLine = 0) Then
+          ObjVolumeCtrl.RegistrarDocumentoEtapa(10);
+       //Retirada Linha acima, para fazer
        if (ObjVolumeCtrl.ObjPedidoVolume.VolumeEmbalagem.EmbalagemId = 0) and
           (FrmeXactWMS.ConfigWMS.VolCxaFechadaExpedicao = 1) then begin
           vContErro := 0;
@@ -293,9 +295,8 @@ begin
                JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaComBaixaEstoqueJson(13)
             Else JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(13);
             if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
-               If vContErro <= 4 then Begin
+               If vContErro <= 1 then Begin
                   Inc(vContErro);
-
                End
                else Begin
                   SetCampoDefault('EdtVolumeId');

@@ -1836,7 +1836,8 @@ begin
   If (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger < DmeXactWMS.QryVolumeDivergencia.FieldByName('Demanda').AsInteger) then Begin
      FdMemProdutos.Filter   := '';
      FdMemProdutos.Filtered := False;
-     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger=0) then
+     if //(FdMemProdutos.RecordCount = 1) and
+        (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger=0) then
         ConfirmarCancelamentoDeVolume
      Else
         ConfirmarGeracaoVolumeExtra;

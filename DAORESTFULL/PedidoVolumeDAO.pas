@@ -725,8 +725,10 @@ Var jSonObj     : tJsonObject;
 begin
   Try
     DmeXactWMS.ResetRest;
-    DmeXactWMS.RESTRequestWMS.Resource := 'v1/pedidovolume/getpedidocxafechadacheckout/{pedidovolumeid}';
+    DmeXactWMS.RESTRequestWMS.Resource := 'v1/pedidovolume/getpedidocxafechadacheckout/{pedidovolumeid}/{usuarioid}/{terminal}';
     DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('pedidovolumeid', pPedidoVolumeId.ToString());
+    DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString());
+    DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('terminal', NomeDoComputador);
     DmeXactWMS.RESTRequestWMS.Method := RmGet;
     DmeXactWMS.RESTRequestWMS.Execute;
     Result := DmeXactWMS.RESTResponseWMS.JSONValue as TjsonObject

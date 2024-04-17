@@ -66,7 +66,7 @@ begin
       FConexao.Query.Sql.Add('and versao = ' + QuotedStr(AParams.Items['novidadeid']));
     if AParams.ContainsKey('status') then
       FConexao.Query.Sql.Add('and Status = ' + AParams.Items['status']);
-    FConexao.Query.Sql.Add('Order by status desc, NovidadeId');
+    FConexao.Query.Sql.Add('Order by NovidadeId Desc' );
     if DebugHook <> 0 then
       FConexao.Query.Sql.SaveToFile('Novidades.Sql');
     FConexao.Query.Open;
@@ -95,7 +95,7 @@ begin
     FConexao.Query.Sql.Add('select novidadeid, FORMAT(Data, ' + #39 + 'dd/MM/yyyy' + #39 +
       ') data, versao, texto, status from Novidades');
     FConexao.Query.Sql.Add('Where Status = 1');
-    FConexao.Query.Sql.Add('Order by status desc, NovidadeId');
+    FConexao.Query.Sql.Add('Order by NovidadeId Desc' );
     if DebugHook <> 0 then
       FConexao.Query.Sql.SaveToFile('News.Sql');
     FConexao.Query.Open;

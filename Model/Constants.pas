@@ -349,7 +349,6 @@ Const SqlPedido = //'SET STATISTICS IO OFF' + sLineBreak +
       'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
       'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
       'Declare @CodigoERP Integer = :pCodigoERP' + sLineBreak +
-      'Declare @ProdutoId integer = (select IdProduto From Produto Where CodProduto = @CodigoERP)'+sLineBreak+
       'Declare @PessoaId Integer = :pPessoaId' + sLineBreak +
       'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' + sLineBreak +
       'Declare @Razao VarChar(100) = :pRazao' + sLineBreak +
@@ -361,6 +360,7 @@ Const SqlPedido = //'SET STATISTICS IO OFF' + sLineBreak +
       'Declare @ProcessoId Integer = :pProcessoId' + sLineBreak +
       'Declare @MontarCarga Integer = :pMontarCarga' + sLineBreak +
       'Declare @CodProduto integer = :pCodProduto' + sLineBreak +
+      'Declare @ProdutoId integer = (select IdProduto From Produto Where CodProduto = @CodProduto)'+sLineBreak+
       'Declare @PedidoPendente Integer = :pPedidoPendente' + sLineBreak +
       'Declare @CargaId Integer = :pCargaId' + sLineBreak +
       'Declare @NotaFiscalERP Varchar(50) = :pNotaFiscalERP' + sLineBreak +
@@ -555,7 +555,7 @@ Const SqlPedidoParaCargas = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
                             '       Ped.DocumentoNr, Ped.DocumentoData,	Ped.RegistroERP,	Ped.DtInclusao, Ped.HrInclusao,	Ped.RotaId,	Ped.Rota,	Ped.ArmazemId,	Ped.Status,'+sLineBreak+
                             '       Ped.ProcessoId, Ped.processo, Ped.Processo Etapa, Ped.DtProcesso, Coalesce(Vl.QtdSuprida, 0) QtdSuprida,'+sLineBreak+
                             '       Coalesce(Etapa.TCxaFechada, 0) as TVolCxaFechada, Coalesce(Etapa.TCxaFracionada, 0) TVolFracionado,'+sLineBreak+
-                            '       Coalesce(Etapa.TCxaFechada, 0)+Coalesce(Etapa.TCxaFracionada, 0)+Coalesce(Etapa.Cancelado, 0) as TVolumes,'+sLineBreak+
+                            '       Coalesce(Etapa.TCxaFechada, 0)+Coalesce(Etapa.TCxaFracionada, 0) as TVolumes, --+Coalesce(Etapa.Cancelado, 0)'+sLineBreak+
                             '       Coalesce(Etapa.Cancelado, 0) as Cancelado, '+sLineBreak+
                             //'       Coalesce(VL.Peso, 0) Peso, '+sLineBreak+
                             //'       Coalesce(VL.VolCm3, 0) VolCm3, '+sLineBreak+
@@ -2303,13 +2303,14 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       '       '+#39+'Caixa Fechada'+#39+' else '+#39+'Fracionado'+#39+' End) Embalagem,'+sLineBreak+
       '       VE.Descricao, VE.Identificacao, VE.Tara, Vlm.Sequencia, Coalesce(Vlm.CaixaEmbalagemId, 0) VolumeCaixa,'+sLineBreak+
       '       DE.ProcessoId, DE.Descricao as Processo, De.UsuarioId, U.Nome Usuario, '+sLineBreak+
-      '       PEd.DocumentoNr, Ped.DocumentoData, Pes.CodPessoaERP, Pes.Razao, Rp.Rotaid, '+sLineBreak+
+      '       PEd.DocumentoNr, Rd.Data DocumentoData, Pes.CodPessoaERP, Pes.Razao, Rp.Rotaid, '+sLineBreak+
       '       Ro.Descricao Rota, DePed.ProcessoId processoidped  --, Rp.Ordem'+sLineBreak+
       'Into #Volumes'+sLineBreak+
       'From PedidoVolumes Vlm'+sLineBreak+
       'Left Join VolumeEmbalagem VE ON VE.EmbalagemId = Vlm.EmbalagemId'+sLineBreak+
       'Left join vDocumentoEtapas DE On De.Documento = Vlm.Uuid'+sLineBreak+
       'Inner join Pedido Ped ON Ped.PedidoId = Vlm.PedidoId'+sLineBreak+
+      'Inner join Rhema_Data Rd ON Rd.IdData = Ped.DocumentoData'+sLineBreak+
       'Left join vDocumentoEtapas DePed On DePed.Documento = Ped.Uuid'+sLineBreak+
       'Inner join Pessoa Pes On Pes.Pessoaid = Ped.pessoaid'+sLineBreak+
       'Left Join RotaPessoas Rp On Rp.pessoaid = Pes.PessoaId '+sLineBreak+
@@ -2323,8 +2324,8 @@ Const SqlVolumeRegistrarExpedicao = 'Declare @PedidoVolumeId Int = :pPedidoVolum
       '  And (@ZonaId = 0 or (Exists (Select ZonaId From PedidoVolumeLotes VL'+sLineBreak+
       '						                         Inner Join vProdutoLotes Pl on Pl.LoteId = VL.LoteId'+sLineBreak+
       '						                          Where ZonaID = @ZonaId and Vl.PedidoVolumeId = Vlm.PedidoVolumeid )))'+sLineBreak+
-      '  And (@DataInicial = 0 or Ped.DocumentoData >= @DataInicial)'+sLineBreak+
-      '  And (@DataFinal = 0 or Ped.DocumentoData <= @DataFinal)'+sLineBreak+
+      '  And (@DataInicial = 0 or Rd.Data >= @DataInicial)'+sLineBreak+
+      '  And (@DataFinal = 0 or Rd.Data <= @DataFinal)'+sLineBreak+
       '  And (@DocumentoNr = '+#39+#39+' or Ped.DocumentoNr = @DocumentoNr)'+sLineBreak+
       '  And (@Sequencia = 0 or Vlm.Sequencia = @Sequencia)'+sLineBreak+
       '  And (@CodPessoa = 0 Or Pes.CodPessoaERP = @CodPessoa)'+sLineBreak+
