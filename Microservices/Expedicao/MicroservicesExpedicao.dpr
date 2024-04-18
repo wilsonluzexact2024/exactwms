@@ -22,10 +22,8 @@ uses
   Server.Utils.Criptografia in '..\Common\Utils\Server.Utils.Criptografia.pas',
   Server.Utils.JsonSearchToWhere in '..\Common\Utils\Server.Utils.JsonSearchToWhere.pas',
   Server.Utils.SectionVariables in '..\Common\Utils\Server.Utils.SectionVariables.pas',
-  Server.Utils.SendMail2 in '..\Common\Utils\Server.Utils.SendMail2.pas',
   Server.Utils.SingletonPermisao in '..\Common\Utils\Server.Utils.SingletonPermisao.pas',
   Server.Utils.Strings in '..\Common\Utils\Server.Utils.Strings.pas',
-  ServerMail in '..\Common\Utils\ServerMail.pas',
   JOSE.Builder in '..\Common\JWT\JOSE.Builder.pas',
   JOSE.Consumer in '..\Common\JWT\JOSE.Consumer.pas',
   JOSE.Consumer.Validators in '..\Common\JWT\JOSE.Consumer.Validators.pas',
@@ -65,9 +63,10 @@ uses
 
 const
   CLogoAscArt =
-    '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|' + #13#10
-    + '|E| |x| |p| |e| |d| |i| |c| |a| |o|   |S| |e| |r| |v| |i| |c| |e|' +
-    #13#10 + '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|';
+    '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|'+#13#10+
+    '|E| |x| |p| |e| |d| |i| |ç| |ã| |o|   |S| |e| |r| |v| |i| |c| |e|'+#13#10+
+    '| | | | | | | | |R|H|E|M|A|S|Y|S| |S|O|L|U|Ç|Õ|E|S| | | | | | | |'+#13#10+
+    '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|';
   CServerTitle = 'Exact Microservice Expedicao';
 begin
   try
