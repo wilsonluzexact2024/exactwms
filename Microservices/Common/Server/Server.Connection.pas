@@ -32,7 +32,7 @@ type
   public
     property DB: TFDConnection read FDB write FDB;
     property Query: TFDQuery read FQuery write FQuery;
-    constructor Create;
+    constructor Create(Tipo: Integer = 0);
     destructor Destroy; override;
   end;
 
@@ -43,7 +43,7 @@ uses
 
 { TConnection }
 
-constructor TConnection.Create;
+constructor TConnection.Create(Tipo: Integer = 0);
 var
 
   LStrTemp: string;
@@ -51,14 +51,17 @@ begin
   try
     Fdriver := TFDPhysMSSQLDriverLink.Create(Nil);
     DB := TFDConnection.Create(nil);
-    DB.ConnectionDefName := cConnectionDefName;
+    if Tipo = 0 then
+      DB.ConnectionDefName := cConnectionDefName
+    Else
+      DB.ConnectionDefName := cConnectionLogDefName;
     DB.Connected := True;
     Query := TFDQuery.Create(nil);
     Query.Connection := DB;
   except
     on e: exception do
 {$IFDEF LINUX}
-      Writeln(' Excesscao ocorrida ao conectar banco de dados at ' + e.Message);
+      Writeln(' Excescao ocorrida ao conectar banco de dados at ' + e.Message);
 {$ENDIF}
   end;
 end;
