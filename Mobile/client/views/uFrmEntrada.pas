@@ -266,6 +266,9 @@ type
     procedure BtnFinalizarCheckInClick(Sender: TObject);
     procedure BtnLoginMasterClick(Sender: TObject);
     procedure CbRastroTipoExit(Sender: TObject);
+    procedure EdtAlturaValidate(Sender: TObject; var Text: string);
+    procedure EdtComprimentoValidate(Sender: TObject; var Text: string);
+    procedure EdtPesoValidate(Sender: TObject; var Text: string);
   private
     { Private declarations }
     EventCreate : Boolean;
@@ -594,6 +597,19 @@ Begin
   MsgD.ShowMsgD;
 End;
 
+procedure TFrmEntrada.EdtAlturaValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 2000 then Begin
+     if Sender = EdtAltura then
+        SetCampoDefault('EdtAltura')
+     Else
+        SetCampoDefault('EdtLargura');
+     ShowErro('Medidas fora do padrão(2Mt)');
+     DelayEdSetFocus(TEdit(Sender));
+  End;
+end;
+
 procedure TFrmEntrada.EdtCodigoKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 {$if defined(Android)}
@@ -704,6 +720,19 @@ procedure TFrmEntrada.EdtCodProdutoTyping(Sender: TObject);
 begin
   inherited;
   LimparRct02_Rct03;
+end;
+
+procedure TFrmEntrada.EdtComprimentoValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 3000 then Begin
+     if Sender = EdtAltura then
+        SetCampoDefault('EdtComprimento')
+     Else
+        SetCampoDefault('EdtComprimento');
+     ShowErro('Medida fora do padrão(3Mt)!');
+     DelayEdSetFocus(TEdit(Sender));
+  End;
 end;
 
 function TFrmEntrada.ValidarCheckInProduto(pCodProdutoCheckIn : Integer): Boolean;
@@ -917,6 +946,17 @@ begin
   inherited;
   EdtDtFabricacao.Text := '';
   EdtDtVencimento.Text := '';
+end;
+
+procedure TFrmEntrada.EdtPesoValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 50000 then Begin
+     if Sender = EdtAltura then
+        SetCampoDefault('EdtPeso');
+     ShowErro('Peso fora do padrão(50Kg)');
+     DelayEdSetFocus(TEdit(Sender));
+  End;
 end;
 
 procedure TFrmEntrada.EdtPickingKeyUp(Sender: TObject; var Key: Word;

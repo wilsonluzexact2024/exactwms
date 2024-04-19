@@ -2114,8 +2114,7 @@ begin
           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
         Erro := False;
-      Except
-        on E: Exception do
+      Except on E: Exception do
         Begin
           Inc(nTentativa);
           if nTentativa > 3 then

@@ -371,28 +371,20 @@ begin
             End;
           End;
 
-          Lconnection.Query.SQL.add
-            ('Insert into RequestResponse (data,	hora,	usuarioid,	terminal,	verbo	,'
-            + sLineBreak +
-            '            ipclient,	Port,	url,	params, body,	responsestr,	responsejson, '
-            + sLineBreak +
-            '           	respstatus,	timeexecution) Values (GetDate(), GetDate(), '
-            + '      ' + pUsuarioId.ToString() + ', ' + #39 + pTerminal + #39 +
-            ', ' + #39 + vMethod + #39 + ', ' + '      ' + #39 + pIpClient + #39
-            + ', ' + pPort.ToString() + ', ' + #39 + pUrl + #39 + ', ' +
-            '      :pParams, :pBody, ' + #39 + pResponseStr + #39 + ', ' +
-            '      :pResponseJson, ' +
-
-            pRespStatus.ToString() + ', ' +
-            StringReplace(pTimeExecution.ToString(), ',', '.', [rfReplaceAll]) +
-
-            ')');
+          Lconnection.Query.SQL.add('Insert into RequestResponse (data,	hora,	usuarioid,	terminal,	verbo, ipclient,	' + sLineBreak +
+                                    '       Port,	url,	params, body,	responsestr,	responsejson, respstatus,	timeexecution, AppName) Values '+sLineBreak+
+                                            '(GetDate(), GetDate(), ' + pUsuarioId.ToString()+sLineBreak+
+                                    '       , '+#39+pTerminal+#39+', '+#39 + vMethod + #39 + ', '+#39+pIpClient+#39+sLineBreak+
+                                    '       , '+pPort.ToString()+', '+#39 + pUrl + #39 + ', :pParams, :pBody'+sLineBreak+
+                                    '       , '+#39+pResponseStr+#39+', :pResponseJson, ' + pRespStatus.ToString()+sLineBreak+
+                                    '       , '+StringReplace(pTimeExecution.ToString(), ',', '.', [rfReplaceAll])+sLineBreak+
+                                    '       , '+#39+pAppName+#39+')');
 
           try
-            Lconnection.Query.ParamByName('pParams').Value := pParams;
-            Lconnection.Query.ParamByName('pBody').Value := pBody;
-            Lconnection.Query.ParamByName('pResponseJson').AsAnsiString :=
-              pResponseJson;
+            Lconnection.Query.ParamByName('pParams').Value              := pParams;
+            Lconnection.Query.ParamByName('pBody').Value                := pBody;
+            Lconnection.Query.ParamByName('pResponseJson').AsAnsiString := pResponseJson;
+            LConnection.Query.SQL.SaveToFile('LogRequestResponse.Sql');
             Lconnection.Query.ExecSQL;
           except
             on e: exception do

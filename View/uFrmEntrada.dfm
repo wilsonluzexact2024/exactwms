@@ -10,7 +10,6 @@ inherited FrmEntrada: TFrmEntrada
   inherited PgcBase: TcxPageControl
     Width = 1178
     Height = 577
-    Properties.ActivePage = TabProdutoSemPicking
     ExplicitWidth = 1178
     ExplicitHeight = 577
     ClientRectBottom = 577
@@ -11220,7 +11219,7 @@ inherited FrmEntrada: TFrmEntrada
             TabStop = False
           end
           object GbItemCubagem: TGroupBox
-            Left = 11
+            Left = 10
             Top = 131
             Width = 756
             Height = 54
@@ -11269,7 +11268,7 @@ inherited FrmEntrada: TFrmEntrada
             end
             object EdtPesoCheckIn: TJvCalcEdit
               Left = 61
-              Top = 18
+              Top = 20
               Width = 53
               Height = 24
               CustomHint = BalloonHint1
@@ -11290,7 +11289,7 @@ inherited FrmEntrada: TFrmEntrada
               OnKeyUp = EdtPesoCheckInKeyUp
             end
             object EdtAlturaCheckIn: TJvCalcEdit
-              Left = 206
+              Left = 204
               Top = 18
               Width = 54
               Height = 24
@@ -11302,6 +11301,7 @@ inherited FrmEntrada: TFrmEntrada
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = []
+              MaxValue = 3000.000000000000000000
               ParentFont = False
               ReadOnly = True
               ShowButton = False
@@ -11325,6 +11325,7 @@ inherited FrmEntrada: TFrmEntrada
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = []
+              MaxValue = 3000.000000000000000000
               ParentFont = False
               ReadOnly = True
               ShowButton = False
@@ -11337,7 +11338,7 @@ inherited FrmEntrada: TFrmEntrada
             end
             object EdtComprimentoCheckIn: TJvCalcEdit
               Left = 518
-              Top = 20
+              Top = 22
               Width = 54
               Height = 24
               CustomHint = BalloonHint1
@@ -11348,6 +11349,7 @@ inherited FrmEntrada: TFrmEntrada
               Font.Height = -13
               Font.Name = 'Tahoma'
               Font.Style = []
+              MaxValue = 3000.000000000000000000
               ParentFont = False
               ReadOnly = True
               ShowButton = False
@@ -11471,7 +11473,7 @@ inherited FrmEntrada: TFrmEntrada
           end
           object GbItemLote: TGroupBox
             Left = 11
-            Top = 189
+            Top = 190
             Width = 756
             Height = 54
             CustomHint = BalloonHint1
@@ -12051,8 +12053,8 @@ inherited FrmEntrada: TFrmEntrada
           end
         end
         object PnlDevolucaoSegregado: TPanel
-          Left = 485
-          Top = 73
+          Left = 487
+          Top = -194
           Width = 726
           Height = 271
           CustomHint = BalloonHint1

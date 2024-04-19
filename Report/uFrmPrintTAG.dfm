@@ -30370,7 +30370,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagArmazenagem
+        Properties.ActivePage = TbTagLocalizacao
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -30632,8 +30632,8 @@ inherited FrmPrintTag: TFrmPrintTag
               Caption = 'At'#233
             end
             object EdtEnderecoIni: TJvComboEdit
-              Left = 21
-              Top = 30
+              Left = 24
+              Top = 32
               Width = 116
               Height = 25
               CustomHint = BalloonHint1
@@ -31071,8 +31071,8 @@ inherited FrmPrintTag: TFrmPrintTag
               OnClick = BtnSearchLocalIniClick
             end
             object EdtEnderecoFin: TJvComboEdit
-              Left = 250
-              Top = 30
+              Left = 252
+              Top = 34
               Width = 116
               Height = 25
               CustomHint = BalloonHint1
@@ -31423,6 +31423,7 @@ inherited FrmPrintTag: TFrmPrintTag
               Text = ''
               OnChange = EdtEnderecoIniChange
               OnExit = EdtEnderecoIniExit
+              OnKeyPress = EdtEnderecoFinKeyPress
             end
             object BtnSearchLocalFin: TBitBtn
               Left = 363
@@ -32146,8 +32147,8 @@ inherited FrmPrintTag: TFrmPrintTag
           end
           object ChkEtqBcoEndereco: TCheckBox
             Left = 485
-            Top = 157
-            Width = 188
+            Top = 158
+            Width = 242
             Height = 17
             CustomHint = BalloonHint1
             Caption = 'Avan'#231'ar Etiqueta em  Branco no final'

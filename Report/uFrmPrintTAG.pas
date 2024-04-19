@@ -216,6 +216,7 @@ type
       var Key: Char);
     procedure EdtQtdEtiquetaIndividualKeyPress(Sender: TObject; var Key: Char);
     procedure BtnEtqIndividualClick(Sender: TObject);
+    procedure EdtEnderecoFinKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     ObjPedidoCtrl      : TPedidoSaidaCtrl;
@@ -931,6 +932,18 @@ procedure TFrmPrintTag.EdtDtInicioChange(Sender: TObject);
 begin
   inherited;
   LimparLstAdvReport;
+end;
+
+procedure TFrmPrintTag.EdtEnderecoFinKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  if (key = #13) and (EdtEnderecoIni.Text<>'') and (EdtEnderecoFin.Text<>'') and (EdtEnderecoIni.Text=EdtEnderecoFin.Text) then Begin
+     BtnPesquisarStandClick(BtnPesquisarStand);
+     if LstEnderecoAdv.RowCount = 2 then
+        BtnImprimirStandClick(BtnImprimirStand);
+  End
+  Else
+     inherited;
 end;
 
 procedure TFrmPrintTag.EdtEnderecoIniChange(Sender: TObject);
@@ -2450,7 +2463,13 @@ begin
                   ImprimirTexto(orNormal, 4, 2, 6,  2, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
                   ImprimirBarras(orNormal, barCODE128, 3, 3, 2, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
                   ImprimirTexto(orNormal, 2, 1, 1,  7, 55, 'eXactWMS®', 0, False);
-               End               Else Begin
+               End
+               Else if CbComposicao.ItemIndex = 4 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1, 1, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 3, 3, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 4, 4, 6, 6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
+               End
+               Else Begin
                   ImprimirTexto(orNormal, 2,           1, 1,  3, 6, ' Rua      Prédio     Nível      Apto', 0, False);
                   ImprimirTexto(orNormal, 3,           3, 3,  4, 6, LstEnderecoAdv.Cells[1, xEtq], 0, False);
                   ImprimirBarras(orNormal, barCODE128, 4, 4,  7, 6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 6, becNAO);
@@ -2511,6 +2530,11 @@ begin
                   ImprimirTexto(orNormal, 4, 2, 6,  3, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
                   ImprimirBarras(orNormal, barCODE128, 3, 3, 3, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
                   ImprimirTexto(orNormal, 2, 1, 1,  8, 55, 'eXactWMS®', 0, False);
+               End
+               Else if CbComposicao.ItemIndex = 3 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 3,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 5, 5, 10, 6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 6, becNAO);
                End
                Else Begin
                   ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);

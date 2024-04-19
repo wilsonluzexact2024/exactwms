@@ -1158,6 +1158,23 @@ end;
 
 procedure TFrmEntrada.EdtAlturaCheckInExit(Sender: TObject);
 begin
+  if Not (TEdit(Sender).ReadOnly)  then Begin
+     if ((Sender=EdtAlturaCheckIn) or (Sender=EdtLarguraCheckIn)) and (StrToFloatDef(TEdit(Sender).Text, 0) > 2000) then Begin
+        ShowErro('Medidas fora do padrão(2Mt)');
+        TEdit(Sender).SetFocus;
+        Exit;
+     End
+     Else if (Sender=EdtComprimentoCheckIn) and (StrToFloatDef(TEdit(Sender).Text, 0) > 3000) then Begin
+        ShowErro('Medidas fora do padrão(3Mt)');
+        EdtComprimentoCheckIn.SetFocus;
+        Exit;
+     End
+     Else if (Sender=EdtPesoCheckIn) and (StrToFloatDef(TEdit(Sender).Text, 0) > 50000) then Begin
+        ShowErro('Peso fora do padrão(50Kg)');
+        EdtComprimentoCheckIn.SetFocus;
+        Exit;
+     End;
+  End;
   inherited;
   ExitFocus(Sender);
 end;
