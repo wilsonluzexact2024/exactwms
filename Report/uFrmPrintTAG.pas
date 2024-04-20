@@ -219,15 +219,15 @@ type
     procedure EdtEnderecoFinKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
-    ObjPedidoCtrl      : TPedidoSaidaCtrl;
+    ObjPedidoCtrl        : TPedidoSaidaCtrl;
     SelEnd : Boolean;
-    JsonPedidoCubagem : tjsonArray;
+    JsonPedidoCubagem    : tjsonArray;
     vPessoaId : Integer;
     SelPedido, SelPedEtq : Boolean;
     vSelectLoteTag       : Boolean;
     vTimeEtiqueta        : Integer;
     vTemperatura         : Integer;
-    Procedure TbTagON(Page : TcxTabSheet);
+    Procedure TbTagON(Page   : TcxTabSheet);
     Procedure TbTagOFF;
     Procedure GetEstrutura;
     procedure ConfigACBrETQ;
@@ -1233,7 +1233,9 @@ begin
   vlIni := TIniFile.Create(ExtractFilePath( Application.ExeName )+'eXactWMS.ini');
   try
     vTimeEtiqueta := vlIni.ReadInteger('PRINTER',  'TimeEtq' , 500);
-    vTemperatura  := vlIni.ReadInteger('PRINTER',  'Temperatura' , 15);
+    vTemperatura  := vlIni.ReadInteger('PRINTER',  'Temperatura' , 10);
+    CbComposicao.ItemIndex := vlIni.ReadInteger('PRINTER',  'PrintEnderecoComposicao' , -1);
+    CbFormato.ItemIndex    := vlIni.ReadInteger('PRINTER',  'PrintEnderecoFormato' , -1);
   finally
     vlIni.Free;
   end;
@@ -1244,8 +1246,8 @@ begin
   TabListagem.TabVisible := False;
   TbTagOFF;
   SetReadOnly;
-  CbComposicao.ItemIndex  := 1;
-  CbFormato.ItemIndex     := 2;
+//  CbComposicao.ItemIndex  := 1;
+//  CbFormato.ItemIndex     := 2;
   LstEnderecoAdv.RowCount := 1;
   LblEtiquetas.Caption := 'Etiquetas: ';
   LblTotalEtiq.Caption    := '0';
@@ -2515,7 +2517,7 @@ begin
   Try
 //    ConfigACBrETQ;
     With ACBrETQConfig do Begin
-      Temperatura := 12;
+      Temperatura := vTemperatura;
       Ativar;
       For xEtq := 1 to Pred(LstEnderecoAdv.RowCount) do begin
         if LstEnderecoAdv.Cells[8, xEtq] = '1' then Begin
@@ -2531,10 +2533,11 @@ begin
                   ImprimirBarras(orNormal, barCODE128, 3, 3, 3, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
                   ImprimirTexto(orNormal, 2, 1, 1,  8, 55, 'eXactWMS®', 0, False);
                End
-               Else if CbComposicao.ItemIndex = 3 then Begin
+               Else if CbComposicao.ItemIndex = 4 then Begin
                   ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);
-                  ImprimirTexto(orNormal, 4,           4, 3,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
-                  ImprimirBarras(orNormal, barCODE128, 5, 5, 10, 6, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 6, becNAO);
+                  ImprimirTexto(orNormal, 4,           4, 9,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 15, 10, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1, 19, 10, 'eXactWMS®', 0, False);
                End
                Else Begin
                   ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);
