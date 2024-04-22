@@ -196,8 +196,7 @@ begin
     ObjVolumeCtrl := TPedidoVolumeCtrl.Create;
     JsonArrayRetorno := ObjVolumeCtrl.GetVolume(0, StrToIntDef(EdtVolumeId.Text, 0), 0, 0);
     if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
-       player('produtoerrado');
-       ShowErro('Volume: '+EdtVolumeId.Text+' '+vErro, 'alarme');
+       MensagemSis('Atenção', 'Volume: '+EdtVolumeId.Text, vErro, '', False, True);
        EdtVolumeId.Clear;
        edtvolumeId.setFocus;
        JsonArrayRetorno := Nil;
@@ -205,7 +204,7 @@ begin
        Exit;
     End
     Else If JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') = 0 then Begin
-       ShowErro('Volume Sem Produto coletado. Cancele o volume!', 'alarme');
+       MensagemSis('Atenção', 'Volume: '+EdtVolumeId.Text, 'Cancelar o Volume.', '', False, True);
        EdtVolumeId.Clear;
        edtvolumeId.setFocus;
        JsonArrayRetorno := Nil;
@@ -223,7 +222,7 @@ begin
     End;
     if Not (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid') in [8, 10, 12]) then Begin
        EdtVolumeId.Text := '';
-       ShowErro('Operação não permitida! Etapa atual do Volume: '+JsonArrayRetorno.Items[0].GetValue<String>('processo'), 'alarme');
+       MensagemSis('Atenção!', 'Operação não permitida! ', 'Etapa atual: '+JsonArrayRetorno.Items[0].GetValue<String>('processo'), '', False, True);
        EdtVolumeId.SetFocus;
        JsonArrayRetorno := Nil;
        ObjVolumeCtrl.Free;
@@ -232,7 +231,7 @@ begin
     if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ExigirReconferenciaToExpedicao = 1) and
         (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid')<>12) then Begin
         LimparExpedicao;
-        ShowErro('O Volume('+EdtVolumeId.Text+') deve ser Reconferido!', 'alarme');
+        MensagemSis('Atenção', 'O Volume('+EdtVolumeId.Text+') deve ser Reconferido!', '', '', False, True);
         Exit;
     End;
     ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := StrToIntDef(EdtVolumeId.Text, 0);
@@ -241,9 +240,7 @@ begin
     Else
        JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(13);
     if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
-       //ShowErro('Erro: '+vErro);
-       player('alarme');
-       MensagemSis('ATENÇÃO:', 'Erro na Expedição!', '', 'Repita o processo.');
+       MensagemSis('ATENÇÃO:', 'Erro na Expedição!', vErro, 'Repita o processo.', False, True);
     End
     Else Begin
       ShowOk('concluido');
@@ -254,12 +251,10 @@ begin
     JsonArrayRetorno    := Nil;
     ObjVolumeCtrl.Free;
   Except On E: Exception do Begin
-    player('produtoerrado');
     JsonArrayRetorno    := Nil;
     EdtvolumeId.setFocus;
     ObjVolumeCtrl.Free;
-    player('alarme');
-    MensagemSis('ATENÇÃO:', 'Erro na Expedição!', E.Message, 'Repita o processo.');
+    MensagemSis('ATENÇÃO:', 'Erro na Expedição!', E.Message, 'Repita o processo.', False, True);
     End;
   End;
 end;

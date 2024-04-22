@@ -234,18 +234,8 @@ Var pQtdCheckOut   : Integer;
 begin
   vCodDigitado := EdtProduto.Text;
   if (StrToInt64Def(EdtProduto.Text, 0) <> vCodProduto) then Begin
-{     JsonObjectRetorno := DmClient.GetCodProdEan(EdtProduto.Text);
-     if JsonObjectRetorno.TryGetValue('Erro', vErro) then Begin
-        SetCampoDefault('EdtProduto');
-        ShowErro('Erro: '+vErro);
-        JsonObjectRetorno := Nil;
-        Exit;
-     End;
-}
      vProdutoId := 0;
      if Not (FDMemProdutoCodBarras.Locate('CodBarras', EdtProduto.Text, [])) then Begin
-//        vProdutoId :=  JsonObjectRetorno.GetValue<Integer>('produtoid');
-//     if (vProdutoId <= 0) Then Begin
         SetCampoDefault('EdtProduto');
         MensagemStand('Código/Ean do produto inválido!');
         Exit;
@@ -283,38 +273,30 @@ begin
   Try
     ObjVolumeCtrl := TPedidoVolumeCtrl.Create;
     ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := StrToIntDef(EdtVolumeId.Text, 0);
-    if Operacao = opCheckOut then Begin
-       If (FrmeXactWMS.ConfigWMS.ExpedicaoOffLine = 0) Then
-          ObjVolumeCtrl.RegistrarDocumentoEtapa(10);
-       //Retirada Linha acima, para fazer
-       if (ObjVolumeCtrl.ObjPedidoVolume.VolumeEmbalagem.EmbalagemId = 0) and
-          (FrmeXactWMS.ConfigWMS.VolCxaFechadaExpedicao = 1) then begin
-          vContErro := 0;
-          Repeat
-            if FrmeXactWMS.ConfigWMS.ExpedicaoOffLine = 0 then
-               JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaComBaixaEstoqueJson(13)
-            Else JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(13);
-            if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
-               If vContErro <= 1 then Begin
-                  Inc(vContErro);
-               End
-               else Begin
-                  SetCampoDefault('EdtVolumeId');
-                  ShowErro('Erro: '+vErro);
-                  vContErro := 0;
-                  JsonArrayRetorno := Nil;
-                  ObjVolumeCtrl.Free;
-                  Limpar;
-                  Exit;
-               End;
-            End
-            Else
-               vContErro := 0;
-            JsonArrayRetorno := Nil;
-          Until vContErro = 0;
+    If (FrmeXactWMS.ConfigWMS.VolCxaFechadaExpedicao = 0) or (FrmeXactWMS.ConfigWMS.ExpedicaoOffLine = 0) Then Begin //ExpedicaoOffLine
+       If Not ObjVolumeCtrl.RegistrarDocumentoEtapa(10) Then Begin
+          SetCampoDefault('EdtVolumeId');
+          ShowErro('Erro: Ocorreu um erro!');
+          ObjVolumeCtrl.Free;
+          Limpar;
+          Exit;
        End;
-    End
-    Else ObjVolumeCtrl.RegistrarDocumentoEtapa(12);
+    End;
+    If (FrmeXactWMS.ConfigWMS.VolCxaFechadaExpedicao = 1) then begin
+       if FrmeXactWMS.ConfigWMS.ExpedicaoOffLine = 0 then
+          JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaComBaixaEstoqueJson(13)
+       Else
+          JsonArrayRetorno := ObjVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(13); //Finaliza CheckOut Automaticamente
+       if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
+          SetCampoDefault('EdtVolumeId');
+          ShowErro('Erro: '+vErro);
+          JsonArrayRetorno := Nil;
+          ObjVolumeCtrl.Free;
+          Limpar;
+          Exit;
+       End;
+       JsonArrayRetorno := Nil;
+    End;
     ObjVolumeCtrl.Free;
     if FrmeXactWMS.ConfigWMS.VolCxaFechadaExpedicao = 1 then
        ShowOk('CheckOut concluído. Expedição Automática.')
@@ -754,54 +736,8 @@ begin
                          JsonArrayVolume.Items[0].GetValue<Integer>('rotaid') );
          StartCheckOutColetor(JsonObjectVolume.GetValue<TJsonArray>('produto'));
          Operacao := opCheckOut;
-      End;
-
-      Exit;
-
-      if 1=2 then Begin //JsonArrayVolume.Items[0].TryGetValue('Erro', vErro) then Begin
-         SetCampoDefault('EdtVolumeId');
-         ShowErro('Erro: '+vErro);
-         //FrmeXactWMS.PlaySound('notfound.wav');
-      End
-      Else Begin
-         if JsonArrayVolume.Items[0].GetValue<Integer>('volumetipo') = 0 then Begin
-            LblTituloForm.Text := 'CheckOut Volume Cxa.Fechada';
-         End
-         Else Begin
-           SetCampoDefault('EdtVolumeId');
-           ShowErro('Fracionado(s) devem ir para o CheckOut.');
-           Exit;
-         End;
-         case JsonArrayVolume.Items[0].GetValue<Integer>('processoid') of
-            2: Begin
-                 SetCampoDefault('EdtVolumeId');
-                 ShowErro('Imprima a etiqueta do volume!');
-                 Exit
-               End;
-            3, 7, 8, 9: Begin Result := True; CabecalhoPedido(JsonArrayVolume.Items[0].GetValue<Integer>('pedidoid'),
-                                                              JsonArrayVolume.Items[0].Getvalue<TjsonObject>('destino').GetValue<String>('fantasia'),
-                                                              JsonArrayVolume.Items[0].GetValue<TJsonObject>('pedido'). GetValue<String>('documentodata'),
-                                                              JsonArrayVolume.Items[0].GetValue<TJsonObject>('rota').GetValue<Integer>('rotaid') );
-                 StartCheckOut;
-                 Operacao := opCheckOut;
-               End;
-            71: Begin
-                 SetCampoDefault('EdtVolumeId');
-                 ShowErro('Volume em Separação. Finalize ou Envie para CheckOut!');
-                 DelayEdSetFocus(EdtVolumeId);
-                 Exit;
-               End;
-            10, 11, 12: Begin //Reconferência
-                SetCampoDefault('EdtVolumeId');
-                ShowErro('Não é possível Recheckout do volume ('+EdtVolumeId.Text+')!');
-                End;
-            Else Begin
-               EdtVolumeId.Text := '';
-               DelayedSetFocus(EdtVolumeId);
-               ObjPedidoVolumeCtrl.Free;
-               raise Exception.Create('Volume não pode ser separado. Etapa Atual: '+JsonArrayVolume.Items[0].GetValue<String>('processo'));
-            End;
-         end;
+         JsonArrayVolume := Nil;
+         JsonCodBarras   := Nil;
       End;
     Except On E: Exception do Begin
       Limpar;
@@ -810,6 +746,7 @@ begin
       End;
     End;
   Finally
+    JsonObjectVolume := Nil;
     ObjPedidoVolumeCtrl.Free;
   End;
 end;

@@ -16588,7 +16588,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
         end
       end
       object BtnProdutoSemPicking: TPanel
-        Left = 864
+        Left = 863
         Top = 483
         Width = 183
         Height = 29
@@ -23433,9 +23433,9 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
         ExplicitLeft = 658
       end
       inherited BtnPesquisarStand: TsImage
-        Left = 120
+        Left = 122
         Top = 6
-        ExplicitLeft = 120
+        ExplicitLeft = 122
         ExplicitTop = 6
       end
       inherited BtnImprimirStand: TsImage

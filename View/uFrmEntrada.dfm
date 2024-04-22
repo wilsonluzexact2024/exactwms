@@ -907,7 +907,7 @@ inherited FrmEntrada: TFrmEntrada
           end
           object ImgSaveCheckIn: TsImage
             Left = 272
-            Top = 317
+            Top = 319
             Width = 24
             Height = 24
             Cursor = crHandPoint
@@ -12046,6 +12046,8 @@ inherited FrmEntrada: TFrmEntrada
               ParentFont = False
               TabOrder = 0
               OnClick = CbRastroTipoClick
+              OnEnter = CbRastroTipoEnter
+              OnExit = CbRastroTipoExit
               Items.Strings = (
                 'Cliente'
                 'Fornecedor')

@@ -419,6 +419,8 @@ type
     procedure AdvSGItensEntradaDblClick(Sender: TObject);
     procedure EdtAlturaCheckInChange(Sender: TObject);
     procedure EdtProdutoIdDevSegKeyPress(Sender: TObject; var Key: Char);
+    procedure CbRastroTipoExit(Sender: TObject);
+    procedure CbRastroTipoEnter(Sender: TObject);
   private
     { Private declarations }
     //ObjEntradaCtrl        : TEntradaCtrl;
@@ -479,6 +481,7 @@ type
     Procedure ValidarUpdateProduto;
     procedure SalvarCheckInItemOLD(xItem, pCausaId: Integer);
     Procedure GetProdutoLoteDevolucao;
+    procedure AtualizaRastreabilidade;
   Protected
     Function DeleteReg : Boolean; OverRide;
     Procedure ShowDados; override;  public
@@ -1021,11 +1024,45 @@ begin
   ExitFocus(Sender);
 end;
 
+Procedure TFrmEntrada.AtualizaRastreabilidade;
+Var TH : TThread;
+Begin
+  TH := TThread.CreateAnonymousThread(procedure
+  Var ObjProdutoCtrl : TProdutoCtrl;
+      JsonArrayAtualiza  : TJsonArray;
+      vErro : String;
+  begin
+    if (CbRastroTipo.ItemIndex+1 <> ObjProdutoCheckIn.Rastro.RastroId) then Begin
+       ObjProdutoCtrl := TProdutoCtrl.Create;
+       JsonArrayAtualiza := ObjProdutoCtrl.AtualizarRastreabilidade(ObjProdutoCheckIn.IdProduto,
+                      CbRastroTipo.ItemIndex+1);
+       if Not JsonArrayAtualiza.Items[0].TryGetValue('Erro', vErro) then Begin
+          FdMemEntradaProduto.Edit;
+          FdMemEntradaProduto.FieldByName('RastroId').AsInteger := CbRastroTipo.ItemIndex+1;
+          FdMemEntradaProduto.Post;
+{          TThread.Synchronize(TThread.CurrentThread, procedure
+          begin
+            SetCampoRastro;
+          end);
+}       End
+       Else
+         CbRastroTipo.ItemIndex := FdMemEntradaProduto.FieldByName('RastroId').AsInteger;
+       JsonArrayAtualiza := Nil;
+       ObjProdutoCtrl.Free;
+    End;
+  end);
+  TH.OnTerminate := ThreadAtualizarRastroTerminate;
+  TH.Start;
+End;
+
 procedure TFrmEntrada.CbRastroTipoClick(Sender: TObject);
 Var TH : TThread;
 begin
   inherited;
   //Incluir controle de acesso
+  exit;
+
+
   TH := TThread.CreateAnonymousThread(procedure
   Var ObjProdutoCtrl : TProdutoCtrl;
       JsonArrayAtualiza  : TJsonArray;
@@ -1052,6 +1089,19 @@ begin
   end);
   TH.OnTerminate := ThreadAtualizarRastroTerminate;
   TH.Start;
+end;
+
+procedure TFrmEntrada.CbRastroTipoEnter(Sender: TObject);
+begin
+  inherited;
+  EnterFocus(CbRastroTipo);
+end;
+
+procedure TFrmEntrada.CbRastroTipoExit(Sender: TObject);
+begin
+  inherited;
+  SetCampoRastro;
+  ExitFocus(CbRastroTipo);
 end;
 
 procedure TFrmEntrada.ThreadAtualizarRastroTerminate(Sender: TObject);
@@ -1312,7 +1362,11 @@ begin
      EdtLoteCheckIn.Text := Copy(EdtDtVencimento.Text, Length(EdtDtVencimento.Text)-1, 2)+
                             Copy(EdtDtVencimento.Text, 4, 2)+
                             Copy(EdtDtVencimento.Text, 1, 2);
-     EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2).ToString();
+//     EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2).ToString();
+     if (StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2) < (StrToInt(Copy(DateToStr(Now()), 7, 4))) then
+        EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2).ToString
+     Else
+        EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(DateToStr(Now()), 7, 4))-2).ToString;
   End;
   if Length(TEdit(Sender).Text) = 8 then
      TEdit(Sender).Text := Copy(TEdit(Sender).Text, 1, 6)+'20'+Copy(TEdit(Sender).Text, 7, 2);
@@ -3120,12 +3174,26 @@ Var X : Integer;
 begin
   Result := False;
   Try
+    if FdMemEntradaProduto.FieldByName('RastroId').AsInteger < 0 then  Begin
+       CbRastroTipo.SetFocus;
+       Exit
+    End;
     if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 1 then  Begin
        vLote       := 'SL';
        vFabricacao := Now();
        vVencimento := now()+(360*10);
     End
     Else If FdMemEntradaProduto.FieldByName('RastroId').AsInteger in [2,3] then  Begin
+       if (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 3) and (EdtDtFabricacao.Text = '  /  /    ') then Begin
+          EdtDtFabricacao.SetFocus;
+          ShowErro('Informe a data de Fabricao!');
+          Exit;
+       End;
+       if (EdtDtVencimento.Text = '  /  /    ') then Begin
+          EdtDtVencimento.SetFocus;
+          ShowErro('Informe a data de Vencimento!');
+          Exit;
+       End;
       if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then
          vLote  := Copy(EdtDtVencimento.Text, 9, 2)+Copy(EdtDtVencimento.Text, 4, 2)+Copy(EdtDtVencimento.Text, 1, 2)
       Else
@@ -3387,19 +3455,19 @@ begin
   EdtLoteCheckIn.clear;
   EdtDtFabricacao.Clear;
   EdtDtVencimento.Clear;
-  case FdMemEntradaProduto.FieldByName('RastroId').AsInteger of
-    1: Begin
+  case CbRastroTipo.ItemIndex Of
+    0: Begin
          GbItemLote.Enabled := False;
          EdtQtdUnidPrimCheckIn.SetFocus;
          GbItemLote.Enabled := False;
        End;
-    2: Begin
+    1: Begin
          EdtLoteCheckIn.Enabled  := False;
          EdtDtFabricacao.Enabled := False;
          EdtDtFabricacao.TabStop := False;
          EdtDtVencimento.SetFocus;
        End;
-    3: Begin
+    2: Begin
          EdtLoteCheckin.Enabled  := True;
          EdtDtFabricacao.Enabled := True;
          EdtDtVencimento.Enabled := True;
@@ -3944,6 +4012,7 @@ begin
   End
   Else if EdtQtdTotCheckIn.Value > 0 then Begin
      If SaveItemCheckIn then Begin
+        AtualizaRastreabilidade;
         AdvSGItensEntrada.FilterActive := False;
         ImgSaveCheckIn.Enabled := False;
         LblSaveCheckIn.Enabled := False;

@@ -30,39 +30,27 @@ Type
 
 procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetVolumeSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetVolume(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetOpenVolumeParaSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetVolumePrintTag(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetVolumeProduto(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetVolumeProdutoReconferencia(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetVolumeProdutoSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetOpenVolumeParaSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetVolumePrintTag(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetVolumeProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetVolumeProdutoReconferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetVolumeProdutoSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetVolumeLote(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeProdutoLotes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetPedidoVolumeSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetVolumeProdutoLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetPedidoVolumeSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Cancelar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MapaSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure VolumeParaEtiquetas(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure VolumeParaEtiquetas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Identificacao para Etiqueta volume Caixa Fracionada
-Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Identificacao para Etiqueta volume Caixa Fechada
 Procedure identificavolumecxafechada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure RegistrarDocumentoEtapa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure RegistrarDocumentoEtapaComBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure VolumeExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -70,52 +58,31 @@ Procedure VolumeExpedido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SaveApanheProdutos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SalvarColetaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure AtualizarConferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure AtualizarConferenciaSemLotes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure FinalizarConferenciaComRegistro(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure GerarVolumeExtra(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GerarVolumeExtra2(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetPedidoVolumeEtapas(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure MapaSeparacaoLista(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure AtualizarConferenciaSemLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure FinalizarConferenciaComRegistro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GerarVolumeExtra(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GerarVolumeExtra2(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetPedidoVolumeEtapas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure MapaSeparacaoLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure DshCheckout(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetAuditoriaVolumes(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetAuditoriaCorteAnalitico(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure VolumeLoteSubstituicao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetAuditoriaVolumes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAuditoriaCorteAnalitico(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure VolumeLoteSubstituicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure CaixaSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure Getdshvolumeevolucao_quantidade(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure Getdshvolumeevolucao_Unidades(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure Getdshvolumeevolucao_quantidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure Getdshvolumeevolucao_Unidades(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure ResetSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetVolumeComDivergencia(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetPedidoVolumeProdutoLote(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetProducaoDiariaPorLoja(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetProducaoDiariaPorRua(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetProducaoDiariaPorSetor(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetProducaoDiariaPorRota(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetVolumeConsulta(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetVolumeComDivergencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetPedidoVolumeProdutoLote(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetProducaoDiariaPorLoja(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetProducaoDiariaPorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetProducaoDiariaPorSetor(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetProducaoDiariaPorRota(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetVolumeConsulta(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetVolumeEAN(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure salvarultimoenderecocoletado(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetVolumeRegistrarExpedicao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure salvarultimoenderecocoletado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetVolumeRegistrarExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -1723,17 +1690,14 @@ begin
   End;
 End;
 
-Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  JsonObjectRetorno, JsonArrayErro: TJSONObject;
-  LService: TServicePedidoVolume;
-  HrInicioLog: Ttime;
+Procedure GetPedidoCxaFechadaCheckOut(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var JsonObjectRetorno, JsonArrayErro: TJSONObject;
+    LService: TServicePedidoVolume;
+    HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;
-    Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] terminal ' +
-      ClientIP(Req));
+    Tutil.Gravalog('[1813-GetPedidoCxaFechadaCheckOu] terminal '+ClientIP(Req));
     LService := TServicePedidoVolume.Create;
     Try
       JsonObjectRetorno := LService.GetPedidoCxaFechadaCheckOut(Req.Params.Items['pedidovolumeid'].ToInteger(),
@@ -2051,32 +2015,20 @@ begin
     Try
       JsonArrayRetorno := TJsonArray.Create;
       LService := TServicePedidoVolume.Create;
-      JsonArrayRetorno := LService.RegistrarDocumentoEtapa
-        (Req.Body<TJSONObject>);
+      JsonArrayRetorno := LService.RegistrarDocumentoEtapa(Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/registrardocumentoetapa',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/registrardocumentoetapa', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
+                      200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+    Except On E: Exception do
       Begin
-        Tutil.Gravalog('[2127-RegistrarDocumentoEtapa] ' + E.Message +
-          ' terminal ' + ClientIP(Req));
+        Tutil.Gravalog('[2127-RegistrarDocumentoEtapa] ' + E.Message +' terminal ' + ClientIP(Req));
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/registrardocumentoetapa',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/registrardocumentoetapa', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
       End;
     End;
   Finally
@@ -2147,22 +2099,20 @@ begin
   Until (Erro = False);
 End;
 
-Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
+Procedure RegistrarDocumentoEtapaSemBaixaEstoque(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
-  JsonArrayRetorno: TJsonArray;
-  LService: TServicePedidoVolume;
-  JsonArrayErro: TJsonArray;
-  HrInicioLog: Ttime;
-  Erro: Boolean;
-  nTentativa: Integer;
+  JsonArrayRetorno : TJsonArray;
+  LService         : TServicePedidoVolume;
+  JsonArrayErro    : TJsonArray;
+  HrInicioLog      : Ttime;
+  Erro             : Boolean;
+  nTentativa       : Integer;
 begin
   HrInicioLog := Time;
-  nTentativa := 0;
+  nTentativa  := 0;
   Repeat
     Erro := True;
-    Tutil.Gravalog('[2240-RegistrarDocumentoEtapaSemBaixaEstoque] terminal ' +
-      ClientIP(Req));
+    Tutil.Gravalog('[2240-RegistrarDocumentoEtapaSemBaixaEstoque] terminal ' + ClientIP(Req));
     Try
       Try
         LService := TServicePedidoVolume.Create;

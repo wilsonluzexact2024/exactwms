@@ -200,7 +200,7 @@ type
     EnabledButtons : Boolean;
     OperacaoCrud : TOperacaoCrud;
     Function Confirmacao(pMensagem1 : String = 'Confirme a Operação'; pMensagem2 : String = ''; Answer : Boolean = True) : Boolean;
-    Function MensagemSis(pMensagem1 : String = 'Atenção:'; pMensagem2 : String = ''; pMensagem3 : String = ''; pMensagem4 : String = ''; Answer : Boolean = False) : Boolean;
+    Function MensagemSis(pMensagem1 : String = 'Atenção:'; pMensagem2 : String = ''; pMensagem3 : String = ''; pMensagem4 : String = ''; Answer : Boolean = False; pErro : Boolean = False) : Boolean;
     Procedure ShowDados; Dynamic;
     Procedure PesquisarClickInLstCadastro(aCol, aRow : Integer); Dynamic;
     Function PesquisarComFiltro(pCampo : Integer; PConteudo : String) : Boolean ; Dynamic;
@@ -938,7 +938,7 @@ begin
 end;
 
 function TFrmBase.MensagemSis(pMensagem1, pMensagem2, pMensagem3,
-  pMensagem4: String; Answer: Boolean): Boolean;
+  pMensagem4: String; Answer, pErro : Boolean): Boolean;
 begin
   With TFrmMensagemSis.Create(Self) do Try
     Mensag1.Caption := pMensagem1;
@@ -951,6 +951,8 @@ begin
     LblConfirmSim.Visible := Answer;
     PctNao.Visible        := Answer;
     LblConfirmNao.Visible := Answer;
+    if pErro then
+       Player('Alarme');
     If ShowModal = MrOk Then Begin
        Result := True;
        End

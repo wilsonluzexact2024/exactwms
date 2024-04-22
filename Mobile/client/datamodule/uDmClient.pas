@@ -1030,10 +1030,11 @@ begin
          RESTClient1.Params.AddHeader('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
       {$IfDef Android}
          RESTClient1.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
+         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobile(Apk) '+VersaoAPK);
       {$else}
          RESTClient1.Params.AddHeader('terminal', NomeDoComputador);
+         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobile '+Versao('eXactWmsMobile.exe'));
       {$Endif}
-      RESTClient1.Params.AddHeader('appname', 'eXactWMSMobile'+Versao('eXactWmsMobile.exe'));
       DmClient.RESTResponseDataSetAdapter1.Response.DisposeOf;
     Except On E: Exception do
       Erro := True;

@@ -635,11 +635,19 @@ end;
 function TPedidoVolumeCtrl.RegistrarDocumentoEtapa(
   pDocumentoEtapaid: Integer): Boolean;
 Var ObjPedidoVolumeDAO : TPedidoVolumeDAO;
+    vErro : String;
 Begin
-  ObjPedidoVolumeDAO := TPedidoVolumeDAO.Create;
-  ObjPedidoVolumeDAO.ObjPedidoVolume := ObjPedidoVolume;
-  ObjPedidoVolumeDAO.RegistrarDocumentoEtapa(pDocumentoEtapaId);
-  ObjPedidoVolumeDAO.Free;
+  Result := True;
+  Try
+    ObjPedidoVolumeDAO := TPedidoVolumeDAO.Create;
+    ObjPedidoVolumeDAO.ObjPedidoVolume := ObjPedidoVolume;
+    If ObjPedidoVolumeDAO.RegistrarDocumentoEtapa(pDocumentoEtapaId).Items[0].TryGetValue('Erro', vErro) then
+       Result := False;
+    ObjPedidoVolumeDAO.Free;
+  Except
+    ObjPedidoVolumeDAO.Free;
+    Result := False;
+  End;
 end;
 
 function TPedidoVolumeCtrl.RegistrarDocumentoEtapaComBaixaEstoque(
@@ -668,14 +676,20 @@ Begin
   ObjPedidoVolumeDAO.Free;
 end;
 
-function TPedidoVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(
-  pDocumentoEtapaid: Integer): TJsonArray;
+function TPedidoVolumeCtrl.RegistrarDocumentoEtapaSemBaixaEstoqueJson(pDocumentoEtapaid: Integer): TJsonArray;
 Var ObjPedidoVolumeDAO : TPedidoVolumeDAO;
 Begin
-  ObjPedidoVolumeDAO := TPedidoVolumeDAO.Create;
-  ObjPedidoVolumeDAO.ObjPedidoVolume := ObjPedidoVolume;
-  Result := ObjPedidoVolumeDAO.RegistrarDocumentoEtapaSemBaixaEstoque(pDocumentoEtapaId);
-  ObjPedidoVolumeDAO.Free;
+  Try
+    ObjPedidoVolumeDAO := TPedidoVolumeDAO.Create;
+    ObjPedidoVolumeDAO.ObjPedidoVolume := ObjPedidoVolume;
+    Result := ObjPedidoVolumeDAO.RegistrarDocumentoEtapaSemBaixaEstoque(pDocumentoEtapaId);
+    ObjPedidoVolumeDAO.Free;
+  Except On E: Exception do Begin
+    Result := TjsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+    FreeAndNil(ObjPedidoVolumeDAO);
+    End;
+  End;
 end;
 
 function TPedidoVolumeCtrl.ResetSeparacao: TJsonArray;

@@ -233,16 +233,14 @@ begin
     exit;
   end;
   Try
-    ArqIni := TIniFile.Create(ExtractFilePath(GetModuleName(HInstance)) +
-      'eXactWMS.ini');
+    ArqIni := TIniFile.Create(ExtractFilePath(GetModuleName(HInstance))+'eXactWMS.ini');
     OParams := TStringList.Create;
     try
       OParams.Clear;
       OParams.add('DriverID=' + ArqIni.ReadString('BD', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BD', 'Server', 'locahost'));
       OParams.add('ApplicationName=EVOLUTIONSERVICE');
-      OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase',
-        'eXactWMS'));
+      OParams.add('Database=' + ArqIni.ReadString('BD', 'DataBase', 'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BD', 'user', 'sa'));
       OParams.add('POOL_MaximumItems=200');
       OParams.add('Password=' + ArqIni.ReadString('BD', 'pwd', 'Ctpd$#*%0'));
@@ -253,17 +251,15 @@ begin
       Writeln('Servidor DB: ' + ArqIni.ReadString('BD', 'Server', 'locahost'));
 {$ENDIF}
       try
-        if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO))
-        then
-          FDManager.AddConnectionDef(_CTCONEXAO, 'MSSQL', OParams);
+        if not assigned(FDManager.ConnectionDefs.FindConnectionDef(_CTCONEXAO)) then
+           FDManager.AddConnectionDef(_CTCONEXAO, 'MSSQL', OParams);
       except
       end;
       OParams.Clear;
       OParams.add('DriverID=' + ArqIni.ReadString('BDLOG', 'Driver', 'MSSQL'));
       OParams.add('Server=' + ArqIni.ReadString('BDLOG', 'Server', 'locahost'));
       OParams.add('ApplicationName=EVOLUTIONSERVICE');
-      OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase',
-        'eXactWMS'));
+      OParams.add('Database=' + ArqIni.ReadString('BDLOG', 'DataBase', 'eXactWMS'));
       OParams.add('User_Name=' + ArqIni.ReadString('BDLOG', 'user', 'sa'));
       OParams.add('POOL_MaximumItems=200');
       OParams.add('POOL_ExpireTimeout=1000');
@@ -481,14 +477,13 @@ begin
       begin
         LSaida := FormatDateTime('hh:nn:ss.zzz', now) + ' - ' + mensagem;
 
-        Writeln(LSaida);
+        //Writeln(LSaida);
 
         try
           try
             p := ExtractFilePath(ParamStr(0)) + 'log' + PathDelim;
             ForceDirectories(p);
-            p := p + FormatDateTime('yyyymmdd', now) + '_' +
-              ChangeFileExt(ExtractFileName(ParamStr(0)), '') + '.log';
+            p := p + FormatDateTime('yyyymmdd', now) + '_' + ChangeFileExt(ExtractFileName(ParamStr(0)), '') + '.log';
             AssignFile(F, p);
             if not fileexists(p) then
               Rewrite(F)

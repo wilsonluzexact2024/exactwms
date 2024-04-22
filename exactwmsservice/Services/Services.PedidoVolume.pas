@@ -1039,7 +1039,8 @@ begin
 end;
 
 function TServicePedidoVolume.GetPedidoCxaFechadaCheckOut(pPedidoVolumeId, pUsuarioId : Integer; pTerminal : String): TJsonObject;
-Var vErro: String;
+Var vErro       : String;
+    vProcessoId : Integer;
 Begin
   if (pPedidoVolumeId = 0) then
     raise Exception.Create('Informe o volume para CheckOut!');
@@ -1056,9 +1057,10 @@ Begin
       Result.AddPair('Erro', 'Volume não encontrado!')
     Else
     Begin
-      vErro := '';
+      vErro       := '';
+      vProcessoId := FConexao.Query.FieldByName('ProcessoId').AsInteger;
       case FConexao.Query.FieldByName('ProcessoId').AsInteger of
-        2: vErro := 'Imprima a Etiqueta.';
+        2: vErro  := 'Imprima a Etiqueta.';
         10, 11, 12, 13: vErro := 'Processo Volume: ' + FConexao.Query.FieldByName('Processo').AsString;
         15: vErro := 'Volume Cancelado.';
       end;
@@ -1082,33 +1084,29 @@ Begin
           Result.AddPair('produto', FConexao.Query.ToJsonArray);
           FConexao.Query.Close;
           FConexao.Query.Sql.Clear;
-          FConexao.Query.Sql.Add
-            (TuEvolutConst.SqlPedidoCxaFechadaCheckOutCodBarras);
-          FConexao.Query.ParamByName('pPedidoVolumeId').Value :=
-            pPedidoVolumeId;
+          FConexao.Query.Sql.Add(TuEvolutConst.SqlPedidoCxaFechadaCheckOutCodBarras);
+          FConexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
           FConexao.Query.Open();
           Result.AddPair('codbarras', FConexao.Query.ToJsonArray);
         End;
         //Registrar Inicio do Processo de CheckOut
         FConexao.Query.Close;
-        FConexao.Query.Sql.Clear;
-        FConexao.Query.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
-        FConexao.Query.Sql.Add('                                  where ' + 'PedidoVolumeId = ' +
-                     pPedidoVolumeId.ToString() + ')');
-        FConexao.Query.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-        FConexao.Query.ParamByName('pProcessoId').Value := 9;
-        FConexao.Query.ParamByName('pUsuarioId').Value  := pusuarioid;
-        FConexao.Query.ParamByName('pTerminal').Value   := pTerminal;
-        FConexao.Query.ExecSQL;
+        if vProcessoId <> 9 then Begin
+           FConexao.Query.Sql.Clear;
+           FConexao.Query.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');
+           FConexao.Query.Sql.Add('                                  where ' + 'PedidoVolumeId = '+pPedidoVolumeId.ToString() + ')');
+           FConexao.Query.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
+           FConexao.Query.ParamByName('pProcessoId').Value := 9;
+           FConexao.Query.ParamByName('pUsuarioId').Value  := pusuarioid;
+           FConexao.Query.ParamByName('pTerminal').Value   := pTerminal;
+           FConexao.Query.ExecSQL;
+        End;
       End;
     End;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin;
-      raise Exception.Create('Processo: GetPedidoCxaFechadaCheckOut - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: GetPedidoCxaFechadaCheckOut - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
@@ -1295,60 +1293,42 @@ begin
 
 end;
 
-function TServicePedidoVolume.RegistrarDocumentoEtapa(pJsonDocumentoEtapa
-  : TJsonObject): TJsonArray;
-var
-  vQry, vQryPedStatus: TFdQuery;
+function TServicePedidoVolume.RegistrarDocumentoEtapa(pJsonDocumentoEtapa : TJsonObject): TJsonArray;
+var vQry, vQryPedStatus: TFdQuery;
 begin
   try
     vQry := FConexao.GetQuery;
     vQryPedStatus := FConexao.GetQuery;;
     vQryPedStatus.connection := FConexao.DB;;
-    vQry.Sql.Add
-      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-      + 'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>
-      ('pedidovolumeid').ToString() + ')');
+    vQry.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '+
+                 'PedidoVolumeId = ' + pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid').ToString() + ')');
     vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-    vQry.ParamByName('pProcessoId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('processoid');
-    vQry.ParamByName('pUsuarioId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>
-      ('estacao');
+    vQry.ParamByName('pProcessoId').Value := pJsonDocumentoEtapa.GetValue<Integer>('processoid');
+    vQry.ParamByName('pUsuarioId').Value  := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQry.ParamByName('pTerminal').Value   := pJsonDocumentoEtapa.GetValue<String>('estacao');
     vQry.ExecSQL;
     vQry.Close;
     vQryPedStatus.Close;
     vQryPedStatus.Sql.Add(TuEvolutConst.AtualizaStatusPedido);
-    vQryPedStatus.ParamByName('pPedidoVolumeId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
-    vQryPedStatus.ParamByName('pUsuarioId').Value :=
-      pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-    vQryPedStatus.ParamByName('pTerminal').Value :=
-      pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQryPedStatus.ParamByName('pPedidoVolumeId').Value := pJsonDocumentoEtapa.GetValue<Integer>('pedidovolumeid');
+    vQryPedStatus.ParamByName('pUsuarioId').Value      := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
+    vQryPedStatus.ParamByName('pTerminal').Value       := pJsonDocumentoEtapa.GetValue<String>('estacao');
     vQryPedStatus.ExecSQL;
-
     Result := TJsonArray.Create();
-    Result.AddElement(TJsonObject.Create.AddPair('Ok',
-      'Processo registrado com sucesso!'));
+    Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Processo registrado com sucesso!'));
     FConexao.DB.Connected := False;
-  Except
-    ON E: Exception do
+  Except On E: Exception do
     Begin
       FConexao.DB.Connected := False;
-      raise Exception.Create('Processo: Volumes para Etiquetas - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: Volumes para Etiquetas - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
-
 end;
 
-function TServicePedidoVolume.RegistrarDocumentoEtapaComBaixaEstoque
-  (pJsonDocumentoEtapa: TJsonObject): TJsonArray;
-Var
-  vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
-  vEstoqueInicial: Integer;
+function TServicePedidoVolume.RegistrarDocumentoEtapaComBaixaEstoque(pJsonDocumentoEtapa: TJsonObject): TJsonArray;
+Var vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
+    vEstoqueInicial: Integer;
 begin
   try
     Result := TJsonArray.Create;
@@ -1498,13 +1478,10 @@ begin
   end;
 end;
 
-function TServicePedidoVolume.RegistrarDocumentoEtapaSemBaixaEstoque
-  (pJsonDocumentoEtapa: TJsonObject): TJsonArray;
-Var
-  vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
-  vEstoqueInicial: Integer;
+function TServicePedidoVolume.RegistrarDocumentoEtapaSemBaixaEstoque(pJsonDocumentoEtapa: TJsonObject): TJsonArray;
+Var vQry, vQryVolumeLotes, vQryEstoque, vQryPedStatus, vQryKardex: TFdQuery;
+    vEstoqueInicial: Integer;
 begin
-
   try
     Result := TJsonArray.Create;
     vQry := FConexao.GetQuery;
@@ -1518,8 +1495,9 @@ begin
     vQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
     vQry.ParamByName('pProcessoId').Value := 10;
     vQry.ParamByName('pUsuarioId').Value  := pJsonDocumentoEtapa.GetValue<Integer>('usuarioid');
-    vQry.ParamByName('pTerminal').Value := pJsonDocumentoEtapa.GetValue<String>('estacao');
+    vQry.ParamByName('pTerminal').Value   := pJsonDocumentoEtapa.GetValue<String>('estacao');
     vQry.ExecSQL;
+    sleep(10);
     vQry.Close;
     vQry.Sql.Clear;
     vQry.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes ');

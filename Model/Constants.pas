@@ -14,44 +14,36 @@ Type
   TuEvolutConst = record
     // Pedidos Cubagem
   Const
-    SqlZerarIdentify = 'DBCC CHECKIDENT (' + #39 + 'Produto' + #39 +
-      ', RESEED, 0)';
+    SqlZerarIdentify = 'DBCC CHECKIDENT (' + #39 + 'Produto' + #39 +', RESEED, 0)';
 
   Const
-    QrySemDados = 'N�o foram encontrados dados na pesquisa!';
+    QrySemDados = 'Não foram encontrados dados na pesquisa!';
 
     // https://dbasqlserverbr.com.br/descobrir-ip-do-servidor-sql-server/
-  Const
-    DadosServerSql = 'SELECT @@SERVERNAME,' + sLineBreak + 'CONNECTIONPROPERTY('
-      + #39 + 'net_transport' + #39 + ') AS net_transport,' + sLineBreak +
-      'CONNECTIONPROPERTY(' + #39 + 'protocol_type' + #39 +
-      ') AS protocol_type,' + sLineBreak + 'CONNECTIONPROPERTY(' + #39 +
-      'auth_scheme' + #39 + ') AS auth_scheme,' + sLineBreak +
-      'CONNECTIONPROPERTY(' + #39 + 'local_net_address' + #39 +
-      ') AS local_net_address,' + sLineBreak + 'CONNECTIONPROPERTY(' + #39 +
-      'local_tcp_port' + #39 + ') AS local_tcp_port,' + sLineBreak +
-      'CONNECTIONPROPERTY(' + #39 + 'client_net_address' + #39 +
-      ') AS client_net_address';
+  Const DadosServerSql = 'SELECT @@SERVERNAME,' + sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'net_transport'+#39+') AS net_transport,' + sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'protocol_type' + #39 +') AS protocol_type,'+sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'auth_scheme' + #39 + ') AS auth_scheme,' + sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'local_net_address'+#39+') AS local_net_address,'+sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'local_tcp_port'+#39+') AS local_tcp_port,' + sLineBreak +
+                         'CONNECTIONPROPERTY('+#39+'client_net_address'+#39+') AS client_net_address';
 
     // https://www.devmedia.com.br/criptografia-de-dados-no-sql-server/37027
 Const SqlCriptografia = '';
 
     // Hash Md5
-Const SqlHashMd5 = 'Select CONVERT(VARCHAR(32), HashBytes(' + #39 + 'MD5' + #39 +
-      ', ' + #39 + '189.112.121.58' + #39 + '), 2) as MD5Hash';
+Const SqlHashMd5 = 'Select CONVERT(VARCHAR(32), HashBytes('+#39+'MD5'+#39+', '+#39+'189.112.121.58'+#39+'), 2) as MD5Hash';
 
 Const SqlDataAtual = '(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))';
 
 Const SqlHoraAtual = '(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))';
 
-Const SqlRetornoDataFormatDataHora = 'Cast(CONVERT(DATETIME, CONVERT(CHAR(8), De.Data, 112)+'#39 + ' ' + #39 +
-      '+CONVERT(CHAR(8),He.Hora, 108)) as DateTime) AS Horario)';
+Const SqlRetornoDataFormatDataHora = 'Cast(CONVERT(DATETIME, CONVERT(CHAR(8), De.Data, 112)+'#39+' '+#39 +
+                                     '+CONVERT(CHAR(8),He.Hora, 108)) as DateTime) AS Horario)';
 
-Const SqlGetUsuarioAcessoFuncionalidade = 'select UF.* From Funcionalidades F' +
-      sLineBreak +
-      'Inner join UsuarioFuncionalidades UF On UF.FuncionalidadeId = F.Funcionalidadeid'
-      + sLineBreak + 'Inner Join usuarios U on U.usuarioid = UF.UsuarioId' +
-      sLineBreak +
+Const SqlGetUsuarioAcessoFuncionalidade = 'select UF.* From Funcionalidades F'+sLineBreak +
+      'Inner join UsuarioFuncionalidades UF On UF.FuncionalidadeId = F.Funcionalidadeid'+sLineBreak +
+      'Inner Join usuarios U on U.usuarioid = UF.UsuarioId'+sLineBreak +
       'where F.Descricao = :pFuncionalidade and U.UsuarioId = :pUsuarioId';
 
 Const SqlGetUsuarioAcessoTopico = 'select UT.* From Topicos T' + sLineBreak +
@@ -1257,30 +1249,25 @@ Const SqlPedidoPrintTag = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
 
     // Volume Tipo
   Const
-    SqlVolumeEmbalagem = 'Declare @EmbalagemId Integer = :pEmbalagemId' +
-      sLineBreak + 'Declare @Descricao VarChar(30) = :pDescricao' + sLineBreak +
-      'Select *, ' + sLineBreak + ' (Case' + sLineBreak + '     When Tipo = ' +
-      #39 + 'R' + #39 + ' then ' + #39 + 'Retorn�vel' + #39 + sLineBreak +
-      '     When Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Pr�pria' + #39 +
-      sLineBreak + '     When Tipo = ' + #39 + 'C' + #39 + ' then ' + #39 +
-      'Pacote' + #39 + sLineBreak + '     WHen Tipo = ' + #39 + 'U' + #39 +
-      ' then ' + #39 + 'Reutiliz�vel' + #39 + sLineBreak +
-      '		End) as TipoDescricao' + sLineBreak + 'From VolumeEmbalagem' +
-      sLineBreak + 'Where (@EmbalagemId = 0 or @EmbalagemId = EmbalagemID) and '
-      + sLineBreak + '      (@Descricao = ' + #39 + #39 +
-      ' or Descricao like @Descricao)';
+    SqlVolumeEmbalagem = 'Declare @EmbalagemId Integer = :pEmbalagemId' +sLineBreak +
+                         'Declare @Descricao VarChar(30) = :pDescricao' + sLineBreak +
+                         'Select *, (Case When Tipo = '+#39+'R'+#39+' then '+#39+'Retornável'+#39+sLineBreak+
+                         '                When Tipo = '+#39+'P'+#39+' then '+#39+'Própria'+#39+sLineBreak+
+                         '                When Tipo = '+#39+'C'+#39+' then '+#39+'Pacote' +#39+sLineBreak+
+                         '                When Tipo = '+#39+'U'+#39+' then '+#39+'Reutilizável'+#39+sLineBreak+
+                         '		         End) as TipoDescricao' + sLineBreak +
+                         'From VolumeEmbalagem'+sLineBreak +
+                         'Where (@EmbalagemId = 0 or @EmbalagemId = EmbalagemID) and '+sLineBreak+
+                         '      (@Descricao = '+#39+#39+' or Descricao like @Descricao)';
 
   Const
-    SqlRegistrarDocumentoEtapa = '--Adicionar a instru��o conforme abaixo' +
-      sLineBreak +
-      '--declare @uuid UNIQUEIDENTIFIER = (Select uuid From PEdido where PedidoId = :pPedidoId)   '
-      + sLineBreak + 'Declare @ProcessoId Integer = :pProcessoId' + sLineBreak +
-      'Declare @UsuarioId  Integer = :pUsuarioId' + sLineBreak +
-      '   Update DocumentoEtapas Set Status = 0 where Documento = @uuid and ProcessoId = @ProcessoId'
-      + sLineBreak +
-      '   Insert Into DocumentoEtapas Values (@uuid, @ProcessoId, (Case When @UsuarioId=0 Then Null Else @UsuarioId End), '
-      + sLineBreak + SqlDataAtual + ', ' + SqlHoraAtual +
-      ', GetDate(), :pTerminal, 1)';
+    SqlRegistrarDocumentoEtapa = '--Adicionar a instrução conforme abaixo'+sLineBreak+
+      '--declare @uuid UNIQUEIDENTIFIER = (Select uuid From PEdido where PedidoId = :pPedidoId)'+sLineBreak+
+      'Declare @ProcessoId Integer = :pProcessoId'+sLineBreak+
+      'Declare @UsuarioId  Integer = :pUsuarioId'+sLineBreak+
+      'Update DocumentoEtapas Set Status = 0 where Documento = @uuid and ProcessoId = @ProcessoId'+sLineBreak+
+      'Insert Into DocumentoEtapas Values (@uuid, @ProcessoId, (Case When @UsuarioId=0 Then Null Else @UsuarioId End), '+sLineBreak+
+      SqlDataAtual+', '+SqlHoraAtual+', GetDate(), :pTerminal, 1)';
 
 Const SqlCreateVolume = 'Declare @PedidoId Integer  = :pPedidoId' + sLineBreak +
       'Declare @NewId Varchar(38) = :pNewId' + sLineBreak +
@@ -6794,7 +6781,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       'Left join RotaPessoas RP ON RP.PessoaId = P.PessoaId' + sLineBreak +
       'Left Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData' + sLineBreak +
       'Left Join vDocumentoEtapas DE On De.Documento = Ped.uuid' + sLineBreak +
-      'Left Join (select ProdutoId, IsNull(sum(Qtde), 0) Qtde From vEstoque Where EstoqueTipoId in (1,4) Group by ProdutoId) Est On Est.ProdutoId = pp.ProdutoId'+sLineBreak+
+      'Left Join (select ProdutoId, IsNull(sum(QtdeProducao), 0) Qtde From vEstoque Where EstoqueTipoId in (1,4) Group by ProdutoId) Est On Est.ProdutoId = pp.ProdutoId'+sLineBreak+
       'Where (@DataIni=0 or Rd.Data >= @DataIni) and (@DataFin=0 or Rd.Data <= @DataFin) And Ped.OperacaoTipoId = 2 and ' +sLineBreak +
       '      (@PedidoId=0 or @PedidoId = Ped.PedidoId) and' + sLineBreak +
       '      (@CodigoERP=0 or @CodigoERP = P.CodPessoaERP) and' + sLineBreak +

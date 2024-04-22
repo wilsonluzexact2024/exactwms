@@ -270,8 +270,8 @@ begin
         AtualizaCheckOut;
      End
      Else Begin
-       ShowErro('Código e/ou Ean inválido!!!');
-       Confirmacao('Produto', 'Código e/ou Ean inválido('+EdtProdutoId.Text+')!!!', False);
+       MensagemSis('Atenção!', 'Código e/ou Ean inválido!!!',
+                   'Código e/ou Ean inválido('+EdtProdutoId.Text+')!!!', '', False, True);
        EdtProdutoId.Clear;
        EdtProdutoId.SetFocus;
      End;
@@ -283,16 +283,12 @@ end;
 procedure TFrmCheckOut.EdtQtdeExit(Sender: TObject);
 begin
   inherited;
-
-  Exit;
   if (F3Press) then Begin
      if (EdtQtde.Value < 0) or ((EdtQtde.Value=0) and (EdtQtde.Text<>'0')) then Begin
-        EdtQtde.ReadOnly := False;
-        raise Exception.Create('Quantidade inválida!');
-     End
-     Else if (EdtQtde.Value > FdMemPesqGeral.FieldByName('Demanda').AsInteger) then begin
-        EdtQtde.ReadOnly := False;
-        raise Exception.Create('Quantidade inválida, maior que demanda.')
+        MensagemSis('Atenção!', 'Quantidade inválida!',
+                   'Quantidade deve ser maior que zero', '', False, True);
+        EdtQtde.Clear;
+        EdtQtde.SetFocus;
      End;
   End;
 end;
@@ -375,8 +371,7 @@ begin
        EdtProdutoId.Clear;
        TotIndErro := TotIndErro + 1;
        ShowIndErro;
-       ShowErro('Produto('+vCodDigitado+') não encontrado!', 'alarme');
-       Confirmacao('CheckOut', 'Produto('+vCodDigitado+') não encontrado!', False);
+       MensagemSis('Atenção!', 'Produto('+vCodDigitado+') não encontrado!', '', '', False, True);
        EdtProdutoId.SetFocus;
        ObjProdutoCtrl.Free;
        Exit;
@@ -387,15 +382,15 @@ begin
        //Confirmacao('CheckOut', 'Produto('+vCodDigitado+') não faz parte deste volume!', False);
        TotIndErro := TotIndErro + 1;
        ShowIndErro;
-       Confirmacao('CheckOut', 'Produto('+vCodDigitado+') não faz parte deste volume!', False);
-  //     raise Exception.Create('Produto('+vCodDigitado+') não encontrado!');
+       MensagemSis('Atenção!', 'Produto('+vCodDigitado+') não faz parte deste volume!', '', '', False, True);
        EdtProdutoId.SetFocus;
        ObjProdutoCtrl.Free;
        Exit;
     End
-    Else If FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger >= FdMemPesqGeral.FieldByName('Demanda').AsInteger then Begin
-       ShowErro('Sobra: Produto já conferido.', 'alarme');
-       Confirmacao('CheckOut', 'Sobra: Produto já conferido.', False);
+    Else If (FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger) >= FdMemPesqGeral.FieldByName('Demanda').AsInteger then Begin
+       MensagemSis('Atenção!', 'Sobra: Produto já conferido.',
+                   Copy(FdMemPesqGeral.FieldByName('Descricao').AsString, 1, 40),
+                   Copy(FdMemPesqGeral.FieldByName('Descricao').AsString, 41, 40), False, True);
        EdtProdutoId.Clear;
        TotIndSobra := TotIndSobra + 1;
        ShowIndErro;
@@ -405,7 +400,7 @@ begin
     End;
     //LblEan.Text := FdMemPesqGeral.FieldByName('CodBarras').AsString;
     if F3Press then Begin
-       if ((Trunc(EdtQtde.Value*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger)
+       if (((Trunc(EdtQtde.Value*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger)+FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger)
            Mod FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger) <> 0) then Begin
   //        raise Exception.Create('Quantidade precisa ser equivalente a embalagem.');
           Confirmacao('CheckOut', 'Quantidade precisa ser equivalente a embalagem.', False);
@@ -413,16 +408,18 @@ begin
           ObjProdutoCtrl.Free;
           Exit;
        End
-       Else if ((EdtQtde.Value*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger) >
+       Else if ((EdtQtde.Value*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger)+FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger >
                 FdMemPesqGeral.FieldByName('Demanda').AsInteger)  then Begin
-          Confirmacao('CheckOut', 'Quantidade maior que a Demanda(Solicitada).', False);
+          Confirmacao('CheckOut', 'Quantidade maior que Demanda.', False);
+          EdtQtde.Value := 1;
+          EdtProdutoId.Clear;
           EdtProdutoId.SetFocus;
           ObjProdutoCtrl.Free;
           Exit;
        End;
-       pQtdCheckOut         := StrToIntDef(EdtQtde.Text, 0)*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger;
+       pQtdCheckOut         := (StrToIntDef(EdtQtde.Text, 0)*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger)+FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger;
        EdtTotItensSep.Value := EdtTotItensSep.Value - FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger;
-       vQtdeEmbalagem       := StrToIntDef(EdtQtde.Text, 0)*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger;
+       vQtdeEmbalagem       := (StrToIntDef(EdtQtde.Text, 0)*FdMemPesqGeral.FieldByName('EmbalagemPadrao').AsInteger)+FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger;
     End
     Else Begin
        pQtdCheckOut   := FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger+
@@ -697,13 +694,17 @@ begin
             ShowErro('Não é permitido o (Re)CheckOut pelo mesmo usuário!', 'alarme');
             raise Exception.Create('Não é permitido o (Re)CheckOut pelo mesmo usuário!');
          End;
-         if (Confirmacao('Reconferência', 'Realizar Reconferêcia do volume: '+ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId.ToString+'?')) then Begin
+         if (Confirmacao('Reconferência', 'Reconferir Volume: '+ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId.ToString+'?')) then Begin
             GetPedidoSaida(ObjVolumeCtrl.ObjPedidoVolume.Pedido.PedidoId, RetornoVolJsonArray.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rota'));
             ObjVolumeCtrl.RegistrarDocumentoEtapa(11);
             If ObjVolumeCtrl.ObjPedidoVolume.VolumeEmbalagem.EmbalagemId <> StrToIntDef(EdtCaixaEmbalagemId.Text, 0) then
                ObjVolumeCtrl.CaixaSeparacao(StrToIntDef(EdtCaixaEmbalagemId.Text, 0));
             Operacao := opReCheckOut;
             StartCheckOut;
+         End
+         Else Begin
+            EdtVolumeId.SetFocus;
+            EdtVolumeId.Clear;
          End;
        end;
     13, 14: begin
@@ -987,7 +988,6 @@ begin
   LblPercErro.Caption   := (TotIndErro / EdtTotItensVol.Value * 100).ToString+'%';
   LblSobras.Caption     := TotIndSobra.ToString;
   LblPercSobras.Caption := (TotIndSobra / EdtTotItensVol.Value * 100).ToString+'%';
-  Player('toast4');
 end;
 
 procedure TFrmCheckOut.ShowIndicesProdutividade;
