@@ -55,6 +55,8 @@ begin
       DB.ConnectionDefName := cConnectionDefName
     Else
       DB.ConnectionDefName := cConnectionLogDefName;
+    Db.FetchOptions.Mode            := fmAll;
+    //Db.FetchOptions.RecordCountMode := cmTotal;
     DB.Connected := True;
     Query := TFDQuery.Create(nil);
     Query.Connection := DB;

@@ -10,7 +10,9 @@ interface
 Uses System.UITypes, System.StrUtils, System.SysUtils, Generics.Collections,
   PerfilClass,
   Horse,
-  System.JSON; // , uTHistoric;
+  Horse.Utils.ClientIP,
+  System.JSON,
+  Exactwmsservice.lib.Utils; // , uTHistoric;
 
 Type
   TipoConsulta = (Resumida, Completa);
@@ -251,22 +253,30 @@ procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   ObjArray: TJSONObject;
   PerfilDAO: TPerfilDao;
+  HrInicioLog: TTime;
 begin
+  HrInicioLog := Time;
   Try
     Try
       PerfilDAO := TPerfilDao.Create;
-      PerfilDAO.ObjPerfil.Perfilid :=
-        StrToIntDef(Req.Params.Items['perfilid'], 0);
-      If PerfilDAO.Delete Then
-         Res.Status(200).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-           'Registro excluído com Sucesso!'))).Status(THTTPStatus.Created)
-      Else
-         raise Exception.Create('Não foi possível excluir o Perfil.');
+      PerfilDAO.ObjPerfil.Perfilid := StrToIntDef(Req.Params.Items['perfilid'], 0);
+      If PerfilDAO.Delete Then Begin
+         Res.Status(200).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro excluído com Sucesso!'))).Status(THTTPStatus.Created);
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Excluído com sucesso!',
+                         201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+
+      End
+      Else Begin
+         Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Exclusão não permitida!'))).Status(THTTPStatus.Created);
+               Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Exclusão não permitida!',
+                      500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+      End;
     Except
       on E: Exception do
       Begin
-        Res.Status(500).Send<TJSONObject>
-          (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;
     End;
   Finally

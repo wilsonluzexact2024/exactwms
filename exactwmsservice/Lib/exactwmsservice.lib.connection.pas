@@ -78,6 +78,7 @@ begin
 
   FListQuerys := TObjectList<TFDQuery>.Create();
   DB := TFDConnection.Create(nil);
+  Db.FetchOptions.Mode           := fmAll;
   DB.FetchOptions.Unidirectional := true;
   DB.ResourceOptions.KeepConnection := true;
   DB.OnLogin := OnLogin;

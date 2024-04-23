@@ -30,7 +30,7 @@ begin
             '  FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
             '  WHERE VL.PEDIDOVOLUMEID =@PEDIDOVOLUMEID AND VL.QTDSUPRIDA > 0'+sLineBreak+
             ' '+sLineBreak+
-            '          UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA'+sLineBreak+
+            '          UPDATE EST SET QTDE = EST.QTDE - Quantidade'+sLineBreak+ //VL.QTDSUPRIDA'+sLineBreak+
             '          FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
             '          INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
             '          AND EST.ENDERECOID = VL.ENDERECOID AND EST.ESTOQUETIPOID = 6'+sLineBreak+

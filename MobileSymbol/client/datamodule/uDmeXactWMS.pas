@@ -99,10 +99,11 @@ begin
          RESTRequestWMS.Params.AddHeader('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
       {$IfDef Android}
          RESTRequestWMS.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
+         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobile(APK) '+VersaoAPK);
       {$else}
          RESTRequestWMS.Params.AddHeader('terminal', NomeDoComputador);
+         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobile '+Versao('eXactWmsMobile.exe'));
       {$Endif}
-      RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobile'+Versao('eXactWmsMobile.exe'));
     End;
   Except ON E: Exception do
     raise Exception.Create('Erro ResetRest '+E.Message);

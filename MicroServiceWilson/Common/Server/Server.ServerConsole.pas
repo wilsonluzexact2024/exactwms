@@ -185,7 +185,7 @@ begin
       if assigned(ConnectionTeste.Query) then
       begin
 
-        ConnectionTeste.Query.SQL.Add('select CURRENT_TIMESTAMP');
+        ConnectionTeste.Query.SQL.Add('select CURRENT_TIMESTAMP DataHora');
         ConnectionTeste.Query.Open();
         Writeln('***************************************************');
         Writeln('***********Sucess to atach database****************');

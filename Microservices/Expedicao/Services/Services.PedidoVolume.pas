@@ -154,18 +154,18 @@ begin
       vQryBaixaEstoque.Connection := vQryVolumeParaExpedicao.Connection;
       vQryVolumeParaExpedicao.SQL.add(TScriptRepository.GetVolumeParaExpedicao);
       vQryVolumeParaExpedicao.Open;
-//      Writeln('       '+FormatDateTime('hh:nn:ss.zzz', now)+' - ' +'VolumeParaExpedicao: '+
-//              inttostr(vQryVolumeParaExpedicao.RecordCount)+' Registros');
+      Writeln('       '+FormatDateTime('hh:nn:ss.zzz', now)+' - ' +'VolumeParaExpedicao: '+
+              inttostr(vQryVolumeParaExpedicao.RecordCount)+' Registros');
       While Not vQryVolumeParaExpedicao.Eof do
       Begin
-        Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now) + ' - ' +
-                'Processando Volume: ' + vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString);
+//        Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now) + ' - ' +
+//                'Processando Volume: ' + vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString);
         Try
           vQryLoteInexistente.Close;
           vQryLoteInexistente.SQL.Clear;
           vQryLoteInexistente.SQL.add(TScriptRepository.GetLoteInexistente);
           vQryLoteInexistente.ParamByName('pPedidoVolumeId').Value :=
-            vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+          vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
           vQryLoteInexistente.Open;
 
           vQryVolumeParaExpedicao.Connection.StartTransaction;
