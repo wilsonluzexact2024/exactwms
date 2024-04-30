@@ -37,66 +37,42 @@ procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Cancelar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure FinalizarCheckIn(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure SalvarCheckInItem(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure SalvarCheckInItemAgrupamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure FinalizarCheckIn(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure SalvarCheckInItem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure SalvarCheckInItemAgrupamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MontarPaginacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure RegistrarProcesso(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure RegistrarProcesso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure PlanilhaCega(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetEspelho(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetOcorrencias(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetResumoCheckIn(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetResumoCheckIn(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetMovimentacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetRelRecebimento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetEtiquetaArmazenagem(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetRelRecebimento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEtiquetaArmazenagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
-procedure PesquisarService(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetRelDshRecebimentos(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetEntradaProduto(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure PesquisarService(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelDshRecebimentos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEntradaProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetEntradaLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetEntradaItens(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEntradaProdutoSemPicking(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure ExcluirPreEntrada(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEntradaProdutoSemPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure ExcluirPreEntrada(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure CancelarNFeERP(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetValidarQtdCheckin(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure SalvarAgrupamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetAgrupamentoLista(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetAgrupamentoPedido(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetValidarQtdCheckin(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure SalvarAgrupamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAgrupamentoLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAgrupamentoPedido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Faturar Lotes P�s CheckIn Agrupameto
-Procedure GetAgrupamentoFatorarLoteXML(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetAgrupamentoFatorarPedidoLotes(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure CancelarCheckInProduto(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure DeleteAgrupamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure RegPrintEtqProduto(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetAgrupamentoFatorarLoteXML(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAgrupamentoFatorarPedidoLotes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure CancelarCheckInProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure DeleteAgrupamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure RegPrintEtqProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure Header(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEntradaLoteCheckIn(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetEntradaLoteDevolucao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetAcompanhamentoCheckIn(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEntradaLoteCheckIn(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEntradaLoteDevolucao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetAcompanhamentoCheckIn(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -1727,21 +1703,15 @@ begin
       LService := TServiceRecebimento.Create;
       jsonEntrada := LService.SalvarCheckInItem(Req.Body<TJSONObject>);
       Res.Send<TJSONObject>(jsonEntrada).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/entrada/SalvarCheckInItem', Trim(Req.Params.Content.Text), Req.Body,
-        '', 'Retorno: ' + JsonEntrada.Count.ToString +' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/entrada/SalvarCheckInItem', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonEntrada.Count.ToString +' Registros.',
+                      200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+    Except on E: Exception do
       Begin
-        Res.Status(500).Send<TJSONObject>
-          (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-          Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/entrada/SalvarCheckInItem', Trim(Req.Params.Content.Text),
-          Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname']);
+        Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                     '/v1/entrada/SalvarCheckInItem', Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
+                     500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally

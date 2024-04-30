@@ -1771,79 +1771,61 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetProdutoReposicao(const AParams
-  : TDictionary<string, string>): TjSonArray;
-var
-  JsonProduto: TJsonObject;
+function TPedidoSaidaDao.GetProdutoReposicao(const AParams : TDictionary<string, string>): TjSonArray;
+var JsonProduto: TJsonObject;
 begin
   Try
-    FConexao.Query.SQL.Add
-      ('Select ProdutoId, CodProduto, Descricao, EnderecoId, Endereco, FatorConversao, EmbalagemPadrao, Quantidade, Fracionado, EstPicking,');
-    FConexao.Query.SQL.Add('       (Fracionado-EstPicking) QtdReposicao');
+    FConexao.Query.SQL.Add('Select ProdutoId, CodProduto, Descricao, EnderecoId, Endereco, FatorConversao, EmbalagemPadrao, ');
+    FConexao.Query.SQL.Add('       Quantidade, Fracionado, EstPicking, (Fracionado-EstPicking) QtdReposicao');
     FConexao.Query.SQL.Add('From');
-    FConexao.Query.SQL.Add
-      ('   (Select PP.ProdutoId, Prd.CodProduto, Prd.Descricao, TEnd.EnderecoId, TEnd.Descricao Endereco, Prd.FatorConversao, PP.EmbalagemPadrao,');
+    FConexao.Query.SQL.Add('   (Select PP.ProdutoId, Prd.CodProduto, Prd.Descricao, TEnd.EnderecoId, TEnd.Descricao Endereco, Prd.FatorConversao, PP.EmbalagemPadrao,');
     FConexao.Query.SQL.Add('           Sum(PP.Quantidade) Quantidade,');
-    FConexao.Query.SQL.Add
-      ('           Sum((Case When Prd.FatorConversao > 1 then (PP.Quantidade /  Prd.FatorConversao) Else 0 End)) CaixaFechada ,');
-    FConexao.Query.SQL.Add
-      ('		   Sum((Case When Prd.FatorConversao > 1 then (PP.Quantidade %  Prd.FatorConversao) Else PP.Quantidade End)) Fracionado');
-    FConexao.Query.SQL.Add
-      ('           , Est.Estoque EstPicking--, ((Case When Prd.FatorConversao > 1 then (PP.Quantidade %  Prd.FatorConversao) Else PP.Quantidade End) - Est.Estoque) As QtdReposicao');
-    FConexao.Query.SQL.Add('            From Pedido Ped');
-    FConexao.Query.SQL.Add
-      ('            Inner Join PedidoProdutos PP ON PP.PedidoId = Ped.PedidoId');
-    FConexao.Query.SQL.Add
-      ('			Inner Join Produto Prd On Prd.IdProduto = Pp.ProdutoId');
-    FConexao.Query.SQL.Add
-      ('			Left Join Enderecamentos TEnd On TEnd.EnderecoId = Prd.EnderecoId');
-    FConexao.Query.SQL.Add
-      ('            Inner join Rhema_Data DP On Dp.IdData = Ped.DocumentoData');
-    FConexao.Query.SQL.Add
-      ('            Left  Join vDocumentoEtapas De On De.Documento = Ped.uuid');
-    FConexao.Query.SQL.Add
-      ('			Left Join (Select ProdutoId, SUM(Qtde) Estoque From vEstoqueProducao where PickingFixo = 1 Group by ProdutoId) Est ON Est.ProdutoId = PP.ProdutoId');
-    FConexao.Query.SQL.Add
-      ('			Where Ped.PedidoId in (20, 1044) --= @PedidoId');
-    FConexao.Query.SQL.Add
-      ('			      And DE.Horario = (Select Max(Horario) From vDocumentoEtapas Where Documento = Ped.Uuid and Status = 1) and De.ProcessoId <> 15');
-    // FConexao.Query.SQL.Add('	              and De.ProcessoId < 13');
-    FConexao.Query.SQL.Add('				  and Ped.OperacaoTipoId = 2');
-    if AParams.ContainsKey('datapedido') then
-    begin
-      FConexao.Query.SQL.Add(' 		      and Dp.Data = :DataPedido ');
-      FConexao.Query.ParamByName('datapedido').Value :=
-        AParams.Items['datapedido'];
+    FConexao.Query.SQL.Add('           Sum((Case When Prd.FatorConversao > 1 then (PP.Quantidade /  Prd.FatorConversao) Else 0 End)) CaixaFechada ,');
+    FConexao.Query.SQL.Add('		         Sum((Case When Prd.FatorConversao > 1 then (PP.Quantidade %  Prd.FatorConversao) Else PP.Quantidade End)) Fracionado');
+    FConexao.Query.SQL.Add('           , Est.Estoque EstPicking--, ((Case When Prd.FatorConversao > 1 then (PP.Quantidade %  Prd.FatorConversao) Else PP.Quantidade End) - Est.Estoque) As QtdReposicao');
+    FConexao.Query.SQL.Add('   From Pedido Ped');
+    FConexao.Query.SQL.Add('   Inner Join PedidoProdutos PP ON PP.PedidoId = Ped.PedidoId');
+    FConexao.Query.SQL.Add('			Inner Join Produto Prd On Prd.IdProduto = Pp.ProdutoId');
+    FConexao.Query.SQL.Add('			Left Join Enderecamentos TEnd On TEnd.EnderecoId = Prd.EnderecoId');
+    FConexao.Query.SQL.Add('   Inner join Rhema_Data DP On Dp.IdData = Ped.DocumentoData');
+    FConexao.Query.Sql.Add('Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid');
+    FConexao.Query.Sql.Add('Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and');
+    FConexao.Query.Sql.Add('                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) ');
+    //    FConexao.Query.SQL.Add('   Left  Join vDocumentoEtapas De On De.Documento = Ped.uuid');
+    FConexao.Query.SQL.Add('			Left Join (Select ProdutoId, SUM(Qtde) Estoque ');
+    FConexao.Query.SQL.Add('              From vEstoqueProducao ');
+    FConexao.Query.SQL.Add('              where PickingFixo = 1');
+    FConexao.Query.SQL.Add('              Group by ProdutoId) Est ON Est.ProdutoId = PP.ProdutoId');
+    FConexao.Query.SQL.Add('			Where --Ped.PedidoId in (20, 1044) And--= @PedidoId');
+    FConexao.Query.SQL.Add('			      --DE.Horario = (Select Max(Horario) From vDocumentoEtapas Where Documento = Ped.Uuid and Status = 1) and');
+    FConexao.Query.SQL.Add('         De.ProcessoId <> 15');
+    FConexao.Query.SQL.Add('		   and Ped.OperacaoTipoId = 2');
+    if AParams.ContainsKey('datapedido') then begin
+       FConexao.Query.SQL.Add(' 		      and Dp.Data = :DataPedido ');
+       FConexao.Query.ParamByName('datapedido').Value := AParams.Items['datapedido'];
     end;
-    FConexao.Query.SQL.Add
-      ('			Group by PP.ProdutoId, Prd.CodProduto, Prd.Descricao, TEnd.EnderecoId, TEnd.Descricao, Prd.FatorConversao, PP.EmbalagemPadrao, Est.Estoque');
+    FConexao.Query.SQL.Add('			Group by PP.ProdutoId, Prd.CodProduto, Prd.Descricao, TEnd.EnderecoId, ');
+    FConexao.Query.SQL.Add('            TEnd.Descricao, Prd.FatorConversao, PP.EmbalagemPadrao, Est.Estoque');
     FConexao.Query.SQL.Add(') as ProdReposicao');
     // FConexao.Query.SQL.Add('where (Fracionado-EstPicking) > 0');
     FConexao.Query.Open();
-    if FConexao.Query.IsEmpty then
-    Begin
-      Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Sem Dados da Estrutura da Tabela.'));
+    if FConexao.Query.IsEmpty then Begin
+       Result := TjSonArray.Create;
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Sem Dados da Estrutura da Tabela.'));
     End
     Else
-      Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
+       Result := FConexao.Query.ToJSONArray();
+  Except ON E: Exception do
     Begin
-      raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create(StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
 
-function TPedidoSaidaDao.GetRelAnaliseRessuprimento(const AParams
-  : TDictionary<string, string>; pVolume: Boolean): TjSonArray;
-var
-  vDtInicio, vDtTermino: TDate;
-  vRotaId: Integer;
-  vPessoaId: Integer;
+Function TPedidoSaidaDao.GetRelAnaliseRessuprimento(const AParams : TDictionary<string, string>; pVolume: Boolean): TjSonArray;
+var vDtInicio, vDtTermino: TDate;
+    vRotaId: Integer;
+    vPessoaId: Integer;
 begin
   vDtInicio := 0;
   vDtTermino := 0;

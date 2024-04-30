@@ -8,6 +8,7 @@ inherited FrmInventario: TFrmInventario
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 723
+    Properties.ActivePage = TabListagem
     ExplicitTop = 59
     ExplicitHeight = 723
     ClientRectBottom = 723
@@ -483,7 +484,7 @@ inherited FrmInventario: TFrmInventario
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 9
         TabStop = False
-        Properties.ActivePage = TabTipoProduto
+        Properties.ActivePage = TabTipoGeografico
         Properties.CustomButtons.Buttons = <>
         ClientRectBottom = 479
         ClientRectLeft = 4
@@ -1556,7 +1557,7 @@ inherited FrmInventario: TFrmInventario
                 OnClick = BtnSchEstruturaClick
               end
               object EdtEnderecoInicial: TEdit
-                Left = 7
+                Left = 8
                 Top = 95
                 Width = 130
                 Height = 24

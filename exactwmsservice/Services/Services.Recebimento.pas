@@ -1625,46 +1625,40 @@ begin
       jsonEntradaItem := JsonArrayitens.Items[xItens] as TJsonObject;
       FConexao.Query.Close;
       FConexao.Query.Sql.Clear;
-      FConexao.Query.Sql.Add
-        ('Select Pl.ProdutoId, Sum(QtdXML) QtdXML, Sum(PI.qtdcheckin+PI.qtddevolvida+PI.qtdsegregada) TotalCheckIn');
+      FConexao.Query.Sql.Add('Select Pl.ProdutoId, Sum(QtdXML) QtdXML, Sum(PI.qtdcheckin+PI.qtddevolvida+PI.qtdsegregada) TotalCheckIn');
       FConexao.Query.Sql.Add('From PedidoItens PI');
-      FConexao.Query.Sql.Add
-        ('Inner Join ProdutoLotes PL ON Pl.LoteId = Pi.LoteId');
-      FConexao.Query.Sql.Add('Where Pi.pedidoid = ' + EntradaId.ToString() +
-        ' and Pl.ProdutoId = ' + jsonEntradaItem.GetValue<String>('produtoid'));
+      FConexao.Query.Sql.Add('Inner Join ProdutoLotes PL ON Pl.LoteId = Pi.LoteId');
+      FConexao.Query.Sql.Add('Where Pi.pedidoid = ' + EntradaId.ToString()+
+                             ' and Pl.ProdutoId = ' + jsonEntradaItem.GetValue<String>('produtoid'));
       FConexao.Query.Sql.Add('Group By Pl.ProdutoId');
       If DebugHook <> 0 then
-        FConexao.Query.Sql.SaveToFile('ValidarCheckIn.Sql');
+         FConexao.Query.Sql.SaveToFile('ValidarCheckIn.Sql');
       FConexao.Query.Open();
-      if FConexao.Query.FieldByName('QtdXml').AsInteger <
-        (FConexao.Query.FieldByName('TotalCheckIn').AsInteger +
-        jsonEntradaItem.GetValue<Integer>('qtdcheckin') +
-        jsonEntradaItem.GetValue<Integer>('qtddevolvida') +
-        jsonEntradaItem.GetValue<Integer>('qtdsegregada')) then
-        raise Exception.Create('Quantidade CheckIn(' +
-          FConexao.Query.FieldByName('TotalCheckIn').AsString +
-          ') maior que no XML!');
+      if FConexao.Query.FieldByName('QtdXml').AsInteger < (FConexao.Query.FieldByName('TotalCheckIn').AsInteger +
+         jsonEntradaItem.GetValue<Integer>('qtdcheckin')+
+         jsonEntradaItem.GetValue<Integer>('qtddevolvida') +
+         jsonEntradaItem.GetValue<Integer>('qtdsegregada')) then
+         raise Exception.Create('Quantidade CheckIn('+FConexao.Query.FieldByName('TotalCheckIn').AsString +') maior que no XML!');
       FConexao.Query.Close;
       FConexao.Query.Sql.Clear;
       EntradaItemId := 0; // jsonEntradaItem.GetValue<integer>('entradaitemid');
-      ProdutoId := jsonEntradaItem.GetValue<Integer>('produtoid');
-      LoteId := 0; // jsonEntradaItem.GetValue<Integer>('loteid');
-      DescrLote := jsonEntradaItem.GetValue<String>('descrlote');
-      Fabricacao := jsonEntradaItem.GetValue<string>('fabricacao');
-      Vencimento := jsonEntradaItem.GetValue<string>('vencimento');
-      DtEntrada := jsonEntradaItem.GetValue<string>('dtentrada');
-      HrEntrada := jsonEntradaItem.GetValue<string>('hrentrada');
-      QtdXml := jsonEntradaItem.GetValue<Integer>('qtdxml');
-      QtdCheckIn := jsonEntradaItem.GetValue<Integer>('qtdcheckin');
-      QtdDevolvida := jsonEntradaItem.GetValue<Integer>('qtddevolvida');
-      CausaId := jsonEntradaItem.GetValue<Integer>('causaid');
-      QtdSegregada := jsonEntradaItem.GetValue<Integer>('qtdsegregada');
-      UsuarioId := jsonEntradaItem.GetValue<Integer>('usuarioid');
+      ProdutoId     := jsonEntradaItem.GetValue<Integer>('produtoid');
+      LoteId        := 0; // jsonEntradaItem.GetValue<Integer>('loteid');
+      DescrLote     := jsonEntradaItem.GetValue<String>('descrlote');
+      Fabricacao    := jsonEntradaItem.GetValue<string>('fabricacao');
+      Vencimento    := jsonEntradaItem.GetValue<string>('vencimento');
+      DtEntrada     := jsonEntradaItem.GetValue<string>('dtentrada');
+      HrEntrada     := jsonEntradaItem.GetValue<string>('hrentrada');
+      QtdXml        := jsonEntradaItem.GetValue<Integer>('qtdxml');
+      QtdCheckIn    := jsonEntradaItem.GetValue<Integer>('qtdcheckin');
+      QtdDevolvida  := jsonEntradaItem.GetValue<Integer>('qtddevolvida');
+      CausaId       := jsonEntradaItem.GetValue<Integer>('causaid');
+      QtdSegregada  := jsonEntradaItem.GetValue<Integer>('qtdsegregada');
+      UsuarioId     := jsonEntradaItem.GetValue<Integer>('usuarioid');
       RespAltLoteId := jsonEntradaItem.GetValue<Integer>('respaltloteid');
       // Salvar no banco
-      vSql := 'Declare @EntradaId Integer     = ' + EntradaId.ToString() +
-        sLineBreak + 'Declare @EntradaItemId Integer = ' +
-        EntradaItemId.ToString() + sLineBreak +
+      vSql := 'Declare @EntradaId Integer = '+EntradaId.ToString()+sLineBreak+
+              'Declare @EntradaItemId Integer = '+EntradaItemId.ToString() + sLineBreak +
         'Declare @ProdutoId Integer     = ' + ProdutoId.ToString() + sLineBreak
         + 'Declare @LoteId Integer        = ' + LoteId.ToString + sLineBreak +
         'Declare @DescrLote VarChar(30) = ' + #39 + DescrLote + #39 + sLineBreak

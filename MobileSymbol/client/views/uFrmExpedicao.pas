@@ -176,6 +176,14 @@ begin
        Limpar;
        Exit;
     End
+    Else If JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') = 0 then Begin
+       SetCampoDefault('EdtCodigo');
+       ShowErro('Volume Sem Produto coletado. Cancele o volume!', 'alarme');
+       JsonArrayRetorno := Nil;
+       ObjPedidoVolumeCtrl.Free;
+       Limpar;
+       Exit;
+    End
     Else Begin
        EdtPedido.Text        := JsonArrayRetorno.Items[0].GetValue<String>('pedidoid')+' / '+JsonArrayRetorno.Items[0].GetValue<String>('pedidovolumeid');
        EdtDataDocumento.Text := JsonArrayRetorno.Items[0].GetValue<String>('documentodata');

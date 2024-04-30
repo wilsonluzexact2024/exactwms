@@ -8,20 +8,19 @@ uses
   Generics.Collections, exactwmsservice.lib.connection,
   uFuncoes, Web.HTTPApp, exactwmsservice.lib.utils, exactwmsservice.dao.base;
 
-Const
-  SqlEntradaIntegracaoConsulta = ';With' + sLineBreak + 'Ped as (Select Ped.*' +
-    sLineBreak + '        From VPedidos Ped' + sLineBreak +
-    '        Inner Join vDocumentoEtapas DE On De.Documento = Ped.Uuid' +
-    sLineBreak +
-    '        Where Ped.OperacaoTipoId = 3 and DE.ProcessoId in ( 5, 15, 31) and Ped.Status <> 31'
-    + sLineBreak +
-    '          And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)), '
-    + sLineBreak +
-
-    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '
-    + sLineBreak +
-    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'
-    + sLineBreak + 'From PedidoItens PI' + sLineBreak +
+Const SqlEntradaIntegracaoConsulta = ';With' + sLineBreak +
+    'Ped as (Select Ped.*'+sLineBreak +
+    '        From VPedidos Ped' + sLineBreak +
+//    '        Inner Join vDocumentoEtapas DE On De.Documento = Ped.Uuid' +sLineBreak +
+    'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Ped.Uuid'+sLineBreak+
+    'Inner Join vDocumentoEtapas De on De.Documento = Ped.uuid and De.Horario = DeM.horario and'+sLineBreak+
+    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
+    '        Where Ped.OperacaoTipoId = 3 and DE.ProcessoId in ( 5, 15, 31) and Ped.Status <> 31'+ sLineBreak +
+    '          --And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+sLineBreak+
+    '), '+ sLineBreak +
+    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '+ sLineBreak +
+    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'+sLineBreak +
+    'From PedidoItens PI' + sLineBreak +
     'Inner Join Ped P ON P.PedidoId = PI.PedidoId' + sLineBreak +
     'Group by PI.PedidoId) ' + sLineBreak + 'Select P.*, TC.*' + sLineBreak +
     'From Ped P' + sLineBreak +
@@ -38,10 +37,12 @@ Const
     '   	   (Case When DE.ProcessoId = 31 then ' + #39 + 'Documento Excluido' +
     #39 + ' Else Ped.StatusNome End) StatusNome' + sLineBreak +
     'From vPedidos Ped' + sLineBreak +
-    'Inner Join vDocumentoEtapas DE On De.Documento = Ped.Uuid' + sLineBreak +
-    'Where (Cast(PedidoId as varchar(36)) = @RegistroERP or RegistroERP = @RegistroERP) and De.ProcessoId in (5, 6, 15, 31)'
-    + sLineBreak +
-    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)';
+    'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid'+sLineBreak+
+    'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and'+sLineBreak+
+    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
+//    'Inner Join vDocumentoEtapas DE On De.Documento = Ped.Uuid' + sLineBreak +
+    'Where (Cast(PedidoId as varchar(36)) = @RegistroERP or RegistroERP = @RegistroERP) and De.ProcessoId in (5, 6, 15, 31)' + sLineBreak +
+    '      --And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)';
 
 Const
   SqlEntradaIntegracaoRetornoPedidoProdutos =
@@ -243,18 +244,19 @@ Const
 
 Const
   SqlGetValidaEntrada =
-    'Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = :pCodPessoaERP and PessoaTipoId = 2)'
-    + sLineBreak + 'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' +
-    sLineBreak + 'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak
-    + 'select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Proceso, De.Horario, Ped.Status'
-    + sLineBreak + 'From pedido Ped' + sLineBreak +
-    'Left join vDocumentoEtapas De On De.Documento = Ped.uuid' + sLineBreak +
+    'Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = :pCodPessoaERP and PessoaTipoId = 2)'+ sLineBreak +
+    'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' +sLineBreak +
+    'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak+
+    'select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Proceso, De.Horario, Ped.Status'+ sLineBreak +
+    'From pedido Ped' + sLineBreak +
+    'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid'+sLineBreak+
+    'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and'+sLineBreak+
+    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
+//    'Left join vDocumentoEtapas De On De.Documento = Ped.uuid' + sLineBreak +
     'where De.Documento = Ped.Uuid and ' + sLineBreak +
-    '      DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and'
-    + sLineBreak + '      Ped.OperacaoTipoId = 3 And' + sLineBreak +
-
-    '      Ped.PedidoId = (Select PedidoId From Pedido Where (((Select chave_entrada_integracao From Configuracao)=0) and (Cast(RegistroERP as VarChar(36)) = @RegistroERP)) '
-    + sLineBreak +
+    '      --DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and'+sLineBreak+
+    '      And Ped.OperacaoTipoId = 3 And' + sLineBreak +
+    '      Ped.PedidoId = (Select PedidoId From Pedido Where (((Select chave_entrada_integracao From Configuracao)=0) and (Cast(RegistroERP as VarChar(36)) = @RegistroERP)) '+sLineBreak +
     '                                                  or ((Select chave_entrada_integracao From Configuracao)=1 and PessoaId = @PessoaId and DocumentoNr = @DocumentoNr))';
 
   // '      Cast(Ped.RegistroERP as VarChar(36)) = @RegistroERP';
@@ -515,59 +517,44 @@ begin
         JSONPedido.getValue<String>('registroerp')) then
       Begin
         Result := TJsonArray.Create(TJsonObject.Create.AddPair('status', '500')
-          .AddPair('entradaid',
-          TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)))
-          .AddPair('documentoerp', JSONPedido.getValue<String>('registroerp'))
-          .AddPair('mensagem', 'Recebimento não pode ser alterado.'));
+                 .AddPair('entradaid', TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)))
+                 .AddPair('documentoerp', JSONPedido.getValue<String>('registroerp'))
+                 .AddPair('mensagem', 'Recebimento não pode ser alterado.'));
       End
       Else
       Begin
         jsonFornecedor := JSONPedido.getValue<TJsonObject>('fornecedor');
-        SalvarFornecedor(FConexao,
-          jsonFornecedor.getValue<Integer>('fornecedorcodigo'),
-          jsonFornecedor.getValue<String>('razao'),
-          jsonFornecedor.getValue<String>('fantasia'),
-          jsonFornecedor.getValue<String>('cnpj'),
-          jsonFornecedor.getValue<String>('email'));
+        SalvarFornecedor(FConexao, jsonFornecedor.getValue<Integer>('fornecedorcodigo'),
+                                   jsonFornecedor.getValue<String>('razao'),
+                                   jsonFornecedor.getValue<String>('fantasia'),
+                                   jsonFornecedor.getValue<String>('cnpj'),
+                                   jsonFornecedor.getValue<String>('email'));
         ArrayJSONItens := JSONPedido.getValue<TJsonArray>('itens');
         vDocumentoOriginal := '';
         vDocumentoOriginal := GetValueInjSon(JSONPedido, 'documentooriginal');
-        vEntradaId := SalvarEntrada(FConexao,
-          JSONPedido.getValue<Integer>('entradaid', 0),
-          jsonFornecedor.getValue<Integer>('fornecedorcodigo', 0),
-          JSONPedido.getValue<String>('natureza'),
-          JSONPedido.getValue<String>('documentonr'),
-          JSONPedido.getValue<String>('documentodata'), vDocumentoOriginal,
-          JSONPedido.getValue<String>('registroerp'), 0);
-        For xItens := 0 To ArrayJSONItens.Count - 1 do
-        Begin
+        vEntradaId := SalvarEntrada(FConexao, JSONPedido.getValue<Integer>('entradaid', 0),
+                                    JsonFornecedor.getValue<Integer>('fornecedorcodigo', 0),
+                                    JSONPedido.getValue<String>('natureza'),
+                                    JSONPedido.getValue<String>('documentonr'),
+                                    JSONPedido.getValue<String>('documentodata'), vDocumentoOriginal,
+                                    JSONPedido.getValue<String>('registroerp'), 0);
+        For xItens := 0 To ArrayJSONItens.Count - 1 do Begin
           JSONProduto := ArrayJSONItens.Get(xItens) as TJsonObject;
           JSONFabricante := JSONProduto.getValue<TJsonObject>('fabricante');
           // Laboratorio
           vLaboratorioId := SalvarLaboratorio(FConexao, JSONFabricante.getValue<Integer>('id'),
                                                         JSONFabricante.getValue<String>('nome'));
           JSONUnidPrimaria := JSONProduto.getValue<TJsonObject>('embalagemprimaria');
-
-          // ShowMessage('Unid Sec = Prim');
-          // if Not JSONProduto.TryGetValue<String>('embalagemsecundaria', vErro) then
-          // JSONUnidSecundaria := JSONProduto.GetValue<TJsonObject>('embalagemprimaria')
-          // Else Begin
-          // ShowMessage('Unid Sec');
-          JSONUnidSecundaria := JSONProduto.getValue<TJsonObject>
-            ('embalagemsecundaria');
-          // End;
+          JSONUnidSecundaria := JSONProduto.getValue<TJsonObject>('embalagemsecundaria');
           SalvarUnidades(FConexao, JSONUnidPrimaria.getValue<String>('sigla'), JSONUnidPrimaria.getValue<String>('descricao'));
           SalvarUnidades(FConexao, JSONUnidSecundaria.getValue<String>('sigla'), JSONUnidSecundaria.getValue<String>('descricao'));
           SalvarProduto(FConexao, JSONProduto.getValue<Integer>('produtoid', 0), JSONProduto.getValue<String>('descricao'),
                                   JSONUnidPrimaria.getValue<String>('sigla'), JSONUnidPrimaria.getValue<Integer>('qtdembalagem'),
                                   JSONUnidSecundaria.getValue<String>('sigla'), JSONUnidSecundaria.getValue<Integer>('qtdembalagem'),
                                   vLaboratorioId, 1, 0, 0, 0, 8, 8, 8, 0, 0, JSONProduto.getValue<String>('ean'));
-
-          SalvarProdutoCodbarras(FConexao, JSONProduto.getValue<Integer>('produtoid', 0),
-                                           JSONProduto.getValue<String>('ean'));
+          SalvarProdutoCodbarras(FConexao, JSONProduto.getValue<Integer>('produtoid', 0), JSONProduto.getValue<String>('ean'));
           ArrayJSONLotes := JSONProduto.getValue<TJsonArray>('lote');
-          for xLotes := 0 to ArrayJSONLotes.Count - 1 do
-          Begin
+          for xLotes := 0 to ArrayJSONLotes.Count - 1 do Begin
             JSONLote := ArrayJSONLotes.Get(xLotes) as TJsonObject;
             // JSONLote  := TJSONObject.ParseJSONValue(ArrayJSONLotes.Get(xEntrada).ToString);
             SalvarProdutoLotes(FConexao, JSONProduto.getValue<Integer>('produtoid', 0),
@@ -582,64 +569,48 @@ begin
         End;
         DeleteCheckIn(FConexao, vEntradaId);
         Result.AddElement(TJsonObject.Create.AddPair('status', '200')
-          .AddPair('entradaid',
-          TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)))
-          .AddPair('id_wms', TJsonNumber.Create(vEntradaId))
-          .AddPair('documentoerp', JSONPedido.getValue<String>('registroerp'))
-          .AddPair('mensagem', 'Ok!'));
+                         .AddPair('entradaid', TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)))
+                         .AddPair('id_wms', TJsonNumber.Create(vEntradaId))
+                         .AddPair('documentoerp', JSONPedido.getValue<String>('registroerp'))
+                         .AddPair('mensagem', 'Ok!'));
       End;
     End;
     FConexao.Query.connection.Commit;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      //
       FConexao.Query.connection.Rollback;
       JsonErro := TJsonObject.Create;
       JsonErro.AddPair('status', '500');
-      JsonErro.AddPair('entradaid',
-        TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)));
-      JsonErro.AddPair('documentoerp',
-        JSONPedido.getValue<String>('registroerp'));
-      JsonErro.AddPair('mensagem', StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      JsonErro.AddPair('entradaid', TJsonNumber.Create(JSONPedido.getValue<Integer>('entradaid', 0)));
+      JsonErro.AddPair('documentoerp', JSONPedido.getValue<String>('registroerp'));
+      JsonErro.AddPair('mensagem', StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
       Result.AddElement(JsonErro);
-      // raise Exception.Create('Processo: EntradaIntegração: '+StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
-
 End;
 
 procedure TEntradaIntegracaoDao.RegistrarRetorno(pEntradaId: Integer);
 begin
   Try
-    FConexao.Query.Sql.Add('Update Pedido Set Status = 5 Where PedidoId = ' +
-      pEntradaId.ToString());
+    FConexao.Query.Sql.Add('Update Pedido Set Status = 5 Where PedidoId = ' + pEntradaId.ToString());
     FConexao.Query.ExecSQL;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Processo: EntradaIntegracao - RegistrarRetorno: '
-        + StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: EntradaIntegracao - RegistrarRetorno: ' + StringReplace(E.Message,
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
 
 function TEntradaIntegracaoDao.Retorno(pPedidoId: String): TJsonArray;
-var
-  VQryPed, vQryPedProd, vQryPedLotes, vQryReg, vQryAtualizaStatusPedido
-    : TFDQuery;
-  ArrayJsonProdutos, ArrayJSONLotes: TJsonArray;
-  jsonRetorno, jsonFornecedor, JSONProduto, JSONFabricante,
-    jsonLotes: TJsonObject;
-  vProcessoId: Integer;
+var VQryPed, vQryPedProd, vQryPedLotes, vQryReg, vQryAtualizaStatusPedido : TFDQuery;
+    ArrayJsonProdutos, ArrayJSONLotes: TJsonArray;
+    jsonRetorno, jsonFornecedor, JSONProduto, JSONFabricante, jsonLotes: TJsonObject;
+    vProcessoId: Integer;
 begin
-  Result := TJsonArray.Create;
-  VQryPed := FConexao.GetQuery;
-  vQryPedProd := FConexao.GetQuery;
+  Result       := TJsonArray.Create;
+  VQryPed      := FConexao.GetQuery;
+  vQryPedProd  := FConexao.GetQuery;
   vQryPedLotes := FConexao.GetQuery;
   vQryPedLotes.FetchOptions.Unidirectional := false;
   VQryPed.FetchOptions.Unidirectional := false;
@@ -650,14 +621,12 @@ begin
     VQryPed.Sql.Add(SqlEntradaIntegracaoRetornoPedido);
     VQryPed.ParamByName('pRegistroERP').Value := pPedidoId;
     if DebugHook <> 0 then
-      VQryPed.Sql.SaveToFile('IntegracaoEntradaRetorno.Sql');
+       VQryPed.Sql.SaveToFile('IntegracaoEntradaRetorno.Sql');
     VQryPed.Open();
-    if (VQryPed.IsEmpty) then
-    Begin
-      Result.AddElement(TJsonObject.Create.AddPair('status', '500')
-        .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
-        .AddPair('mensagem', TuEvolutConst.QrySemDados));
-
+    if (VQryPed.IsEmpty) then Begin
+       Result.AddElement(TJsonObject.Create.AddPair('status', '500')
+             .AddPair('saidaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
+             .AddPair('mensagem', TuEvolutConst.QrySemDados));
     End
     Else
     Begin

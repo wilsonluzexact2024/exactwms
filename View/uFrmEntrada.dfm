@@ -15,7 +15,6 @@ inherited FrmEntrada: TFrmEntrada
     ClientRectBottom = 577
     ClientRectRight = 1178
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1178
       ExplicitHeight = 553
       inherited LstCadastro: TAdvStringGrid
@@ -97,6 +96,7 @@ inherited FrmEntrada: TFrmEntrada
       end
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1178
       ExplicitHeight = 553
       inherited ShCadastro: TShape
@@ -17750,7 +17750,7 @@ inherited FrmEntrada: TFrmEntrada
             Left = 136
             Top = 124
             Width = 119
-            Height = 25
+            Height = 23
             CustomHint = BalloonHint1
             Color = clWhite
             Ctl3D = False
@@ -17780,7 +17780,7 @@ inherited FrmEntrada: TFrmEntrada
             Left = 138
             Top = 60
             Width = 90
-            Height = 25
+            Height = 23
             CustomHint = BalloonHint1
             Color = clWhite
             Ctl3D = False
@@ -17838,8 +17838,8 @@ inherited FrmEntrada: TFrmEntrada
               AlignWithMargins = True
               Left = 3
               Top = 3
-              Width = 179
-              Height = 35
+              Width = 80
+              Height = 23
               CustomHint = BalloonHint1
               Align = alClient
               Alignment = taCenter
@@ -17858,8 +17858,6 @@ inherited FrmEntrada: TFrmEntrada
               OnClick = LblLoginClick
               OnMouseEnter = BtnLoginMouseEnter
               OnMouseLeave = BtnLoginMouseLeave
-              ExplicitWidth = 80
-              ExplicitHeight = 23
             end
           end
         end
@@ -28955,12 +28953,10 @@ inherited FrmEntrada: TFrmEntrada
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1178
       ExplicitHeight = 553
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1178
       ExplicitHeight = 553
       inherited DbgImporta: TDBGrid
@@ -28976,6 +28972,9 @@ inherited FrmEntrada: TFrmEntrada
       Caption = 'Agrupamento de Notas'
       ImageIndex = 4
       OnShow = TabGroupNotaShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PnlGroupNotaLeft: TPanel
         Left = 0
         Top = 0
@@ -29005,13 +29004,12 @@ inherited FrmEntrada: TFrmEntrada
           object LblTitGroup: TLabel
             Left = 1
             Top = 1
-            Width = 618
+            Width = 306
             Height = 17
             CustomHint = BalloonHint1
             Align = alTop
             Alignment = taCenter
             Caption = 'Selecionar Fornecedor / Notas para Agrupamento'
-            ExplicitWidth = 306
           end
           object LblFornecedorGroup: TLabel
             Left = 142
@@ -29907,13 +29905,12 @@ inherited FrmEntrada: TFrmEntrada
           object Label32: TLabel
             Left = 1
             Top = 13
-            Width = 556
+            Width = 161
             Height = 17
             CustomHint = BalloonHint1
             Align = alBottom
             Alignment = taCenter
             Caption = 'Agrupamentos Dipon'#237'veis'
-            ExplicitWidth = 161
           end
         end
         object LstAgrupamentoLista: TAdvStringGrid
@@ -31083,21 +31080,12 @@ inherited FrmEntrada: TFrmEntrada
     Width = 1177
     ExplicitTop = 617
     ExplicitWidth = 1177
-    inherited LblMensShowErro: TLabel
-      Width = 1177
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 1007
     Top = -47
     ExplicitLeft = 1007
     ExplicitTop = -47
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited DsPesqGeral: TDataSource
     Left = 489

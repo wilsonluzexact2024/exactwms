@@ -1681,7 +1681,7 @@ begin
   Try
     FConexao.Query.Sql.Add('Declare @CodProduto Integer = :pCodProduto');
     FConexao.Query.Sql.Add('Select CodProduto, Coalesce(Sum(Qtde), 0) Qtde');
-    FConexao.Query.Sql.Add('From (select CodigoERP CodProduto, Sum(Qtde) Qtde');
+    FConexao.Query.Sql.Add('From (select CodigoERP CodProduto, Sum(Qtde) Qtde --Sum(IsNull(QtdeProducao, 0)+IsNull(QtdeReserva, 0)) Qtde');
     FConexao.Query.Sql.Add('From vEstoque Est');
     FConexao.Query.Sql.Add('Where CodigoERP = @CodProduto');
     FConexao.Query.Sql.Add('  And ZonaId <> 3 And ((Select mudarPickingEstoquePallet from Configuracao) = 1 or EstruturaId = 2)');
@@ -1707,13 +1707,10 @@ begin
        Result.AddElement(TJsonObject.Create.AddPair('codproduto', TJsonNumber.Create(pCodProduto))
                                            .Addpair('estoque', TJsonNumber.Create(FConexao.Query.FieldByName('Qtde').AsInteger)));
     End;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Processo: UpdatePicking - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: UpdatePicking - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

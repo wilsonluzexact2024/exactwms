@@ -30,19 +30,11 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
               Viewport.Height = 322.000000000000000000
             end
             inherited LytPesqForm: TLayout
-              inherited LblContPesq: TLabel
-                Size.Width = 60.800003051757810000
-                Size.Height = 17.600000381469730000
-              end
               inherited CbCampoPesq: TComboBox
                 inherited LnCampoPesq: TLine
                   Position.Y = 28.000000000000000000
                   Size.Width = 97.000000000000000000
                 end
-              end
-              inherited LblCbPesq: TLabel
-                Size.Width = 44.799999237060550000
-                Size.Height = 17.600000381469730000
               end
             end
             inherited LytListaBase: TLayout
@@ -86,7 +78,6 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
               end
             end
             inherited LblAtivo: TLabel
-              Size.Height = 17.600006103515630000
               TabOrder = 2
             end
             object LytDetalheVolume: TLayout
@@ -794,6 +785,7 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
                       Size.Height = 20.000000000000000000
                       Size.PlatformDefault = False
                       Stroke.Color = claNull
+                      OnClick = RctF3Click
                       object LblF3: TLabel
                         Align = Client
                         AutoSize = True
@@ -884,7 +876,6 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
                         TextSettings.Font.Size = 11.000000000000000000
                         Text = 'F9 Vol.Extra'
                         TabOrder = 0
-                        OnClick = LblF9Click
                       end
                     end
                     object RctF5: TRectangle
@@ -2060,7 +2051,6 @@ inherited FrmSeparacaoColetor: TFrmSeparacaoColetor
             inherited LytBodyShowErro: TLayout
               inherited Rectangle5: TRectangle
                 inherited LblMsg01ShowErro: TLabel
-                  Size.Height = 15.200000762939450000
                   TextSettings.Font.StyleExt = {00070000000000000004000000}
                 end
                 inherited LblMsg02ShowErro: TLabel

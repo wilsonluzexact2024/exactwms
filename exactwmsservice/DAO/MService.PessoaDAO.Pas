@@ -266,25 +266,22 @@ begin
   if AParams.ContainsKey('pessoatipoid') then
     vPessoaTipoid := AParams.Items['pessoatipoid'].ToInt64;
   if vPessoaTipoid in [1, 2] then
-    vSql := 'select P.PessoaId, P.CodPessoaERP, Pt.Descricao, p.Razao, p.Fantasia, p.CnpjCpf, p.Email, Rp.RotaId, R.Descricao Rota, P.ShelfLife, p.Status'
-      + sLineBreak
+    vSql := 'select P.PessoaId, P.CodPessoaERP, Pt.Descricao, p.Razao, p.Fantasia, p.CnpjCpf, p.Email, Rp.RotaId, R.Descricao Rota, P.ShelfLife, p.Status'+sLineBreak
   Else
-    vSql := 'select P.PessoaId, Pt.Descricao, p.Razao, p.Fantasia, p.CnpjCpf, p.Email, Rp.RotaId, R.Descricao Rota, p.Status'
-      + sLineBreak;
-  vSql := vSql + 'From Pessoa p' + sLineBreak +
-    'Inner Join PessoaTipo Pt On Pt.PessoaTipoId = p.PessoaTipoID' + sLineBreak
-    + 'Left Join RotaPessoas Rp On Rp.PessoaId = p.PessoaId' + sLineBreak +
-    'Left Join Rotas R On R.RotaId = Rp.RotaId' + sLineBreak;
-  If (AParams.ContainsKey('diponivelagrupamento')) and
-    (AParams.Items['diponivelagrupamento'].ToInteger = 1) then
-  Begin
-    vSql := vSql + 'Left Join (select PessoaId From Pedido Ped' + sLineBreak +
-      '           Inner Join vDocumentoEtapas De On De.Documento = Ped.Uuid' +
-      sLineBreak +
-      '		        Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'
-      + sLineBreak + '		          And De.ProcessoId = 1' + sLineBreak +
-      '           Group by PessoaId) PedFor On PedFor.PessoaId = P.PessoaId' +
-      sLineBreak;
+    vSql := 'select P.PessoaId, Pt.Descricao, p.Razao, p.Fantasia, p.CnpjCpf, p.Email, Rp.RotaId, R.Descricao Rota, p.Status'+sLineBreak;
+  vSql := vSql + 'From Pessoa p'+sLineBreak+
+          'Inner Join PessoaTipo Pt On Pt.PessoaTipoId = p.PessoaTipoID'+sLineBreak+
+          'Left Join RotaPessoas Rp On Rp.PessoaId = p.PessoaId' + sLineBreak+
+          'Left Join Rotas R On R.RotaId = Rp.RotaId' + sLineBreak;
+  If (AParams.ContainsKey('diponivelagrupamento')) and (AParams.Items['diponivelagrupamento'].ToInteger = 1) then Begin
+     vSql := vSql + 'Left Join (select PessoaId From Pedido Ped'+sLineBreak+
+//             '                  Inner Join vDocumentoEtapas De On De.Documento = Ped.Uuid'+sLineBreak+
+             'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid'+sLineBreak+
+             'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and'+sLineBreak+
+             '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
+             '		                Where --DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and'+sLineBreak+
+             '		                      De.ProcessoId = 1'+sLineBreak +
+             '                  Group by PessoaId) PedFor On PedFor.PessoaId = P.PessoaId'+sLineBreak;
   End;
   vSql := vSql + 'Where p.PessoaTipoID  = :PessoaTipoId';
   If (AParams.ContainsKey('diponivelagrupamento')) and

@@ -266,6 +266,9 @@ type
     procedure BtnFinalizarCheckInClick(Sender: TObject);
     procedure BtnLoginMasterClick(Sender: TObject);
     procedure CbRastroTipoExit(Sender: TObject);
+    procedure EdtAlturaValidate(Sender: TObject; var Text: string);
+    procedure EdtComprimentoValidate(Sender: TObject; var Text: string);
+    procedure EdtPesoValidate(Sender: TObject; var Text: string);
   private
     { Private declarations }
     EventCreate : Boolean;
@@ -314,6 +317,7 @@ type
     Procedure PermitirAcessoCtrlSeg; OverRide;
     Procedure BlockFuncaoAutorizacao; OverRide;
     Procedure LiberarFuncaoBloqueada; OverRide;
+    Procedure AtivaCampoDefault; OverRide;
   end;
 
 var
@@ -343,6 +347,94 @@ begin
   inherited;
   EdtLote.Text := '';
   DelayEdSetFocus(EdtLote);
+end;
+
+procedure TFrmEntrada.AtivaCampoDefault;
+begin
+  inherited;
+  if CampoDefault = 'CbCampoPesq' then Begin
+     DelayEdSetFocus(CbCampoPesq);
+  End
+  Else if CampoDefault = 'EdtConteudoPesq' then Begin
+     EdtConteudoPesq.Text := '';
+     DelayEdSetFocus(EdtConteudoPesq);
+  End
+  Else if CampoDefault = 'EdtCodigo' then Begin
+     EdtCodigo.Text := '';
+     DelayEdSetFocus(EdtCodigo);
+  End
+  Else if CampoDefault = 'EdtCodProdutoDevSeg' then Begin
+     EdtCodProdutoDevSeg.Text := '';
+     DelayEdSetFocus(EdtCodProdutoDevSeg);
+  End
+  Else if CampoDefault = 'CbTipoMovimentacaoDevSeg' then Begin
+     CbTipoMovimentacaoDevSeg.ItemIndex := -1;
+     DelayEdSetFocus(CbTipoMovimentacaoDevSeg);
+  End
+  Else if CampoDefault = 'CbLoteDevSeg' then Begin
+     CbLoteDevSeg.ItemIndex := -1;
+     DelayEdSetFocus(CbLoteDevSeg);
+  End
+  Else if CampoDefault = 'EdtQtdeDevSeg' then Begin
+     EdtQtdeDevSeg.Text := '';
+     DelayEdSetFocus(EdtQtdeDevSeg);
+  End
+  Else if CampoDefault = 'CbCausaDevolucaoSegregado' then Begin
+     CbCausaDevolucaoSegregado.ItemIndex := -1;
+     DelayEdSetFocus(CbCausaDevolucaoSegregado);
+  End
+  Else if CampoDefault = 'EdtCodProduto' then Begin
+     EdtCodProduto.Text := '';
+     DelayEdSetFocus(EdtCodProduto);
+  End
+  Else if CampoDefault = 'EdtPicking' then Begin
+     EdtPicking.Text := '';
+     DelayEdSetFocus(EdtPicking);
+  End
+  Else if CampoDefault = 'CbRastroTipo' then Begin
+     CbRastroTipo.ItemIndex := -1;
+     DelayEdSetFocus(CbRastroTipo);
+  End
+  Else if CampoDefault = 'EdtFatorConversao' then Begin
+     EdtFatorConversao.Text := '';
+     DelayEdSetFocus(EdtFatorConversao);
+  End
+  Else if CampoDefault = 'EdtPeso' then Begin
+     EdtPeso.Text := '';
+     DelayEdSetFocus(EdtPeso);
+  End
+  Else if CampoDefault = 'EdtAltura' then Begin
+     EdtAltura.Text := '';
+     DelayEdSetFocus(EdtAltura);
+  End
+  Else if CampoDefault = 'EdtLargura' then Begin
+     EdtLargura.Text := '';
+     DelayEdSetFocus(EdtLargura);
+  End
+  Else if CampoDefault = 'EdtComprimento' then Begin
+     EdtComprimento.Text := '';
+     DelayEdSetFocus(EdtComprimento);
+  End
+  Else if CampoDefault = 'EdtLote' then Begin
+     EdtLote.Text := '';
+     DelayEdSetFocus(EdtLote);
+  End
+  Else if CampoDefault = 'EdtDtFabricacao' then Begin
+     EdtDtFabricacao.Text := '';
+     DelayEdSetFocus(EdtDtFabricacao);
+  End
+  Else if CampoDefault = 'EdtDtVencimento' then Begin
+     EdtDtVencimento.Text := '';
+     DelayEdSetFocus(EdtDtVencimento);
+  End
+  Else if CampoDefault = 'EdtQtdUnidPrimCheckIn' then Begin
+     EdtQtdUnidPrimCheckin.Text := '';
+     DelayEdSetFocus(EdtQtdUnidPrimCheckIn);
+  End
+  Else if CampoDefault = 'EdtQtdUnidSecCheckIn' then Begin
+     EdtQtdUnidSecCheckIn.Text := '';
+     DelayEdSetFocus(EdtQtdUnidSecCheckIn);
+  End
 end;
 
 procedure TFrmEntrada.AtivarPanelAutorizacao;
@@ -443,14 +535,17 @@ begin
   inherited;
   EXIT;
   if (EdtUsuarioCtrlSeg.Text='') or (EdtSenhaCtrlSeg.Text='') then Begin
+     if EdtUsuarioCtrlSeg.Text = '' then
+        SetCampoDefault('EdtUsuarioCtrlSeg')
+     Else
+        SetCampoDefault('EdtSenhaCtrlSeg');
      ShowErro('Informe o Usuário e a Senha!');
-     if EdtUsuarioCtrlSeg.Text = '' then DelayEdSetFocus(EdtUsuarioCtrlSeg)
-     Else DelayEdSetFocus(EdtSenhaCtrlSeg);
      Exit;
   End;
   if (Sender=EdtUsuarioCtrlSeg) and (EdtUsuarioCtrlSeg.Text = '') then
      Exit;
   if (Sender=BtnLogIn) and ((EdtUsuarioCtrlSeg.Text = '') or (EdtSenhaCtrlSeg.Text='')) then Begin
+     SetCampoDefault('EdtUsuarioCtrlSeg');
      ShowErro('Informe usuário e senha.');
      Exit;
   End;
@@ -462,34 +557,28 @@ begin
     ObjUsuarioAutorizacaoCtrl := TUsuarioCtrl.Create;
     UsuarioJsonArray := ObjUsuarioAutorizacaoCtrl.FindUsuario(EdtUsuarioCtrlSeg.Text, 0);
     if UsuarioJsonArray.Items[0].TryGetValue('Erro', vErro) then Begin
-       EdtUsuarioCtrlSeg.Text := '';
+       SetCampoDefault('EdtUsuarioCtrlSeg');
        ShowErro('Erro: '+vErro);
-       DelayEdSetFocus(EdtUsuarioCtrlSeg);
     End
     Else if UsuarioJsonArray.Items[0].GetValue<Integer>('usuarioid') = 0 then Begin
-       EdtUsuarioCtrlSeg.Text := '';
-       DelayedSetFocus(EdtUsuarioCtrlSeg);
+       SetCampoDefault('EdtUsuarioCtrlSeg');
        ShowErro('Usuário Inválido!!!');
     End
     Else if (UsuarioJsonArray.Items[0].GetValue<Integer>('status') = 2) then Begin
-       EdtUsuarioCtrlSeg.Text := '';
-       DelayedSetFocus(EdtUsuarioCtrlSeg);
+       SetCampoDefault('EdtUsuarioCtrlSeg');
        ShowErro('Acesso negado! Usuário inativo.');
     End;
     LblUsuarioCtrlSeg.Text      := UsuarioJsonArray.Items[0].GetValue<String>('nome');
     sleep(300);
     if Not ((MD5Texto(EdtSenhaCtrlSeg.Text) = UsuarioJsonArray.Items[0].GetValue<String>('senha'))) Then Begin
+       SetCampoDefault('EdtUsuarioCtrlSeg');
        ShowErro('Usuário/Senha inválido!');
-       EdtUsuarioCtrlSeg.Text := '';
-       DelayEdSetFocus(EdtUsuarioCtrlSeg);
     End;
     ObjUsuarioAutorizacaoCtrl.ObjUsuario.UsuarioId := UsuarioJsonArray.Items[0].GetValue<Integer>('usuarioid');
     if Not (ObjUsuarioAutorizacaoCtrl.AcessoFuncionalidade('Recebimentos - Alteração Lotes')) then Begin
-       SetCampoDefault('EdtLote');
+       SetCampoDefault('EdtUsuarioCtrlSeg');
        ShowErro('Usuário não autorizado!');
-       EdtUsuarioCtrlSeg.Text := '';
        EdtSenhaCtrlSeg.Text   := '';
-       DelayEdSetFocus(EdtUsuarioCtrlSeg);
     End
     Else Begin
        EdtUsuarioCtrlSeg.Text := '';
@@ -503,7 +592,7 @@ begin
     LblUsuarioAut.Text     := '';
     EdtUsuarioCtrlSeg.Text := '';
     EdtSenhaCtrlSeg.Text   := '';
-    DelayedSetFocus(EdtUsuarioCtrlSeg);
+    SetCampoDefault('EdtUsuarioCtrlSeg');
     ShowErro('Erro: ('+DmCLient.RESTResponse1.StatusCode.ToString()+') '+E.Message);
     End;
   End;
@@ -538,9 +627,8 @@ begin
     Else
        ActConfirmarNovoLoteExecute(ActConfirmarNovoLote);
   Except On E: Exception do Begin
-    EdtLote.Text := '';
+    SetCampoDefault('EdtLote.Text');
     ShowErro('Erro: '+E.Message);
-    DelayEdsetFocus(EdtLote);
     End;
   End;
 end;
@@ -593,6 +681,19 @@ Begin
   MsgD.Height      := 200;
   MsgD.ShowMsgD;
 End;
+
+procedure TFrmEntrada.EdtAlturaValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 2000 then Begin
+     if Sender = EdtAltura then
+        SetCampoDefault('EdtAltura')
+     Else
+        SetCampoDefault('EdtLargura');
+     ShowErro('Medidas fora do padrão(2Mt)');
+     DelayEdSetFocus(TEdit(Sender));
+  End;
+end;
 
 procedure TFrmEntrada.EdtCodigoKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
@@ -706,6 +807,15 @@ begin
   LimparRct02_Rct03;
 end;
 
+procedure TFrmEntrada.EdtComprimentoValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 3000 then Begin
+     SetCampoDefault('EdtComprimento');
+     ShowErro('Medida fora do padrão(3Mt)!');
+  End;
+end;
+
 function TFrmEntrada.ValidarCheckInProduto(pCodProdutoCheckIn : Integer): Boolean;
 Var xRecno : Integer;
 begin
@@ -715,6 +825,7 @@ begin
      (FdMemEntradaProduto.FieldByName('QtdXml').AsInteger<=(FdMemEntradaProduto.FieldByName('QtdCheckin').AsInteger+
                                                             FdMemEntradaProduto.FieldByName('QtdDevolvida').AsInteger+
                                                             FdMemEntradaProduto.FieldByName('QtdSegregada').AsInteger)) then Begin
+     SetCampoDefault('EdtCodProduto');
      ShowErro('Produto com CheckIn concluído');
      Result := False;
      End
@@ -797,8 +908,8 @@ begin
            EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(DateToStr(Now()), 7, 4))-2).ToString;
      End
      Else Begin
+        SetCampoDefault('EdtDtFabricacao');
         ShowErro('Informe a data de Fabricacao');
-        DelayEdSetFocus(EdtDtFabricacao);
         Exit;
      End;
   End;
@@ -806,19 +917,20 @@ begin
     StrToDate(TEdit(Sender).Text);
   Except Begin
     TEdit(Sender).Text := '';
-    DelayEdSetFocus(TEdit(Sender));
+    SetCampoDefault('EdtDtFabricao');
     ShowErro('Data de Fabricação inválida');
     End;
   End;
   if ((Sender) = EdtDtFabricacao) and (StrToDate(TEdit(Sender).Text) > Date()) then Begin
      TEdit(Sender).Text := '';
+     SetCampoDefault('EdtDtFabricao');
      ShowErro('Data de Fabricação não pode ser maior que hoje!');
-     DelayEdSetFocus(TEdit(Sender));
   End;
   if (Sender = EdtDtVencimento) then Begin
      If (StrToDate(EdtDtVencimento.Text) <= StrToDate(EdtDtFabricacao.Text)) then Begin
         TEdit(Sender).Text := '';
-        ShowErro('Data de Vecimento inválida!');
+        SetCampoDefault('EdtDtVencimento');
+        ShowErro('EdtDtVencimento');
         DelayEdSetFocus(TEdit(Sender));
      End
      Else Begin
@@ -919,6 +1031,15 @@ begin
   EdtDtVencimento.Text := '';
 end;
 
+procedure TFrmEntrada.EdtPesoValidate(Sender: TObject; var Text: string);
+begin
+  inherited;
+  if StrToFloatDef(TEdit(Sender).Text, 0) > 50000 then Begin
+     SetCampoDefault('EdtPeso');
+     ShowErro('Peso fora do padrão(50Kg)');
+  End;
+end;
+
 procedure TFrmEntrada.EdtPickingKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
@@ -928,7 +1049,14 @@ begin
         DelayEdSetFocus(EdtPeso)
      Else if Not EdtLote.ReadOnly then
         DelayEdSetFocus(EdtLote)
-     Else DelayEdSetFocus(EdtDtFabricacao);
+     Else Begin
+        if CbRastroTipo.ItemIndex = 0 then
+           DelayEdSetFocus(EdtQtdUnidPrimCheckIn)
+        Else if CbRastroTipo.ItemIndex = 1 then
+           DelayEdSetFocus(EdtDtVencimento)
+        Else
+           DelayEdSetFocus(EdtLote);
+     End;
   End;
 end;
 
@@ -946,11 +1074,12 @@ begin
           ObjEnderecoCtrl  := TEnderecoCtrl.Create;
           EnderecoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EnderecoMask(EdtPicking.Text, '', False), EnderecoMask(EdtPicking.Text, '', False), 'T', 2, 0);
           if (EnderecoJsonArray.Items[0].TryGetValue('Erro', vErro)) or (EnderecoJsonArray.Count < 1) then Begin
-             ShowErro('Endereço '+EnderecoMask(EdtPicking.Text, '', False)+'não encontrado!');
+             SetCampoDefault('EdtPicking');
+             ShowErro('Endereço '+EnderecoMask(EdtPicking.Text, '', False)+' não encontrado!');
              EdtPicking.Text := '';
-             DelayEdSetFocus(EdtPicking);
           End
           Else If EnderecoJsonArray.Items[0].GetValue<Integer>('status') = 0 then Begin
+             SetCampoDefault('EdtPicking');
              ShowErro('Endereco('+EnderecoMask(EdtPicking.Text, '', True)+') inativo!');
              EdtPicking.Text := '';
           End
@@ -1498,7 +1627,7 @@ begin
   JsonArrayRetorno := ObjProdutoCtrl.FindProduto('0', pCodProduto, '', 0, 0);
   if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
      EdtCodProduto.Text := '';
-     DelayEdSetFocus(EdtCodProduto);
+     SetCampoDefault('EdtCodProduto');
      ShowErro('Codigo de produto inválido!!!');
   End
   Else Begin
@@ -1506,6 +1635,7 @@ begin
     FdMemEntradaProduto.First;
     if Not FdMemEntradaProduto.Locate('CodProduto', Result, [loPartialKey]) then Begin
        Result := 0;
+       SetCampoDefault('EdtCodProduto');
        ShowErro('Produto não pertence a este CheckIn!');
     End
   End;
@@ -1981,7 +2111,7 @@ begin
     if JsonArrayEntrada.Items[0].TryGetValue('Erro', vErro) then begin
        JsonArrayEntrada := Nil;
        ObjEntradaCtrl.Free;
-       DelayEdSetFocus(EdtCodigo);
+       SetCampoDefault('EdtCodigo');
        ShowErro(vErro);
        Exit;
     end;
@@ -2013,9 +2143,8 @@ begin
      DelayEdSetFocus(EdtCodigo);
   End
   Else Begin
+     SetCampoDefault('EdtCodigo');
      ShowErro('Recebimento('+EdtCodigo.Text+') não encontradao!');
-     EdtCodigo.Text := '';
-     DelayEdSetFocus(EdtCodigo);
   End;
 end;
 
@@ -2062,6 +2191,7 @@ begin
   if pConteudo = '0' then raise Exception.Create('conteúdo inválido para pesquisar!');
   if (EdtConteudoPesq.Text <> '') then begin
      if CbCampoPesq.ItemIndex < 0 then Begin
+        SetCampoDefault('CbCampoPesq');
         ShowErro('Selecione o campo para procurar!');
         CbCampoPesq.SetFocus;
         Exit;
@@ -2070,8 +2200,8 @@ begin
        Try
          StrToDate(EdtConteudoPesq.Text);
        Except
+         SetCampoDefault('EdtConteudoPesq');
          ShowErro('Data Inválida para pesquisa.');
-         CbCampoPesq.SetFocus;
          Exit;
        End;
      End;
@@ -2094,8 +2224,10 @@ begin
           Result := GetListaEntrada(0, 0, '', '', '', 0, 0, StrToIntDef(EdtConteudoPesq.Text, 0), '0')
        Else if CbCampoPesq.ItemIndex = 7 then //Agrupamento
           Result := GetListaEntrada(0, 0, '', '', '', 0, 0, 0, EdtConteudoPesq.Text);
-     Except On E: Exception do
+     Except On E: Exception do  Begin
+        SetCampoDefault('EdtConteudo');
         ShowErro('Erro: '+E.Message);
+        End;
      End;
      EdtConteudoPesq.Text := '';
   End;
@@ -2294,13 +2426,13 @@ begin
   End
   Else If FdMemEntradaProduto.FieldByName('RastroId').AsInteger in [2,3] then  Begin
     if (EdtDtFabricacao.Text = '  /  /    ') then Begin
+       SetCampoDefault('EdtDtFabricacao');
        ShowErro('Informe a data de Fabricao!');
-       DelayEdSetFocus(EdtDtFabricacao);
        Exit;
     End;
     if (EdtDtVencimento.Text = '  /  /    ') then Begin
+       SetCampoDefault('EdtDtVencimento');
        ShowErro('Informe a data de Vencimento!');
-       DelayEdSetFocus(EdtDtVencimento);
        Exit;
     End;
     if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then Begin
@@ -2309,8 +2441,8 @@ begin
     End
     Else Begin
        if (EdtLote.Text = '') then Begin
+          SetCampoDefault('EdtLote');
           ShowErro('Informe o lote do Produto!');
-          DelayEdSetFocus(EdtLote);
           Exit;
        End;
        vLote  := EdtLote.Text;
@@ -2364,8 +2496,8 @@ begin
 //     VerifyEndCheckIn;
   End
   Else Begin
+     SetCampoDefault('EdtQtdUnidPrimCheckIn');
      ShowErro('Não foi possível salvar o CheckIn. tente novamente!');
-     DelayEdSetFocus(EdtQtdUnidPrimCheckIn);
   End;
 end;
 
@@ -2374,7 +2506,7 @@ Var vQtdDevolvida, vQtdSegregada : Integer;
 begin
   inherited;
   if CbTipoMovimentacaoDevSeg.ItemIndex < 0 then Begin
-     DelayEdSetFocus(CbTipoMovimentacaoDevSeg);
+     SetCampoDefault('CbTipoMovimentacaoDevSeg');
      ShowErro('Informe o motivo da operação.');
   End;
   if CbLoteDevSeg.ItemIndex < 0 then begin
@@ -2387,8 +2519,8 @@ begin
   if FdMemEntradaProduto.FieldByName('QtdXml').AsInteger <
      (StrToIntDef(EdtQtdeDevSeg.Text, 0)+FdMemEntradaProduto.FieldByName('QtdCheckIn').AsInteger+
       FdMemEntradaProduto.FieldByName('QtdDevolvida').AsInteger+FdMemEntradaProduto.FieldByName('QtdSegregada').AsInteger) Then Begin
+     SetCampoDefault('EdtQtdeDevSeg');
      ShowErro('Quantidade Total maior que na Nota!');
-     DelayEdSetFocus(EdtQtdeDevSeg);
      Exit;
   End;
   if CbTipoMovimentacaoDevSeg.ItemIndex = 0 then Begin
@@ -2426,8 +2558,8 @@ begin
   //     VerifyEndCheckIn;
   End
   Else Begin
+     SetCampoDefault('EdtQtdUnidPrimCheckIn');
      ShowErro('Não foi possível salvar o CheckIn. tente novamente!');
-     DelayEdSetFocus(EdtQtdUnidPrimCheckIn);
   End;
 end;
 

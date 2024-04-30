@@ -257,8 +257,6 @@ type
     LblSubstituicaoInativa: TLabel;
     FdMemProdutosQtdSeparada: TIntegerField;
     EdtDesativarDigitacao: TEdit;
-    Line11: TLine;
-    Line12: TLine;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     Procedure CabecalhoPedido(pPedidoId : Integer; pRazao, pDocumentoData : String; pRotaid : Integer);
@@ -309,13 +307,13 @@ type
     procedure RctF7Click(Sender: TObject);
     procedure LblF3Click(Sender: TObject);
     procedure RctF8Click(Sender: TObject);
-    procedure LblF9Click(Sender: TObject);
     procedure EdtLoteSubstituirKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure EdtLoteSubstituirExit(Sender: TObject);
     procedure RctF9Click(Sender: TObject);
     procedure EdtQtdeApanheLoteF3Validate(Sender: TObject; var Text: string);
     procedure EdtVolumeIdTyping(Sender: TObject);
+    procedure RctF3Click(Sender: TObject);
   private
     { Private declarations }
     LogOffCaixa            : Boolean;
@@ -394,6 +392,7 @@ type
     function ValidarColetaProduto: Boolean;
     procedure VerificarFinalizacaoOrContinuidadeSeparacao(pForcado : Boolean);
     Function ValidarColetaLote : Boolean;
+    procedure ConfirmarResetVolume;
   Protected
     Procedure PermitirAcessoCtrlSeg; OverRide;
     Procedure LiberarFuncaoBloqueada; OverRide;
@@ -1050,6 +1049,9 @@ begin
     4: Begin
        ShowOk('Vc deve clicar em SIM para Finalizar!');
     End;
+    5: Begin
+       PgcPrincipal.ActiveTab := TabDetalhes;
+    End
     Else
        ChgTabDet.Execute;
   end;
@@ -1097,6 +1099,11 @@ begin
 
        End;
     End;
+    5: Begin
+       ConfirmaResetVolume(StrToIntDef(EdtVolumeId.Text, 0));
+       PgcPrincipal.ActiveTab := TabDetalhes;
+       ShowOk('Reset realizado!');
+    End
     Else
        ChgTabDet.Execute; //PgcPrincipal.ActiveTab := TabDetalhes;
   end;
@@ -1154,6 +1161,17 @@ begin
   LblTituloFoot.Text        := 'Divergência(s) e não coletados serão lançadas em novo volume.';
   LblMensagem1.Text := 'Gerar Volume Extra de Excesso?';
   LblMensagem2.Text := 'Volume será gerado devido excesso na caixa.';
+  //PgcPrincipal.ActiveTab := TabConfirmacao;
+  ChgTabConfirmacao.Execute;
+end;
+
+procedure TFrmSeparacaoColetor.ConfirmarResetVolume;
+begin
+  CodConfirmacao := 5;
+  LblTituloConfirmacao.Text := 'Resetar Volume';
+  LblTituloFoot.Text        := 'Produtos já coletar retornar ao Picking.';
+  LblMensagem1.Text := 'Resetar Volume?';
+  LblMensagem2.Text := 'Toda a coleta será desfeita.';
   //PgcPrincipal.ActiveTab := TabConfirmacao;
   ChgTabConfirmacao.Execute;
 end;
@@ -1375,11 +1393,6 @@ end;
 procedure TFrmSeparacaoColetor.EdtEmbalagemIdKeyUp(Sender: TObject;
   var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
-  if (Length(EdtEmbalagemId.Text) > 20) then Begin
-     SetCampoDefault('EdtProduto');
-     ShowErro('Nr Embalagem inválido!!!');
-     Exit;
-  End;
   if Key = vkF2 then Begin
      FrmeXactWMS.BrnMenuClick(Sender);
      Exit;
@@ -1523,16 +1536,11 @@ Var vCod : Integer;
     vQtdSuprida        : Integer;
     ObjProdutoCtrl     : TProdutoCtrl;
 begin
-  if (Length(EdtProduto.Text)>20) then Begin
-     SetCampoDefault('EdtProduto');
-     ShowErro('Código/Ean inválido');
-     Exit;
-  End;
   inherited;
   If (Key = vkReturn) and (EdtProduto.Text<>'') then Begin
      DelayEdSetFocus(EdtDesativarDigitacao);
-     if (StrToIntDef(EdtEmbalagemId.Text, 0) > 0) and
-        (StrToIntDef(EdtProduto.Text, 0) = StrToIntDef(EdtEmbalagemId.Text, 0))then Begin
+     if (StrToInt64Def(EdtEmbalagemId.Text, 0) <> 0) and
+        (StrToInt64Def(EdtProduto.Text, 0) = StrToInt64Def(EdtEmbalagemId.Text, 0))then Begin
         LogOff;
         Exit;
      End
@@ -1828,7 +1836,8 @@ begin
   If (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger < DmeXactWMS.QryVolumeDivergencia.FieldByName('Demanda').AsInteger) then Begin
      FdMemProdutos.Filter   := '';
      FdMemProdutos.Filtered := False;
-     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger=0) then
+     if //(FdMemProdutos.RecordCount = 1) and
+        (DmeXactWMS.QryVolumeDivergencia.FieldByName('QtdSuprida').AsInteger=0) then
         ConfirmarCancelamentoDeVolume
      Else
         ConfirmarGeracaoVolumeExtra;
@@ -2526,24 +2535,6 @@ begin
   End;
 end;
 
-procedure TFrmSeparacaoColetor.LblF9Click(Sender: TObject);
-begin
-  inherited;
-  If (Not GetVolumeComDivergencia) then Begin
-     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then Begin
-        ConfirmarCancelamentoDeVolume;
-        Exit;
-     End
-     Else if (Not LytLoteApanhe.Visible) or (EdtProduto.Text='') then
-        SetCampoDefault('EdtProduto')
-     Else SetCampoDefault('EdtLoteSeparacao');
-     ShowErro('Volume Extra não permitido!');
-     Exit;
-  End;
-  If (pPanelDigitarProduto) then
-     ConfirmarGeracaoVolumeExtra;
-end;
-
 procedure TFrmSeparacaoColetor.LiberarFuncaoBloqueada;
 begin
   inherited;
@@ -3040,6 +3031,27 @@ begin
   DelayEdSetFocus(EdtProduto);
 end;
 
+procedure TFrmSeparacaoColetor.RctF3Click(Sender: TObject);
+begin
+  inherited;
+  if ((FrmeXactWMS.ConfigWMS.ApanheConsolidado = 0) or (FrmeXactWMS.ConfigWMS.BeepProdIndividual = 0) or
+     ((FrmeXactWMS.ConfigWMS.BeepProdIndividual = 1) and (StrToIntDef(EdtQtdDemanda.Text,0)>FrmeXactWMS.ConfigWMS.BeepIndividualLimiteUnid))) then Begin
+     F3Press := True;
+     if LytLoteApanhe.Visible then Begin
+       EdtQtdeApanheLoteF3.ReadOnly := False;
+       DelayedSetFocus(EdtQtdeApanheLoteF3);
+       EdtProduto.ReadOnly       := False;
+       EdtLoteSeparacao.ReadOnly := False;
+     End
+     Else Begin
+       EdtQtdApanhe.ReadOnly := False;
+       DelayedSetFocus(EdtQtdApanhe);
+       EdtProduto.ReadOnly       := False;
+       EdtLoteSeparacao.ReadOnly := False;
+     End;
+  End;
+end;
+
 procedure TFrmSeparacaoColetor.RctF5Click(Sender: TObject);
 begin
   inherited;
@@ -3073,15 +3085,14 @@ begin
      if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then Begin
         ConfirmarCancelamentoDeVolume;
         Exit;
-     End
-     Else if (Not LytLoteApanhe.Visible) or (EdtProduto.Text='') then
-        SetCampoDefault('EdtProduto')
-     Else SetCampoDefault('EdtLoteSeparacao');
-     ShowErro('Volume Extra não permitido!');
-     Exit;
+     End;
   End;
-  If (pPanelDigitarProduto) then
-     ConfirmarGeracaoVolumeExtraForcado;
+  If (pPanelDigitarProduto) then Begin
+     if (FdMemProdutos.RecordCount = 1) and (DmeXactWMS.QryPesquisa.FieldByName('QtdSuprida').AsInteger=0) then
+        ConfirmarCancelamentoDeVolume
+     Else
+        ConfirmarGeracaoVolumeExtraForcado;
+  End;
 end;
 
 procedure TFrmSeparacaoColetor.RedistribuirApanheParaLotes;
@@ -3215,6 +3226,11 @@ begin
      ShowErro('Usuário não autorizado!', 'alarme');
      Exit;
   End;
+
+  CodConfirmacao := 5;
+  ConfirmarResetVolume;
+  exit;
+
   TDialogService.MessageDialog('Resetar o volume('+EdtVolumeId.Text+')?',
                TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0,
    procedure(const AResult: TModalResult)

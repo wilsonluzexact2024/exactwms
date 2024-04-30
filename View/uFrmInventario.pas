@@ -739,7 +739,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 1, 1)[0].Descricao;
        EdtEnderecoFinal.SetFocus;
        ObjEnderecoCtrl := Nil;
     End;
@@ -2402,7 +2402,7 @@ begin
      vEnderecoFinal := vEnderecoInicial
   Else vEnderecoFinal := EdtEnderecoFinal.Text;
   JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoPorListaZonaJson(0, StrToIntDef(EdtEstruturaId.Text, 0),
-                      0, vEnderecoInicial, vEnderecoFinal, 'T', 2, vListaZona, 1);
+                      0, vEnderecoInicial, vEnderecoFinal, 'T', 1, vListaZona, 1);
   LstEnderecoDisponivel.RowCount := 1;
   LblEnderecoDisponivel.Caption := 'Endereço Disponível(0)';
   LblEnderecoSelecao.Caption    := 'Endereço(s) Selecionado para Contagem(0)';

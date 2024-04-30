@@ -263,20 +263,22 @@ begin
       If PerfilDAO.Delete Then Begin
          Res.Status(200).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro excluído com Sucesso!'))).Status(THTTPStatus.Created);
          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                         '/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Excluído com sucesso!',
+                         'v1/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Excluído com sucesso!',
                          201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
 
       End
       Else Begin
          Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Exclusão não permitida!'))).Status(THTTPStatus.Created);
-               Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Exclusão não permitida!',
-                      500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                'v1/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', 'Exclusão não permitida!',
+                500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
-    Except
-      on E: Exception do
+    Except on E: Exception do
       Begin
         Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                'v1/perfil/:perfilid', Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
+                500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally

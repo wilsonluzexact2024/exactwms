@@ -303,7 +303,9 @@ begin
        if LstTopicoAcesso.Cells[2, xTopicos] = '1' then
           vListaTopicos := vListaTopicos+IfThen(vListaTopicos<>'',', ','') + LstTopicoAcesso.Cells[0, xTopicos];
      if vListaTopicos = '' then vListaTopicos := '0';
-     GetControleAcesoFuncionalidades(vListaTopicos);
+     //GetControleAcesoFuncionalidades(vListaTopicos);
+     if (ARow > 0) then
+        GetControleAcesoFuncionalidades(LstTopicoAcesso.Cells[0, aRow] );
   End
   else If (ARow > 0) then
     GetControleAcesoFuncionalidades(LstTopicoAcesso.Cells[0, aRow] );

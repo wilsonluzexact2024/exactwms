@@ -3,7 +3,6 @@ inherited FrmPerfil: TFrmPerfil
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
       inherited LstCadastro: TAdvStringGrid
         ColCount = 5
@@ -549,6 +548,19 @@ inherited FrmPerfil: TFrmPerfil
             24
             25)
         end
+      end
+    end
+  end
+  inherited PnlErro: TPanel
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
+  end
+  inherited PnlConfigPrinter: TPanel
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
       end
     end
   end
