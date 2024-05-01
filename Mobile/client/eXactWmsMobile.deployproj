@@ -7,55 +7,6 @@
         <DeviceId Condition="'$(Platform)'=='Android'"/>
         <DeviceId Condition="'$(Platform)'=='Android64'"/>
     </PropertyGroup>
-    <ItemGroup Condition="'$(Platform)'=='Win64'">
-        <DeployFile Include="Bin\success.wav" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\</RemoteDir>
-            <RemoteName>success.wav</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Bin\Dados\wmscoletor.db3" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\</RemoteDir>
-            <RemoteName>wmscoletor.db3</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="C:\App\eXactWMS\dados\exactwms.db3" Condition="'$(Config)'=='Release'">
-            <RemoteDir>eXactWmsMobile\</RemoteDir>
-            <RemoteName>exactwms.db3</RemoteName>
-            <DeployClass>File</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="c:\App\eXactWMS\eXactWmsMobile.exe" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\</RemoteDir>
-            <RemoteName>eXactWmsMobile.exe</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
-        <DeployFile Include="wmsconfig.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\</RemoteDir>
-            <RemoteName>wmsconfig.xml</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Platform)'=='Linux64'"/>
     <ItemGroup Condition="'$(Platform)'=='Win32'"/>
     <ItemGroup Condition="'$(Platform)'=='Android64'">
         <DeployFile Include="bin\sound\toast.wav" Condition="'$(Config)'=='Debug'">
@@ -71,6 +22,15 @@
             <RemoteDir>eXactWmsMobile\res\drawable-hdpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
             <DeployClass>Android_LauncherIcon72</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="C:\App\eXactWMS\Mobile32\libeXactWmsMobile.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>eXactWmsMobile\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libeXactWmsMobile.so</RemoteName>
+            <DeployClass>ProjectOutput_Android32</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -166,25 +126,7 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\lib\android\debug\mips\libnative-activity.so" Condition="'$(Config)'=='Release'">
-            <RemoteDir>eXactWmsMobile\library\lib\mips\</RemoteDir>
-            <RemoteName>libeXactWmsMobile.so</RemoteName>
-            <DeployClass>AndroidLibnativeMipsFile</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libeXactWmsMobile.so</RemoteName>
-            <DeployClass>AndroidLibnativeArmeabiv7aFile</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Condition="'$(Config)'=='Release'">
             <RemoteDir>eXactWmsMobile\library\lib\armeabi-v7a\</RemoteDir>
             <RemoteName>libeXactWmsMobile.so</RemoteName>
             <DeployClass>AndroidLibnativeArmeabiv7aFile</DeployClass>
@@ -383,15 +325,6 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>eXactWmsMobile\library\lib\armeabi\</RemoteDir>
-            <RemoteName>libeXactWmsMobile.so</RemoteName>
-            <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Condition="'$(Config)'=='Release'">
             <RemoteDir>eXactWmsMobile\library\lib\armeabi\</RemoteDir>
             <RemoteName>libeXactWmsMobile.so</RemoteName>
             <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
@@ -711,6 +644,15 @@
             <RemoteName>apito.wav</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="C:\App\eXactWMS\Mobile\colors-night-v21.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>eXactWmsMobile\res\values-night-v21\</RemoteDir>
+            <RemoteName>colors.xml</RemoteName>
+            <DeployClass>Android_ColorsDark</DeployClass>
+            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -1314,4 +1256,53 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
     </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Win64'">
+        <DeployFile Include="Bin\success.wav" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>success.wav</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Bin\Dados\wmscoletor.db3" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>wmscoletor.db3</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="C:\App\eXactWMS\dados\exactwms.db3" Condition="'$(Config)'=='Release'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>exactwms.db3</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="c:\App\eXactWMS\eXactWmsMobile.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>eXactWmsMobile.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="wmsconfig.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>wmsconfig.xml</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+    </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Linux64'"/>
 </Project>
