@@ -3186,7 +3186,7 @@ begin
     Else If FdMemEntradaProduto.FieldByName('RastroId').AsInteger in [2,3] then  Begin
        if (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 3) and (EdtDtFabricacao.Text = '  /  /    ') then Begin
           EdtDtFabricacao.SetFocus;
-          ShowErro('Informe a data de Fabricao!');
+          ShowErro('Informe a data de Fabricação!');
           Exit;
        End;
        if (EdtDtVencimento.Text = '  /  /    ') then Begin
@@ -3194,12 +3194,12 @@ begin
           ShowErro('Informe a data de Vencimento!');
           Exit;
        End;
-      if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then
-         vLote  := Copy(EdtDtVencimento.Text, 9, 2)+Copy(EdtDtVencimento.Text, 4, 2)+Copy(EdtDtVencimento.Text, 1, 2)
-      Else
-         vLote  := EdtLoteCheckIn.Text;
-      vFabricacao := StrToDate(EdtDtFabricacao.Text);
-      vVencimento := StrToDate(EdtDtVencimento.Text);
+       if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then
+          vLote  := Copy(EdtDtVencimento.Text, 9, 2)+Copy(EdtDtVencimento.Text, 4, 2)+Copy(EdtDtVencimento.Text, 1, 2)
+       Else
+          vLote  := EdtLoteCheckIn.Text;
+       vFabricacao := StrToDate(EdtDtFabricacao.Text);
+       vVencimento := StrToDate(EdtDtVencimento.Text);
     End
     Else Begin
        vLote       := 'SL';

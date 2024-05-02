@@ -45,7 +45,26 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="c:\App\eXactWMS\eXactWmsMobile.exe" Condition="'$(Config)'=='Release'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>eXactWmsMobile.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="wmsconfig.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>eXactWmsMobile\</RemoteDir>
+            <RemoteName>wmsconfig.xml</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="wmsconfig.xml" Condition="'$(Config)'=='Release'">
             <RemoteDir>eXactWmsMobile\</RemoteDir>
             <RemoteName>wmsconfig.xml</RemoteName>
             <DeployClass>ProjectFile</DeployClass>

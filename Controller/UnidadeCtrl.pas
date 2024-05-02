@@ -7,7 +7,7 @@ unit UnidadeCtrl;
 
 interface
 
-Uses VCL.Forms, System.UITypes, System.StrUtils, System.SysUtils, Vcl.Controls, Vcl.Dialogs, Generics.Collections,
+Uses System.UITypes, System.StrUtils, System.SysUtils, Generics.Collections,
      UnidadeClass, Rest.Json, System.Json, Rest.Types;
 
 Type
@@ -59,7 +59,7 @@ begin
   DmeXactWMS.RESTRequestWMS.Execute;
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) or
      (DmeXactWMS.RESTResponseWMS.StatusCode = 204) Then Begin //Lista de codigo de sucesso
-     ShowMessage('Registro excluído com sucesso');
+//     ShowMessage('Registro excluído com sucesso');
      Result := True;
   End
   Else
@@ -132,9 +132,8 @@ begin
        jSonUnidade := ReturnJson.Items[xItens] as TJSONObject;
        ObjUnidade  := ObjUnidade.JsonToClass(jSonUnidade.ToString());
        Result.Add(ObjUnidade);
-       jSonUnidade           := Nil;
-       jSonUnidade.DisposeOf;
        xItens := xItens + 1;
+       jSonUnidade := Nil;
      until (xItens > Pred(ReturnJson.Count));
   End
   Else Raise Exception.Create('Registro de Unidade de medida não encontrada');
@@ -143,7 +142,7 @@ end;
 Function tUnidadeCtrl.Salvar : Boolean;       //(pHistorico: THistorico)
 Var jSonUnidade : TJsonObject;
 Begin
-  Result := True;
+  Result := False;
   jSonUnidade := tJson.ObjectToJsonObject(ObjUnidade);
   DmeXactWMS.ResetRest;
   DmeXactWMS.RestRequestWMS.ClearBody;
@@ -160,9 +159,9 @@ Begin
   DmeXactWMS.RESTRequestWMS.Execute;
   FreeAndNil(jSonUnidade);
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
-     ShowMessage('Registro gravado com sucesso!')
+     Result := True //ShowMessage('Registro gravado com sucesso!')
   Else
-    raise Exception.Create('Ocorreu um erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
+    raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
 End;
 
 End.

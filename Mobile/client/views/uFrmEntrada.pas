@@ -2436,7 +2436,10 @@ begin
        Exit;
     End;
     if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then Begin
-       EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2).ToString();
+        if (StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2) < (StrToInt(Copy(DateToStr(Now()), 7, 4))) then
+           EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(EdtDtVencimento.Text, 7, 4))-2).ToString
+        Else
+           EdtDtFabricacao.Text := Copy(EdtDtVencimento.Text, 1, 6)+(StrToInt(Copy(DateToStr(Now()), 7, 4))-2).ToString;
        vLote  := Copy(EdtDtVencimento.Text, 9, 2)+Copy(EdtDtVencimento.Text, 4, 2)+Copy(EdtDtVencimento.Text, 1, 2)
     End
     Else Begin

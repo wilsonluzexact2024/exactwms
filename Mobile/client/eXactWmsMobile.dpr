@@ -129,7 +129,9 @@ uses
   PedidoVolumeSeparacaoDAO in '..\..\DAORESTFULL\PedidoVolumeSeparacaoDAO.pas',
   uOpenViewUrl in '..\..\Model\uOpenViewUrl.pas',
   uFrmCorrecaoLotes in 'views\uFrmCorrecaoLotes.pas' {FrmCorrecaoLotes},
-  uFrmCheckListEstoque in 'views\uFrmCheckListEstoque.pas' {FrmCheckListEstoque};
+  uFrmCheckListEstoque in 'views\uFrmCheckListEstoque.pas' {FrmCheckListEstoque},
+  UnidadeCtrl in '..\..\Controller\UnidadeCtrl.pas',
+  LaboratorioCtrl in '..\..\Controller\LaboratorioCtrl.Pas';
 
 {$R *.res}
 

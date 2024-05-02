@@ -10,6 +10,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
   inherited PgcBase: TcxPageControl
     Width = 1279
     Height = 635
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1279
     ExplicitHeight = 635
     ClientRectBottom = 635

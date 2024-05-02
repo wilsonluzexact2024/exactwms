@@ -386,7 +386,7 @@ Try
   Else if ShowErro = 1 then
     raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
 Except ON E: Exception do
-  raise Exception.Create('Erro na função FindProduto. '+E.Message);
+  raise Exception.Create(E.Message);
   End;
 End;
 

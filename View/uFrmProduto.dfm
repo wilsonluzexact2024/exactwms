@@ -11,10 +11,13 @@ inherited FrmProduto: TFrmProduto
   end
   inherited PgcBase: TcxPageControl
     Height = 568
+    Properties.ActivePage = TabPrincipal
     OnPageChanging = PgcBasePageChanging
     ExplicitHeight = 568
     ClientRectBottom = 568
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 544
       inherited LstCadastro: TAdvStringGrid
         Height = 506
@@ -153,56 +156,7 @@ inherited FrmProduto: TFrmProduto
         ExplicitLeft = 61
         ExplicitTop = 506
       end
-      object EdtDescricaoRed: TLabeledEdit [5]
-        Left = 655
-        Top = 75
-        Width = 368
-        Height = 25
-        CustomHint = BalloonHint1
-        CharCase = ecUpperCase
-        Ctl3D = True
-        EditLabel.Width = 97
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Descri'#231#227'o Usual '
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 5
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-      end
-      object EdtCodigoMS: TLabeledEdit [6]
-        Left = 608
-        Top = 226
-        Width = 123
-        Height = 21
-        CustomHint = BalloonHint1
-        Ctl3D = True
-        EditLabel.Width = 72
-        EditLabel.Height = 17
-        EditLabel.CustomHint = BalloonHint1
-        EditLabel.Caption = 'Registro MS'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        LabelPosition = lpLeft
-        MaxLength = 13
-        ParentCtl3D = False
-        ParentFont = False
-        TabOrder = 15
-        Visible = False
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-      end
-      object ChkPerigoso: TCheckBox [7]
+      object ChkPerigoso: TCheckBox [5]
         Left = 295
         Top = 227
         Width = 91
@@ -212,7 +166,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'Perigoso'
         TabOrder = 13
       end
-      object ChkMedicamento: TCheckBox [8]
+      object ChkMedicamento: TCheckBox [6]
         Left = 391
         Top = 227
         Width = 103
@@ -223,7 +177,7 @@ inherited FrmProduto: TFrmProduto
         TabOrder = 14
         OnClick = ChkMedicamentoClick
       end
-      object chkLiquido: TCheckBox [9]
+      object chkLiquido: TCheckBox [7]
         Left = 8
         Top = 227
         Width = 91
@@ -233,7 +187,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'L'#237'quido'
         TabOrder = 10
       end
-      object GbEnderecoPicking: TGroupBox [10]
+      object GbEnderecoPicking: TGroupBox [8]
         Left = 9
         Top = 250
         Width = 1015
@@ -406,7 +360,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = EdtPickingExit
         end
       end
-      object ChkSNGPC: TCheckBox [11]
+      object ChkSNGPC: TCheckBox [9]
         Left = 766
         Top = 227
         Width = 76
@@ -422,7 +376,7 @@ inherited FrmProduto: TFrmProduto
         ParentFont = False
         TabOrder = 16
       end
-      object grpEstoqueReposicao: TGroupBox [12]
+      object grpEstoqueReposicao: TGroupBox [10]
         Left = 8
         Top = 402
         Width = 572
@@ -515,7 +469,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = edtDescricaoExit
         end
       end
-      object GroupBox4: TGroupBox [13]
+      object GroupBox4: TGroupBox [11]
         Left = 496
         Top = 162
         Width = 528
@@ -673,74 +627,7 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
       end
-      object grpValidadeMinima: TGroupBox [14]
-        Left = 598
-        Top = 402
-        Width = 425
-        Height = 68
-        CustomHint = BalloonHint1
-        Caption = 
-          ' [ Controle Recebimento x Expedi'#231#227'o -  Shelf Life M'#237'nimo - Meses' +
-          ') ] '
-        TabOrder = 21
-        object Label17: TLabel
-          Left = 7
-          Top = 33
-          Width = 76
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Recebimento'
-        end
-        object Label16: TLabel
-          Left = 231
-          Top = 33
-          Width = 60
-          Height = 17
-          CustomHint = BalloonHint1
-          Caption = 'Expedi'#231#227'o'
-        end
-        object EdtMesEntradaMinima: TJvCalcEdit
-          Left = 91
-          Top = 29
-          Width = 65
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 0
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-        object EdtMesSaidaMinima: TJvCalcEdit
-          Left = 295
-          Top = 29
-          Width = 65
-          Height = 25
-          CustomHint = BalloonHint1
-          DecimalPlaces = 0
-          DisplayFormat = '0'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlack
-          Font.Height = -13
-          Font.Name = 'Segoe UI'
-          Font.Style = []
-          ParentFont = False
-          ShowButton = False
-          TabOrder = 1
-          DecimalPlacesAlwaysShown = False
-          OnEnter = edtDescricaoEnter
-          OnExit = edtDescricaoExit
-        end
-      end
-      object edtCodProduto: TLabeledEdit [15]
+      object edtCodProduto: TLabeledEdit [12]
         Left = 85
         Top = 23
         Width = 111
@@ -766,7 +653,7 @@ inherited FrmProduto: TFrmProduto
         OnExit = edtCodProdutoExit
         OnKeyPress = edtCodProdutoKeyPress
       end
-      object GroupBox2: TGroupBox [16]
+      object GroupBox2: TGroupBox [13]
         Left = 8
         Top = 325
         Width = 1015
@@ -1003,7 +890,7 @@ inherited FrmProduto: TFrmProduto
           OnClick = BtnCapturarPesoClick
         end
       end
-      object GroupBox1: TGroupBox [17]
+      object GroupBox1: TGroupBox [14]
         Left = 177
         Top = 480
         Width = 713
@@ -1082,27 +969,7 @@ inherited FrmProduto: TFrmProduto
           OnExit = edtDescricaoExit
         end
       end
-      object CbRastroTipo: TComboBox [18]
-        Left = 877
-        Top = 24
-        Width = 146
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 3
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object EdtLaboratorioId: TLabeledEdit [19]
+      object EdtLaboratorioId: TLabeledEdit [15]
         Left = 84
         Top = 123
         Width = 37
@@ -1127,7 +994,7 @@ inherited FrmProduto: TFrmProduto
         OnExit = EdtLaboratorioIdExit
         OnKeyPress = EdtLaboratorioIdKeyPress
       end
-      object GroupBox3: TGroupBox [20]
+      object GroupBox3: TGroupBox [16]
         Left = 8
         Top = 162
         Width = 478
@@ -1286,27 +1153,7 @@ inherited FrmProduto: TFrmProduto
           OnKeyPress = EdtLaboratorioIdKeyPress
         end
       end
-      object CbProdutoTipo: TComboBox [21]
-        Left = 325
-        Top = 24
-        Width = 176
-        Height = 22
-        CustomHint = BalloonHint1
-        Style = csOwnerDrawFixed
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 1
-        OnEnter = edtDescricaoEnter
-        OnExit = edtDescricaoExit
-        Items.Strings = (
-          'Cliente'
-          'Fornecedor')
-      end
-      object edtDescricao: TLabeledEdit [22]
+      object edtDescricao: TLabeledEdit [17]
         Left = 84
         Top = 75
         Width = 457
@@ -1330,7 +1177,7 @@ inherited FrmProduto: TFrmProduto
         OnEnter = edtDescricaoEnter
         OnExit = edtDescricaoExit
       end
-      object ChkInflamavel: TCheckBox [23]
+      object ChkInflamavel: TCheckBox [18]
         Left = 199
         Top = 227
         Width = 91
@@ -1340,7 +1187,7 @@ inherited FrmProduto: TFrmProduto
         Caption = 'Inflam'#225'vel'
         TabOrder = 12
       end
-      object BitBtn4: TBitBtn [24]
+      object BitBtn4: TBitBtn [19]
         Left = 121
         Top = 123
         Width = 24
@@ -1425,7 +1272,7 @@ inherited FrmProduto: TFrmProduto
         TabStop = False
         OnClick = BtnPesqFabricante
       end
-      object CbMedicamentoTipo: TComboBox [25]
+      object CbMedicamentoTipo: TComboBox [20]
         Left = 654
         Top = 24
         Width = 111
@@ -1445,7 +1292,7 @@ inherited FrmProduto: TFrmProduto
           'Cliente'
           'Fornecedor')
       end
-      object btnPesquisar: TBitBtn [26]
+      object btnPesquisar: TBitBtn [21]
         Left = 194
         Top = 24
         Width = 24
@@ -1530,7 +1377,7 @@ inherited FrmProduto: TFrmProduto
         TabStop = False
         Visible = False
       end
-      object ChkImportado: TCheckBox [27]
+      object ChkImportado: TCheckBox [22]
         Left = 103
         Top = 227
         Width = 91
@@ -1539,6 +1386,162 @@ inherited FrmProduto: TFrmProduto
         TabStop = False
         Caption = 'Importado'
         TabOrder = 11
+      end
+      object CbProdutoTipo: TComboBox [23]
+        Left = 325
+        Top = 24
+        Width = 176
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object CbRastroTipo: TComboBox [24]
+        Left = 877
+        Top = 24
+        Width = 146
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 3
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+        Items.Strings = (
+          'Cliente'
+          'Fornecedor')
+      end
+      object grpValidadeMinima: TGroupBox [25]
+        Left = 598
+        Top = 402
+        Width = 425
+        Height = 68
+        CustomHint = BalloonHint1
+        Caption = 
+          ' [ Controle Recebimento x Expedi'#231#227'o -  Shelf Life M'#237'nimo - Meses' +
+          ') ] '
+        TabOrder = 21
+        object Label17: TLabel
+          Left = 7
+          Top = 33
+          Width = 76
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Recebimento'
+        end
+        object Label16: TLabel
+          Left = 231
+          Top = 33
+          Width = 60
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Expedi'#231#227'o'
+        end
+        object EdtMesEntradaMinima: TJvCalcEdit
+          Left = 91
+          Top = 29
+          Width = 65
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 0
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+        object EdtMesSaidaMinima: TJvCalcEdit
+          Left = 295
+          Top = 29
+          Width = 65
+          Height = 25
+          CustomHint = BalloonHint1
+          DecimalPlaces = 0
+          DisplayFormat = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = []
+          ParentFont = False
+          ShowButton = False
+          TabOrder = 1
+          DecimalPlacesAlwaysShown = False
+          OnEnter = edtDescricaoEnter
+          OnExit = edtDescricaoExit
+        end
+      end
+      object EdtCodigoMS: TLabeledEdit [26]
+        Left = 608
+        Top = 226
+        Width = 123
+        Height = 21
+        CustomHint = BalloonHint1
+        Ctl3D = True
+        EditLabel.Width = 72
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Registro MS'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        MaxLength = 13
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 15
+        Visible = False
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
+      end
+      object EdtDescricaoRed: TLabeledEdit [27]
+        Left = 655
+        Top = 75
+        Width = 368
+        Height = 25
+        CustomHint = BalloonHint1
+        CharCase = ecUpperCase
+        Ctl3D = True
+        EditLabel.Width = 97
+        EditLabel.Height = 17
+        EditLabel.CustomHint = BalloonHint1
+        EditLabel.Caption = 'Descri'#231#227'o Usual '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        LabelPosition = lpLeft
+        ParentCtl3D = False
+        ParentFont = False
+        TabOrder = 5
+        OnEnter = edtDescricaoEnter
+        OnExit = edtDescricaoExit
       end
       inherited PnlInfo: TPanel
         Left = 921
@@ -6915,6 +6918,8 @@ inherited FrmProduto: TFrmProduto
       ExplicitHeight = 544
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 544
       inherited DbgImporta: TDBGrid
         Top = 224
@@ -33588,12 +33593,21 @@ inherited FrmProduto: TFrmProduto
   inherited PnlErro: TPanel
     Top = 608
     ExplicitTop = 608
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 941
     Top = 336
     ExplicitLeft = 941
     ExplicitTop = 336
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited DsPesqGeral: TDataSource
     Left = 507

@@ -9,6 +9,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PgcBase: TcxPageControl
     Width = 1363
     Height = 740
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1363
     ExplicitHeight = 740
     ClientRectBottom = 740
@@ -460,7 +461,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabResumo
+        Properties.ActivePage = TabPedidos
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 522

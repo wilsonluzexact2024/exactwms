@@ -613,16 +613,6 @@ inherited FrmRelDesempenhoExpedicao: TFrmRelDesempenhoExpedicao
         end
       end
     end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-    end
-    inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-    end
   end
   inherited PnHeader: TPanel
     inherited PanWin8: TPanel
@@ -638,11 +628,22 @@ inherited FrmRelDesempenhoExpedicao: TFrmRelDesempenhoExpedicao
     ExplicitLeft = 994
     ExplicitTop = 188
   end
+  inherited PnlErro: TPanel
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
+  end
   inherited PnlConfigPrinter: TPanel
     Left = 689
     Top = 203
     ExplicitLeft = 689
     ExplicitTop = 203
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited FdMemPesqGeral: TFDMemTable
     object FdMemPesqGeralData: TDateField

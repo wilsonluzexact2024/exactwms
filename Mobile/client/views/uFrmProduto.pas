@@ -142,9 +142,13 @@ type
     procedure EdtUnidIdSecTyping(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     Procedure Limpar;
+    procedure EdtUnidIdPrimValidate(Sender: TObject; var Text: string);
+    procedure EdtUnidIdSecValidate(Sender: TObject; var Text: string);
+    procedure EdtFabricanteIdValidate(Sender: TObject; var Text: string);
   private
     { Private declarations }
     ObjProdutoCtrl : TProdutoCtrl;
+    vCreateForm    : Boolean;
     Procedure GetProduto;
     Procedure GetProdutoControle;
     Procedure PositionField;
@@ -152,9 +156,11 @@ type
     Procedure ValidarBeepProduto;
     Function GetPickUsed(pCdProduto : Int64; pNmEndereco : String) : Boolean;
     Function GetListaProduto(pId, pCodigoERP : String; pDescricao : String; pRecsSkip : Integer) : Boolean;
+    Procedure UpdatePicking;
   protected
     Function PesquisarComFiltro(pCampo : Integer; PConteudo : String) : Boolean ; OverRide;
     Procedure GetListaLstCadastro; OverRide;
+    Procedure AtivaCampoDefault; OverRide;
   public
     { Public declarations }
   end;
@@ -167,7 +173,17 @@ implementation
 {$R *.fmx}
 {$R *.NmXhdpiPh.fmx ANDROID}
 
-Uses uRetorno, uFuncoes, uFrmeXactWMS, EnderecoCtrl;
+Uses uRetorno, uFuncoes, uFrmeXactWMS, EnderecoCtrl, UnidadeCtrl, UnidadeClass,
+  LaboratorioCtrl;
+
+procedure TFrmProduto.AtivaCampoDefault;
+begin
+  inherited;
+  if CampoDefault = 'EdtCodigo' then Begin
+     EdtCodigo.Text := '';
+     DelayEdSetFocus(EdtCodigo);
+  End;
+end;
 
 procedure TFrmProduto.BtnAddClick(Sender: TObject);
 begin
@@ -186,64 +202,52 @@ begin
   if (ObjProdutoCtrl.ObjProduto = Nil) or (EdtCodigo.Text = '') then
      raise Exception.Create('Alteração inválida...');
   inherited;
-
+  EdtCodigo.Enabled     := False;
+  EdtDescricao.ReadOnly := True;
+  UpdatePicking;
 end;
 
 procedure TFrmProduto.BtnSaveClick(Sender: TObject);
-Var JsonProduto : TJsonObject;
 begin
   if EdtCodigo.Text = '' then Exit;
   ShowLoading;
-
-  ObjProdutoCtrl.ObjProduto.Laboratorio.IdLaboratorio := StrToIntDef(EdtFabricanteId.Text, 0);
-    //Endereco           := TEndereco;
-  ObjProdutoCtrl.ObjProduto.Unid.Id            := StrToIntDef(EdtUnidIdPrim.Text, 0);
-  ObjProdutoCtrl.ObjProduto.QtdUnid            := StrToIntDef(EdtQtdeUnidPrim.Text, 0);
-  ObjProdutoCtrl.ObjProduto.UnidSecundaria.Id  := StrToIntDef(EdtUnidIdSec.Text, 0);
-  ObjProdutoCtrl.ObjProduto.FatorConversao     := StrToIntDef(EdtFatorConversao.Text, 0);
-  ObjProdutoCtrl.ObjProduto.Rastro.RastroId    := StrToIntDef(Copy(CbRastroTipo.Items.Text, 1, 1), 0);
-  ObjProdutoCtrl.ObjProduto.Rastro.Descricao   := Copy(CbRastroTipo.Items.Text, 3,  Length(CbRastroTipo.Items.Text)-2);
-  ObjProdutoCtrl.ObjProduto.Liquido            := SwtLiquido.IsChecked;
-  ObjProdutoCtrl.ObjProduto.Importado          := SwtImportado.IsChecked;
-  ObjProdutoCtrl.ObjProduto.Inflamavel         := SwtInflamavel.IsChecked;
-  ObjProdutoCtrl.ObjProduto.Perigoso           := SwtPerigoso.IsChecked;
-  ObjProdutoCtrl.ObjProduto.Medicamento        := SwtMedicamento.IsChecked;
-  ObjProdutoCtrl.ObjProduto.SNGPC              := SwtSNGPC.IsChecked;
-  ObjProdutoCtrl.ObjProduto.Peso               := StrToIntDef(EdtPeso.Text, 0);
-  ObjProdutoCtrl.ObjProduto.Altura             := StrToIntDef(EdtAltura.Text, 0);
-  ObjProdutoCtrl.ObjProduto.Largura            := StrToIntDef(EdtLargura.Text, 0);
-  ObjProdutoCtrl.ObjProduto.Comprimento        := StrToIntDef(EdtComprimento.Text, 0);
-  ObjProdutoCtrl.ObjProduto.Volume             := StrToIntDef(EdtVolume.Text, 0);
-  ObjProdutoCtrl.ObjProduto.MaxPicking         := StrToIntDef(EdtEstoqMax.Text, 0); //Capacidade Máxima do Picking
-  ObjProdutoCtrl.ObjProduto.MesEntradaMinima   := StrToIntDef(EdtValidadeMinEnt.Text, 0);
-  ObjProdutoCtrl.ObjProduto.MesSaidaMinima     := StrToIntDef(EdtValidadeMinSai.Text, 0);
-
-{  JsonProduto := TJsonObject.Create;
-  JsonProduto.AddPair('idproduto', TJsonNumber.Create(ObjProdutoCtrl.ObjProduto.IdProduto));
-  JsonProduto.AddPair('codproduto', EdtCodigo.Text);
-  JsonProduto.AddPair('descricao', EdtDescricao.Text);
-  JsonProduto.AddPair('descricaored', EdtDescricao.Text);
-  JsonProduto.AddPair('qtdunid', '1');
-  JsonProduto.AddPair('fatorconversao', EdtFatorConversao.Text);
-  JsonProduto.AddPair('endereco', EdtEndereco.Text);
-  JsonProduto.AddPair('rastroid', Copy(CbTipoControle.Items.Strings[CbTipoControle.ItemIndex], 1, 1));
-  JsonProduto.AddPair('peso', TJsonNumber.Create(StrToFloat(EdtPeso.Text)));
-  JsonProduto.AddPair('altura', TJsonNumber.Create(StrToFloat(EdtAltura.Text)));
-  JsonProduto.AddPair('largura', TJsonNumber.Create(StrToFloat(EdtLargura.Text)));
-  JsonProduto.AddPair('comprimento', TJsonNumber.Create(StrToFloat(EdtComprimento.Text)));
-  JsonProduto.AddPair('mesentradaminima', TJsonNumber.Create(StrToFloat(EdtValidadeMinEnt.Text)));
-  JsonProduto.AddPair('messaidaminima', TJsonNumber.Create(StrToFloat(EdtValidadeMinSai.Text)));
-}  If ObjProdutoCtrl.Salvar Then Begin
-     ObjProdutoCtrl.ObjProduto.IdProduto := 0;
-     HideLoading;
-     inherited;
-     MensagemStand('Registro salvo com sucesso!')
-  End
-  else Begin
-    HideLoading;
-    MensagemStand('Ocorreu um erro: Registro não salvo!');
+  Try
+    ObjProdutoCtrl.ObjProduto.Laboratorio.IdLaboratorio := StrToIntDef(EdtFabricanteId.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Unid.Id            := StrToIntDef(EdtUnidIdPrim.Text, 0);
+    ObjProdutoCtrl.ObjProduto.QtdUnid            := StrToIntDef(EdtQtdeUnidPrim.Text, 0);
+    ObjProdutoCtrl.ObjProduto.UnidSecundaria.Id  := StrToIntDef(EdtUnidIdSec.Text, 0);
+    ObjProdutoCtrl.ObjProduto.FatorConversao     := StrToIntDef(EdtFatorConversao.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Rastro.RastroId    := StrToIntDef(Copy(CbRastroTipo.Items.Text, 1, 1), 0);
+    ObjProdutoCtrl.ObjProduto.Rastro.Descricao   := Copy(CbRastroTipo.Items.Text, 3,  Length(CbRastroTipo.Items.Text)-2);
+    ObjProdutoCtrl.ObjProduto.Liquido            := SwtLiquido.IsChecked;
+    ObjProdutoCtrl.ObjProduto.Importado          := SwtImportado.IsChecked;
+    ObjProdutoCtrl.ObjProduto.Inflamavel         := SwtInflamavel.IsChecked;
+    ObjProdutoCtrl.ObjProduto.Perigoso           := SwtPerigoso.IsChecked;
+    ObjProdutoCtrl.ObjProduto.Medicamento        := SwtMedicamento.IsChecked;
+    ObjProdutoCtrl.ObjProduto.SNGPC              := SwtSNGPC.IsChecked;
+    ObjProdutoCtrl.ObjProduto.Peso               := StrToIntDef(EdtPeso.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Altura             := StrToIntDef(EdtAltura.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Largura            := StrToIntDef(EdtLargura.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Comprimento        := StrToIntDef(EdtComprimento.Text, 0);
+    ObjProdutoCtrl.ObjProduto.Volume             := StrToIntDef(EdtVolume.Text, 0);
+    ObjProdutoCtrl.ObjProduto.MaxPicking         := StrToIntDef(EdtEstoqMax.Text, 0); //Capacidade Máxima do Picking
+    ObjProdutoCtrl.ObjProduto.MesEntradaMinima   := StrToIntDef(EdtValidadeMinEnt.Text, 0);
+    ObjProdutoCtrl.ObjProduto.MesSaidaMinima     := StrToIntDef(EdtValidadeMinSai.Text, 0);
+    If ObjProdutoCtrl.Salvar Then Begin
+       ObjProdutoCtrl.ObjProduto.IdProduto := 0;
+       HideLoading;
+       inherited;
+       MensagemStand('Registro salvo com sucesso!')
+    End
+    else Begin
+      HideLoading;
+      ShowErro('Erro: Registro não salvo!', 'apito');
+    End;
+  Except On E: Exception do Begin
+      HideLoading;
+      ShowErro('Erro: '+E.Message, 'apito');
+    End;
   End;
-//  JsonProduto := Nil;
 end;
 
 procedure TFrmProduto.EdtCodigoKeyDown(Sender: TObject; var Key: Word;
@@ -371,16 +375,92 @@ begin
   EdtFabricante.Text := '...';
 end;
 
+procedure TFrmProduto.EdtFabricanteIdValidate(Sender: TObject;
+  var Text: string);
+Var ObjLaboratorioCtrl : TLaboratorioCtrl;
+    LstLaboratorioCtrl : TObjectList<TLaboratorioCtrl>;
+begin
+  inherited;
+  if (Not EdtFabricanteId.ReadOnly) and (EdtFabricanteId.Text<>'') then Begin
+     if StrToIntDef(EdtFabricanteId.Text, 0) <= 0 then
+        raise Exception.Create('Id do Fabricante inválido!');
+     Try
+       ObjLaboratorioCtrl := TLaboratorioCtrl.Create;
+       LstLaboratorioCtrl := ObjLaboratorioCtrl.GetLaboratorio(StrToIntDef(EdtFabricanteId.Text, 0), '', 0);
+       ObjProdutoCtrl.ObjProduto.Laboratorio := LstLaboratorioCtrl.Items[0].ObjLaboratorio;
+       If LstLaboratorioCtrl.Items[0].ObjLaboratorio.IdLaboratorio = 0 then
+          raise Exception.Create('Fabricante('+EdtFabricanteId.Text+') não entrado!');
+       EdtFabricante.Text := LstLaboratorioCtrl.Items[0].ObjLaboratorio.NOme;
+     Except On E: Exception do
+       raise Exception.Create('Fabricante: '+EdtFabricanteId.Text+sLineBreak+E.Message);
+     End;
+//     ObjEnderecoCtrl.DisposeOf;
+     //LstEndereco.DisposeOf;
+  End;
+end;
+
 procedure TFrmProduto.EdtUnidIdPrimTyping(Sender: TObject);
 begin
   inherited;
   LblUnidPrimaria.Text := '...';
 end;
 
+procedure TFrmProduto.EdtUnidIdPrimValidate(Sender: TObject; var Text: string);
+Var ObjUnidadeCtrl : TUnidadeCtrl;
+    LstUnidade     : TObjectList<TUnidade>;
+begin
+  inherited;
+  ObjUnidadeCtrl := TUnidadeCtrl.Create;
+  if (Not EdtUnidIdPrim.ReadOnly) and (EdtUnidIdPrim.Text<>'') then Begin
+     if StrToIntDef(EdtUnidIdPrim.Text, 0) <= 0 then
+        raise Exception.Create('Id do Tipo Embalagem inválido!');
+     Try
+       LstUnidade := ObjUnidadeCtrl.GetUnidade(StrToIntDef(EdtUnidIdPrim.Text ,0), '', 0);
+       If LstUnidade.Items[0].Id = 0 then
+          raise Exception.Create('Tipo Embalagem('+EdtUnidIdPrim.Text+') inexistente!')
+       Else
+          ObjProdutoCtrl.ObjProduto.Unid := LstUnidade.Items[0];
+       LblUnidPrimaria.Text := LstUnidade.Items[0].Descricao;
+     Except On E: Exception do Begin
+       //FreeAndNil(ObjUnidadeCtrl);
+       raise Exception.Create('Erro: '+EdtUnidIdPrim.Text+sLineBreak+E.Message);
+       End;
+     End;
+  End;
+  //ObjUnidadeCtrl.Free;
+  //ExitFocus(Sender);
+end;
+
 procedure TFrmProduto.EdtUnidIdSecTyping(Sender: TObject);
 begin
   inherited;
   LblUnidSecundaria.Text := '...';
+end;
+
+procedure TFrmProduto.EdtUnidIdSecValidate(Sender: TObject; var Text: string);
+Var ObjUnidadeCtrl : TUnidadeCtrl;
+    LstUnidade     : TObjectList<TUnidade>;
+begin
+  inherited;
+  ObjUnidadeCtrl := TUnidadeCtrl.Create;
+  if (Not EdtUnidIdSec.ReadOnly) and (EdtUnidIdSec.Text<>'') then Begin
+     if StrToIntDef(EdtUnidIdSec.Text, 0) <= 0 then
+        raise Exception.Create('Id do Tipo da Caixa de Embarque inválido!');
+     Try
+       LstUnidade := ObjUnidadeCtrl.GetUnidade(StrToIntDef(EdtUnidIdSec.Text ,0), '', 0);
+       If LstUnidade.Items[0].Id = 0 then
+          raise Exception.Create('Tipo Embalagem('+EdtUnidIdSec.Text+') inexistente!')
+       Else
+          ObjProdutoCtrl.ObjProduto.Unid := LstUnidade.Items[0];
+       LblUnidSecundaria.Text := LstUnidade.Items[0].Descricao;
+     Except On E: Exception do Begin
+       //FreeAndNil(ObjUnidadeCtrl);
+       raise Exception.Create('Erro: '+EdtUnidIdSec.Text+sLineBreak+E.Message);
+       End;
+     End;
+  End;
+  //ObjUnidadeCtrl.Free;
+  //ExitFocus(Sender);
 end;
 
 procedure TFrmProduto.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -393,18 +473,15 @@ end;
 
 procedure TFrmProduto.FormCreate(Sender: TObject);
 begin
+  vCreateForm := True;
   inherited;
   ObjProdutoCtrl         := TProdutoCtrl.Create;
   GetProdutoControle;
   PositionField;
   PgcPrincipal.ActiveTab := TabDetalhes;
-  //BtnArrowLeft.Action  := ChgTabEstoque;
   LstPrincipal.Visible   := False;
   GdSearch.Visible       := True;
-  //GetListaLstCadastro;
   PgcPrincipal.ActiveTab := TabDetalhes;
-//  if FrmeXactWMS.Brand_Collector = 'Honeywell' then
-//       VKAutoShowMode  := TVKAutoShowMode.DefinedBySystem;  // Always
 end;
 
 procedure TFrmProduto.FormDestroy(Sender: TObject);
@@ -451,7 +528,11 @@ end;
 procedure TFrmProduto.GetListaLstCadastro;
 begin
   inherited;
-  GetListaProduto('-1', '-1', '', 0);
+  if vCreateForm then Begin
+     vCreateForm := False;
+  End
+  Else
+     GetListaProduto('-1', '-1', '', 0);
 end;
 
 Function TFrmProduto.GetListaProduto(pId, pCodigoERP, pDescricao: String;
@@ -465,7 +546,10 @@ begin
   if pDescricao = '%' then pDescricao := '*';
   JsonArrayProduto := ObjProdutoCtrl.FindProduto(pId, pCodigoERP, pDescricao, pRecsSkip, 0);
   if JsonArrayProduto.Items[0].TryGetValue('Erro', vErro) then Begin
+     HideLoading;
+     SetCampoDefault('EdtCodigo');
      ShowErro(vErro);
+     JsonArrayProduto := Nil;
      Exit;
   End;
   Result := JsonArrayProduto.Count >= 1;
@@ -536,8 +620,8 @@ begin
 //  ObjProdutoCtrl.ObjProduto :=  DmClient.GetProduto(EdtCodigo.Text); //.ToInt64());
     ObjProdutoCtrl.GetCodigoERP(EdtCodigo.Text);
   Except On E: Exception do Begin
-    ObjProdutoCtrl := Nil;
     HideLoading;
+    SetCampoDefault('EdtCodigo');
     ShowErro('erro: '+E.Message);
     Exit;
     End;
@@ -581,9 +665,11 @@ end;
 
 procedure TFrmProduto.Limpar;
 begin
+  EdtCodigo.Enabled      := True;
   EdtEndereco.Text       := '';
   CbRastroTipo.ItemIndex := -1;
   Edtdescricao.Text      := '';
+  EdtDescricao.ReadOnly  := True;
   EdtFabricanteId.Text   := '';
   EdtFabricante.Text     := '';
   EdtUnidIdPrim.Text     := '';
@@ -736,6 +822,30 @@ begin
      EdtValidadeMinSai.Text   := ObjProdutoCtrl.ObjProduto.MesEntradaMinima.ToString();
      EdtValidadeMinEnt.Text   := ObjProdutoCtrl.ObjProduto.MesSaidaMinima.ToString();
      DelayedSetFocus(EdtEndereco);
+  End;
+end;
+
+procedure TFrmProduto.UpdatePicking;
+Var JsonArrayRetorno : TJsonArray;
+    vErro : String;
+begin
+  if ObjProdutoCtrl.ObjProduto.Endereco.EnderecoId <> 0 then Begin
+     EdtEndereco.Enabled := False;
+     JsonArrayRetorno := ObjProdutoCtrl.UpdatePicking(ObjProdutoCtrl.ObjProduto.CodProduto);
+     if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+        ShowErro(vErro)
+     Else
+        EdtEndereco.Enabled := JsonArrayRetorno.Items[0].GetValue<Integer>('estoque', 0) = 0;
+  End
+  Else
+     EdtEndereco.Enabled := True;
+  if EdtEndereco.Enabled  then Begin
+     EdtEndereco.FontColor  := TAlphaColorRec.Black;
+     EdtEndereco.Font.Style := [];
+  End
+  Else Begin
+     EdtEndereco.FontColor  := TAlphaColorRec.Red;
+     EdtEndereco.Font.Style := [TFontStyle.fsBold];
   End;
 end;
 

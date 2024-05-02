@@ -7,7 +7,7 @@ unit LaboratorioCtrl;
 
 interface
 
-Uses VCL.Forms, System.UITypes, System.StrUtils, System.SysUtils, Vcl.Controls, Vcl.Dialogs, Generics.Collections,
+Uses System.UITypes, System.StrUtils, System.SysUtils,  Generics.Collections,
       Rest.Json, System.Json, Rest.Types, LaboratoriosClass;
 
 Type

@@ -287,6 +287,8 @@ class procedure Tutil.SalvarLog(pMethod: TMethodType; pUsuarioId: Integer;
   pRespStatus: Integer; pTimeExecution: Double; pAppName: String);
 
 begin
+  if DebugHook <> 0 then
+     Exit;
   TTask.Create(
     procedure()
     Var
@@ -467,6 +469,8 @@ end;
 class procedure Tutil.Gravalog(mensagem: string);
 var Teste : String;
 begin
+  if DebugHook <> 0 then exit;
+
   Try
     TTask.Create(
       procedure()
