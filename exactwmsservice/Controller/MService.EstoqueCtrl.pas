@@ -29,37 +29,22 @@ Type
 procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure ConsultaKardex(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure GetEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetRelEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetEstoqueEnderecoPorTipo(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetEstoqueProduto(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetMovimentacaoInterna(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetListaTransferencia(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+procedure GetEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetRelEstoqueLotePorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetEstoqueEnderecoPorTipo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelEstoquePreOrVencido(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEstoqueProduto(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc); procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetMovimentacaoInterna(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetListaTransferencia(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Produtos disponíveis da Coleta de Reposição para ser transferido para Picking
-Procedure GetMotivoMovimentacaoSegregado(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-Procedure GetEstoqueSemPicking(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure ValidarMovimentacaoPallet(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetControleArmazenagem(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure SalvarEstoqueChecklist(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetMotivoMovimentacaoSegregado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEstoqueSemPicking(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure ValidarMovimentacaoPallet(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetControleArmazenagem(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure SalvarEstoqueChecklist(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -275,25 +260,19 @@ begin
   End;
 End;
 
-procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest;
-  Res: THorseResponse; Next: TProc);
-var
-  EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJsonArray;
+procedure GetEstoqueEnderecoPorTipoDetalhes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var EstoqueDAO: TEstoqueDao;
+    JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
       EstoqueDAO := TEstoqueDao.Create;
-      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipoDetalhes
-        (Req.Query.Dictionary)).Status(THTTPStatus.Created);
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(EstoqueDAO.GetEstoqueEnderecoPorTipoDetalhes(Req.Query.Dictionary)).Status(THTTPStatus.Created);
+    Except on E: Exception do
       Begin
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
-        Res.Send<TJsonArray>(JsonArrayRetorno)
-          .Status(THTTPStatus.ExpectationFailed);
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -352,11 +331,9 @@ begin
   End;
 End;
 
-Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-var
-  EstoqueDAO: TEstoqueDao;
-  JsonArrayRetorno: TJsonArray;
+Procedure GetRelEstoqueSaldo(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var EstoqueDAO: TEstoqueDao;
+    JsonArrayRetorno: TJsonArray;
 begin
   Try
     try
@@ -647,13 +624,10 @@ begin
       jsonEstoque := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
       EstoqueDAO := TEstoqueDao.Create;
       if EstoqueDAO.Salvar(jsonEstoque) then
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
-    Except
-      on E: Exception do
+         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro salvo com Sucesso!'))).Status(THTTPStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Status(500).Send<TJSONObject>
-          (TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Status(500).Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;
     End;
   Finally

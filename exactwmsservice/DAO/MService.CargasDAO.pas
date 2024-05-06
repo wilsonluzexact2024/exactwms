@@ -101,42 +101,33 @@ Begin
 end;
 
 function TCargasDAO.CancelarCarregamento(const pCargaId: Integer): TJsonObject;
-var
-  vSql: String;
+var vSql: String;
 Begin
   try
-    FConexao.Query.SQL.Add('Delete from CargaCarregamento where CargaId = ' +
-      pCargaId.ToString + ' and Processo = ' + QuotedStr('CA'));
-    FConexao.Query.SQL.Add
-      ('Update CargaPedidos Set Conferido = 0 Where CargaId = ' +
-      pCargaId.ToString);
+    FConexao.Query.SQL.Add('Delete from CargaCarregamento where CargaId = '+pCargaId.ToString + ' and Processo = ' + QuotedStr('CA'));
+    FConexao.Query.SQL.Add('Update CargaPedidos Set Conferido = 0 Where CargaId = '+pCargaId.ToString);
     FConexao.Query.ExecSQL(vSql);
     Result := TJsonObject.Create.AddPair('Ok', '200');
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Tabela: CancelarCarregamento - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: CancelarCarregamento - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
 
 function TCargasDAO.CancelarConferencia(const pCargaId: Integer): TJsonObject;
-var
-  vSql: String;
+var vSql: String;
 Begin
   try
-    FConexao.Query.SQL.Add('Delete from CargaCarregamento where CargaId = ' +
-      pCargaId.ToString + ' and Processo = ' + QuotedStr('CO'));
-    FConexao.Query.SQL.Add
-      ('Update CargaPedidos Set Conferido = 0 Where CargaId = ' +
-      pCargaId.ToString);
+    FConexao.Query.SQL.Add('Delete from CargaCarregamento where CargaId = '+pCargaId.ToString + ' and Processo = ' + QuotedStr('CO'));
+    FConexao.Query.SQL.Add('Update CargaPedidos Set Conferido = 0 Where CargaId = '+pCargaId.ToString);
+    FConexao.Query.SQL.Add('Delete De From DocumentoEtapas De');
+    FConexao.Query.SQL.Add('Inner Join Cargas C On C.Uuid = De.Documento');
+    FConexao.Query.SQL.Add('Where C.CargaId = '+pCargaId.ToString()+' and processoId > 16');
     FConexao.Query.ExecSQL(vSql);
     Result := TJsonObject.Create.AddPair('Ok', '200');
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       raise Exception.Create('Tabela: CancelarConferência - ' +
         StringReplace(E.Message,
@@ -263,60 +254,48 @@ begin
   Result := False;
   try
     FConexao.Query.SQL.Add('Declare @CargaId Integer = ' + pCargaId.ToString);
-    FConexao.Query.SQL.Add
-      ('select CC.IdMin, De.Processoid, De.Descricao Processo, C.*');
+    FConexao.Query.SQL.Add('select CC.IdMin, De.Processoid, De.Descricao Processo, C.*');
     FConexao.Query.SQL.Add('From Cargas C');
-    FConexao.Query.SQL.Add
-      ('Left Join vDocumentoEtapas DE On De.Documento = C.uuid');
-    FConexao.Query.SQL.Add
-      ('Left Join (Select CargaId, Min(CarregamentoId) IdMin');
+    FConexao.Query.SQL.Add('Left Join vDocumentoEtapas DE On De.Documento = C.uuid');
+    FConexao.Query.SQL.Add('Left Join (Select CargaId, Min(CarregamentoId) IdMin');
     FConexao.Query.SQL.Add('           From CargaCarregamento');
-    FConexao.Query.SQL.Add
-      ('           Group by CargaId) Cc ON Cc.CargaId = C.CargaId');
-    FConexao.Query.SQL.Add
-      ('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = C.uuid and Status = 1)');
+    FConexao.Query.SQL.Add('           Group by CargaId) Cc ON Cc.CargaId = C.CargaId');
+    FConexao.Query.SQL.Add('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = C.uuid and Status = 1)');
     FConexao.Query.SQL.Add('      And C.CargaId = @CargaId');
     if DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('CargasDelete.Sql');
+       FConexao.Query.SQL.SaveToFile('CargasDelete.Sql');
     FConexao.Query.Open;
-    if (FConexao.Query.FieldByName('ProcessoId').AsInteger > 16) then
-    Begin
-      Result := False;
-      raise Exception.Create('Não é possível Cancelar a Carga. Processo Atual: '
-        + FConexao.Query.FieldByName('Processo').AsString);
+    if (FConexao.Query.FieldByName('ProcessoId').AsInteger > 16) then Begin
+       Result := False;
+       raise Exception.Create('Não é possível Cancelar a Carga. Processo Atual: '+
+                              FConexao.Query.FieldByName('Processo').AsString);
     End
-    Else if (Not FConexao.Query.IsEmpty) and
-      (FConexao.Query.FieldByName('IdMin').AsInteger > 0) then
-    Begin
-      FConexao.Query.Close;
-      FConexao.Query.SQL.Clear;
-      FConexao.Query.SQL.Add
-        ('Insert Into DocumentoEtapas (Documento, ProcessoId, UsuarioId, DataId, HoraId, DataHora, Terminal, Status)'
-        + '             Select (Select uuid From Pedido where PedidoId = CP.PedidoId), 17, '
-        + pJsonObject.GetValue<Integer>('usuarioid').ToString() +
-        ' , (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '
-        + ' (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'
-        + ', GETDATE(), ' + QuotedStr(pJsonObject.GetValue<String>('terminal'))
-        + ', 1 from cargaPedidos CP Where CP.cargaid = ' + pCargaId.ToString);
-      Result := True;
+    Else if (Not FConexao.Query.IsEmpty) and (FConexao.Query.FieldByName('IdMin').AsInteger > 0) then Begin
+       raise Exception.Create('Abortar Conferência/Carregamento antes de Excluir!');
     End
     Else if (Not FConexao.Query.IsEmpty) and
       (FConexao.Query.FieldByName('IdMin').AsInteger = 0) then
     Begin
       FConexao.Query.Close;
       FConexao.Query.SQL.Clear;
-      FConexao.Query.SQL.Add('Delete Cargas where CargaId = ' +
-        pCargaId.ToString);
+      FConexao.Query.SQL.Add('Delete CargaPedidos where CargaId = '+pCargaId.ToString);
+      FConexao.Query.SQL.Add('Delete CargaCarregamento where CargaId = '+pCargaId.ToString);
+      FConexao.Query.SQL.Add
+        ('Insert Into DocumentoEtapas (Documento, ProcessoId, UsuarioId, DataId, HoraId, DataHora, Terminal, Status)'+sLineBreak+
+         '       Select C.Uuid, 31, '+pJsonObject.GetValue<Integer>('usuarioid').ToString()+sLineBreak+
+         '     , (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)) '+sLineBreak+
+         '     , (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'+
+         '     , GETDATE(), ' + QuotedStr(pJsonObject.GetValue<String>('terminal')) + ', 1 '+sLineBreak+
+         'from cargas C '+sLineBreak+
+         'Where C.cargaid = ' + pCargaId.ToString);
+      if DebugHook <> 0 then
+         FConexao.Query.SQL.SaveToFile('CargaExcluir.Sql');
       FConexao.Query.ExecSQL;
       Result := True;
     End;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Tabela: DeleteCargas - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create(E.Message);
     End;
   end;
 end;

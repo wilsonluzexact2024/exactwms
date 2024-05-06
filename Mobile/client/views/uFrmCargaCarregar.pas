@@ -331,7 +331,8 @@ begin
 //  inherited;
   if StrToIntDef(EdtConteudoPesq.Text, 0) =  0 then
      ShowErro('Informe um Id válido');
-  OpenCarga(StrToIntDef(EdtConteudoPesq.Text, 0), 0 , 16);
+  EdtCodigo.Text := EdtConteudoPesq.Text;
+  OpenCarga(StrToIntDef(EdtConteudoPesq.Text, 0), 0 , 0);
 end;
 
 procedure TFrmCargaCarregar.CargaDestinatario;
@@ -343,6 +344,7 @@ begin
   Try
     JsonArrayDestinatario := ObjCargaCtrl.GetCargaPessoas(ObjCargaCtrl.ObjCargas.cargaid, 0);
     if JsonArrayDestinatario.Items[0].TryGetValue('Erro', vErro) then Begin
+       JsonArrayDestinatario := Nil;
        raise Exception.Create(vErro);
        Exit;
     End;
@@ -364,7 +366,8 @@ Var JsonArrayPedido : TJsonArray;
     vErro  : String;
 begin
   Try
-    JsonArrayPedido := ObjCargaCtrl.GetCargaPedidos(ObjCargaCtrl.ObjCargas.cargaid, QryCargaDestinatario.FieldByName('PessoaId').AsInteger, 'CA', 0);
+    JsonArrayPedido := ObjCargaCtrl.GetCargaPedidos(ObjCargaCtrl.ObjCargas.cargaid,
+                                                    QryCargaDestinatario.FieldByName('PessoaId').AsInteger, 'CA', 0);
     if JsonArrayPedido.Items[0].TryGetValue('Erro', vErro) then Begin
        raise Exception.Create(vErro);
        Exit;
@@ -477,8 +480,8 @@ Var JsonArrayCarga : TJsonArray;
     vErro          : String;
 Var Th : TThread;
 begin
-  Th := TThread.CreateAnonymousThread(procedure
-    begin
+//  Th := TThread.CreateAnonymousThread(procedure
+//    begin
       JsonArrayCarga := ObjCargaCtrl.GetCargas(pCargaId, 0, 0, '', '', '', 0, '', '', 0);
          TThread.Synchronize(nil,
            procedure()
@@ -509,9 +512,9 @@ begin
              ObjCargaCtrl.ObjCargas.ProcessoId              := JsonArrayCarga.Items[0].GetValue<Integer>('processoid');
              ShowDados;
            end);
-    end);
-  Th.OnTerminate := ThreadTerminate;
-  Th.Start;
+//    end);
+//  Th.OnTerminate := ThreadTerminate;
+//  Th.Start;
 end;
 
 procedure TFrmCargaCarregar.GetCargaVolumes;

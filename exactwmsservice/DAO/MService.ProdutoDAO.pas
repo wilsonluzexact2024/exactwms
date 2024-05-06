@@ -1429,9 +1429,10 @@ begin
       FConexao.Query.Sql.Add('else Begin');
       FConexao.Query.Sql.Add('  Update Estoque');
       FConexao.Query.Sql.Add('     Set Qtde = Qtde + @Quantidade');
-      FConexao.Query.Sql.Add
-        ('  Where LoteId = (Select LoteId From ProdutoLotes where LoteId = (Select LoteId From ProdutoLotes Where ProdutoId = @ProdutoId and DescrLote = '
-        + #39 + '202109' + #39 + ')) and');
+      FConexao.Query.Sql.Add('        , DtAlteracao  = '+tuEvolutConst.SqlDataAtual);
+      FConexao.Query.Sql.Add('        , HrAlteracao  = '+tuEvolutConst.SqlhoraAtual);
+
+      FConexao.Query.Sql.Add('  Where LoteId = (Select LoteId From ProdutoLotes where LoteId = (Select LoteId From ProdutoLotes Where ProdutoId = @ProdutoId and DescrLote = '+#39 + '202109' + #39 + ')) and');
       FConexao.Query.Sql.Add
         ('  EnderecoId = (Select EnderecoId From Enderecamentos where Descricao = @Endereco) and EstoqueTipoId = 4');
       FConexao.Query.Sql.Add('End');

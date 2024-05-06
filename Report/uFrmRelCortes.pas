@@ -1,4 +1,4 @@
-unit uFrmRelCortes;
+﻿unit uFrmRelCortes;
 
 interface
 
@@ -60,6 +60,11 @@ type
     LblTotal: TLabel;
     FdMemPesqGeralEstoque: TIntegerField;
     FdMemPesqGeralVencido: TIntegerField;
+    GroupBox2: TGroupBox;
+    LblZona: TLabel;
+    Label16: TLabel;
+    EdtZonaId: TEdit;
+    BtnPesqZona: TBitBtn;
     procedure FormDestroy(Sender: TObject);
     procedure BtnPesquisarStandClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -67,6 +72,11 @@ type
     procedure EdtCodProdutoExit(Sender: TObject);
     procedure BtnPesqProdutoClick(Sender: TObject);
     procedure LstReportClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure BtnPesqZonaClick(Sender: TObject);
+    procedure EdtZonaIdChange(Sender: TObject);
+    procedure EdtZonaIdExit(Sender: TObject);
+    procedure EdtInicioEnter(Sender: TObject);
+    procedure EdtInicioExit(Sender: TObject);
   private
     { Private declarations }
     vCodProduto : Integer;
@@ -83,7 +93,8 @@ implementation
 
 {$R *.dfm}
 
-uses PedidoSaidaCtrl, uFuncoes, Views.Pequisa.Produtos, ProdutoCtrl;
+uses PedidoSaidaCtrl, uFuncoes, Views.Pequisa.Produtos, ProdutoCtrl,
+  EnderecamentoZonaCtrl, Views.Pequisa.EnderecamentoZonas;
 
 procedure TFrmRelCortes.BtnPesqProdutoClick(Sender: TObject);
 begin
@@ -112,18 +123,18 @@ begin
     If EdtInicio.Text <> '  /  /    ' then
        pDataIni := StrToDate(EdtInicio.Text);
   Except
-    raise Exception.Create('Data Inicial inv�lida!');
+    raise Exception.Create('Data Inicial inválida!');
   End;
   Try
     If EdtTermino.Text <> '  /  /    ' then
        pDataFin := StrToDate(EdtTermino.Text);
   Except
-    raise Exception.Create('Data Final inv�lida!');
+    raise Exception.Create('Data Final inválida!');
   End;
   if StrToIntDef(EdtPedidoId.Text, 0) < 0 then
-     raise Exception.Create('Id de Pedido inv�lido!');
+     raise Exception.Create('Id de Pedido inválido!');
   if StrToIntDef(EdtCodProduto.Text, 0) < 0 then
-     raise Exception.Create('C�digo do produto inv�lido!');
+     raise Exception.Create('Código do produto inválido!');
   if ChkSintetico.Checked then
      vSintetico := 1
   Else vSintetico := 0;
@@ -135,7 +146,7 @@ begin
     begin
       ObjPedidoCtrl := TPedidoSaidaCtrl.Create();
       jsonArrayRetorno := ObjPedidoCtrl.GetCortes(pDataIni, pDataFin, StrToIntDef(EdtPedidoId.Text, 0),
-                          vCodProduto, vSintetico);
+                          vCodProduto, vSintetico, StrToIntDef(EdtZonaId.Text, 0));
       if JsonArrayRetorno.Items[0].TryGetValue<string>('Erro', vErro) then
          ShowErro(verro)
       Else Begin
@@ -149,11 +160,27 @@ begin
          BtnExportarStand.Enabled := True;
          If Not FdMemPesqGeral.IsEmpty then
             MontaListaCorte
-         Else ShowErro('N�o foi encontrado dados na consulta.');
+         Else ShowErro('Não foi encontrado dados na consulta.');
       End;
       JsonArrayRetorno := Nil;
       ObjPedidoCtrl.Free;
     end);
+end;
+
+procedure TFrmRelCortes.BtnPesqZonaClick(Sender: TObject);
+begin
+  inherited;
+  if EdtZonaId.ReadOnly then Exit;
+  inherited;
+  FrmPesquisaEnderecamentoZonas := TFrmPesquisaEnderecamentoZonas.Create(Application);
+  try
+    if (FrmPesquisaEnderecamentoZonas.ShowModal = mrOk) then Begin
+       EdtZonaId.Text := FrmPesquisaEnderecamentoZonas.Tag.ToString();
+       EdtZonaIdExit(EdtZonaId);
+    End;
+  finally
+    FreeAndNil(FrmPesquisaEnderecamentoZonas);
+  end;
 end;
 
 procedure TFrmRelCortes.EdtCodProdutoExit(Sender: TObject);
@@ -169,7 +196,7 @@ begin
   if vProdutoDigitado = 0 then Begin
      vCodDig := EdtCodProduto.Text;
      EdtCodProduto.Clear;
-     raise Exception.Create('Produto n�o encontrado! Verifique o C�digo/Ean('+vCodDig+')');
+     raise Exception.Create('Produto não encontrado! Verifique o Código/Ean('+vCodDig+')');
   End;
   ObjProdutoCtrl := TProdutoCtrl.Create;
   JsonArrayRetorno := ObjProdutoCtrl.FindProduto(vProdutoDigitado.ToString, '', '', 0, 0);
@@ -179,18 +206,70 @@ begin
      JsonArrayRetorno := Nil;
      ObjProdutoCtrl.Free;
      //JsonArrayRetorno.DisposeOf;
-     raise Exception.Create('Produto n�o encontrado!');
+     raise Exception.Create('Produto não encontrado!');
   End;
   LblProduto.Caption := JsonArrayRetorno.Items[0].GetValue<String>('descricao');
   vCodProduto := JsonArrayRetorno.Items[0].GetValue<Integer>('codProduto');
   JsonArrayRetorno := Nil;
   ObjProdutoCtrl.Free;
+  ExitFocus(Sender);
 end;
 
 procedure TFrmRelCortes.EdtInicioChange(Sender: TObject);
 begin
   inherited;
+  vCodProduto := 0;
   Limpar;
+end;
+
+procedure TFrmRelCortes.EdtInicioEnter(Sender: TObject);
+begin
+  inherited;
+  EnterFocus(Sender);
+end;
+
+procedure TFrmRelCortes.EdtInicioExit(Sender: TObject);
+begin
+  inherited;
+  ExitFocus(Sender);
+end;
+
+procedure TFrmRelCortes.EdtZonaIdChange(Sender: TObject);
+begin
+  inherited;
+  if Sender = EdtZonaId then
+     LblZona.Caption := '';
+  EdtInicioChange(EdtInicio);
+end;
+
+procedure TFrmRelCortes.EdtZonaIdExit(Sender: TObject);
+Var ObjEnderecamentoZonaCtrl   : TEnderecamentoZonaCtrl;
+    ZonaJsonArray : TJSONArray;
+    vErro         : String;
+begin
+  inherited;
+  if EdtZonaId.Text = '' then Begin
+     LblZona.Caption := '';
+     Exit;
+  End;
+  if StrToIntDef(EdtZonaId.Text, 0) <= 0 then Begin
+     LblZona.Caption := '';
+     ShowErro( '😢Zona/Setor('+EdtZonaId.Text+') inválida!' );
+     EdtZonaId.Clear;
+     Exit;
+  end;
+  ObjEnderecamentoZonaCtrl   := TEnderecamentoZonaCtrl.Create;
+  ZonaJsonArray := ObjEnderecamentoZonaCtrl.FindEnderecamentoZona(StrToIntDef(EdtZonaId.text, 0), '', 0);
+  if ZonaJsonArray.Items[0].TryGetValue('Erro', vErro) then Begin // (ReturnLstRota.Count <= 0) then Begin
+     LblZona.Caption := '';
+     ShowErro(vErro, 'toast4');
+     EdtZonaId.Clear;
+  end
+  Else
+     LblZona.Caption := ZonaJsonArray.Items[0].GetValue<String>('descricao');
+  ZonaJsonArray := Nil;
+  ObjEnderecamentoZonaCtrl.Free;
+  ExitFocus(Sender);
 end;
 
 procedure TFrmRelCortes.FormCreate(Sender: TObject);

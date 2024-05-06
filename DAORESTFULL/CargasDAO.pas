@@ -25,7 +25,7 @@ Type
     Function CancelarConferencia  : TJsonObject;
     Function CancelarCarga(const pJsonObject: TJsonObject): TJsonObject;
     Function Salvar(pJsonCarga : TJsonObject) : TJsonObject;
-    Function Delete : Boolean;
+    Function Delete : TJsonObject;
     Function RegistrarCarregamento(pJsonCarregamento : TJsonObject) : TJsonObject;
     Function FinalizarCarregamento(pJsonFinalizar : TJsonObject) : TJsonObject;
     Function GetCargaHeader(pCargaId : Integer) : TJsonArray;
@@ -89,12 +89,12 @@ begin
   DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('cargaid', Self.ObjCargas.CargaId.ToString());
   DmeXactWMS.RESTRequestWMS.Method := RmDelete;
   DmeXactWMS.RESTRequestWMS.Execute;
-  if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) or
-     (DmeXactWMS.RESTResponseWMS.StatusCode = 204) Then Begin //Lista de codigo de sucesso
+//  if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) or
+//     (DmeXactWMS.RESTResponseWMS.StatusCode = 204) Then Begin //Lista de codigo de sucesso
      Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJSONObject;
-  End
-  Else
-    raise Exception.Create('não foi possível Cancelar o Carregamento');
+//  End
+//  Else
+//    raise Exception.Create('não foi possível Cancelar o Carregamento');
 end;
 
 function TCargasDao.CancelarConferencia: TJsonObject;
@@ -118,27 +118,25 @@ begin
   Self.FObjCargas := TCargas.Create;
 end;
 
-function TCargasDao.Delete : Boolean;
+function TCargasDao.Delete : TJsonObject;
 Var pJsonDelete : TjsonObject;
 begin
-  Result := False;
-  DmeXactWMS.ResetRest;
-  DmeXactWMS.RESTRequestWMS.Resource := 'v1/cargas/{cargaid}';
-  DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('cargaid', Self.ObjCargas.CargaId.ToString());
-  pJsonDelete:= TJsonObject.Create();
-  pJsonDelete.AddPair('cargaid', TJsonNumber.Create(Self.ObjCargas.CargaId));
-  pJsonDelete.AddPair('usuarioid', TJsonNumber.Create(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId));
-  pJsonDelete.AddPair('terminal', NomeDoComputador);
-  DmeXactWMS.RestRequestWMS.AddBody(pJsonDelete.ToJson, ContentTypeFromString('application/json'));
-  DmeXactWMS.RESTRequestWMS.Method := RmDelete;
-  DmeXactWMS.RESTRequestWMS.Execute;
-  pJsonDelete.Free;
-  if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) or
-     (DmeXactWMS.RESTResponseWMS.StatusCode = 204) Then Begin //Lista de codigo de sucesso
-     Result := True;
-  End
-  Else Begin
-    raise Exception.Create((DmeXactWMS.RESTResponseWMS.JSONValue as TJSONObject).GetValue<String>('Erro')); //DmeXactWMS.RESTResponseWMS.StatusText);
+  Try
+    DmeXactWMS.ResetRest;
+    DmeXactWMS.RESTRequestWMS.Resource := 'v1/cargas/{cargaid}';
+    DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('cargaid', Self.ObjCargas.CargaId.ToString());
+    pJsonDelete:= TJsonObject.Create();
+    pJsonDelete.AddPair('cargaid', TJsonNumber.Create(Self.ObjCargas.CargaId));
+    pJsonDelete.AddPair('usuarioid', TJsonNumber.Create(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId));
+    pJsonDelete.AddPair('terminal', NomeDoComputador);
+    DmeXactWMS.RestRequestWMS.AddBody(pJsonDelete.ToJson, ContentTypeFromString('application/json'));
+    DmeXactWMS.RESTRequestWMS.Method := RmDelete;
+    DmeXactWMS.RESTRequestWMS.Execute;
+    pJsonDelete.Free;
+    Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJSONObject;
+  Except On E: Exception do Begin
+    Result := TJsonObject.Create.AddPair('Erro', E.Message)
+    End;
   End;
 end;
 
@@ -189,7 +187,7 @@ begin
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
      Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJSONArray
   Else
-    raise Exception.Create('Ocorreu um erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
+    raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
 end;
 
 function TCargasDao.GetCargaCarregarVolumes(const pCargaId : Integer; pProcesso : String; pShowErro: Integer) : TJsonArray;
@@ -205,7 +203,7 @@ begin
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
      Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJSONArray
   Else
-    raise Exception.Create('Ocorreu um erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
+    raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
 end;
 
 function TCargasDao.GetCargaHeader(pCargaId: Integer): TJsonArray;

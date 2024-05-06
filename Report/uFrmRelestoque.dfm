@@ -1,13 +1,30 @@
 inherited FrmRelEstoque: TFrmRelEstoque
   Caption = 'FrmRelEstoque'
+  ClientHeight = 614
+  ExplicitHeight = 616
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Height = 559
+    Properties.ActivePage = TabPrincipal
+    ExplicitHeight = 559
+    ClientRectBottom = 559
+    inherited TabListagem: TcxTabSheet
+      ExplicitHeight = 535
+      inherited LstCadastro: TAdvStringGrid
+        Height = 497
+        ExplicitHeight = 497
+      end
+      inherited AdvGridLookupBar1: TAdvGridLookupBar
+        Height = 497
+        ExplicitHeight = 497
+      end
+    end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Posi'#231#227'o Estoque'
       ExplicitTop = 24
       ExplicitWidth = 1157
-      ExplicitHeight = 524
+      ExplicitHeight = 535
       inherited LblTotRegCaption: TLabel
         Left = 8
         Top = 182
@@ -21,16 +38,19 @@ inherited FrmRelEstoque: TFrmRelEstoque
         ExplicitTop = 182
       end
       inherited PnlInfo: TPanel
+        Top = 349
         TabOrder = 8
+        ExplicitTop = 349
       end
       inherited ChkCadastro: TCheckBox
         TabOrder = 9
       end
       inherited LstReport: TAdvStringGrid
         Top = 208
-        Height = 316
+        Height = 305
         TabStop = False
-        ColCount = 18
+        Align = alNone
+        ColCount = 19
         TabOrder = 7
         ColumnHeaders.Strings = (
           'C'#243'd.ERP'
@@ -50,13 +70,14 @@ inherited FrmRelEstoque: TFrmRelEstoque
           'CrosDocking'
           'Segregado'
           'Expedi'#231#227'o'
+          'Dt.Entrada'
           'Ult.Movimento')
-        ExplicitLeft = -1
         ExplicitTop = 208
-        ExplicitHeight = 316
+        ExplicitHeight = 305
         ColWidths = (
           74
           118
+          74
           74
           74
           74
@@ -772,6 +793,15 @@ inherited FrmRelEstoque: TFrmRelEstoque
         end
       end
     end
+    inherited TbFrameWeb: TcxTabSheet
+      ExplicitHeight = 535
+    end
+    inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitHeight = 535
+      inherited DbgImporta: TDBGrid
+        Height = 331
+      end
+    end
     object TabMovimentacaoInterna: TcxTabSheet
       CustomHint = BalloonHint1
       Caption = 'Movimenta'#231#227'o Interna'
@@ -1146,7 +1176,7 @@ inherited FrmRelEstoque: TFrmRelEstoque
         Left = 0
         Top = 206
         Width = 1157
-        Height = 318
+        Height = 329
         Cursor = crDefault
         CustomHint = BalloonHint1
         TabStop = False
@@ -1384,6 +1414,7 @@ inherited FrmRelEstoque: TFrmRelEstoque
         SortSettings.HeaderMirrorColorTo = 16182488
         Version = '8.4.2.2'
         WordWrap = False
+        ExplicitHeight = 318
         ColWidths = (
           74
           48
@@ -1735,6 +1766,8 @@ inherited FrmRelEstoque: TFrmRelEstoque
     ExplicitTop = 47
   end
   inherited PnlErro: TPanel
+    Top = 592
+    ExplicitTop = 592
     inherited LblMensShowErro: TLabel
       Width = 1156
       Height = 22
@@ -1843,6 +1876,9 @@ inherited FrmRelEstoque: TFrmRelEstoque
     object FdMemPesqGeralmascarapicking: TStringField
       FieldName = 'mascarapicking'
       Size = 14
+    end
+    object FdMemPesqGeralDtInclusao: TDateField
+      FieldName = 'DtInclusao'
     end
   end
   inherited frxReport1: TfrxReport

@@ -10,6 +10,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 663
+    Properties.ActivePage = TabPrincipal
     OnDrawTab = PgcBaseDrawTab
     ExplicitTop = 59
     ExplicitHeight = 663

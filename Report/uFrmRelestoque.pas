@@ -128,6 +128,7 @@ type
     FdMemPesqGeralPicking: TStringField;
     FdMemPesqGeralmascara: TStringField;
     FdMemPesqGeralmascarapicking: TStringField;
+    FdMemPesqGeralDtInclusao: TDateField;
     procedure BtnSchProdutoClick(Sender: TObject);
     procedure EdtProdutoIdExit(Sender: TObject);
     procedure EdtProdutoIdChange(Sender: TObject);
@@ -352,6 +353,13 @@ begin
   LstReport.UnHideColumn(14);
 }  LstReport.UnHideColumnsAll;
   if CbEstoqueTipo.ItemIndex > 0 then Begin
+     if CbEstoqueTipo.ItemIndex = 1 then Begin
+        LstReport.HideColumn(10);
+        LstReport.HideColumn(11);
+        LstReport.HideColumn(14);
+        LstReport.HideColumn(15);
+        LstReport.HideColumn(16);
+     End;
      If CbEstoqueTipo.ItemIndex <> 2 then
         LstReport.HideColumn(13);
      If CbEstoqueTipo.ItemIndex <> 3 then
@@ -624,6 +632,8 @@ begin
   LstReport.ColWidths[14] :=  80;
   LstReport.ColWidths[15] :=  80;
   LstReport.ColWidths[16] :=  100;
+  LstReport.ColWidths[17] :=  100;
+  LstReport.ColWidths[18] :=  100;
   LstReport.Alignments[ 0, 0] := taRightJustify;
   LstReport.FontStyles[ 0, 0] := [FsBold];
   LstReport.Alignments[ 8, 0]  := taCenter;
@@ -637,6 +647,8 @@ begin
   LstReport.Alignments[15, 0]  := taRightJustify;
   LstReport.Alignments[16, 0]  := taRightJustify;
   LstReport.Alignments[17, 0]  := taCenter;
+  LstReport.Alignments[18, 0]  := taCenter;
+  LstReport.Align         := AlBottom;
   LstReport.RowCount      := 1;
   CbEstoqueTipo.ItemIndex := 4;
   RbEstoque.ItemIndex     := 0;
@@ -820,7 +832,8 @@ begin
     LstReport.Cells[14, xProd+1] := FdMemPesqGeral.FieldByName('qtdcrosdocking').AsString;
     LstReport.Cells[15, xProd+1] := FdMemPesqGeral.FieldByName('segregado').AsString;
     LstReport.Cells[16, xProd+1] := FdMemPesqGeral.FieldByName('Expedicao').AsString;
-    LstReport.Cells[17, xProd+1] := FdMemPesqGeral.FieldByName('DtUltimaMovimentacao').AsString;
+    LstReport.Cells[17, xProd+1] := FdMemPesqGeral.FieldByName('DtInclusao').AsString;
+    LstReport.Cells[18, xProd+1] := FdMemPesqGeral.FieldByName('DtUltimaMovimentacao').AsString;
     LstReport.Alignments[0, xProd+1]  := taRightJustify;
     LstReport.Alignments[8, xProd+1]  := taCenter;
     LstReport.Alignments[9, xProd+1] := taRightJustify;
@@ -833,6 +846,7 @@ begin
     LstReport.Alignments[15, xProd+1] := taRightJustify;
     LstReport.Alignments[16, xProd+1] := taRightJustify;
     LstReport.Alignments[17, xProd+1] := taCenter;
+    LstReport.Alignments[18, xProd+1] := taCenter;
     Inc(xProd);
     FdMemPesqGeral.Next;
   End;

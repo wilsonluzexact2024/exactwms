@@ -35,13 +35,10 @@ procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 // Finalizar a Separacao
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SaveSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetResumoSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetResumoSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetDshSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetDesempenhoExpedicao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure FinalizarSeparacao(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetDesempenhoExpedicao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure FinalizarSeparacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -101,14 +98,11 @@ begin
   Try
     Try
       PedidoVolumeSeparacaoDAO := TPedidoVolumeSeparacaoDAO.Create;
-      Res.Status(200).Send<TJSonArray>
-        (PedidoVolumeSeparacaoDAO.GetDesempenhoExpedicao(Req.Query.Dictionary));
-    Except
-      On E: Exception do
+      Res.Status(200).Send<TJSonArray>(PedidoVolumeSeparacaoDAO.GetDesempenhoExpedicao(Req.Query.Dictionary));
+    Except On E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayErro);
       End;
     End;

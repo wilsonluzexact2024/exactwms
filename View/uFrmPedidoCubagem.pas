@@ -887,7 +887,7 @@ begin
      Exit;
   End;
   if StrToIntDef(EdtZonaId.Text, 0) <= 0 then Begin
-     LblRota.Caption := '';
+     LblZona.Caption := '';
      ShowErro( '😢Zona/Setor('+EdtZonaId.Text+') inválida!' );
      EdtZonaId.Clear;
      Exit;

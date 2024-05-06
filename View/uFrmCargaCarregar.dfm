@@ -6,6 +6,9 @@ inherited FrmCargaCarregar: TFrmCargaCarregar
   inherited PgcBase: TcxPageControl
     Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 11
         ColumnHeaders.Strings = (
@@ -48,9 +51,6 @@ inherited FrmCargaCarregar: TFrmCargaCarregar
       end
     end
     inherited TabPrincipal: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inherited ShCadastro: TShape
         Left = 738
         Top = 18
@@ -718,6 +718,16 @@ inherited FrmCargaCarregar: TFrmCargaCarregar
         TabOrder = 4
       end
     end
+    inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
+    end
+    inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
+    end
   end
   inherited PnHeader: TPanel
     inherited PanWin8: TPanel
@@ -727,9 +737,9 @@ inherited FrmCargaCarregar: TFrmCargaCarregar
         ExplicitLeft = 139
       end
       inherited BtnExcluir: TsImage
-        Left = 230
+        Left = 232
         Visible = False
-        ExplicitLeft = 230
+        ExplicitLeft = 232
       end
       inherited BtnFechar: TsImage
         Left = 73
@@ -782,6 +792,19 @@ inherited FrmCargaCarregar: TFrmCargaCarregar
     Top = 349
     ExplicitLeft = 1009
     ExplicitTop = 349
+  end
+  inherited PnlErro: TPanel
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
+  end
+  inherited PnlConfigPrinter: TPanel
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited TmFrameWeb: TTimer
     Left = 584

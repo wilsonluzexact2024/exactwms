@@ -11497,8 +11497,8 @@ inherited FrmEntrada: TFrmEntrada
               Caption = 'Vencimento'
             end
             object EdtDtFabricacao: TJvDateEdit
-              Left = 341
-              Top = 19
+              Left = 342
+              Top = 21
               Width = 90
               Height = 24
               CustomHint = BalloonHint1
@@ -11520,7 +11520,7 @@ inherited FrmEntrada: TFrmEntrada
             end
             object EdtDtVencimento: TJvDateEdit
               Left = 651
-              Top = 21
+              Top = 23
               Width = 80
               Height = 24
               CustomHint = BalloonHint1
@@ -12034,7 +12034,7 @@ inherited FrmEntrada: TFrmEntrada
             TabOrder = 3
             object CbRastroTipo: TComboBox
               Left = 8
-              Top = 20
+              Top = 22
               Width = 135
               Height = 22
               CustomHint = BalloonHint1
@@ -28956,6 +28956,7 @@ inherited FrmEntrada: TFrmEntrada
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1178
       ExplicitHeight = 553
     end

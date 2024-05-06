@@ -16,7 +16,6 @@ uses
   horse.jhonson,
   horse.Compression,
 
-
   horse.Utils.ClientIP,
   System.SysUtils,
   uFuncoes in '..\uFuncoes.pas',

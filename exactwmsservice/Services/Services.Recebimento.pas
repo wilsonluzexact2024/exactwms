@@ -591,7 +591,7 @@ begin
       vQryFinalizar.Close;
       vQryFinalizar.Sql.Clear;
       vQryFinalizar.Sql.Add('select LoteId, ');
-      vQryFinalizar.Sql.Add('       (Case When SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
+      vQryFinalizar.Sql.Add('       (Case When RastroId = 3 or SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
       vQryFinalizar.Sql.Add('	            Else (Select EnderecoIdStage From Configuracao) End) EnderecoIdStage');
       vQryFinalizar.Sql.Add('from vProdutoLotes');
       vQryFinalizar.Sql.Add('where LoteId = :pLoteId');
@@ -619,22 +619,33 @@ begin
       vSql := vSql +
               'If @QtdCheckIn > 0 Begin' + sLineBreak +
               '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage) Begin'+sLineBreak +
-              '      Update Estoque Set Qtde = Qtde + @QtdCheckIn Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'+sLineBreak +
-              '      End' + sLineBreak + 'Else Begin' + sLineBreak +
-              '      Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) '+sLineBreak +
+              '      Update Estoque Set Qtde = Qtde + @QtdCheckIn '+sLineBreak +
+              '      	    , DtAlteracao  = (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))'+sLineBreak+
+              '           , hralteracao  = (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'+sLineBreak+
+              '         		, UsuarioIdAlt = '+vQryItens.FieldByName('UsuarioId').AsString+sLineBreak +
+              '      Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'+sLineBreak+
+              '   End' + sLineBreak +
+              '   Else Begin' + sLineBreak +
+              '      Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc ) '+sLineBreak +
               '           Values (@LoteId, @EnderecoIdStage, 1, @QtdCheckIn, ' +sLineBreak +
               '                  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '+ sLineBreak +
-              '                  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
+              '                  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), '+sLineBreak+
+              '                  '+vQryItens.FieldByName('UsuarioId').AsString+' )'+sLineBreak +
               '   End;'+sLineBreak+
               'End;'+sLineBreak;
       vSql := vSql + 'If @QtdSegregada > 0 Begin' + sLineBreak +
               '   If Exists (Select LoteId From Estoque Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)) Begin'+ sLineBreak +
-              '      Update Estoque Set Qtde = Qtde + @QtdSegregada Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'+sLineBreak +
+              '      Update Estoque Set Qtde = Qtde + @QtdSegregada '+sLineBreak +
+              '      	    , DtAlteracao  = (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))'+sLineBreak+
+              '           , hralteracao  = (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'+sLineBreak+
+              '         		, UsuarioIdAlt = '+vQryItens.FieldByName('UsuarioId').AsString+sLineBreak +
+              '      Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'+sLineBreak+
               '   End' + sLineBreak +
               '	  Else Begin' + sLineBreak +
-              '	   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada,'+sLineBreak +
-              '							(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'+sLineBreak +
-              '							(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
+              '	   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada, '+sLineBreak +
+              '							    (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'+sLineBreak +
+'							    (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) '+sLineBreak +
+              '         		, '+vQryItens.FieldByName('UsuarioId').AsString+' )'+sLineBreak +
               '   End;' + sLineBreak +
               'End;';
       // try Clipboard.AsText := vSql; Except End;

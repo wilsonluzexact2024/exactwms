@@ -16,10 +16,9 @@ begin
   Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
             'Declare @UsuarioId Integer      = :pUsuarioId'+sLineBreak+
             'INSERT INTO KARDEX'+sLineBreak+
-            '  SELECT 2, VL.LOTEID, VL.ENDERECOID, VL.ESTOQUETIPOID, VL.QTDSUPRIDA,'+sLineBreak+
-            '     (SELECT Coalesce(QTDE, 0)'+sLineBreak+
-            '      FROM ESTOQUE'+sLineBreak+
-            '       WHERE  LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID ),'+sLineBreak+
+            '   SELECT 2, VL.LOTEID, VL.ENDERECOID, VL.ESTOQUETIPOID, VL.QTDSUPRIDA, (SELECT Coalesce(QTDE, 0)'+sLineBreak+
+            '   FROM ESTOQUE'+sLineBreak+
+            '   WHERE  LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID ),'+sLineBreak+
             '     (SELECT Coalesce(QTDE, 0)-VL.QTDSUPRIDA'+sLineBreak+
             '      FROM ESTOQUE'+sLineBreak+
             '      WHERE LOTEID = VL.LOTEID AND ENDERECOID = VL.ENDERECOID AND ESTOQUETIPOID = VL.ESTOQUETIPOID) ,'+sLineBreak+
@@ -30,13 +29,17 @@ begin
             '  FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
             '  WHERE VL.PEDIDOVOLUMEID =@PEDIDOVOLUMEID AND VL.QTDSUPRIDA > 0'+sLineBreak+
             ' '+sLineBreak+
-            '          UPDATE EST SET QTDE = EST.QTDE - Quantidade'+sLineBreak+ //VL.QTDSUPRIDA'+sLineBreak+
-            '          FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
-            '          INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
-            '          AND EST.ENDERECOID = VL.ENDERECOID AND EST.ESTOQUETIPOID = 6'+sLineBreak+
-            '          WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID'+sLineBreak+
-            '		       UPDATE PEDIDOVOLUMES SET EXPEDIDO = 1'+sLineBreak+
-            '          WHERE PEDIDOVOLUMEID = @PEDIDOVOLUMEID    '+sLineBreak+
+            '  UPDATE EST  '+sLineBreak+
+            '     SET QTDE = EST.QTDE - Quantidade'+sLineBreak+ //VL.QTDSUPRIDA'+sLineBreak+
+            '    , DtAlteracao  = (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))'+sLineBreak+
+            '    , HrAlteracao  = (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'+sLineBreak+
+            '    , UsuarioIdAlt = @UsuarioId'+sLineBreak+
+            '  FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
+            '  INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
+            '                            AND EST.ENDERECOID = VL.ENDERECOID AND EST.ESTOQUETIPOID = 6'+sLineBreak+
+            '  WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID'+sLineBreak+
+            '		UPDATE PEDIDOVOLUMES SET EXPEDIDO = 1'+sLineBreak+
+            '  WHERE PEDIDOVOLUMEID = @PEDIDOVOLUMEID    '+sLineBreak+
             ' '+sLineBreak+
             'DELETE FROM ESTOQUE WHERE QTDE <= 0 AND ESTOQUETIPOID = 6';
 end;
@@ -44,8 +47,13 @@ end;
 class function TScriptRepository.GetLoteExistente: String;
 begin
   Result := 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+            'Declare @Usuarioid Integer      = :pUsuarioId'+sLineBreak+
             '-- Baixa Estoque Existente'+sLineBreak+
-            'UPDATE EST SET QTDE = EST.QTDE - VL.QTDSUPRIDA'+sLineBreak+
+            'UPDATE EST '+sLineBreak+
+            '  SET QTDE         = EST.QTDE - VL.QTDSUPRIDA'+sLineBreak+
+            '    , DtAlteracao  = (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date))'+sLineBreak+
+            '    , HrAlteracao  = (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))'+sLineBreak+
+            '    , UsuarioIdAlt = @UsuarioId'+sLineBreak+
             'FROM PEDIDOVOLUMELOTES VL'+sLineBreak+
             'INNER JOIN ESTOQUE EST ON EST.LOTEID = VL.LOTEID'+sLineBreak+
             '  AND EST.ENDERECOID = VL.ENDERECOID'+sLineBreak+

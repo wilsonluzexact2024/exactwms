@@ -161,6 +161,7 @@ var
   vParamOk: Integer;
   vData: TDateTime;
 begin
+  vParamOk := 0;
   FConexao.Query.SQL.Add(TuEvolutConst.GetDesempenhoExpedicao);
   if aParams.ContainsKey('datainicialpedido') then
   begin
@@ -244,9 +245,10 @@ begin
   end
   Else
     FConexao.Query.ParamByName('pEmbalagemId').Value := 99;
-  if vParamOk <> aParams.Count then
-    Result.AddElement(tjsonObject.Create.AddPair('Erro',
-      'Parâmetros incorretos na requisição!'))
+  if vParamOk <> aParams.Count then begin
+     Result := TJsonArray.Create;
+     Result.AddElement(tjsonObject.Create.AddPair('Erro', 'Parâmetros incorretos na requisição!'));
+  end
   Else
   begin
     If DebugHook <> 0 Then
@@ -272,8 +274,7 @@ begin
     FConexao.Query.Open();
     if FConexao.Query.Isempty then Begin
        Result := TJsonArray.Create;
-      Result.AddElement(tjsonObject.Create.AddPair('Erro',
-        TuEvolutConst.QrySemDados));
+       Result.AddElement(tjsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados));
     End
     Else
     Begin

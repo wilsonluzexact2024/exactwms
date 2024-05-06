@@ -164,53 +164,38 @@ begin
           vQryLoteInexistente.Close;
           vQryLoteInexistente.SQL.Clear;
           vQryLoteInexistente.SQL.add(TScriptRepository.GetLoteInexistente);
-          vQryLoteInexistente.ParamByName('pPedidoVolumeId').Value :=
-          vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+          vQryLoteInexistente.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+          //vQryLoteInexistente.ParamByName('pUsuarioId').Value      := vQryVolumeParaExpedicao.FieldByName('UsuarioId').AsInteger;
           vQryLoteInexistente.Open;
 
           vQryVolumeParaExpedicao.Connection.StartTransaction;
           vQryGerarKardex.Close;
           vQryGerarKardex.SQL.Clear;
           vQryGerarKardex.SQL.add(TScriptRepository.GerarKardexReserva);
-          vQryGerarKardex.ParamByName('pPedidoVolumeId').Value :=
-            vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
-          vQryGerarKardex.ParamByName('pUsuarioId').Value :=
-            vQryVolumeParaExpedicao.FieldByName('UsuarioId').AsInteger;
-
+          vQryGerarKardex.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+          vQryGerarKardex.ParamByName('pUsuarioId').Value := vQryVolumeParaExpedicao.FieldByName('UsuarioId').AsInteger;
           vQryGerarKardex.ExecSQL;
-//          Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now)+' - '+'Gera Kardex: PedidoVolume:' +
-//                  vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString);
-//          SalvarLog(0, 'MicroserviceExpedicao', '', 0, 'GeraKardex', vQryGerarKardex.SQL.Text, '', '', '', 1, Time - LTime);
-
           vQryLoteExistente.Close;
           vQryLoteExistente.SQL.Clear;
           vQryLoteExistente.SQL.add(TScriptRepository.GetLoteExistente);
           vQryLoteExistente.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+          vQryLoteExistente.ParamByName('pUsuarioId').Value      := vQryVolumeParaExpedicao.FieldByName('UsuarioId').AsInteger;
           vQryLoteExistente.ExecSQL;
 
           While Not vQryLoteInexistente.Eof do
           Begin
             vQryBaixaEstoque.Close;
             vQryBaixaEstoque.SQL.Clear;
-            // vQryBaixaEstoque.SQL.Add('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
             vQryBaixaEstoque.SQL.add('Insert Into Estoque Values (');
-            vQryBaixaEstoque.SQL.add(vQryLoteInexistente.FieldByName('LoteId')
-              .AsString + ', ' + vQryLoteInexistente.FieldByName('EnderecoId')
-              .AsString + ', ' + vQryLoteInexistente.FieldByName
-              ('EstoqueTipoId').AsString + ', ' +
-              (vQryLoteInexistente.FieldByName('QtdSuprida').AsInteger * -1)
-              .ToString() + ', ');
-            // Select Vl.Loteid, Vl.EnderecoId, Vl.EstoqueTipoId, Vl.QtdSuprida*-1,');' +
+            vQryBaixaEstoque.SQL.add(vQryLoteInexistente.FieldByName('LoteId').AsString+', '+
+            vQryLoteInexistente.FieldByName('EnderecoId').AsString + ', ' +
+            vQryLoteInexistente.FieldByName('EstoqueTipoId').AsString + ', ' +
+            (vQryLoteInexistente.FieldByName('QtdSuprida').AsInteger).ToString() + ', ');
             vQryBaixaEstoque.SQL.add('   (SELECT IDDATA FROM RHEMA_DATA WHERE DATA = CAST(GETDATE() AS DATE)) ,');
-            vQryBaixaEstoque.SQL.add('   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), NULL, NULL, NULL, Null)');
-            // vQryBaixaEstoque.Sql.Add('   FROM PEDIDOVOLUMELOTES VL');
-            // vQryBaixaEstoque.Sql.Add('   Left join Estoque Est On Est.Loteid = Vl.Loteid and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = Vl.EstoqueTipoId');
-            // vQryBaixaEstoque.Sql.Add('   WHERE VL.PEDIDOVOLUMEID = @PEDIDOVOLUMEID and Est.LoteId Is Null  ');
-            // vQryBaixaEstoque.ParamByName('pPedidoVolumeId').Value := vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsInteger;
+            vQryBaixaEstoque.SQL.add('   (SELECT IDHORA FROM RHEMA_HORA WHERE HORA = (SELECT SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), ');
+            vQryBaixaEstoque.Sql.Add(vQryVolumeParaExpedicao.FieldByName('UsuarioId').AsString+', NULL, NULL, Null)');
             LTime := Time;
             vQryBaixaEstoque.ExecSQL;
-//            SalvarLog(0, 'MicroserviceExpedicao', '', 0, 'BaixaEtoqueInexistente', vQryBaixaEstoque.SQL.Text, '', '', '', 1, Time - LTime);
-//            Writeln('       ' + FormatDateTime('hh:nn:ss.zzz', now)+' - Baixa Lote Inexistente: ' + vQryLoteInexistente.FieldByName('LoteId').AsString);
             vQryLoteInexistente.Next;
           End;
           vQryVolumeParaExpedicao.Connection.Commit;
@@ -219,7 +204,7 @@ begin
           Sleep(10);
         Except On e: exception do
           Begin
-            SalvarLog(0, 'API EXP OFF', '', 0, 'Erro Baixa Etoque. Volume: ' +
+            SalvarLog(0, 'API EXP OFF', '', 0, 'Erro Baixa Estoque. Volume: ' +
                       vQryVolumeParaExpedicao.FieldByName('PedidoVolumeId').AsString, e.Message, '', '', '', 500, Time - LTime);
             if vQryVolumeParaExpedicao.Connection.InTransaction then
                vQryVolumeParaExpedicao.Connection.RollBack;
@@ -232,7 +217,7 @@ begin
       End;
     Except
       on e: exception do
-        SalvarLog(0, 'MicroserviceExpedicao', '', 0, 'ErroBaixaEtoque', e.Message, '', '', '', 0, 0);
+        SalvarLog(0, 'MicroserviceExpedicao', '', 0, 'ErroBaixaEstoque', e.Message, '', '', '', 0, 0);
     End;
     // Con.DB.ExecSQL(TScriptRepository.ScriptBaixaEstoqueReposicao);
   finally

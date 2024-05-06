@@ -915,15 +915,25 @@ begin
   End;
   Try
     StrToDate(TEdit(Sender).Text);
+    if StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130') then
+       if Sender = EdtDtFabricacao then
+          raise Exception.Create('Dt.Fabricação inválida!')
+       else raise Exception.Create('Dt.Vencimento inválida!');
   Except Begin
     TEdit(Sender).Text := '';
-    SetCampoDefault('EdtDtFabricao');
-    ShowErro('Data de Fabricação inválida');
+    if Sender = EdtDtFabricacao then Begin
+       SetCampoDefault('EdtDtFabricacao');
+       ShowErro('Data de Fabricação inválida');
+    End
+    Else if Sender = EdtDtVencimento then Begin
+       SetCampoDefault('EdtDtFabricacao');
+       ShowErro('Data de Fabricação inválida');
+    End;
     End;
   End;
   if ((Sender) = EdtDtFabricacao) and (StrToDate(TEdit(Sender).Text) > Date()) then Begin
      TEdit(Sender).Text := '';
-     SetCampoDefault('EdtDtFabricao');
+     SetCampoDefault('EdtDtFabricacao');
      ShowErro('Data de Fabricação não pode ser maior que hoje!');
   End;
   if (Sender = EdtDtVencimento) then Begin

@@ -553,7 +553,7 @@ end;
 procedure TFrmEntrada.AdvSGItensEntradaDblClick(Sender: TObject);
 begin
   inherited;
-  if SpbBtnIniciarCheckIn.Visible then Begin
+  if BtnStartCheckIn.Visible then Begin
      If FdMemEntradaProduto.Locate('CodProduto', AdvSGItensEntrada.Ints[1, AdvSGItensEntrada.row], []) then Begin
         SpbBtnIniciarCheckInClick(SpbBtnIniciarCheckIn);
         EdtProdutoCheckIn.Text := AdvSGItensEntrada.Cells[1, AdvSGItensEntrada.row];
@@ -1046,7 +1046,7 @@ Begin
           end);
 }       End
        Else
-         CbRastroTipo.ItemIndex := FdMemEntradaProduto.FieldByName('RastroId').AsInteger;
+         CbRastroTipo.ItemIndex := FdMemEntradaProduto.FieldByName('RastroId').AsInteger-1;
        JsonArrayAtualiza := Nil;
        ObjProdutoCtrl.Free;
     End;
@@ -1059,36 +1059,6 @@ procedure TFrmEntrada.CbRastroTipoClick(Sender: TObject);
 Var TH : TThread;
 begin
   inherited;
-  //Incluir controle de acesso
-  exit;
-
-
-  TH := TThread.CreateAnonymousThread(procedure
-  Var ObjProdutoCtrl : TProdutoCtrl;
-      JsonArrayAtualiza  : TJsonArray;
-      vErro : String;
-  begin
-    if (CbRastroTipo.ItemIndex+1 <> ObjProdutoCheckIn.Rastro.RastroId) then Begin
-       ObjProdutoCtrl := TProdutoCtrl.Create;
-       JsonArrayAtualiza := ObjProdutoCtrl.AtualizarRastreabilidade(ObjProdutoCheckIn.IdProduto,
-                      CbRastroTipo.ItemIndex+1);
-       if Not JsonArrayAtualiza.Items[0].TryGetValue('Erro', vErro) then Begin
-          FdMemEntradaProduto.Edit;
-          FdMemEntradaProduto.FieldByName('RastroId').AsInteger := CbRastroTipo.ItemIndex+1;
-          FdMemEntradaProduto.Post;
-          TThread.Synchronize(TThread.CurrentThread, procedure
-          begin
-            SetCampoRastro;
-          end);
-       End
-       Else
-         CbRastroTipo.ItemIndex := FdMemEntradaProduto.FieldByName('RastroId').AsInteger;
-       JsonArrayAtualiza := Nil;
-       ObjProdutoCtrl.Free;
-    End;
-  end);
-  TH.OnTerminate := ThreadAtualizarRastroTerminate;
-  TH.Start;
 end;
 
 procedure TFrmEntrada.CbRastroTipoEnter(Sender: TObject);
@@ -1334,6 +1304,8 @@ begin
     if Length(TEdit(Sender).Text) = 8 then
        TEdit(Sender).Text := Copy(TEdit(Sender).Text, 1, 6)+'20'+Copy(TEdit(Sender).Text, 7, 2);
     StrToDate(EdtDtFabricacao.Text);
+    if StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130') then
+       raise Exception.Create('Dt.Fabricação inválida!');
   Except
     EdtDtFabricacao.SetFocus;
     ShowErro('Data de fabricação do lote inválida');
@@ -1350,15 +1322,27 @@ procedure TFrmEntrada.EdtDtVencimentoExit(Sender: TObject);
 begin
   inherited;
   if (EdtDtVencimento.Text='') or (EdtDtVencimento.Text='  /  /  ') or (EdtDtVencimento.Text='  /  /    ') or
-     (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 1) then
+     (CbRastroTipo.ItemIndex = 0) then
      Exit;
-  if (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 3) and
+  Try
+    if Length(TEdit(Sender).Text) = 8 then
+       TEdit(Sender).Text := Copy(TEdit(Sender).Text, 1, 6)+'20'+Copy(TEdit(Sender).Text, 7, 2);
+    StrToDate(TEdit(Sender).Text);
+    if StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130') then
+       raise Exception.Create('Dt.Vencimento inválida!');
+  Except
+    EdtDtFabricacao.SetFocus;
+    ShowErro('Data de Vencimento do lote inválida');
+    EdtDtVencimento.SetFocus;
+    Exit;
+  End;
+  if (CbRastroTipo.ItemIndex = 2) and
      ((EdtDtFabricacao.Text='') or (EdtDtFabricacao.Text='  /  /  ') or (EdtDtFabricacao.Text='  /  /    ')) then Begin
      ShowErro('Informe a Data de Fabricação do produto!');
      EdtDtFabricacao.SetFocus;
      Exit;
   End
-  Else If (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2) then Begin
+  Else If (CbRastroTipo.ItemIndex = 1) then Begin
      EdtLoteCheckIn.Text := Copy(EdtDtVencimento.Text, Length(EdtDtVencimento.Text)-1, 2)+
                             Copy(EdtDtVencimento.Text, 4, 2)+
                             Copy(EdtDtVencimento.Text, 1, 2);
@@ -1556,13 +1540,13 @@ begin
              raise Exception.Create('Erro no Endereçamento: '+EnderecoMask(EdtPickingCheckIn.Text, '', False)+sLineBreak+E.Message);
           End;
         End;
-        if ObjProdutoCheckIn.Rastro.RastroId = 3 then
+        if CbRastroTipo.ItemIndex = 2 then
            EdtLoteCheckIn.SetFocus
-        Else if ObjProdutoCheckIn.Rastro.RastroId = 2 then Begin
+        Else if CbRastroTipo.ItemIndex = 1 then Begin
            EdtLoteCheckIn.Enabled := False;
            EdtDtFabricacao.SetFocus;
         End
-        Else if ObjProdutoCheckIn.Rastro.RastroId = 1 then Begin
+        Else if CbRastroTipo.ItemIndex = 0 then Begin
            GbItemLote.Enabled := False;
            EdtQtdUnidPrimCheckIn.SetFocus;
         End;
@@ -1627,27 +1611,7 @@ begin
         EdtProdutoCheckIn.SetFocus;
         Exit;
      End;
-{     filtraritens(ObjProdutoCheckIn.CodProduto);
-     if AdvSGItensEntrada.RowCount=1 then Begin
-        AdvSGItensEntrada.FilterActive := False;
-        raise Exception.Create('Produto não faz parte deste documento!');
-     End;
-     AdvSGItensEntrada.FilterActive := False;
-     if (EdtPickingCheckIn.Text = '') and (FrmeXactWMS.ConfigWMS.ObjConfiguracao.EnderecarProdutoEntrada >= 1) then Begin
-        EdtPickingCheckIn.ReadOnly := False;
-        EdtPickingCheckIn.SetFocus
-     End
-     Else if ObjProdutoCheckIn.Rastro.RastroId = 3 then
-        EdtLoteCheckIn.SetFocus
-     Else if ObjProdutoCheckIn.Rastro.RastroId = 2 then Begin
-        EdtLoteCheckIn.Enabled := False;
-        EdtDtFabricacao.SetFocus;
-     End
-     Else if ObjProdutoCheckIn.Rastro.RastroId = 1 then Begin
-        GbItemLote.Enabled := False;
-        EdtQtdUnidPrimCheckIn.SetFocus;
-     End;
-}     SetCampoRastro;
+     SetCampoRastro;
      if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.CubagemProdutoEntrada > 0) and
         ((EdtVolumeCheckIn.Value = 0) or (EdtVolumeCheckIn.Value = 512)) then Begin
         GbItemCubagem.Enabled := True;
@@ -3174,17 +3138,17 @@ Var X : Integer;
 begin
   Result := False;
   Try
-    if FdMemEntradaProduto.FieldByName('RastroId').AsInteger < 0 then  Begin
+    if CbRastroTipo.ItemIndex < 0 then  Begin
        CbRastroTipo.SetFocus;
        Exit
     End;
-    if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 1 then  Begin
+    if CbRastroTipo.ItemIndex = 0 then  Begin
        vLote       := 'SL';
        vFabricacao := Now();
        vVencimento := now()+(360*10);
     End
-    Else If FdMemEntradaProduto.FieldByName('RastroId').AsInteger in [2,3] then  Begin
-       if (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 3) and (EdtDtFabricacao.Text = '  /  /    ') then Begin
+    Else If (CbRastroTipo.ItemIndex = 1) or (CbRastroTipo.ItemIndex = 2) then  Begin
+       if (CbRastroTipo.ItemIndex = 2) and (EdtDtFabricacao.Text = '  /  /    ') then Begin
           EdtDtFabricacao.SetFocus;
           ShowErro('Informe a data de Fabricação!');
           Exit;
@@ -3194,7 +3158,7 @@ begin
           ShowErro('Informe a data de Vencimento!');
           Exit;
        End;
-       if FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 2 then
+       if CbRastroTipo.ItemIndex = 1 then
           vLote  := Copy(EdtDtVencimento.Text, 9, 2)+Copy(EdtDtVencimento.Text, 4, 2)+Copy(EdtDtVencimento.Text, 1, 2)
        Else
           vLote  := EdtLoteCheckIn.Text;
@@ -3214,64 +3178,6 @@ begin
        Result := False;
        Exit;
     End;
-
-(*    for X := 0 to Pred(ObjEntradaCtrl.Entrada.Itens.Count) do With ObjEntradaCtrl.Entrada.Itens[X] do Begin
-      vLoteNovo := True;
-      vLote2 :=  ProdutoLotes.Lotes.DescrLote;
-      If (ObjEntradaCtrl.Entrada.Itens[X].ProdutoLotes.Produto.IdProduto = ObjProdutoCheckIn.IdProduto) and
-         (ProdutoLotes.Lotes.DescrLote = vLote) then Begin
-             xTeste := ObjEntradaCtrl.Entrada.Itens[x].EntradaItemId;
-             ProdutoLotes.Produto.SNGPC       := ChkSNGPCCheckIn.Checked;
-             ProdutoLotes.Produto.Endereco.EnderecoId := 0; //Buscar o Codigo do Endereço de Picking - GetEndereco
-             ProdutoLotes.Produto.Peso        := Trunc(EdtPesoCheckIn.Value);
-             ProdutoLotes.Produto.Altura      := Trunc(EdtAlturaCheckIn.Value);
-             ProdutoLotes.Produto.Largura     := Trunc(EdtLarguraCheckIn.Value);
-             ProdutoLotes.Produto.Comprimento := Trunc(EdtComprimentoCheckIn.Value);
-             ProdutoLotes.Lotes.Fabricacao := vFabricacao;
-             ProdutoLotes.Lotes.Vencimento := vVencimento;
-             ProdutoLotes.Lotes.DtEntrada  := Now();
-             //o Tipo Adicional ou Ultimo lancamento deve ser verificado no SQL
-             {if FrmeXactWMS.ConfigWMS.ObjConfiguracao.CheckInItem = 0 then
-                QtdCheckIn := QtdCheckIn + Trunc(EdtQtdTotCheckIn.Value)
-             Else
-                QtdCheckIn      := Trunc(EdtQtdTotCheckIn.Value);}
-             vQtdCheckIn   := QtdCheckIn;
-             vQtdDevolvida := QtdDevolvida;
-             vQtdSegregada := QtdSegregada;
-             QtdCheckIn      := Trunc(EdtQtdTotCheckIn.Value);
-             QtdDevolvida    := 0;
-             QtdSegregada    := 0;
-             vLoteNovo       := False;
-             SalvarCheckInItem(X, 0); //Posicao do Item no Objeto ObjEntradaCtrl.Entrada.Itens
-             QtdCheckIn   := vQtdCheckIn + Trunc(EdtQtdTotCheckIn.Value);
-             QtdDevolvida := vQtdDevolvida;
-             QtdSegregada := vQtdSegregada;
-             Break;
-      End;
-    End;
-    if vLoteNovo then Begin
-       ObjEntradaItensCtrl := TEntradaItensCtrl.Create;
-       ObjEntradaItensCtrl.EntradaItens.Create;
-       ObjProdutoCheckIn.SNGPC       := ChkSNGPCCheckIn.Checked;
-       ObjProdutoCheckIn.Endereco.EnderecoId := 0; //Buscar o Codigo do Endereço de Picking - GetEndereco
-       ObjProdutoCheckIn.Peso        := Trunc(EdtPesoCheckIn.Value);
-       ObjProdutoCheckIn.Altura      := Trunc(EdtAlturaCheckIn.Value);
-       ObjProdutoCheckIn.Largura     := Trunc(EdtLarguraCheckIn.Value);
-       ObjProdutoCheckIn.Comprimento := Trunc(EdtComprimentoCheckIn.Value);
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Produto := ObjProdutoCheckIn;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.ProdutoId  := ObjProdutoCheckIn.IdProduto;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.CodigoERP  := ObjProdutoCheckIn.CodProduto;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.DescrLote  := vLote;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.Fabricacao := vFabricacao;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.Vencimento := vVencimento;
-       ObjEntradaItensCtrl.EntradaItens.ProdutoLotes.Lotes.DtEntrada  := Now();
-       ObjEntradaItensCtrl.EntradaItens.QtdCheckIn      := Trunc(EdtQtdTotCheckIn.Value);
-       ObjEntradaItensCtrl.EntradaItens.QtdDevolvida    := 0;
-       ObjEntradaItensCtrl.EntradaItens.QtdSegregada    := 0;
-       ObjEntradaCtrl.Entrada.Itens.Add(ObjEntradaItensCtrl.EntradaItens); //Verificar se deveria incluir apenas o lote no produto ou permanecer incluindo um novo item(Produto)
-       SalvarCheckInItem(ObjEntradaCtrl.Entrada.Itens.Count-1, 0);
-    End;
-*)
     ImgSaveCheckIn.Enabled := True;
     LblSaveCheckIn.Enabled := True;
     ClearEditCheckIn;
@@ -3983,7 +3889,7 @@ begin
      vMsg := 'Necessário Cubagem do produto.';
   if EdtLarguraCheckIn.Value = 0 then
      vmsg := 'Informe a cubagem do produto.';
-  if (ObjProdutoCheckIn.Rastro.RastroId = 3) and (Not EdtLoteCheckIn.ReadOnly) and (EdtLoteCheckIn.Text='') then
+  if (CbRastroTipo.ItemIndex = 2) and (Not EdtLoteCheckIn.ReadOnly) and (EdtLoteCheckIn.Text='') then
      raise Exception.Create('Informe o lote do produto.');
   if EdtQtdTotCheckIn.Value <= 0 then
      vMsg := 'Quantidade de itens conferida é inválida.';
@@ -3995,7 +3901,7 @@ begin
      vMsg := 'Quantidade inválida para esse CheckIn.';
   if ((FdMemEntradaProduto.FieldByName('ProdutoSNGPC').AsInteger = 1) or
      (FdMemEntradaProduto.FieldByName('ZonaSNGPC').AsInteger = 1) or
-     (FdMemEntradaProduto.FieldByName('RastroId').AsInteger = 3)) and
+     (CbRastroTipo.ItemIndex = 2)) and
      (EdtLoteCheckIn.Text='') then Begin
      edtLoteCheckIn.SetFocus;
      vMsg := 'Informe o lote do produto!';

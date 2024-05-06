@@ -32,7 +32,7 @@ Type
     Function CancelarConferencia(Const pCargaId : Integer) : TJsonObject;
     Function CancelarCarga(Const pJsonObject : TJsonObject) : TJsonObject;
     Function Salvar(pJsonCarga : TJsonObject) : TJsonObject;  //(pHistorico: THistorico)
-    Function DelCargas : Boolean;
+    Function DelCargas : TJsonObject;
     Function RegistrarCarregamento(Const pJsonCarregamento : TJsonObject) : TJsonObject;
     Function FinalizarCarregamento(Const pJsonCarregamento : TJsonObject) : TJsonObject;
     Function GetCargaHeader(pCargaId : Integer; pShowErro : Integer) : TJsonArray;
@@ -126,19 +126,21 @@ begin
   FObjCargas := TCargas.Create;
 end;
 
-function TCargasCtrl.DelCargas : Boolean;
+function TCargasCtrl.DelCargas : TJsonObject;
 Var ObjCargasDAO : TCargasDAO;
+    vErro        : String;
 begin
   Try
     ObjCargasDAO := TCargasDAO.Create;
     ObjCargasDAO.ObjCargas.CargaId := Self.ObjCargas.CargaId;
     Result := ObjCargasDAO.Delete;
-    if Result then
+    if Not Result.TryGetValue('Erro', vErro) then
        Self.ObjCargas.CargaId := 0;
     ObjCargasDAO.Free;
   Except On E: Exception do Begin
     ObjCargasDAO.Free;
-    raise Exception.Create(E.Message);
+    Result := TJsonObject.Create;
+    Result := TJsonObject.Create.AddPair('Erro', E.Message);
     End;
   End;
 end;

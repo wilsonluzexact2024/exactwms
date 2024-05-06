@@ -581,10 +581,8 @@ begin
   end;
 end;
 
-function TEstoqueDao.GetEstoqueEnderecoPorTipoDetalhes(const AParams
-  : TDictionary<string, string>): TJsonArray;
-var
-  xObjJson: TJsonObject;
+function TEstoqueDao.GetEstoqueEnderecoPorTipoDetalhes(const AParams : TDictionary<string, string>): TJsonArray;
+var xObjJson: TJsonObject;
 begin
   try
     if (AParams.ContainsKey('estoquetipoid')) and (AParams.Items['estoquetipoid'].ToInteger = 6) then
@@ -941,49 +939,39 @@ var
 begin
   try
     FConexao.Query.Sql.Add('Select Est.*, Mov.Data DtUltimaMovimentacao');
-    FConexao.Query.Sql.Add
-      ('From (select CodigoERP CodProduto, Produto Descricao, SUM(Qtde) Saldo');
+    FConexao.Query.Sql.Add('From (select CodigoERP CodProduto, Produto Descricao, SUM(Qtde) Saldo');
     FConexao.Query.Sql.Add('      from vEstoque');
     FConexao.Query.Sql.Add('      where EstoqueTipoId in (1, 4)');
-    // if (AParams.ContainsKey('estoquetipoid')) then
-    // FConexao.Query.SQL.Add(' 		      and TipoId = '+ AParams.Items['estoquetipoid']);
     if AParams.ContainsKey('produtoid') then
-      SqlWhere := SqlWhere + ' And Produtoid = ' + AParams.Items['produtoid'];
+       SqlWhere := SqlWhere + ' And Produtoid = ' + AParams.Items['produtoid'];
     if AParams.ContainsKey('enderecoid') then
-      SqlWhere := SqlWhere + ' And EnderecoId = ' + AParams.Items['enderecoid'];
+       SqlWhere := SqlWhere + ' And EnderecoId = ' + AParams.Items['enderecoid'];
     if AParams.ContainsKey('estruturaid') then
-      SqlWhere := SqlWhere + ' And Estruturaid = ' + AParams.Items
-        ['estruturaid'];
+       SqlWhere := SqlWhere + ' And Estruturaid = ' + AParams.Items['estruturaid'];
     if AParams.ContainsKey('zonaid') then
-      SqlWhere := SqlWhere + ' And ZonaId = ' + AParams.Items['zonaid'];
+       SqlWhere := SqlWhere + ' And ZonaId = ' + AParams.Items['zonaid'];
     if AParams.ContainsKey('zerado') and (AParams.Items['zerado'] = 'N') then
-      SqlWhere := SqlWhere + ' And (QtdEspera + QtdProducao - Reserva) <> 0)';
-    if AParams.ContainsKey('negativo') and (AParams.Items['negativo'] = 'N')
-    then
-      SqlWhere := SqlWhere + ' And (QtdEspera + QtdProducao - Reserva) > 0)';
-    if AParams.ContainsKey('prevencido') and (AParams.Items['prevencido'] = '1')
-    then
-      SqlWhere := SqlWhere +
-        ' And (EET.Vencimento > GetDate() and EET.Vencimento <= GetDate()+(Select MesesParaPreVencido*30 From Configuracao))';
+       SqlWhere := SqlWhere + ' And (QtdEspera + QtdProducao - Reserva) <> 0)';
+    if AParams.ContainsKey('negativo') and (AParams.Items['negativo'] = 'N') then
+       SqlWhere := SqlWhere + ' And (QtdEspera + QtdProducao - Reserva) > 0)';
+    if AParams.ContainsKey('prevencido') and (AParams.Items['prevencido'] = '1') then
+       SqlWhere := SqlWhere+' And (EET.Vencimento > GetDate() and EET.Vencimento <= GetDate()+(Select MesesParaPreVencido*30 From Configuracao))';
     if AParams.ContainsKey('vencido') and (AParams.Items['vencido'] = '1') then
-      SqlWhere := SqlWhere + ' And (Vencimento <= GetDate())';
+       SqlWhere := SqlWhere + ' And (Vencimento <= GetDate())';
     if SqlWhere <> '' then
-      FConexao.Query.Sql.Add(SqlWhere);
+       FConexao.Query.Sql.Add(SqlWhere);
     FConexao.Query.Sql.Add('      Group by CodigoERP, Produto) Est');
     FConexao.Query.Sql.Add(TuEvolutConst.SqlRelEstoqueSaldo);
     If DebugHook <> 0 Then
-      FConexao.Query.Sql.SaveToFile('EstoqueSaldo.Sql');
+       FConexao.Query.Sql.SaveToFile('EstoqueSaldo.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then
-    Begin
-      Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Não há Estoque disponível.'));
+    if FConexao.Query.IsEmpty then Begin
+       Result := TJsonArray.Create;
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Não há Estoque disponível.'));
     End
     Else
       Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       raise Exception.Create('Tabela: Estoque(Endereço por Tipo Detalhes) - ' +
         StringReplace(E.Message,
@@ -1069,70 +1057,48 @@ begin
         vQryEstoque.Close;
         vQryEstoque.Sql.Clear;
         vQryEstoque.Sql.Add('Select Coalesce(Qtde, 0) Qtde From Estoque');
-        vQryEstoque.Sql.Add('Where LoteId        = ' + jsonArrayEstoque.Items
-          [xEstoque].GetValue<String>('loteid'));
-        vQryEstoque.Sql.Add('  And EnderecoId    = ' + jsonArrayEstoque.Items
-          [xEstoque].GetValue<String>('enderecoid'));
-        vQryEstoque.Sql.Add('  And EstoqueTipoId = ' + jsonArrayEstoque.Items
-          [xEstoque].GetValue<String>('estoquetipoid'));
+        vQryEstoque.Sql.Add('Where LoteId        = ' + jsonArrayEstoque.Items[xEstoque].GetValue<String>('loteid'));
+        vQryEstoque.Sql.Add('  And EnderecoId    = ' + jsonArrayEstoque.Items[xEstoque].GetValue<String>('enderecoid'));
+        vQryEstoque.Sql.Add('  And EstoqueTipoId = ' + jsonArrayEstoque.Items[xEstoque].GetValue<String>('estoquetipoid'));
         If DebugHook <> 0 then
-          vQryEstoque.Sql.SaveToFile('ValidarEstoque.Sql');
+           vQryEstoque.Sql.SaveToFile('ValidarEstoque.Sql');
         vQryEstoque.Open();
-        if vQryEstoque.FieldByName('Qtde').AsInteger <
-          (jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('qtde') * -1) then
-          raise Exception.Create('Saldo(' + vQryEstoque.FieldByName('Qtde')
-            .AsString + ') Estoque Insuficiente para movimentar!');
+        if vQryEstoque.FieldByName('Qtde').AsInteger < (jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('qtde') * -1) then
+          raise Exception.Create('Saldo(' + vQryEstoque.FieldByName('Qtde').AsString + ') Estoque Insuficiente para movimentar!');
         vEstoqueInicial := vQryEstoque.FieldByName('Qtde').AsInteger;
       End;
       // Pegar o Saldo Inicial do Estoque
       vQryEstoque.Close;
       vQryEstoque.Sql.Clear;
-      vQryEstoque.Sql.Add
-        ('Select Qtde from Estoque where LoteId = :pLoteId and EnderecoId = :pEnderecoId and EstoqueTipoId = :pEstoqueTipoId');
-      vQryEstoque.ParamByName('pLoteId').Value := jsonArrayEstoque.Get(xEstoque)
-        .GetValue<Integer>('loteid');
-      vQryEstoque.ParamByName('pEnderecoId').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('enderecoid');
-      vQryEstoque.ParamByName('pEstoqueTipoId').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('estoquetipoid');
+      vQryEstoque.Sql.Add('Select Qtde from Estoque where LoteId = :pLoteId and EnderecoId = :pEnderecoId and EstoqueTipoId = :pEstoqueTipoId');
+      vQryEstoque.ParamByName('pLoteId').Value        := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('loteid');
+      vQryEstoque.ParamByName('pEnderecoId').Value    := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('enderecoid');
+      vQryEstoque.ParamByName('pEstoqueTipoId').Value := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('estoquetipoid');
       // vQryEstoque.Open;
       // vEstoqueInicial := vQryEstoque.FieldByName('Qtde').AsInteger;
       vQryEstoque.Close;
       vQryEstoque.Sql.Clear;
       vQryEstoque.Sql.Add('--EstoqueDao.Salvar');
       vQryEstoque.Sql.Add(TuEvolutConst.SqlEstoque);
-      vQryEstoque.ParamByName('pLoteId').Value := jsonArrayEstoque.Get(xEstoque)
-        .GetValue<Integer>('loteid');
-      vQryEstoque.ParamByName('pEnderecoId').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('enderecoid');
-      vQryEstoque.ParamByName('pEstoqueTipoId').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('estoquetipoid');
-      vQryEstoque.ParamByName('pQuantidade').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('qtde');
-      vQryEstoque.ParamByName('pUsuarioId').Value :=
-        jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('usuarioid');
+      vQryEstoque.ParamByName('pLoteId').Value        := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('loteid');
+      vQryEstoque.ParamByName('pEnderecoId').Value    := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('enderecoid');
+      vQryEstoque.ParamByName('pEstoqueTipoId').Value := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('estoquetipoid');
+      vQryEstoque.ParamByName('pQuantidade').Value    := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('qtde');
+      vQryEstoque.ParamByName('pUsuarioId').Value     := jsonArrayEstoque.Get(xEstoque).GetValue<Integer>('usuarioid');
       vQryEstoque.ExecSQL;
-      if jsonArrayEstoque.Items[xEstoque].GetValue<Integer>('motivosegregado') > 0
-      then
-      Begin
-        vQryEstoque.Close;
-        vQryEstoque.Sql.Clear;
-        vQryEstoque.Sql.Add('Insert into SegregadoHistorico Values (');
-        vQryEstoque.Sql.Add('       GetDate(), GetDate(), ' +
-          jsonArrayEstoque.Items[xEstoque].GetValue<String>
-          ('motivosegregado') + ', ');
-        vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque)
-          .GetValue<String>('loteid') + ', ');
-        vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque)
-          .GetValue<String>('qtde') + ', ');
-        vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque)
-          .GetValue<String>('usuarioid') + ', ');
-        vQryEstoque.Sql.Add('       ' + #39 + jsonArrayEstoque.Get(xEstoque)
-          .GetValue<String>('nomeestacao') + #39 + ', ');
-        vQryEstoque.Sql.Add('       NewId())');
-        If DebugHook <> 0 Then
-          vQryEstoque.Sql.SaveToFile('SegregadoHistorico.Sql');
-        vQryEstoque.ExecSQL;
+      if jsonArrayEstoque.Items[xEstoque].GetValue<Integer>('motivosegregado') > 0 then Begin
+         vQryEstoque.Close;
+         vQryEstoque.Sql.Clear;
+         vQryEstoque.Sql.Add('Insert into SegregadoHistorico Values (');
+         vQryEstoque.Sql.Add('       GetDate(), GetDate(), ' + jsonArrayEstoque.Items[xEstoque].GetValue<String>('motivosegregado') + ', ');
+         vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque).GetValue<String>('loteid') + ', ');
+         vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque).GetValue<String>('qtde') + ', ');
+         vQryEstoque.Sql.Add('       ' + jsonArrayEstoque.Get(xEstoque).GetValue<String>('usuarioid') + ', ');
+         vQryEstoque.Sql.Add('       ' + #39 + jsonArrayEstoque.Get(xEstoque).GetValue<String>('nomeestacao') + #39 + ', ');
+         vQryEstoque.Sql.Add('       NewId())');
+         If DebugHook <> 0 Then
+            vQryEstoque.Sql.SaveToFile('SegregadoHistorico.Sql');
+         vQryEstoque.ExecSQL;
       End;
     End;
     JsonArrayKardex := pjsonEstoque.GetValue<TJsonArray>('kardex');

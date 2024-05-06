@@ -3,6 +3,7 @@ inherited FrmControleArmazenagem: TFrmControleArmazenagem
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl [1]
+    Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
       Caption = 'Hist'#243'rico de Movimenta'#231#227'o'
       ExplicitTop = 24

@@ -377,15 +377,11 @@ begin
   Try
    Try
      ObjCargaDAO := TCargasDao.Create;
-     ObjCargaDAO.CancelarCarga(TJSONObject.ParseJSONValue(Req.Body)
-       as TJSONObject);
-     Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-       'Carregamento Cancelado com Sucesso!'))).Status(THTTPStatus.Created);
-   Except
-     on E: Exception do
+     ObjCargaDAO.CancelarCarga(TJSONObject.ParseJSONValue(Req.Body) as TJSONObject);
+     Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Carregamento Cancelado com Sucesso!'))).Status(THTTPStatus.Created);
+   Except on E: Exception do
      Begin
-       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-         E.Message))).Status(THTTPStatus.ExpectationFailed);
+       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THTTPStatus.ExpectationFailed);
      End;
    End;
   Finally
@@ -393,24 +389,18 @@ begin
   End;
 End;
 
-procedure CancelarCarregamento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  ObjCargaDAO: TCargasDao;
+procedure CancelarCarregamento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var ObjCargaDAO: TCargasDao;
 begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      ObjCargaDAO.CancelarCarregamento
-        (StrToIntDef(Req.Params.Items['cargaid'], 0));
+      ObjCargaDAO.CancelarCarregamento(StrToIntDef(Req.Params.Items['cargaid'], 0));
       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Carregamento Cancelado com Sucesso!'))).Status(THTTPStatus.Created);
-    Except
-      on E: Exception do
+                            'Carregamento Cancelado com Sucesso!'))).Status(THTTPStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
-        // Status(THTTPStatus.Created);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -426,12 +416,10 @@ begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      ObjCargaDAO.CancelarConferencia
-        (StrToIntDef(Req.Params.Items['cargaid'], 0));
+      ObjCargaDAO.CancelarConferencia(StrToIntDef(Req.Params.Items['cargaid'], 0));
       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Confer�ncia Cancelado com Sucesso!'))).Status(THTTPStatus.ok);
-    Except
-      on E: Exception do
+                            'Conferência Cancelado com Sucesso!'))).Status(THTTPStatus.ok);
+    Except on E: Exception do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
           E.Message))).Status(THTTPStatus.ExpectationFailed);
@@ -443,22 +431,17 @@ begin
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  ObjCargaDAO: TCargasDao;
+Var ObjCargaDAO       : TCargasDao;
+    JsonObjectRetorno : TJsonObject;
 begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      ObjCargaDAO.Delete(StrToIntDef(Req.Params.Items['cargaid'], 0),
-        (TJSONObject.ParseJSONValue(Req.Body) as TJSONObject));
-      // Req.Body<TJsonObject>);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Exclu�do com Sucesso!'))).Status(THTTPStatus.Created);
-    Except
-      on E: Exception do
+      ObjCargaDAO.Delete(StrToIntDef(Req.Params.Items['cargaid'], 0), (TJSONObject.ParseJSONValue(Req.Body) as TJSONObject));
+      Res.Send<TJSONObject>(TJSONObject.Create.AddPair('Ok', 'Excluído com sucesso!')).Status(THTTPStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally

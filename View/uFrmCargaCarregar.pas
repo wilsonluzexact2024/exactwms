@@ -161,8 +161,14 @@ Var xLista : Integer;
 end;
 
 function TFrmCargaCarregar.DeleteReg: Boolean;
+Var JsonObjecRetorno : TJsonObject;
+    vErro : String;
 begin
-  ObjCargaCarregarCtrl.CancelarCarregamento(ObjCargaCarregarCtrl.ObjCargas.cargaid);
+  JsonObjecRetorno := ObjCargaCarregarCtrl.CancelarCarregamento(ObjCargaCarregarCtrl.ObjCargas.cargaid);
+  if JsonObjecRetorno.TryGetValue('erro', vErro) then
+     ShowErro('Erro', vErro)
+  Else
+     ShowOk('Carga Excluída com sucesso!');
 end;
 
 procedure TFrmCargaCarregar.EdtCargaIdExit(Sender: TObject);

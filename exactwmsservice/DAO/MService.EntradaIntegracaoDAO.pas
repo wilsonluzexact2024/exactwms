@@ -265,36 +265,28 @@ type
 
   TEntradaIntegracaoDao = class(TBasicDao)
   private
-
-    Procedure SalvarFornecedor(pConneXact: TConnection; pCodigo: Integer = 0;
-      pRazao: String = ''; pFantasia: String = ''; pCnpj: String = '';
-      pEmail: String = '');
-    Function SalvarLaboratorio(pConneXact: TConnection;
-      pIdLaboratorio: Integer = 0; pNome: String = ''): Integer;
-    Procedure SalvarUnidades(pConneXact: TConnection; pSigla: String = 'Un';
-      pDescricao: String = 'Unidade');
+    Procedure SalvarFornecedor(pConneXact: TConnection; pCodigo: Integer = 0; pRazao: String = '';
+                               pFantasia: String = ''; pCnpj: String = ''; pEmail: String = '');
+    Function SalvarLaboratorio(pConneXact: TConnection; pIdLaboratorio: Integer = 0; pNome: String = ''): Integer;
+    Procedure SalvarUnidades(pConneXact: TConnection; pSigla: String = 'Un'; pDescricao: String = 'Unidade');
     Procedure SalvarProduto(pConneXact: TConnection; pCodProduto: Integer = 0;
-      pDescricao: String = ''; pSiglaUnidPrimaria: String = 'Un';
-      pQtdUnidPrimaria: Integer = 1; pSiglaUnidSecundaria: String = 'Un';
-      pFatorConversao: Integer = 1; pLaboratorioId: Integer = 0;
-      pPeso: Integer = 1; pLiquido: Integer = 0; pPerigoso: Integer = 0;
-      pInflamavel: Integer = 0; pAltura: Integer = 8; pLargura: Integer = 8;
-      pComprimento: Integer = 8; pMesEntradaMinima: Integer = 0;
-      pMesSaidaMinima: Integer = 0; pEan: String = '');
+                            pDescricao: String = ''; pSiglaUnidPrimaria: String = 'Un';
+                            pQtdUnidPrimaria: Integer = 1; pSiglaUnidSecundaria: String = 'Un';
+                            pFatorConversao: Integer = 1; pLaboratorioId: Integer = 0;
+                            pPeso: Integer = 1; pLiquido: Integer = 0; pPerigoso: Integer = 0;
+                            pInflamavel: Integer = 0; pAltura: Integer = 8; pLargura: Integer = 8;
+                            pComprimento: Integer = 8; pMesEntradaMinima: Integer = 0;
+                            pMesSaidaMinima: Integer = 0; pEan: String = '');
     Procedure SalvarProdutoCodbarras(pConneXact: TConnection;
       pCodProdutoERP: Integer = 0; pEan: String = '');
-    Procedure SalvarProdutoLotes(pConneXact: TConnection;
-      pProdutoId: Integer = 0; pDescrLote: String = '';
-      pFabricacao: String = ''; pVencimento: String = '');
-    Function SalvarEntrada(pConneXact: TConnection; pPedidoId: Integer = 0;
-      pPessoaId: Integer = 0; pNatureza: String = ''; pDocumentoNr: String = '';
-      pDocumentoData: String = ''; pDocumentoOriginal: String = '';
-      pRegistroERP: String = ''; pArmazemId: Integer = 0): Integer;
-    Procedure SalvarEntradaItens(pConneXact: TConnection;
-      pPedidoId, pIdProduto: Integer; pLote: String; pQtdXML: Integer);
+    Procedure SalvarProdutoLotes(pConneXact: TConnection; pProdutoId: Integer = 0; pDescrLote: String = '';
+                                 pFabricacao: String = ''; pVencimento: String = '');
+    Function SalvarEntrada(pConneXact: TConnection; pPedidoId: Integer = 0; pPessoaId: Integer = 0;
+                           pNatureza: String = ''; pDocumentoNr: String = ''; pDocumentoData: String = '';
+                           pDocumentoOriginal: String = ''; pRegistroERP: String = ''; pArmazemId: Integer = 0): Integer;
+    Procedure SalvarEntradaItens(pConneXact: TConnection; pPedidoId, pIdProduto: Integer; pLote: String; pQtdXML: Integer);
     Procedure DeleteCheckIn(pConneXact: TConnection; pEntradaId: Integer);
-    Function ValidaEntrada(pConneXact: TConnection; pCodPessoaERP: Integer;
-      pDocumentoNr, pRegistroERP: String): Boolean;
+    Function ValidaEntrada(pConneXact: TConnection; pCodPessoaERP: Integer; pDocumentoNr, pRegistroERP: String): Boolean;
     procedure SalvarLogOld(pFuncao, pMensagem: String);
   public
     constructor Create; overload;
@@ -303,7 +295,6 @@ type
     function Insert(ArrayEntradas: TJsonArray): TJsonArray;
     Function Retorno(pPedidoId: String): TJsonArray;
     Procedure RegistrarRetorno(pEntradaId: Integer);
-
   end;
 
 implementation
@@ -784,23 +775,20 @@ Begin
   Try
     FConexao.Query.Close;
     FConexao.Query.Sql.Clear;
-    FConexao.Query.Sql.Add
-      ('Declare @ProdutoId Integer = (Select IdProduto From Produto Where CodProduto = '
-      + pProdutoId.ToString() + ')');
-    FConexao.Query.Sql.Add('Declare @DescrLote VarChar(30) = ' +
-      QuotedStr(pDescrLote));
-    FConexao.Query.Sql.Add
-      ('Declare @Fabricacao Int = (Select IdData From Rhema_Data Where Data =' +
-      #39 + pFabricacao + #39 + ')');
-    FConexao.Query.Sql.Add
-      ('Declare @Vencimento Int = (Select IdData From Rhema_Data Where Data =' +
-      #39 + pVencimento + #39 + ')');
-    FConexao.Query.Sql.Add('If @DescrLote = ' + #39 + 'SL' + #39 +
-      ' or (Select RastroId From Produto where IdProduto = @ProdutoId) = 1');
-    FConexao.Query.Sql.Add
-      ('   Set @Vencimento = (Select IdData From Rhema_Data where Data = Cast(GetDate() as Date))+(360*10)');
+    FConexao.Query.Sql.Add('Declare @ProdutoId Integer = (Select IdProduto From Produto Where CodProduto = '+pProdutoId.ToString() + ')');
+    FConexao.Query.Sql.Add('Declare @DescrLote VarChar(30) = ' + QuotedStr(pDescrLote));
+    if pFabricacao = '' then
+       FConexao.Query.Sql.Add('Declare @Fabricacao Int = (Select IdData From Rhema_Data Where Data = Cast(GetDate()-720 as Date))')
+    Else
+       FConexao.Query.Sql.Add('Declare @Fabricacao Int = (Select IdData From Rhema_Data Where Data ='+#39 + pFabricacao + #39 + ')');
+    if pVencimento = '' then
+       FConexao.Query.Sql.Add('Declare @Vencimento Int = (Select IdData From Rhema_Data Where Data = Cast(GetDate()+(360*10) as Date))')
+    Else
+       FConexao.Query.Sql.Add('Declare @Vencimento Int = (Select IdData From Rhema_Data Where Data ='+#39 + pVencimento + #39 + ')');
+    FConexao.Query.Sql.Add('If @DescrLote = '+#39+'SL'+#39+' or (Select RastroId From Produto where IdProduto = @ProdutoId) = 1');
+    FConexao.Query.Sql.Add('   Set @Vencimento = (Select IdData From Rhema_Data where Data = Cast(GetDate() as Date))+(360*10)');
     FConexao.Query.Sql.Add(SqlProdutoLotesInsert);
-    if DebugHook <> 0 then
+    if (DebugHook <> 0) and (pProdutoId = 145717) then
       FConexao.Query.Sql.SaveToFile('EntradaInsertLote.Sql');
     FConexao.Query.ExecSQL;
   Except

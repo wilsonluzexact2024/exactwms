@@ -67,7 +67,7 @@ Type
     Function GetDashBoard030405(pDtInicio, pDtTermino : TDate) : TJsonArray;
     Function GetDashBoard06(pDtInicio, pDtTermino : TDate) : TJsonArray;
     Function GetResumoProducao(pDtInicio, pDtTermino : TDate; pProcessoId : Integer; pUsuarioId : Integer; pDtPedidoIni, pDtPedidoFin : TDate) : TJsonArray;
-    Function GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId, pCodProduto : Integer; pSintetico : Integer) : TJsonArray;
+    Function GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId, pCodProduto : Integer; pSintetico, pZonaId : Integer) : TJsonArray;
     Function GetMovimentacao(pPedidoId: Integer; pDataInicio, pDataFinal: TDateTime; pProdutoId: Integer): TJsonArray;
     Function GetEvolucaoAtendimentoPed(aParams : TDictionary<String, String>) : TJsonArray;
     Function GetEvolucaoAtendimentoUnid(aParams : TDictionary<String, String>) : TJsonArray;
@@ -174,12 +174,12 @@ begin
 end;
 
 function TPedidoSaidaCtrl.GetCortes(pDataIni, pDataFin: TDateTime; pPedidoId,
-  pCodProduto : Integer; pSintetico : Integer): TJsonArray;
+  pCodProduto : Integer; pSintetico, pZonaId : Integer): TJsonArray;
 Var ObjPedidoSaidaDAO : TPedidoSaidaDAO;
 begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
-    Result := ObjPedidoSaidaDAO.GetCortes(pDataIni, pDataFin, pPedidoId, pCodProduto, pSintetico);
+    Result := ObjPedidoSaidaDAO.GetCortes(pDataIni, pDataFin, pPedidoId, pCodProduto, pSintetico, pZonaId);
     ObjPedidoSaidaDAO.Free;
   Except ON E: Exception do Begin
     Result := TJsonArray.Create;

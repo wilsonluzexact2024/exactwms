@@ -34,7 +34,7 @@ Type
                            pDocumentoNr, pRazao, pRegistroERP : String; pRotaId, pProcessoId : Integer; pRecebido, pCubagem, pEtiqueta : Integer; pProcessar, pVerificarEstoque : Boolean) : tJsonArray;
     Function PedidoResumoAtendimento(pPedidoId : Integer = 0; pDivergencia : Integer = 0; pDataInicial : TDate = 0; pDataFinal : TDate = 0) : TjsonArray;
     Function GetClientesRotaCarga(pPessoaId : Integer; pRazao : String; pDataIni, pDataFin : TDateTime; pRotaId, pProcessoId : Integer) : TJsonArray;
-    Function GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId, pProdutoId : Integer; pSintetico : Integer) : TJsonArray;
+    Function GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId, pProdutoId : Integer; pSintetico, pZonaId : Integer) : TJsonArray;
     Function Salvar(pPedidoId : Integer) : Boolean;
     //Property PedidoSaida : TPedidoSaida Read FPedidoSaida Write FPedidoSaida;
     function GetPedidoPendente: tJsonArray;
@@ -316,7 +316,7 @@ begin
 end;
 
 function TPedidoSaidaDao.GetCortes(pDataIni, pDataFin : TDateTime; pPedidoId,
-  pProdutoId : Integer; pSintetico : Integer) : TJsonArray;
+  pProdutoId : Integer; pSintetico, pZonaid : Integer) : TJsonArray;
 Var vResource : String;
 begin
   Result := TJsonArray.Create;
@@ -334,6 +334,8 @@ begin
        vResource :=  vResource+'&codproduto='+pProdutoId.ToString;
     if pSintetico <> 0 then
        vResource :=  vResource+'&sintetico='+pSintetico.ToString;
+    if pZonaId <> 0 then
+       vResource :=  vResource+'&zonaid='+pzonaid.ToString;
     vResource := StringReplace(vResource, '?&', '?', [rfReplaceAll]);
     DmeXactWMS.RequestReport.Resource := vResource;
     DmeXactWMS.RequestReport.Method   := RmGet;

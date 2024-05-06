@@ -1639,9 +1639,13 @@ begin
     if AParams.ContainsKey('pedidoid') then
       pPedidoId := AParams.Items['pedidoid'].ToInteger;
     if AParams.ContainsKey('codproduto') then
-      pCodProduto := AParams.Items['codproduto'].ToInteger;
+       pCodProduto := AParams.Items['codproduto'].ToInteger;
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     FConexao.Query.ParamByName('pCodProduto').Value := pCodProduto;
+    if AParams.ContainsKey('zonaid') then
+       FConexao.Query.ParamByName('pZonaId').Value := AParams.Items['zonaid'].ToInteger
+    Else
+       FConexao.Query.ParamByName('pZonaId').Value := 0;
     if DebugHook <> 0 then
       if AParams.ContainsKey('sintetico') then
         FConexao.Query.SQL.SaveToFile('CortesSintetico.Sql')

@@ -182,6 +182,7 @@ type
     Procedure ShowDados; OverRide;
     Procedure ConfirmacaoExecute; OverRide;
     Procedure ConfirmacaoCancel; OverRide;
+    Procedure AtivaCampoDefault; OverRide;
   end;
 
 var
@@ -192,6 +193,19 @@ implementation
 {$R *.fmx}
 
 uses uFuncoes, uFrmeXactWMS, ProcessoCtrl, uDmClient, System.Threading;
+
+procedure TFrmCargaConferencia.AtivaCampoDefault;
+begin
+  inherited;
+  if CampoDefault = 'EdtVolumeId' then Begin
+     EdtVolumeId.Text := '';
+     DelayEdSetFocus(EdtVolumeId);
+  End
+  Else if CampoDefault = 'CbDestinatario' then Begin
+     CbDestinatario.ItemIndex := -1;
+     DelayEdSetFocus(CbDestinatario);
+  End
+end;
 
 procedure TFrmCargaConferencia.AtivarDestinatario;
 begin
@@ -220,25 +234,22 @@ begin
     vPedidoVolumeid := EdtVolumeId.Text;
     if QryCargaVolumes.Locate('PedidoVolumeId', EdtVolumeId.Text, []) then Begin
        if QryCargaVolumes.FieldByName('PessoaId').AsInteger <> QryCargaDestinatario.FieldByName('PessoaId').AsInteger then Begin
-          EdtVolumeId.Text := '';
           HideLoading;
+          SetCampoDefault('EdtVolumeId');
           ShowErro('Atenção: Volume('+vPedidoVolumeId+') não pertence ao Destinatário da Conferência!');
-          DelayEdSetFocus(EdtVolumeId);
           Exit;
        End
        Else if QryCargaVolumes.FieldByName('Conferido').AsInteger = 1 then Begin
-          EdtVolumeId.Text := '';
           HideLoading;
+          SetCampoDefault('EdtVolumeId');
           ShowErro('Atenção: Volume('+vPedidoVolumeId+') já conferido"');
-          DelayEdSetFocus(EdtVolumeId);
           Exit;
        End;
     End
     Else Begin
-       EdtVolumeId.Text := '';
        HideLoading;
+       SetCampoDefault('EdtVolumeId');
        ShowErro('Atenção: Volume('+vPedidoVolumeId+') não pertence a Carga!');
-       DelayEdSetFocus(EdtVolumeId);
        Exit;
     End;
     QryCargaVolumes.Edit;
@@ -276,9 +287,10 @@ begin
           vPos1 := QryCargaDestinatario.FieldByName('TotPed').AsInteger;
           vPos2 := QryCargaDestinatario.FieldByName('Conferido').AsInteger;
           if QryCargaDestinatario.FieldByName('Conferido').AsInteger >= QryCargaDestinatario.FieldByName('TotPed').AsInteger then Begin
-             ShowOk('Conferëncia Loja('+QryCargaDestinatario.FieldByName('CodPessoaERP').AsString+') Concluída', 'ok');
+             SetCampoDefault('CbDestinatario');
              CbDestinatario.ItemIndex := -1;
              DelayEdSetFocus(CbDestinatario);
+             ShowOk('Conferëncia Loja('+QryCargaDestinatario.FieldByName('CodPessoaERP').AsString+') Concluída', 'ok');
              MontaCargaDestinatario;
              //AtualizarDestinatario;
           End
@@ -496,21 +508,17 @@ begin
           //GetListaLstCadastro;
     End;
     3: Begin //Reconferência de Cargas
-         PgcPrincipal.ActiveTab  := TabDetalhes;
          vCargaId   := ObjCargaCtrl.ObjCargas.cargaid;
          JsonObject := ObjCargaCtrl.CancelarConferencia(vCargaId);
-         if Not JsonObject.TryGetValue('Erro', vErro) then
-            OpenCarga(StrToIntDef(EdtCargaId.Text, 0), 0, 0);
-{         EdtCargaId.Enabled      := False;
-         EdtVolumeId.Enabled     := True;
-         EdtVolumeid.ReadOnly    := False;
-         CbDestinatario.Enabled  := True;
-         DelayEdSetFocus(EdtVolumeId);
-         BtnSave.Enabled         := True;
-         BtnCancel.Enabled       := True;
-         PthBtnSave.Fill.Color   := TAlphaColorRec.Chocolate;
-         PthBtnCancel.Fill.Color := TAlphaColorRec.Chocolate;
-}       End;
+         if Not JsonObject.TryGetValue('Erro', vErro) then Begin
+            edtCargaId.Text        := '';
+            sleep(20);
+            PgcPrincipal.ActiveTab := TabLista;
+            EdtConteudoPesq.Text := '';
+         End
+         Else
+           ShowErro('Erro: '+vErro);
+       End;
     Else
        PgcPrincipal.ActiveTab := TabDetalhes;
   end;

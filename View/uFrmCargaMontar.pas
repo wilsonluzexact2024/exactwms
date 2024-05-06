@@ -500,8 +500,21 @@ begin
 end;
 
 function TFrmCargaMontar.DeleteReg: Boolean;
+Var JsonObjectRetorno : TJsonObject;
+    vErro : String;
 begin
-   Result := ObjCargaCtrl.DelCargas;
+  Result := False;
+  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Carga - Excluir') then Begin
+     ShowErro('Acesso não autorizado a esta funcionalidade!');
+     Exit;
+  End;
+  JsonObjectRetorno := ObjCargaCtrl.DelCargas;
+  if JsonObjectRetorno.TryGetValue('Erro', vErro) then
+     ShowErro(vErro)
+  Else Begin
+     ShowOk('Carga Excluída com sucesso!');
+     Result := True;
+  End;
 end;
 
 procedure TFrmCargaMontar.EdtCargaIdChange(Sender: TObject);
@@ -1389,7 +1402,7 @@ begin
        AtualizarStatus(aRow, 18);
      End;
   End
-  Else if (aCol = 11) and (TAdvStringGrid(Sender).Ints[10, xRota] = 1) then Begin
+  Else if (aCol = 11) and (TAdvStringGrid(Sender).Ints[10, aRow] = 1) then Begin
      if (aRow = 0) and (TAdvStringGrid(Sender).RowCount>1) then Begin
         For xRota := 1 to Pred(TAdvStringGrid(Sender).RowCount) do Begin
           //if (LstCargaResumo.Cells[10, xRota].ToInteger = 1) then Begin
@@ -1409,7 +1422,7 @@ begin
           TAdvStringGrid(Sender).Cells[11, aRow] := '1'
        Else
          TAdvStringGrid(Sender).Cells[11, aRow] := '0';
-         AtualizarStatus(aRow, 20);
+       AtualizarStatus(aRow, 20);
      End;
   End;
 End;
