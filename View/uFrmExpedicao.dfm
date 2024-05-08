@@ -4,6 +4,7 @@ inherited FrmExpedicao: TFrmExpedicao
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -221,7 +222,7 @@ inherited FrmExpedicao: TFrmExpedicao
           25)
       end
       object EdtVolumeId: TJvCalcEdit
-        Left = 93
+        Left = 90
         Top = 25
         Width = 121
         Height = 29

@@ -17,15 +17,13 @@ Const
   SqlSaidaIntegracaoConsulta = ';With' + sLineBreak +
   // 'Ped as (Select * From VPedidos Where Status in( 2, 5)), '+sLineBreak+
     'Ped as (Select De.ProcessoId, Ped.* From VPedidos Ped' + sLineBreak +
-    '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid' +
-    sLineBreak + '        Where Ped.Status <= 2' + sLineBreak +
-    '		      and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'
-    + sLineBreak +
-
-    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '
-    + sLineBreak +
-    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'
-    + sLineBreak + 'From PedidoItens PI' + sLineBreak +
+    '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid' + sLineBreak +
+    '                                          De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) '+sLineBreak+
+    '        Where Ped.Status <= 2' + sLineBreak +
+    '		      and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'+ sLineBreak +
+    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, ' + sLineBreak +
+    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'+sLineBreak +
+    'From PedidoItens PI' + sLineBreak +
     'Inner Join Ped P ON P.PedidoId = PI.PedidoId' + sLineBreak +
     'Group by PI.PedidoId) ' + sLineBreak + 'Select P.*, TC.*' + sLineBreak +
     'From Ped P' + sLineBreak +
@@ -240,32 +238,20 @@ begin // Processo lento
       // Salvar o Pedido
       vQryPedStatus.Close;
       vQryPedStatus.Sql.Clear;
-      vQryPedStatus.Sql.Add
-        ('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = '
-        + jsonDestinatario.getValue<Integer>('destinatarioid').toString() +
-        ' and PessoaTipoId = 1)');
-      vQryPedStatus.Sql.Add('Declare @DocumentoNr VarChar(20) = ' +
-        QuotedStr(ArraySaidas.Get(xSaida).getValue<String>('documentonr')));
-      vQryPedStatus.Sql.Add('Declare @RegistroERP Varchar(36) = ' +
-        QuotedStr(ArraySaidas.Get(xSaida).getValue<String>('registroerp')));
-      vQryPedStatus.Sql.Add
-        ('Select Ped.Pedidoid, DE.ProcessoId, Coalesce(Pv.StatusMin, 1) StatusMin, Coalesce(Pv.StatusMax, 1) StatusMax');
+      vQryPedStatus.Sql.Add('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = '+
+                            jsonDestinatario.getValue<Integer>('destinatarioid').toString()+' and PessoaTipoId = 1)');
+      vQryPedStatus.Sql.Add('Declare @DocumentoNr VarChar(20) = ' + QuotedStr(ArraySaidas.Get(xSaida).getValue<String>('documentonr')));
+      vQryPedStatus.Sql.Add('Declare @RegistroERP Varchar(36) = ' + QuotedStr(ArraySaidas.Get(xSaida).getValue<String>('registroerp')));
+      vQryPedStatus.Sql.Add('Select Ped.Pedidoid, DE.ProcessoId, Coalesce(Pv.StatusMin, 1) StatusMin, Coalesce(Pv.StatusMax, 1) StatusMax');
       vQryPedStatus.Sql.Add('From Pedido Ped');
-      vQryPedStatus.Sql.Add
-        ('Left Join vDocumentoEtapas DE on DE.Documento = Ped.Uuid');
-      vQryPedStatus.Sql.Add
-        ('Left Join (Select Pv.PedidoId, Min(De.ProcessoId) StatusMin, Max(De.ProcessoId) StatusMax');
+      vQryPedStatus.Sql.Add('Left Join vDocumentoEtapas DE on DE.Documento = Ped.Uuid and ');
+      vQryPedStatus.Sql.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+      vQryPedStatus.Sql.Add('Left Join (Select Pv.PedidoId, Min(De.ProcessoId) StatusMin, Max(De.ProcessoId) StatusMax');
       vQryPedStatus.Sql.Add('           From PedidoVolumes Pv');
-      vQryPedStatus.Sql.Add
-        ('		   Left Join vDocumentoEtapas DE on DE.Documento = Pv.Uuid');
-      vQryPedStatus.Sql.Add
-        ('           Where DE.Documento = Pv.Uuid and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
-      vQryPedStatus.Sql.Add
-        ('		   Group By Pv.PedidoId) Pv ON Pv.PedidoId = Ped.Pedidoid');
-      vQryPedStatus.Sql.Add
-        ('Where DE.Documento = Ped.Uuid and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)');
-      vQryPedStatus.Sql.Add
-        ('      and PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP');
+      vQryPedStatus.Sql.Add('		         Left Join vDocumentoEtapas DE on DE.Documento = Pv.Uuid and');
+      vQryPedStatus.Sql.Add('                                            De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento )');
+      vQryPedStatus.Sql.Add('		         Group By Pv.PedidoId) Pv ON Pv.PedidoId = Ped.Pedidoid');
+      vQryPedStatus.Sql.Add('Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP');
       vQryPedStatus.Open;
       if (Not vQryPedStatus.IsEmpty) and
         (vQryPedStatus.FieldByName('ProcessoId').AsInteger > 1) then

@@ -204,17 +204,16 @@ begin
   HrInicioLog := Time;
   Try
     Try
-      ArrayJsonSaidaIntegracao := TjsonObject.ParseJSONValue(Req.Body)
-        as TJsonArray;
+      ArrayJsonSaidaIntegracao := TjsonObject.ParseJSONValue(Req.Body) as TJsonArray;
+                                  //TJsonObject.ParseJSONValue(TEncoding.UTF8.GetBytes(Req.Body), 0) as TJsonArray;
 
       if ArrayJsonSaidaIntegracao = Nil then
-        raise Exception.Create('Arquivo JSON inválido!');
+         raise Exception.Create('Arquivo JSON inválido!');
       { else if TJSONObject.ParseJSONValue(Req.Body) Is TJsonArray then
         ShowMessage('Recebido Array')
         Else ShowMEssage('Recebido TJSONObject');
       } SaidaIntegracaoDAO := TSaidaIntegracaoDao.Create;
-      JsonArrayRetorno := SaidaIntegracaoDAO.Insert
-        (ArrayJsonSaidaIntegracao, 'V1');
+      JsonArrayRetorno := SaidaIntegracaoDAO.Insert(ArrayJsonSaidaIntegracao, 'V1');
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         'Integracao', ClientIP(Req), THorse.Port, '/v1/saidaintegracao',
@@ -255,8 +254,7 @@ begin
   Try
     Try
       LService := TServiceSaidaIntegracao.Create;
-      JsonArrayRetorno := LService.Insert(TjsonObject.ParseJSONValue(Req.Body)
-        as TJsonArray, 'V2');
+      JsonArrayRetorno := LService.Insert(TjsonObject.ParseJSONValue(Req.Body) as TJsonArray, 'V2');
       if (JsonArrayRetorno.Items[0].TryGetValue('status', vStatus)) and
         (vStatus.ToInteger > 299) then
       Begin

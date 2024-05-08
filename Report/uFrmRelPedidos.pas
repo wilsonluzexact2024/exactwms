@@ -300,6 +300,7 @@ type
     Procedure TotalizarLstVolumeConsulta;
     Procedure LimparConsultaVolumes(Sender: TObject);
     Procedure MontaListaVolumeConsulta(pJsonArrayRetorno : TJsonArray);
+    Procedure ReimpressaoTAGVolume;
   public
     { Public declarations }
   end;
@@ -849,32 +850,32 @@ begin
   vCodProduto := 0;
   vCodProdutoVolume := 0;
   TabListagem.TabVisible := False;
-  LstPedidosAdv.ColWidths[0]  :=  80;
-  LstPedidosAdv.ColWidths[1]  :=  75;
-  LstPedidosAdv.ColWidths[2]  :=  70;
-  LstPedidosAdv.ColWidths[3]  :=  75;
-  LstPedidosAdv.ColWidths[4]  := 280;
-  LstPedidosAdv.ColWidths[5]  := 160;
-  LstPedidosAdv.ColWidths[6]  :=  75; //Dt.Processo
-  LstPedidosAdv.ColWidths[7]  :=  50;
-  LstPedidosAdv.ColWidths[8]  :=  40;
-  LstPedidosAdv.ColWidths[9]  :=  70;
-  LstPedidosAdv.ColWidths[10] :=  80;
-  LstPedidosAdv.ColWidths[11] :=  60;
-  LstPedidosAdv.ColWidths[12] :=  80;
-  LstPedidosAdv.ColWidths[13] :=  85;
-  LstPedidosAdv.ColWidths[14] :=  70;
-  LstPedidosAdv.ColWidths[15] :=  80;
-  LstPedidosAdv.ColWidths[16] :=  80;
-  LstPedidosAdv.ColWidths[17] :=  85;
-  LstPedidosAdv.ColWidths[18] :=  80;
-  LstPedidosAdv.ColWidths[19] := 100;
-  LstPedidosAdv.ColWidths[20] := 150;
-  LstPedidosAdv.ColWidths[21] :=  60;
-  LstPedidosAdv.ColWidths[22] := 120;
-  LstPedidosAdv.ColWidths[23] :=  60;
-  LstPedidosAdv.ColWidths[24] :=  70;
-  LstPedidosAdv.ColWidths[25] :=  40;
+  LstPedidosAdv.ColWidths[0]  :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[1]  :=  75+Trunc(75*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[2]  :=  70+Trunc(70*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[3]  :=  75+Trunc(75*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[4]  := 280+Trunc(280*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[5]  := 160+Trunc(160*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[6]  :=  75+Trunc(75*ResponsivoVideo); //Dt.Processo
+  LstPedidosAdv.ColWidths[7]  :=  50+Trunc(50*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[8]  :=  40+Trunc(40*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[9]  :=  70+Trunc(70*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[10] :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[11] :=  60+Trunc(60*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[12] :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[13] :=  85+Trunc(85*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[14] :=  70+Trunc(70*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[15] :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[16] :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[17] :=  85+Trunc(85*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[18] :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[19] := 100+Trunc(100*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[20] := 150+Trunc(150*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[21] :=  60+Trunc(60*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[22] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[23] :=  60+Trunc(60*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[24] :=  70+Trunc(70*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[25] :=  40+Trunc(40*ResponsivoVideo);
   LstPedidosAdv.Alignments[0, 0]  := taRightJustify;
   LstPedidosAdv.FontStyles[0, 0]  := [FsBold];
   LstPedidosAdv.Alignments[1, 0]  := taCenter;
@@ -896,16 +897,16 @@ begin
   PgcPedidos.ActivePage := TabPedidos;
   LStPedidosAdv.RowCount := 1;
   //Volumes do Pedido
-  LstVolumesAdv.ColWidths[0] := 100;
-  LstVolumesAdv.ColWidths[1] :=  60;
-  LstVolumesAdv.ColWidths[2] := 180;
-  LstVolumesAdv.ColWidths[3] := 160;
-  LstVolumesAdv.ColWidths[4] := 40;
-  LstVolumesAdv.ColWidths[5] := 40;
-  LstVolumesAdv.ColWidths[6] := 70;
-  LstVolumesAdv.ColWidths[7] := 120;
-  LstVolumesAdv.ColWidths[8] :=  40;
-  LstVolumesAdv.ColWidths[9] :=  40;
+  LstVolumesAdv.ColWidths[0] := 100+Trunc(100*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[1] :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[2] := 180+Trunc(180*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[3] := 160+Trunc(160*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[4] := 40+Trunc(40*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[5] := 40+Trunc(40*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[6] := 70+Trunc(70*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[7] := 120+Trunc(120*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[8] :=  40+Trunc(40*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[9] :=  40+Trunc(40*ResponsivoVideo);
   LstVolumesAdv.Alignments[0, 0] := taRightJustify;
   LstVolumesAdv.FontStyles[0, 0] := [FsBold];
   LstVolumesAdv.Alignments[1, 0] := taRightJustify;
@@ -916,16 +917,16 @@ begin
   LstVolumesAdv.HideColumn(3);
   LstVolumesAdv.HideColumn(5);
   //Resumo Atendimento do Pedido
-  LstPedidoResumoAdv.ColWidths[0] := 80;
-  LstPedidoResumoAdv.ColWidths[1] := 60;
-  LstPedidoResumoAdv.ColWidths[2] := 250;
-  LstPedidoResumoAdv.ColWidths[3] := 120;
-  LstPedidoResumoAdv.ColWidths[4] := 200;
-  LstPedidoResumoAdv.ColWidths[5] := 70;
-  LstPedidoResumoAdv.ColWidths[6] := 90;
-  LstPedidoResumoAdv.ColWidths[7] := 70;
-  LstPedidoResumoAdv.ColWidths[8] := 70;
-  LstPedidoResumoAdv.ColWidths[9] := 70;
+  LstPedidoResumoAdv.ColWidths[0] := 80+Trunc(80*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[1] := 60+Trunc(60*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[2] := 250+Trunc(250*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[3] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[4] := 200+Trunc(200*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[5] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[6] := 90+Trunc(90*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[7] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[8] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[9] := 70+Trunc(70*ResponsivoVideo);
   LstPedidoResumoAdv.Alignments[0, 0] := taRightJustify;
   LstPedidoResumoAdv.FontStyles[0, 0] := [FsBold];
   LstPedidoResumoAdv.Alignments[5, 0] := taRightJustify;
@@ -934,18 +935,18 @@ begin
   LstPedidoResumoAdv.Alignments[9, 0] := taRightJustify;
 
   //Produtos do Volume
-  LstVolumeProdutosAdv.ColWidths[0]  :=  75;
-  LstVolumeProdutosAdv.ColWidths[1]  := 150;
-  LstVolumeProdutosAdv.ColWidths[2]  := 100;
-  LstVolumeProdutosAdv.ColWidths[3]  :=  80;
-  LstVolumeProdutosAdv.ColWidths[4]  :=  90;
-  LstVolumeProdutosAdv.ColWidths[5]  :=  60;
-  LstVolumeProdutosAdv.ColWidths[6]  :=  80;
-  LstVolumeProdutosAdv.ColWidths[7]  :=  60;
-  LstVolumeProdutosAdv.ColWidths[8]  :=  90;
-  LstVolumeProdutosAdv.ColWidths[9]  := 120;
-  LstVolumeProdutosAdv.ColWidths[10] := 130;//80;
-  LstVolumeProdutosAdv.ColWidths[11] := 150;//80;
+  LstVolumeProdutosAdv.ColWidths[0]  :=  75+Trunc(75*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[1]  := 150+Trunc(150*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[2]  := 100+Trunc(100*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[3]  :=  80+Trunc(80*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[4]  :=  90+Trunc(90*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[5]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[6]  :=  80+Trunc(80*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[7]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[8]  :=  90+Trunc(90*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[9]  := 120+Trunc(120*ResponsivoVideo);
+  LstVolumeProdutosAdv.ColWidths[10] := 130+Trunc(130*ResponsivoVideo);//80;
+  LstVolumeProdutosAdv.ColWidths[11] := 150+Trunc(150*ResponsivoVideo);//80;
   LstVolumeProdutosAdv.Alignments[0, 0] := taRightJustify;
   LstVolumeProdutosAdv.FontStyles[0, 0] := [FsBold];
   LstVolumeProdutosAdv.Alignments[3, 0] := taCenter;
@@ -956,19 +957,19 @@ begin
   LstVolumeProdutosAdv.Alignments[8, 0] := taRightJustify;
   LstVolumeProdutosAdv.Alignments[10, 0] := taCenter;
 
-  lstVolumeEtapas.ColWidths[0]     := 100;
-  lstVolumeEtapas.ColWidths[1]     :=  80;
-  lstVolumeEtapas.ColWidths[2]     :=  65;
-  lstVolumeEtapas.ColWidths[3]     := 130;
-  lstVolumeEtapas.ColWidths[4]     := 120;
+  lstVolumeEtapas.ColWidths[0]     := 100+Trunc(100*ResponsivoVideo);
+  lstVolumeEtapas.ColWidths[1]     :=  80+Trunc(80*ResponsivoVideo);
+  lstVolumeEtapas.ColWidths[2]     :=  65+Trunc(65*ResponsivoVideo);
+  lstVolumeEtapas.ColWidths[3]     := 130+Trunc(130*ResponsivoVideo);
+  lstVolumeEtapas.ColWidths[4]     := 120+Trunc(120*ResponsivoVideo);
   lstVolumeEtapas.Alignments[1, 0] := taCenter;
   lstVolumeEtapas.Alignments[2, 0] := taCenter;
 
-  LstPedidoProcesso.ColWidths[0]     := 100;
-  LstPedidoProcesso.ColWidths[1]     :=  80;
-  LstPedidoProcesso.ColWidths[2]     :=  65;
-  LstPedidoProcesso.ColWidths[3]     := 130;
-  LstPedidoProcesso.ColWidths[4]     := 120;
+  LstPedidoProcesso.ColWidths[0]     := 100+Trunc(100*ResponsivoVideo);
+  LstPedidoProcesso.ColWidths[1]     :=  80+Trunc(80*ResponsivoVideo);
+  LstPedidoProcesso.ColWidths[2]     :=  65+Trunc(65*ResponsivoVideo);
+  LstPedidoProcesso.ColWidths[3]     := 130+Trunc(130*ResponsivoVideo);
+  LstPedidoProcesso.ColWidths[4]     := 120+Trunc(120*ResponsivoVideo);
   LstPedidoProcesso.Alignments[1, 0] := taCenter;
   LstPedidoProcesso.Alignments[2, 0] := taCenter;
   LstPedidoProcesso.RowCount         := 1;
@@ -1168,9 +1169,9 @@ procedure TFrmRelPedidos.LstVolumeProdutosAdvClickCell(Sender: TObject; ARow,
   ACol: Integer);
 begin
   inherited;
-  if (aRow = 0) and (aCol in [0, 1, 4, 9]) then Begin
-     LstVolumeProdutosAdv.SortSettings.Column := aCol;
-     LstVolumeProdutosAdv.QSort;
+  if (aRow = 0) Then Begin //and (aCol in [0, 1, 4, 9]) then Begin
+     TAdvStringGrid(Sender).SortSettings.Column := aCol;
+     TAdvStringGrid(Sender).QSort;
   End
 end;
 
@@ -1239,11 +1240,16 @@ begin
   If TAdvStringGrid(Sender).Name = 'LstVolumesAdv' then
      aColGrid := 6
   Else
-     aColGrid := 8;
+     aColGrid := 7;
   if (aRow = 0) and (aColGrid <> 7) then Begin
      TAdvStringGrid(Sender).SortSettings.Column := aCol;
      TAdvStringGrid(Sender).QSort;
      Exit;
+  End
+  Else if (aCol = 9) and (Sender=LstVolumeConsulta) then Begin
+     If (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Relatórios - Re-Impressão de TAG')) then
+        raise Exception.Create('Acesso não autorizado para Reimpressão de TAG!');
+     ReimpressaoTAGVolume;
   End
   Else if (aColGrid = aCol) and (ARow>0) and (TAdvStringGrid(Sender).Cells[8, aRow]='2') and (TAdvStringGrid(Sender).Cells[8, 0]='Ação') then Begin
      //APlicar Controle de Acesso
@@ -1408,52 +1414,57 @@ Begin
 end;
 
 procedure TFrmRelPedidos.HeaderLstVolumeConsulta;
-begin
-  LstVolumeConsulta.ColWidths[0]  :=  90;
-  LstVolumeConsulta.ColWidths[1]  :=  60;
-  LstVolumeConsulta.ColWidths[2]  :=  60;
-  LstVolumeConsulta.ColWidths[3]  := 100;
-  LstVolumeConsulta.ColWidths[4]  := 120;
-  LstVolumeConsulta.ColWidths[5]  :=  80; //Dt.Processo
-  LstVolumeConsulta.ColWidths[6]  :=  60;
-  LstVolumeConsulta.ColWidths[7]  := 120;
-  LstVolumeConsulta.ColWidths[8]  :=  40;
-  LstVolumeConsulta.ColWidths[9]  :=  40;
-  LstVolumeConsulta.Width := (90+60+0+100+170+80+60+120+40+40)+10;
-  LstVolumeHistoricoConsulta.width := Width - (LstVolumeConsulta.Width+50);
-  LstVolumeConsulta.Alignments[0, 0] := taRightJustify;
-  LstVolumeConsulta.FontStyles[0, 0] := [FsBold];
-  LstVolumeConsulta.Alignments[1, 0] := taRightJustify;
-  LstVolumeConsulta.Alignments[2, 0] := taRightJustify;
-  LstVolumeConsulta.Alignments[3, 0] := taLeftJustify;
-  LstVolumeConsulta.Alignments[4, 0] := taLeftJustify;
-  LstVolumeConsulta.Alignments[5, 0] := taLeftJustify;
-  LstVolumeConsulta.Alignments[6, 0] := taRightJustify;
-  LstVolumeConsulta.Alignments[7, 0] := taLeftJustify;
-  LstVolumeConsulta.Alignments[8, 0] := taCenter;
-  LstVolumeConsulta.Alignments[9, 0] := taCenter;
+Begin
+  LstVolumeConsulta.ColWidths[0]  :=  90+Trunc(90*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[1]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[2]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[3]  := 100+Trunc(100*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[4]  := 120+Trunc(120*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[5]  :=  80+Trunc(80*ResponsivoVideo); //Dt.Processo
+  LstVolumeConsulta.ColWidths[6]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[7]  := 120+Trunc(120*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[8]  :=  40+Trunc(40*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[9]  :=  40+Trunc(40*ResponsivoVideo);
+  LstVolumeConsulta.ColWidths[10] :=  40+Trunc(40*ResponsivoVideo);
+  LstVolumeConsulta.Width := Trunc(Screen.Width*0.53);  //  720; //(90+60+0+100+170+80+60+40+40+40)+40;
 
-  LstVolumeHistoricoConsulta.ColWidths[0]  := 100;
-  LstVolumeHistoricoConsulta.ColWidths[1]  :=  80;
-  LstVolumeHistoricoConsulta.ColWidths[2]  :=  65;
-  LstVolumeHistoricoConsulta.ColWidths[3]  := 130;
-  LstVolumeHistoricoConsulta.ColWidths[4]  := 120;
+
+  LstVolumeHistoricoConsulta.width := Width - (LstVolumeConsulta.Width+50);
+  LstVolumeConsulta.Alignments[ 0, 0] := taRightJustify;
+  LstVolumeConsulta.FontStyles[ 0, 0] := [FsBold];
+  LstVolumeConsulta.Alignments[ 1, 0] := taRightJustify;
+  LstVolumeConsulta.Alignments[ 2, 0] := taRightJustify;
+  LstVolumeConsulta.Alignments[ 3, 0] := taLeftJustify;
+  LstVolumeConsulta.Alignments[ 4, 0] := taLeftJustify;
+  LstVolumeConsulta.Alignments[ 5, 0] := taLeftJustify;
+  LstVolumeConsulta.Alignments[ 6, 0] := taRightJustify;
+  LstVolumeConsulta.Alignments[ 7, 0] := taLeftJustify;
+  LstVolumeConsulta.Alignments[ 8, 0] := taCenter;
+  LstVolumeConsulta.Alignments[ 9, 0] := taCenter;
+  LstVolumeConsulta.Alignments[10, 0] := taCenter;
+  LstVolumeConsulta.HideColumn(4);
+
+  LstVolumeHistoricoConsulta.ColWidths[0]  := 100+Trunc(100*ResponsivoVideo);
+  LstVolumeHistoricoConsulta.ColWidths[1]  :=  80+Trunc(80*ResponsivoVideo);
+  LstVolumeHistoricoConsulta.ColWidths[2]  :=  65+Trunc(65*ResponsivoVideo);
+  LstVolumeHistoricoConsulta.ColWidths[3]  := 130+Trunc(130*ResponsivoVideo);
+  LstVolumeHistoricoConsulta.ColWidths[4]  := 120+Trunc(120*ResponsivoVideo);
   LstVolumeHistoricoConsulta.Alignments[1, 0] := taCenter;
   LstVolumeHistoricoConsulta.Alignments[2, 0] := taCenter;
 
   //Produtos do Volume
-  LstVolumeProdutosConsulta.ColWidths[0]  :=  75;
-  LstVolumeProdutosConsulta.ColWidths[1]  := 250;
-  LstVolumeProdutosConsulta.ColWidths[2]  := 150;
-  LstVolumeProdutosConsulta.ColWidths[3]  :=  80;
-  LstVolumeProdutosConsulta.ColWidths[4]  :=  90;
-  LstVolumeProdutosConsulta.ColWidths[5]  :=  60;
-  LstVolumeProdutosConsulta.ColWidths[6]  :=  80;
-  LstVolumeProdutosConsulta.ColWidths[7]  :=  60;
-  LstVolumeProdutosConsulta.ColWidths[8]  :=  90;
-  LstVolumeProdutosConsulta.ColWidths[9]  := 120;
-  LstVolumeProdutosConsulta.ColWidths[10] := 130;//80;
-  LstVolumeProdutosConsulta.ColWidths[11] := 150;//80;
+  LstVolumeProdutosConsulta.ColWidths[0]  :=  75+Trunc(75*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[1]  := 250+Trunc(25*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[2]  := 150+Trunc(150*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[3]  :=  80+Trunc(80*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[4]  :=  90+Trunc(90*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[5]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[6]  :=  80+Trunc(80*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[7]  :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[8]  :=  90+Trunc(90*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[9]  := 120+Trunc(120*ResponsivoVideo);
+  LstVolumeProdutosConsulta.ColWidths[10] := 130+Trunc(130*ResponsivoVideo);//80;
+  LstVolumeProdutosConsulta.ColWidths[11] := 150+Trunc(150*ResponsivoVideo);//80;
   LstVolumeProdutosConsulta.Alignments[0,  0] := taRightJustify;
   LstVolumeProdutosConsulta.FontStyles[0,  0] := [FsBold];
   LstVolumeProdutosConsulta.Alignments[3,  0] := taCenter;
@@ -2140,8 +2151,9 @@ begin
   If LstVolumeConsulta.RowCount > 1 Then
      LstVolumeConsulta.FixedRows := 1;
   for xVol := 1 to pJsonArrayRetorno.Count do Begin
-    LstVolumeConsulta.AddDataImage(8, xVol, 3, TCellHAlign.haCenter, TCellVAlign.vaTop);
-    LstVolumeConsulta.AddDataImage(9, xVol, 1, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstVolumeConsulta.AddDataImage( 8, xVol, 3, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstVolumeConsulta.AddDataImage( 9, xVol, 1, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstVolumeConsulta.AddDataImage(10, xVol, 5, TCellHAlign.haCenter, TCellVAlign.vaTop);
   End;
   vTotVolume := pJsonArrayRetorno.Count;
   vTotVolumePendente          := 0;
@@ -2425,6 +2437,65 @@ begin
       End);
   End;
 
+end;
+
+procedure TFrmRelPedidos.ReimpressaoTAGVolume;
+Var vPrintTag, vEmbalagem, vPedidoVolumeId : Integer;
+    ObjPedidoVolumeCtrl    : TPedidoVOlumeCtrl;
+    jsonEtiquetasPorVolume : tjsonArray;
+    vErro : String;
+begin
+  raise Exception.Create('Funcionalidade em Desenvolvimento...');
+  vPrintTag  := 2;
+  vEmbalagem := 2;
+  ObjPedidoVolumeCtrl := TPedidoVOlumeCtrl.Create;
+  jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume( vPedidoVolumeId);
+  if jsonEtiquetasPorVolume.Items[0].tryGetValue<String>('Erro', vErro) then Begin
+     ShowErro('Erro na Impressão. Volume: '+EdtPedidoVolumeId.Text+' - '+vErro);
+     jsonEtiquetasPorVolume := Nil;
+     ObjPedidoVolumeCtrl.Free;
+  End;
+ {
+               if (StrToIntDef(EdtPedidoVolumeId.Text, 0) = 0) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) = vPedidoVolumeId) then Begin
+                  vCaixaEmbalagemId := JsonArrayRetorno.Items[xVolumes].GetValue<Integer>('embalagemid');
+                  if (vCaixaEmbalagemId <> 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [1, 2])) then Begin
+                     jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume( vPedidoVolumeId);
+                     If (((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 3) and (RbProcesso.ItemIndex = 0)) or
+                        ((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') > 2) and (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 13) and (RbProcesso.ItemIndex > 0))) or (EdtPedidoVolumeId.Text<>'') then Begin
+                        pPedidoId          := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid');
+                        pDocumentoOriginal := jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal');
+                        pDtPedido          := DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido')));
+                        pPedidoVolumeId    := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidovolumeid');
+                        pSequencia         := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia');
+                        pCodPessoaERP      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp');
+                        prazao             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia');
+                        pRotaId            := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid');
+                        protas             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas');
+                        pProcessoId        := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid');
+                        pMascara           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('mascara');
+                        vPredini           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('inicio');
+                        vPredIni           := copy(EnderecoMask(vPredIni, pMascara, True), 1, 5);
+                        vPredFin           := jsonEtiquetasPorVolume.items[0].GetValue<String>('termino');
+                        vPredFin           := copy(EnderecoMask(vPredFin, pMascara, True), 1, 5);
+                        vItens             := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens');
+                        vTotUnid           := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida');
+                        vTotalVolumes      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes');
+                        if (pProcessoId < 13) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) <> 0) then
+                           TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
+                                                          jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), vItens,
+                                                          vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId, vTotalVolumes);
+                     End;
+                  End
+                  Else If (vCaixaEmbalagemId = 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [0, 2])) then Begin
+                    //Buscar os dados para o VOlume
+                    if FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then //Padrão eXactWMS
+                       TagVolumeCaixaFechada8x10etqEpl2(vPedidoVolumeId)
+                    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then //Padrão eXactWMS com Endereço
+                       TagVolumeCaixaFechada_Address_8x10etqEpl2(vPedidoVolumeId)
+                    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then //Destaque para Cliente e Rota
+                       TagVolumeCaixaFechada_RotaClienteDestaque_8x10etqEpl2(vPedidoVolumeId);
+                  End;
+}
 end;
 
 procedure TFrmRelPedidos.TabPedidosShow(Sender: TObject);

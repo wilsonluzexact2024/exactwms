@@ -233,6 +233,12 @@ begin
         LimparExpedicao;
         MensagemSis('Atenção', 'O Volume('+EdtVolumeId.Text+') deve ser Reconferido!', '', '', False, True);
         Exit;
+    End
+    Else If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <>
+                                                             JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
+       LimparExpedicao;
+       MensagemSis('Atenção', 'Enviar Volume'+EdtVolumeId.Text+' para Auditoria!', '', '', False, True);
+       Exit;
     End;
     ObjVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := StrToIntDef(EdtVolumeId.Text, 0);
     if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ExpedicaoOffLine = 0 then

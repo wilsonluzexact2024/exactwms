@@ -30,12 +30,8 @@ Const
     'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData ' +
     'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao ' +
     'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao ' + sLineBreak +
-    'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid'+sLineBreak+
-    'Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid'+sLineBreak+
-    'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and'+sLineBreak+
-    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
-//    'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and'+sLineBreak+
-//    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) '+sLineBreak+
+    'Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and '+sLineBreak+
+    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento) '+sLineBreak+
     'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '+ sLineBreak +
     '      (@PessoaId = 0 or P.PessoaId = @PessoaId) and ' +sLineBreak +
     '      (@DocumentoNr = '+#39+#39+' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak +

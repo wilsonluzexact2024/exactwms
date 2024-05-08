@@ -142,47 +142,31 @@ var
   vSql: String;
 begin
   try
-    vSql := 'Declare @CargaId Integer = ' + pJsonObject.GetValue<Integer>
-      ('cargaid').ToString() + sLineBreak + 'Declare @PedidoVolumeId Integer = '
-      + pJsonObject.GetValue<Integer>('pedidovolumeid').ToString() + sLineBreak
-      + 'Declare @PedidoId Integer = (Select PedidoId From PedidoVolumes' +
-      sLineBreak +
-      '                             Where PedidoVolumeId = @PedidoVolumeId)' +
-      sLineBreak +
-      'Insert Into CargaCarregamento (Cargaid, PedidoVolumeId, UsuarioId, Data, Hora, Terminal, Processo) Values ('
-      + sLineBreak + pJsonObject.GetValue<Integer>('cargaid').ToString() + ', '
-      + pJsonObject.GetValue<Integer>('pedidovolumeid').ToString() + ', ' +
-      pJsonObject.GetValue<Integer>('usuarioid').ToString() + ', ' +
-      ' GetDate(), GetDate(), ' +
-      QuotedStr(pJsonObject.GetValue<String>('terminal')) + ', ' +
-      QuotedStr(pJsonObject.GetValue<String>('processo')) + ')';
+    vSql := 'Declare @CargaId Integer = ' + pJsonObject.GetValue<Integer>('cargaid').ToString() + sLineBreak +
+      'Declare @PedidoVolumeId Integer = ' + pJsonObject.GetValue<Integer>('pedidovolumeid').ToString() + sLineBreak+
+      'Declare @PedidoId Integer = (Select PedidoId From PedidoVolumes Where PedidoVolumeId = @PedidoVolumeId)' + sLineBreak +
+      'Insert Into CargaCarregamento (Cargaid, PedidoVolumeId, UsuarioId, Data, Hora, Terminal, Processo) Values ('+sLineBreak+
+      pJsonObject.GetValue<Integer>('cargaid').ToString() + ', ' + pJsonObject.GetValue<Integer>('pedidovolumeid').ToString() + ', ' +
+      pJsonObject.GetValue<Integer>('usuarioid').ToString() + ', ' + ' GetDate(), GetDate(), ' +
+      QuotedStr(pJsonObject.GetValue<String>('terminal')) + ', ' + QuotedStr(pJsonObject.GetValue<String>('processo')) + ')';
     FConexao.Query.SQL.Add(vSql);
     FConexao.Query.SQL.Add('Update Cp Set Conferido = 1');
     FConexao.Query.SQL.Add('From CargaPedidos Cp');
-    FConexao.Query.SQL.Add
-      ('Left Join (select Pv.PedidoId, Pv.PedidoVolumeId, CC.PedidoVolumeId VlmConferido');
+    FConexao.Query.SQL.Add('Left Join (select Pv.PedidoId, Pv.PedidoVolumeId, CC.PedidoVolumeId VlmConferido');
     FConexao.Query.SQL.Add('			        From PedidoVolumes Pv');
-    FConexao.Query.SQL.Add
-      ('			        inner Join vDocumentoEtapas De ON De.Documento = Pv.Uuid');
-    FConexao.Query.SQL.Add
-      ('			        Left Join CargaCarregamento CC On Cc.PedidoVolumeId = Pv.PedidoVolumeId');
-    FConexao.Query.SQL.Add
-      ('			        where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
-    FConexao.Query.SQL.Add
-      ('			        And De.ProcessoId <> 15) CC On Cc.PedidoId = Cp.PedidoId and CC.PedidoVOlumeId is Null');
-    FConexao.Query.SQL.Add
-      ('where Cp.CargaId = @CargaId and Cp.PedidoId = @PedidoId');
+    FConexao.Query.SQL.Add('			        inner Join vDocumentoEtapas De ON De.Documento = Pv.Uuid');
+    FConexao.Query.SQL.Add('			        Left Join CargaCarregamento CC On Cc.PedidoVolumeId = Pv.PedidoVolumeId');
+    FConexao.Query.SQL.Add('			        where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
+    FConexao.Query.SQL.Add('			        And De.ProcessoId <> 15) CC On Cc.PedidoId = Cp.PedidoId and CC.PedidoVOlumeId is Null');
+    FConexao.Query.SQL.Add('where Cp.CargaId = @CargaId and Cp.PedidoId = @PedidoId');
     if DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('CargaCarregamento.Sql');
+       FConexao.Query.SQL.SaveToFile('CargaCarregamento.Sql');
     FConexao.Query.ExecSQL;
     Result := TJsonObject.Create.AddPair('Ok', '200');
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
-      raise Exception.Create('Tabela: CargaCarregamento - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: CargaCarregamento - ' + StringReplace(E.Message,
+           '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
@@ -257,11 +241,11 @@ begin
     FConexao.Query.SQL.Add('select CC.IdMin, De.Processoid, De.Descricao Processo, C.*');
     FConexao.Query.SQL.Add('From Cargas C');
     FConexao.Query.SQL.Add('Left Join vDocumentoEtapas DE On De.Documento = C.uuid');
+    FConexao.Query.SQL.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
     FConexao.Query.SQL.Add('Left Join (Select CargaId, Min(CarregamentoId) IdMin');
     FConexao.Query.SQL.Add('           From CargaCarregamento');
     FConexao.Query.SQL.Add('           Group by CargaId) Cc ON Cc.CargaId = C.CargaId');
-    FConexao.Query.SQL.Add('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = C.uuid and Status = 1)');
-    FConexao.Query.SQL.Add('      And C.CargaId = @CargaId');
+    FConexao.Query.SQL.Add('Where C.CargaId = @CargaId');
     if DebugHook <> 0 then
        FConexao.Query.SQL.SaveToFile('CargasDelete.Sql');
     FConexao.Query.Open;
@@ -495,16 +479,14 @@ begin
   QryRecordCount.SQL.Add('Declare @ProcessoId Integer = :pProcessoId');
   QryRecordCount.SQL.Add('Select Count(C.CargaId) cReg');
   QryRecordCount.SQL.Add('from Cargas C');
-  QryRecordCount.SQL.Add
-    ('Left Join vDocumentoEtapas DE On De.Documento = C.Uuid');
+  QryRecordCount.SQL.Add('Left Join vDocumentoEtapas DE On De.Documento = C.Uuid and');
+  QryRecordCount.SQL.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
   QryRecordCount.SQL.Add('Inner join Rotas R On R.RotaId = C.RotaId');
-  QryRecordCount.SQL.Add
-    ('Left Join Pessoa T ON T.PessoaId = C.transportadoraid');
+  QryRecordCount.SQL.Add('Left Join Pessoa T ON T.PessoaId = C.transportadoraid');
   QryRecordCount.SQL.Add('Inner Join Pessoa M On M.Pessoaid = C.motoristaid');
   QryRecordCount.SQL.Add('Inner Join Veiculos V ON V.VeiculoId = C.veiculoid');
   QryRecordCount.SQL.Add('Inner Join usuarios U On U.UsuarioId = C.Usuarioid');
-  QryRecordCount.SQL.Add
-    ('Where (@ProcessoId = 0 or @ProcessoId = DE.ProcessoId)');
+  QryRecordCount.SQL.Add('Where (@ProcessoId = 0 or @ProcessoId = DE.ProcessoId)');
   if AParams.ContainsKey('cargaid') then
   begin
     // qryPesquisa.SQL.Add('and C.CargaId = :Cargaid');

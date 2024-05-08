@@ -158,6 +158,8 @@ type
     CbInventarioAJustePadrao: TComboBox;
     Label53: TLabel;
     CbMudarPickingEstoquePallet: TComboBox;
+    Label54: TLabel;
+    CbVolumeAuditoria: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure CbIntDesvioAuditoriaClick(Sender: TObject);
@@ -344,6 +346,7 @@ begin
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolCxaFechadaExpedicao     := CbVolCxaFechadaExpedicao.ItemIndex;
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.ReconferirCorteReconferencia   := CbReconferirCorteReconferencia.ItemIndex;
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.ExigirReconferenciaToExpedicao := CbExigirReconferenciaToExpedicao.ItemIndex;
+  FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolumeAuditoria            := CbVolumeAuditoria.ItemIndex;
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra      := CbModeloPrinterCodBar.Text;
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.PortaPrinterCodBarra       := CbPortaPrinterCodBar.Text;
   FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterGerencial     := CbModeloPrinterGerencial.Text;
@@ -446,6 +449,7 @@ begin
   CbVolCxaFechadaExpedicao.ItemIndex     := FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolCxaFechadaExpedicao;
   CbReconferirCorteReconferencia.ItemIndex   := FrmeXactWMS.ConfigWMS.ObjConfiguracao.ReconferirCorteReconferencia;
   CbExigirReconferenciaToExpedicao.ItemIndex := FrmeXactWMS.ConfigWMS.ObjConfiguracao.ExigirReconferenciaToExpedicao;
+  CbVolumeAuditoria.ItemIndex                := FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolumeAuditoria;
   CbModeloPrinterCodBar.ItemIndex    := CbModeloPrinterCodBar.Items.IndexOf(FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra);
   CbPortaPrinterCodBar.ItemIndex     := CbPortaPrinterGerencial.Items.IndexOf(FrmeXactWMS.ConfigWMS.ObjConfiguracao.PortaPrinterCodBarra);
   CbModeloPrinterGerencial.ItemIndex := CbModeloPrinterGerencial.Items.IndexOf(FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterGerencial);

@@ -246,6 +246,9 @@ type
     Procedure TagEndereco5x10etqEpl2;
     Procedure TagEndereco8x10etqEpl2;
     Procedure TagEndereco8x10etqEpl2_Localizacao_CodBarras_Lateral;
+
+    Procedure TagEndereco3x10etqPpla;
+    Procedure TagEndereco5x10etqPpla;
   public
     { Public declarations }
     Procedure Imprimir; OverRide;
@@ -525,6 +528,10 @@ begin
         TagEndereco5x10etqEpl2 //Criar demais modelos de Tag
      Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) and (CbFormato.ItemIndex = 3) then
         TagEndereco8x10etqEpl2 //Criar demais modelos de Tag
+     Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) and (CbFormato.ItemIndex = 1) then
+        TagEndereco3x10etqPpla //Criar demais modelos de Tag
+     Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) and (CbFormato.ItemIndex = 2) then
+        TagEndereco5x10etqPpla //Criar demais modelos de Tag
   End;
 end;
 
@@ -1252,16 +1259,16 @@ begin
   LblEtiquetas.Caption := 'Etiquetas: ';
   LblTotalEtiq.Caption    := '0';
   With LstEnderecoAdv do Begin
-    ColWidths[0]  :=  40;
-    ColWidths[1]  := 120;
-    ColWidths[2]  :=  150;
-    ColWidths[3]  :=  70;
-    ColWidths[4]  :=  80;
-    ColWidths[5]  :=  90;
-    ColWidths[6]  :=  120;
-    ColWidths[7]  :=  60;
-    ColWidths[8]  :=  65;
-    ColWidths[10] :=  70;
+    ColWidths[0]  :=  40+Trunc(40*ResponsivoVideo);
+    ColWidths[1]  := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[2]  := 150+Trunc(150*ResponsivoVideo);
+    ColWidths[3]  :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[4]  :=  80+Trunc(80*ResponsivoVideo);
+    ColWidths[5]  :=  90+Trunc(90*ResponsivoVideo);
+    ColWidths[6]  := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[7]  :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[8]  :=  65+Trunc(65*ResponsivoVideo);
+    ColWidths[10] :=  70+Trunc(70*ResponsivoVideo);
     LstEnderecoAdv.HideColumn(9);
     Alignments[2, 0] := taCenter;
     Alignments[7, 0] := taCenter;
@@ -1270,14 +1277,14 @@ begin
     FontStyles[1, 0] := [FsBold];
   End;
   JsonPedidoCubagem := tjsonArray.Create;
-  LstPedidosAdv.ColWidths[0] :=  90;
-  LstPedidosAdv.ColWidths[1] := 120;
-  LstPedidosAdv.ColWidths[2] :=  70;
-  LstPedidosAdv.ColWidths[3] := 200;
-  LstPedidosAdv.ColWidths[4] := 120;
-  LstPedidosAdv.ColWidths[5] :=  60;
-  LstPedidosAdv.ColWidths[6] := 120;
-  LstPedidosAdv.ColWidths[7] :=  40;
+  LstPedidosAdv.ColWidths[0] :=  90+Trunc(90*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[1] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[2] :=  70+Trunc(70*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[3] := 200+Trunc(200*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[4] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[5] :=  60+Trunc(60*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[6] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidosAdv.ColWidths[7] :=  40+Trunc(40*ResponsivoVideo);
   LstPedidosAdv.Alignments[0, 0] := taRightJustify;
   LstPedidosAdv.FontStyles[0, 0] := [fsBold];
   LstPedidosAdv.Alignments[2, 0] := taRightJustify;
@@ -1285,15 +1292,15 @@ begin
   LstPedidosAdv.Alignments[6, 0] := taLeftJustify;
   LstPedidosAdv.Alignments[7, 0] := taCenter;
 
-  LstVolumesFilterAdv.ColWidths[0] := 100;
-  LstVolumesFilterAdv.ColWidths[1] :=  60;
-  LstVolumesFilterAdv.ColWidths[2] := 120;
-  LstVolumesFilterAdv.ColWidths[3] :=  60;
-  LstVolumesFilterAdv.ColWidths[4] := 120;
-  LstVolumesFilterAdv.ColWidths[5] :=  50;
-  LstVolumesFilterAdv.ColWidths[6] :=  70;
-  LstVolumesFilterAdv.ColWidths[7] := 120;
-  LstVolumesFilterAdv.ColWidths[8] :=  40;
+  LstVolumesFilterAdv.ColWidths[0] := 100+Trunc(100*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[1] :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[2] := 120+Trunc(120*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[3] :=  60+Trunc(60*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[4] := 120+Trunc(120*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[5] :=  50+Trunc(50*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[6] :=  70+Trunc(70*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[7] := 120+Trunc(120*ResponsivoVideo);
+  LstVolumesFilterAdv.ColWidths[8] :=  40+Trunc(40*ResponsivoVideo);
   LstVolumesFilterAdv.Alignments[0, 0] := taRightJustify;
   LstVolumesFilterAdv.FontStyles[0, 0] := [FsBold];
   LstVolumesFilterAdv.Alignments[1, 0] := taRightJustify;
@@ -1466,7 +1473,9 @@ Begin
                   if (vCaixaEmbalagemId <> 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [1, 2])) then Begin
                      jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume( vPedidoVolumeId);
                      If (((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 3) and (RbProcesso.ItemIndex = 0)) or
-                        ((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') > 2) and (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 13) and (RbProcesso.ItemIndex > 0))) or (EdtPedidoVolumeId.Text<>'') then Begin
+                        ((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') > 2) and
+                        (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 13) and
+                        (RbProcesso.ItemIndex > 0))) or (EdtPedidoVolumeId.Text<>'') then Begin
                         pPedidoId          := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid');
                         pDocumentoOriginal := jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal');
                         pDtPedido          := DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido')));
@@ -2440,6 +2449,84 @@ begin
   End;
 end;
 
+procedure TFrmPrintTag.TagEndereco3x10etqPpla;
+Var xEtq  : Integer;
+    vErro : Boolean;
+    JsonProduto : TJsonObject;
+    vProduto : String;
+begin
+  inherited;
+  vErro := True; //Forçar inicialização da impressão
+  Try
+//    ConfigACBrETQ;
+    With ACBrETQConfig do Begin
+      DPI         := TACBrETQDPI(1);
+      Temperatura := vTemperatura;
+      Ativar;
+      For xEtq := 1 to Pred(LstEnderecoAdv.RowCount) do begin
+        if LstEnderecoAdv.Cells[8, xEtq] = '1' then Begin
+           Repeat
+             Try
+               if CbComposicao.ItemIndex = 0 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  9, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 3,  11, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirTexto(orNormal, 2,           1, 1,  14, 6, 'eXactWMS®', 0, False);
+               End
+               Else if CbComposicao.ItemIndex = 3 then Begin
+                  ImprimirTexto(orNormal, 4, 2, 6,  3, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 3, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1,  8, 55, 'eXactWMS®', 0, False);
+               End
+               Else if CbComposicao.ItemIndex = 4 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 9,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 15, 10, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1, 19, 10, 'eXactWMS®', 0, False);
+               End
+               Else Begin
+                  //ImprimirTexto(orNormal, 3,    2,  1, 3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  //ImprimirTexto(orNormal, 4,           4, 3,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+
+                  ImprimirTexto(orNormal, 2, 2, 1, 26, 18, 'Rua  Prédio Nível  Apto');
+                  ImprimirTexto(orNormal, 3, 3, 3, 13, 18, LstEnderecoAdv.Cells[1, xEtq]);
+                  ImprimirBarras(orNormal, barCODE128, 3, 2, 3, 26, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 8, becNAO);
+
+                  if (CbComposicao.ItemIndex = 2) and (LstEnderecoAdv.Cells[10, xEtq].ToInteger()>0) then Begin
+                     JsonProduto := TProdutoCtrl.GetEan(LstEnderecoAdv.Cells[10, xEtq]);
+                     vProduto := LstEnderecoAdv.Cells[10, xEtq]+' '+JsonProduto.GetValue<String>('descricao');
+                     ImprimirTexto(orNormal, 2,           2, 1,  19, 2, Copy(vProduto,  1, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  20, 2, Copy(vProduto, 31, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  21, 2, Copy(vProduto, 61, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  22, 2, Copy(vProduto, 91, 30), 0, False); //Colocar o nome do produto
+                     JsonProduto := Nil;
+                  End;
+                  ImprimirTexto(orNormal, 2,           1, 1, 2, 60, 'eXactWMS®', 0, False);
+               End;
+               FinalizarEtiqueta;
+               Imprimir(SpCopias.Value, 0);
+               Sleep(vTimeEtiqueta);
+               vErro := False;
+             Except On E: Exception do Begin
+               vErro := True;
+               ShowErro('Erro: Problema de comunicação com impressora...');
+               End;
+             End;
+           Until vErro = False;
+        End;
+      End;
+      if ChkEtqBcoEndereco.Checked then Begin
+         ImprimirTexto(orNormal, 2,           1, 1,15, 30, '  < ----------->   ', 0, False);
+         ImprimirTexto(orNormal, 2,           1, 1, 2, 60, 'eXactWMS®', 0, False);
+         FinalizarEtiqueta;
+         Imprimir(SpCopias.Value, 0);
+      End;
+      Desativar;
+    end;
+  Except On E: Exception do
+    ShowErro('Erro: Impressão das etiquetas. Volume Caixa Fechada!'+sLineBreak+E.Message);
+  End;
+end;
+
 procedure TFrmPrintTag.TagEndereco5x10etqEpl2;
 Var xEtq     : Integer;
     vErro    : Boolean;
@@ -2503,6 +2590,80 @@ begin
     end;
   Except On E: Exception do
     ShowErro('Erro: Ocorreu um erro na impressão das etiquetas  Volume Caixa Fechada!'+sLineBreak+E.Message);
+  End;
+end;
+
+procedure TFrmPrintTag.TagEndereco5x10etqPpla;
+Var xEtq  : Integer;
+    vErro : Boolean;
+    JsonProduto : TJsonObject;
+    vProduto : String;
+begin
+  inherited;
+  vErro := True; //Forçar inicialização da impressão
+  Try
+//    ConfigACBrETQ;
+    With ACBrETQConfig do Begin
+      DPI         := TACBrETQDPI(1);
+      Temperatura := vTemperatura;
+      Ativar;
+      For xEtq := 1 to Pred(LstEnderecoAdv.RowCount) do begin
+        if LstEnderecoAdv.Cells[8, xEtq] = '1' then Begin
+           Repeat
+             Try
+               if CbComposicao.ItemIndex = 0 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  9, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 3,  11, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirTexto(orNormal, 2,           1, 1,  14, 6, 'eXactWMS®', 0, False);
+               End
+               Else if CbComposicao.ItemIndex = 3 then Begin
+                  ImprimirTexto(orNormal, 4, 2, 6,  3, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 3, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1,  8, 55, 'eXactWMS®', 0, False);
+               End
+               Else if CbComposicao.ItemIndex = 4 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 9,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 15, 10, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 4, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1, 19, 10, 'eXactWMS®', 0, False);
+               End
+               Else Begin
+                  //ImprimirTexto(orNormal, 3,    2,  1, 3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  //ImprimirTexto(orNormal, 4,           4, 3,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+
+                  ImprimirTexto(orNormal, 2, 2, 1, 45, 3, ' Rua   Prédio   Nível   Apto');
+                  ImprimirTexto(orNormal, 3, 4, 4, 28, 3, LstEnderecoAdv.Cells[1, xEtq]);
+
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 10, 26, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 15, becNAO);
+                  if (CbComposicao.ItemIndex = 2) and (LstEnderecoAdv.Cells[10, xEtq].ToInteger()>0) then Begin
+                     JsonProduto := TProdutoCtrl.GetEan(LstEnderecoAdv.Cells[10, xEtq]);
+                     vProduto := LstEnderecoAdv.Cells[10, xEtq]+' '+JsonProduto.GetValue<String>('descricao');
+                     ImprimirTexto(orNormal, 2,           2, 1,  19, 2, Copy(vProduto,  1, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  20, 2, Copy(vProduto, 31, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  21, 2, Copy(vProduto, 61, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  22, 2, Copy(vProduto, 91, 30), 0, False); //Colocar o nome do produto
+                     JsonProduto := Nil;
+                  End;
+                  ImprimirTexto(orNormal, 2,           1, 1, 8, 46, 'eXactWMS®', 0, False);
+               End;
+               FinalizarEtiqueta;
+               Imprimir(SpCopias.Value, 0);
+               Sleep(vTimeEtiqueta);
+               vErro := False;
+             Except On E: Exception do Begin
+               vErro := True;
+               ShowErro('Erro: Problema de comunicação com impressora...');
+               End;
+             End;
+           Until vErro = False;
+        End;
+      End;
+      if ChkEtqBcoEndereco.Checked then
+         Imprimir(SpCopias.Value, 0);
+      Desativar;
+    end;
+  Except On E: Exception do
+    ShowErro('Erro: Impressão das etiquetas. Volume Caixa Fechada!'+sLineBreak+E.Message);
   End;
 end;
 
@@ -3216,15 +3377,15 @@ procedure TFrmPrintTag.TbTagArmazenagemShow(Sender: TObject);
 begin
   inherited;
   EdtPedidoId.Clear;
-  LstTagArmazenagem.ColWidths[0] := 100;
-  LstTagArmazenagem.ColWidths[1] := 100;
-  LstTagArmazenagem.ColWidths[2] := 100;
-  LstTagArmazenagem.ColWidths[3] :=  70;
-  LstTagArmazenagem.ColWidths[4] := 250;
-  LstTagArmazenagem.ColWidths[5] := 250;
-  LstTagArmazenagem.ColWidths[6] :=  50;
-  LstTagArmazenagem.ColWidths[7] :=  50;
-  LstTagArmazenagem.ColWidths[8] :=  65;
+  LstTagArmazenagem.ColWidths[0] := 100+Trunc(100*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[1] := 100+Trunc(100*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[2] := 100+Trunc(100*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[3] :=  70+Trunc(70*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[4] := 250+Trunc(250*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[5] := 250+Trunc(250*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[6] :=  50+Trunc(50*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[7] :=  50+Trunc(50*ResponsivoVideo);
+  LstTagArmazenagem.ColWidths[8] :=  65+Trunc(65*ResponsivoVideo);
   EdtDtInicio.Clear;
   EdtDtTermino.Clear;
   EdtPedidoIdTag.Clear;

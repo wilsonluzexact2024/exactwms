@@ -683,16 +683,12 @@ begin
       FConexao.Query.SQL.Clear;
       FConexao.Query.SQL.Add('If (select De.Descricao ');
       FConexao.Query.SQL.Add('   From Inventarios I');
-      FConexao.Query.SQL.Add
-        ('   Inner Join vDocumentoEtapas DE On De.Documento = I.uuid');
-      FConexao.Query.SQL.Add('   where I.InventarioId = ' +
-        vInventarioId.ToString());
-      FConexao.Query.SQL.Add
-        ('         and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = I.uuid and Status = 1)) = '
-        + #39 + 'Inventario - Gerado' + #39 + ' Begin');
-
-      FConexao.Query.SQL.Add
-        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where InventarioId = '
+      FConexao.Query.SQL.Add('   Inner Join vDocumentoEtapas DE On De.Documento = I.uuid and');
+      FConexao.Query.SQL.Add('                                     De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+      FConexao.Query.SQL.Add('   where I.InventarioId = '+vInventarioId.ToString()+')');
+//      FConexao.Query.SQL.Add('         and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = I.uuid and Status = 1)) = '
+      FConexao.Query.SQL.Add('  '+#39+'Inventario - Gerado'+#39+' Begin');
+      FConexao.Query.SQL.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where InventarioId = '
         + vInventarioId.ToString() + ')');
       FConexao.Query.SQL.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
       FConexao.Query.ParamByName('pTerminal').Value := vEstacao;

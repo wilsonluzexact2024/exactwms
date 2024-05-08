@@ -11,16 +11,15 @@ uses
 Const
   SqlSaidaIntegracaoConsulta = ';With' + sLineBreak +
     'Ped as (Select De.ProcessoId, Ped.* From VPedidos Ped' + sLineBreak +
-    '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid' +
-    sLineBreak + '        Where Ped.Status <= 2' + sLineBreak +
-    '		      and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'
-    + sLineBreak +
-    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '
-    + sLineBreak +
-    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'
-    + sLineBreak + 'From PedidoItens PI' + sLineBreak +
+    '        Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid'+sLineBreak+
+    '                                          De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) '+sLineBreak+
+    '        Where Ped.Status <= 2 and Ped.OperacaoTipoId = 2 and De.ProcessoId >= 13),'+sLineBreak +
+    'TotCheckIn as (Select PI.PedidoId, Coalesce(Sum(QtdXML), 0) QtdXml, Coalesce(Sum(QtdCheckIn), 0) QtdCheckIn, '+sLineBreak +
+    '                Coalesce(Sum(QtdDevolvida), 0) QtdDevolvida, Coalesce(Sum(QtdSegregada), 0) QtdSegregada'+sLineBreak +
+    'From PedidoItens PI' + sLineBreak +
     'Inner Join Ped P ON P.PedidoId = PI.PedidoId' + sLineBreak +
-    'Group by PI.PedidoId) ' + sLineBreak + 'Select P.*, TC.*' + sLineBreak +
+    'Group by PI.PedidoId) ' + sLineBreak +
+    'Select P.*, TC.*' + sLineBreak +
     'From Ped P' + sLineBreak +
     'Left Join TotCheckIn TC On Tc.PedidoId = P.PedidoId'; // CheckIn Concluído
 
@@ -193,19 +192,17 @@ begin
   inherited;
 end;
 
-function TSaidaIntegracaoDao.Insert(ArraySaidas: TJsonArray; pVersao: String)
-  : TJsonArray;
-var
-  JsonItens: TJsonArray;
+function TSaidaIntegracaoDao.Insert(ArraySaidas: TJsonArray; pVersao: String) : TJsonArray;
+var JsonItens: TJsonArray;
   // jsonProduto,
-  jsonDestinatario: TJsonObject;
-  xSaida, xItens, vSaidaId: Integer;
-  vEmbalagemPadrao: Integer;
-  vQryTransaction, vQryJson: TFDQuery;
-  vOperacaoNatureza, vDocumentoOriginal: String;
-  JsonRetorno: TJsonObject;
-  FIndConeXact: Integer;
-
+    jsonDestinatario: TJsonObject;
+    xSaida, xItens, vSaidaId: Integer;
+    vEmbalagemPadrao: Integer;
+    vQryTransaction, vQryJson: TFDQuery;
+    vOperacaoNatureza, vDocumentoOriginal: String;
+    JsonRetorno: TJsonObject;
+    FIndConeXact: Integer;
+    ErroJson : String;
 begin
   Result := TJsonArray.Create;
   Try
@@ -216,7 +213,7 @@ begin
       vQryJson.Sql.SaveToFile('JsonIntegracao.Sql');
     vQryJson.ExecSQL;
   Except
-
+     ErroJson := 'Json com Erro.';
   End;
   for xSaida := 0 to Pred(ArraySaidas.Count) do
   Begin
@@ -224,56 +221,52 @@ begin
       vQryTransaction := FConexao.GetQuery;
 
       vQryTransaction.connection.StartTransaction;
-      jsonDestinatario := ArraySaidas.Get(xSaida).GetValue<TJsonObject>
-        ('destinatario');
+      jsonDestinatario := ArraySaidas.Get(xSaida).GetValue<TJsonObject>('destinatario');
+      ErroJson := 'SalvarDestinatario';
       SalvarDestinatario(jsonDestinatario.GetValue<Integer>('destinatarioid'),
-        jsonDestinatario.GetValue<String>('razao'),
-        jsonDestinatario.GetValue<String>('fantasia'),
-        jsonDestinatario.GetValue<String>('cnpj'),
-        jsonDestinatario.GetValue<String>('email'), '', FConexao);
-      if pVersao = 'V1' then
-      Begin
+                         jsonDestinatario.GetValue<String>('razao'),
+                         jsonDestinatario.GetValue<String>('fantasia'),
+                         jsonDestinatario.GetValue<String>('cnpj'),
+                         jsonDestinatario.GetValue<String>('email'), '', FConexao);
+      if pVersao = 'V1' then Begin
         vOperacaoNatureza := '';
         vDocumentoOriginal := '';
       End
-      Else if pVersao = 'V2' then
-      Begin
-        if (AnsiIndexStr(UpperCase(ArraySaidas.Get(xSaida)
-          .GetValue<String>('natureza')), ['FATURA', 'PRÉ-FATURA']) >= 0) then
-          vOperacaoNatureza := 'Pré-fatura'
+      Else if pVersao = 'V2' then Begin
+        if (AnsiIndexStr(UpperCase(ArraySaidas.Get(xSaida).GetValue<String>('natureza')), ['FATURA', 'PRÉ-FATURA']) >= 0) then
+           vOperacaoNatureza := 'Pré-fatura'
         else
-          vOperacaoNatureza := 'Ressuprimento';
-        vDocumentoOriginal := ArraySaidas.Get(xSaida)
-          .GetValue<String>('documentooriginal');
+           vOperacaoNatureza := 'Ressuprimento';
+        vDocumentoOriginal := ArraySaidas.Get(xSaida).GetValue<String>('documentooriginal');
       End;
-      vSaidaId := SalvarSaida(ArraySaidas.Get(xSaida)
-        .GetValue<Integer>('saidaid', 0),
-        jsonDestinatario.GetValue<Integer>('destinatarioid'), vOperacaoNatureza,
-        ArraySaidas.Get(xSaida).GetValue<String>('documentonr'),
-        // Enviada com tratamento abaixo
-        ArraySaidas.Get(xSaida).GetValue<String>('documentodata'),
-        ArraySaidas.Get(xSaida).GetValue<String>('registroerp'), 0,
-        vDocumentoOriginal, FConexao);
+      ErroJson := 'SalvarSaida';
+      vSaidaId := SalvarSaida(ArraySaidas.Get(xSaida).GetValue<Integer>('saidaid', 0),
+                              jsonDestinatario.GetValue<Integer>('destinatarioid'), vOperacaoNatureza,
+                              ArraySaidas.Get(xSaida).GetValue<String>('documentonr'),
+                              // Enviada com tratamento abaixo
+                              ArraySaidas.Get(xSaida).GetValue<String>('documentodata'),
+                              ArraySaidas.Get(xSaida).GetValue<String>('registroerp'), 0,
+                              vDocumentoOriginal, FConexao);
       if vSaidaId > 0 then
       Begin
         JsonItens := ArraySaidas.Get(xSaida).GetValue<TJsonArray>('itens');
         For xItens := 0 To Pred(JsonItens.Count) do
         Begin
+          ErroJson := 'SalvarProduto';
           SalvarProduto(JsonItens.Get(xItens).GetValue<Integer>('produtoid', 0),
             JsonItens.Get(xItens).GetValue<String>('descricao'), 'Un', 1, 'Un',
             JsonItens.Get(xItens).GetValue<Integer>('embalagempadrao'), 0, 1, 0,
             0, 0, 8, 8, 8, 0, 0, JsonItens.Get(xItens).GetValue<String>('ean'),
             FConexao);
+          ErroJson := 'SalvarProdutoCodBarras';
           SalvarProdutoCodbarras(JsonItens.Get(xItens)
             .GetValue<Integer>('produtoid', 0), JsonItens.Get(xItens)
             .GetValue<String>('ean'), FConexao);
-          if JsonItens.Get(xItens).GetValue<Integer>('embalagempadrao', 0) >= 1
-          then
-            vEmbalagemPadrao := JsonItens.Get(xItens)
-              .GetValue<Integer>('embalagempadrao', 0)
+          if JsonItens.Get(xItens).GetValue<Integer>('embalagempadrao', 0) >= 1 then
+             vEmbalagemPadrao := JsonItens.Get(xItens).GetValue<Integer>('embalagempadrao', 0)
           Else
-            vEmbalagemPadrao := JsonItens.Get(xItens)
-              .GetValue<Integer>('embalagempadrao', 0);
+             vEmbalagemPadrao := JsonItens.Get(xItens).GetValue<Integer>('embalagempadrao', 0);
+          ErroJson := 'SalvarSaidaItens';
           SalvarSaidaItens(vSaidaId, JsonItens.Get(xItens)
             .GetValue<Integer>('produtoid', 0), JsonItens.Get(xItens)
             .GetValue<Integer>('quantidade', 0), vEmbalagemPadrao, FConexao);
@@ -289,18 +282,15 @@ begin
       Begin
         vQryTransaction.connection.Rollback;
         Result.AddElement(TJsonObject.Create(TJSONPair.Create('SaidaId',
-          'Documento(' + ArraySaidas.Get(xSaida).GetValue<String>('documentonr')
-          + ') não pode ser reenviado! ')));
+                          'Documento('+ArraySaidas.Get(xSaida).GetValue<String>('documentonr')+ ') não pode ser reenviado! ')));
       End;
-
-    Except
-      ON E: Exception do
+    Except On E: Exception do
       Begin
         vQryTransaction.connection.Rollback;
         raise Exception.Create('Processo: SaidaIntegracaos: ' +
           StringReplace(E.Message,
           '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
+          '', [rfReplaceAll])+ErroJson);
       End;
     end;
   End;
@@ -521,69 +511,41 @@ begin
   Try
     vQryPedStatus.Close;
     vQryPedStatus.Sql.Clear;
-    vQryPedStatus.Sql.Add
-      ('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = '
-      + pPessoaId.toString() + ' and PessoaTipoId = 1)');
-    vQryPedStatus.Sql.Add('Declare @DocumentoNr VarChar(20) = ' +
-      QuotedStr(pDocumentoNr));
-    vQryPedStatus.Sql.Add('Declare @RegistroERP Varchar(36) = ' +
-      QuotedStr(pRegistroERP));
-    vQryPedStatus.Sql.Add
-      ('Select Ped.Pedidoid, DE.ProcessoId, Coalesce(Pv.StatusMin, 1) StatusMin, Coalesce(Pv.StatusMax, 1) StatusMax');
+    vQryPedStatus.Sql.Add('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = ' + pPessoaId.toString() + ' and PessoaTipoId = 1)');
+    vQryPedStatus.Sql.Add('Declare @DocumentoNr VarChar(20) = ' + QuotedStr(pDocumentoNr));
+    vQryPedStatus.Sql.Add('Declare @RegistroERP Varchar(36) = ' + QuotedStr(pRegistroERP));
+    vQryPedStatus.Sql.Add('Select Ped.Pedidoid, DE.ProcessoId, Coalesce(Pv.StatusMin, 1) StatusMin, Coalesce(Pv.StatusMax, 1) StatusMax');
     vQryPedStatus.Sql.Add('From Pedido Ped');
-    vQryPedStatus.Sql.Add
-      ('Left Join vDocumentoEtapas DE on DE.Documento = Ped.Uuid');
-    vQryPedStatus.Sql.Add
-      ('Left Join (Select Pv.PedidoId, Min(De.ProcessoId) StatusMin, Max(De.ProcessoId) StatusMax');
+    vQryPedStatus.Sql.Add('Left Join vDocumentoEtapas DE on DE.Documento = Ped.Uuid and ');
+    vQryPedStatus.Sql.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+    vQryPedStatus.Sql.Add('Left Join (Select Pv.PedidoId, Min(De.ProcessoId) StatusMin, Max(De.ProcessoId) StatusMax');
     vQryPedStatus.Sql.Add('           From PedidoVolumes Pv');
-    vQryPedStatus.Sql.Add
-      ('		   Left Join vDocumentoEtapas DE on DE.Documento = Pv.Uuid');
-    vQryPedStatus.Sql.Add
-      ('           Where DE.Documento = Pv.Uuid and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
-    vQryPedStatus.Sql.Add
-      ('		   Group By Pv.PedidoId) Pv ON Pv.PedidoId = Ped.Pedidoid');
-    vQryPedStatus.Sql.Add
-      ('Where DE.Documento = Ped.Uuid and De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)');
-    vQryPedStatus.Sql.Add
-      ('      and PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP');
+    vQryPedStatus.Sql.Add('		         Left Join vDocumentoEtapas DE on DE.Documento = Pv.Uuid And');
+    vQryPedStatus.Sql.Add('                                            De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+    vQryPedStatus.Sql.Add('		         Group By Pv.PedidoId) Pv ON Pv.PedidoId = Ped.Pedidoid');
+    vQryPedStatus.Sql.Add('Where PessoaId = @PessoaId and DocumentoNr = @DocumentoNr and RegistroERP = @RegistroERP');
+    If DebugHook <> 0 Then
+       vQryPedStatus.Sql.SaveToFile('IntegracaoSaida_PedStatus.Sql');
     vQryPedStatus.Open;
-    if (Not vQryPedStatus.isEmpty) and
-      (vQryPedStatus.FieldByName('ProcessoId').AsInteger > 1) then
-    Begin
-
-      raise Exception.Create('Não é permitido o reenvio deste ressuprimento: ' +
-        pRegistroERP + '.');
-    End;
+    if (Not vQryPedStatus.isEmpty) and (vQryPedStatus.FieldByName('ProcessoId').AsInteger > 1) then
+       raise Exception.Create('Não é permitido o reenvio deste ressuprimento: ' + pRegistroERP + '.');
     vQryPedStatus.Close;
     vQryPedStatus.Sql.Clear;
     vQry.Sql.Add('Declare @PedidoId Integer = ' + pPedidoId.toString());
-    vQry.Sql.Add
-      ('Declare @OperacaoTipoId Integer = (Select OperacaoTipoId From OperacaoTipo Where Upper(Descricao) = '
-      + QuotedStr(UpperCase('Saída')) + ')');
-    vQry.Sql.Add
-      ('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = '
-      + pPessoaId.toString() + ' and PessoaTipoId = 1)');
-    vQry.Sql.Add('Declare @DocumentoNr VarChar(20) = ' +
-      QuotedStr(pDocumentoNr));
-    vQry.Sql.Add
-      ('Declare @DocumentoData Int = (Select IdData From Rhema_Data Where Data ='
-      + #39 + pDocumentoData + #39 + ')');
-    vQry.Sql.Add('Declare @RegistroERP Varchar(36) = ' +
-      QuotedStr(pRegistroERP));
-    vQry.Sql.Add('Declare @OperacaoNatureza VarChar(30) = ' +
-      QuotedStr(pOperacaoNatureza));
-    vQry.Sql.Add('Declare @DocumentoOriginal Varchar(20)  = ' +
-      QuotedStr(pDocumentoOriginal));
+    vQry.Sql.Add('Declare @OperacaoTipoId Integer = (Select OperacaoTipoId From OperacaoTipo Where Upper(Descricao) = '+QuotedStr(UpperCase('Saída')) + ')');
+    vQry.Sql.Add('Declare @PessoaId Integer = (Select PessoaId From Pessoa Where CodPessoaERP = ' + pPessoaId.toString() + ' and PessoaTipoId = 1)');
+    vQry.Sql.Add('Declare @DocumentoNr VarChar(20) = ' + QuotedStr(pDocumentoNr));
+    vQry.Sql.Add('Declare @DocumentoData Int = (Select IdData From Rhema_Data Where Data =' + #39 + pDocumentoData + #39 + ')');
+    vQry.Sql.Add('Declare @RegistroERP Varchar(36) = ' + QuotedStr(pRegistroERP));
+    vQry.Sql.Add('Declare @OperacaoNatureza VarChar(30) = ' + QuotedStr(pOperacaoNatureza));
+    vQry.Sql.Add('Declare @DocumentoOriginal Varchar(20)  = ' + QuotedStr(pDocumentoOriginal));
     vQry.Sql.Add(SqlSaidaInsert);
-    // ClipBoard.AsText := vQry.Sql.ToString();
     If DebugHook <> 0 Then
-      vQry.Sql.SaveToFile('SaidaIns.Sql');
+       vQry.Sql.SaveToFile('SaidaIns.Sql');
     vQry.Open;
     Result := vQry.FieldByName('PedidoId').AsInteger;
     vQry.Close;;
-    //
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       vQry.Close;
 
@@ -606,13 +568,12 @@ begin
     vQryItens.ParamByName('pQuantidade').Value := pQuantidade;
     vQryItens.ParamByName('pEmbalagemPadrao').Value := pEmbalagemPadrao;
     vQryItens.ParamByName('pCodProduto').Value := pCodProduto;
-    // ClipBoard.AsText := FConexao.Query.Sql.ToString();
-    // FConexao.Query.Sql.SaveToFile('SaidaItensIns.Sql';
+    vQryItens.ParamByName('pItemid').Value     := 0;
+    if DebugHook <> 0 then
+       vQryItens.Sql.SaveToFile('IntSaida_PedidoItens.Sql');
     vQryItens.ExecSQL;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-
       raise Exception.Create('Processo: SaidaIntegracaos - PedidoItens: ' +
         StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',

@@ -25,12 +25,12 @@ inherited FrmPrintTag: TFrmPrintTag
   inherited PgcBase: TcxPageControl
     Width = 1309
     Height = 713
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1309
     ExplicitHeight = 713
     ClientRectBottom = 713
     ClientRectRight = 1309
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1309
       ExplicitHeight = 689
       inherited LstCadastro: TAdvStringGrid
@@ -30562,9 +30562,11 @@ inherited FrmPrintTag: TFrmPrintTag
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = []
+            ItemIndex = 1
             ParentFont = False
             TabOrder = 1
             TabStop = False
+            Text = 'Localiza'#231#227'o / C'#243'd.Barras'
             Items.Strings = (
               'Somente Localiza'#231#227'o'
               'Localiza'#231#227'o / C'#243'd.Barras'
@@ -30585,11 +30587,11 @@ inherited FrmPrintTag: TFrmPrintTag
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = []
-            ItemIndex = 3
+            ItemIndex = 1
             ParentFont = False
             TabOrder = 2
             TabStop = False
-            Text = '8 x 10'
+            Text = '3 x 10'
             Items.Strings = (
               '2 x 10'
               '3 x 10'
@@ -32981,7 +32983,7 @@ inherited FrmPrintTag: TFrmPrintTag
             end
             object EdtPedidoVolumeId: TEdit
               Left = 7
-              Top = 38
+              Top = 40
               Width = 88
               Height = 24
               CustomHint = BalloonHint1
@@ -39740,7 +39742,6 @@ inherited FrmPrintTag: TFrmPrintTag
       ExplicitHeight = 689
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1309
       ExplicitHeight = 689
       inherited DbgImporta: TDBGrid
@@ -39847,7 +39848,6 @@ inherited FrmPrintTag: TFrmPrintTag
     ExplicitWidth = 1308
     inherited LblMensShowErro: TLabel
       Width = 1308
-      Height = 22
     end
   end
   inherited PnlConfigPrinter: TPanel
@@ -39866,11 +39866,6 @@ inherited FrmPrintTag: TFrmPrintTag
       Top = 107
       ExplicitLeft = 146
       ExplicitTop = 107
-    end
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
     end
   end
   inherited BalloonHint1: TBalloonHint

@@ -224,6 +224,7 @@ type
     //Form Pesquisa Base
     pbTitulo  : String;
     pbService : String;
+    ResponsivoVideo : Real;
     //pbCampos  : TDictionary;
     function Alpha(Texto: String): Boolean;
     procedure EnterFocus(Sender: TObject);
@@ -441,6 +442,10 @@ end;
 
 procedure TFrmBase.FormCreate(Sender: TObject);
 begin
+  if Screen.Width > 1366 then
+     ResponsivoVideo := ((Screen.Width - 1366) / 1366)
+  Else
+     ResponsivoVideo := 0;
   TbFrameWeb.TabVisible := False;
   vLastErro   := '';
   CorGetAtual := $00D9FCD6;

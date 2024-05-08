@@ -2260,7 +2260,6 @@ EXIT;
     end,
     True
   );
-
 end;
 
 procedure TFrmeXactWMS.GetDelLog;

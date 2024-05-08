@@ -379,21 +379,15 @@ begin
       End;
       VQry.Close;
       VQry.Sql.Clear;
-      VQry.Sql.Add
-        ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '
-        + 'PedidoVolumeId = ' + vPedidoVolumeId.ToString() + ')');
+      VQry.Sql.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From PedidoVolumes where '+ 'PedidoVolumeId = '+vPedidoVolumeId.ToString() + ')');
       VQry.Sql.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-      VQry.ParamByName('pProcessoId').Value :=
-        pJsonObjectFinalizar.GetValue<Integer>('processoid');
-      VQry.ParamByName('pUsuarioId').Value :=
-        pJsonObjectFinalizar.GetValue<Integer>('usuarioid');
-      VQry.ParamByName('pTerminal').Value :=
-        pJsonObjectFinalizar.GetValue<String>('terminal');
+      VQry.ParamByName('pProcessoId').Value := pJsonObjectFinalizar.GetValue<Integer>('processoid');
+      VQry.ParamByName('pUsuarioId').Value  := pJsonObjectFinalizar.GetValue<Integer>('usuarioid');
+      VQry.ParamByName('pTerminal').Value   := pJsonObjectFinalizar.GetValue<String>('terminal');
       VQry.ExecSQL;
-      Result.AddElement(TJsonObject.Create.AddPair('volumeextra',
-        tjsonNumber.Create(vVolumeIdExtra)));
+      Result.AddElement(TJsonObject.Create.AddPair('volumeextra', tjsonNumber.Create(vVolumeIdExtra)));
       if pNewConnection then
-        VQry.connection.commit;
+         VQry.connection.commit;
       VQry.Close;
     Except
       ON E: Exception do
@@ -806,131 +800,83 @@ begin
     try
       Fconexao.Query.Sql.Add('Declare @PedidoId Integer = ' +
         pJsonObject.GetValue<Integer>('pedidoId').ToString());
-      Fconexao.Query.Sql.Add('Declare @PedidoVolumeId Integer = ' +
-        pJsonObject.GetValue<Integer>('pedidoVolumeId').ToString());
-      Fconexao.Query.Sql.Add('Declare @UsuarioId Integer = ' +
-        pJsonObject.GetValue<Integer>('usuarioid').ToString());
-      Fconexao.Query.Sql.Add('Declare @Terminal VarChar(50) = ' +
-        QuotedStr(pJsonObject.GetValue<String>('terminal')));
+      Fconexao.Query.Sql.Add('Declare @PedidoVolumeId Integer = '+pJsonObject.GetValue<Integer>('pedidoVolumeId').ToString());
+      Fconexao.Query.Sql.Add('Declare @UsuarioId Integer    = '+pJsonObject.GetValue<Integer>('usuarioid').ToString());
+      Fconexao.Query.Sql.Add('Declare @Terminal VarChar(50) = '+QuotedStr(pJsonObject.GetValue<String>('terminal')));
       Fconexao.Query.Sql.Add('--Volumes Não expedido');
-      Fconexao.Query.Sql.Add
-        ('Update Est Set LoteId = Vl.LoteId, Qtde = Qtde - Vl.QtdSuprida');
+      Fconexao.Query.Sql.Add('Update Est Set LoteId = Vl.LoteId, Qtde = Qtde - Vl.QtdSuprida');
       Fconexao.Query.Sql.Add('	From Estoque Est');
-      Fconexao.Query.Sql.Add
-        ('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
+      Fconexao.Query.Sql.Add('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
       Fconexao.Query.Sql.Add('                from PedidoVolumeLotes Vl');
-      Fconexao.Query.Sql.Add
-        ('                Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      Fconexao.Query.Sql.Add
-        ('				Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
-      Fconexao.Query.Sql.Add
-        ('                Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      Fconexao.Query.Sql.Add
-        ('                      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      Fconexao.Query.Sql.Add
-        ('					  DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1) and');
-      Fconexao.Query.Sql.Add('					  DE.ProcessoId < 13');
-      Fconexao.Query.Sql.Add
-        ('                Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId and Vl.EnderecoId=Est.EnderecoId');
+      Fconexao.Query.Sql.Add('                Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
+      Fconexao.Query.Sql.Add('				            Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid and');
+      Fconexao.Query.Sql.Add('                                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento)');
+      Fconexao.Query.Sql.Add('                Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
+      Fconexao.Query.Sql.Add('                      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
+      Fconexao.Query.Sql.Add('					                 DE.ProcessoId < 13');
+      Fconexao.Query.Sql.Add('                Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId and Vl.EnderecoId=Est.EnderecoId');
       Fconexao.Query.Sql.Add('	Where Est.EstoqueTipoId = 6');
       Fconexao.Query.Sql.Add('--Volume Expedido');
       Fconexao.Query.Sql.Add('Update Est Set Qtde = Qtde + Vl.QtdSuprida');
       Fconexao.Query.Sql.Add('	From Estoque Est');
-      Fconexao.Query.Sql.Add
-        ('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
-      Fconexao.Query.Sql.Add('                from PedidoVolumeLotes Vl');
-      Fconexao.Query.Sql.Add
-        ('                Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      Fconexao.Query.Sql.Add
-        ('				Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
-      Fconexao.Query.Sql.Add
-        ('                Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      Fconexao.Query.Sql.Add
-        ('                      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      Fconexao.Query.Sql.Add
-        ('					  DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1) and');
-      Fconexao.Query.Sql.Add
-        ('					  DE.ProcessoId >= 13 and DE.ProcessoId <> 15');
-      Fconexao.Query.Sql.Add
-        ('                Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId');
-      Fconexao.Query.Sql.Add
-        ('	Where est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
-      Fconexao.Query.Sql.Add
-        ('Insert Into Estoque select Vl.LoteId, (Select EnderecoidVolumeExpedidoCancelado From Configuracao), 1, SUM(QtdSuprida),');
-      Fconexao.Query.Sql.Add
-        ('							   (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      Fconexao.Query.Sql.Add
-        ('							   (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
+      Fconexao.Query.Sql.Add('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
+      Fconexao.Query.Sql.Add('             from PedidoVolumeLotes Vl');
+      Fconexao.Query.Sql.Add('             Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
+      Fconexao.Query.Sql.Add('				         Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
+      Fconexao.Query.Sql.Add('                                           De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento)');
+      Fconexao.Query.Sql.Add('             Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
+      Fconexao.Query.Sql.Add('                   (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
+      Fconexao.Query.Sql.Add('					              DE.ProcessoId >= 13 and DE.ProcessoId <> 15');
+      Fconexao.Query.Sql.Add('             Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId');
+      Fconexao.Query.Sql.Add('	Where est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
+      Fconexao.Query.Sql.Add('Insert Into Estoque select Vl.LoteId, (Select EnderecoidVolumeExpedidoCancelado From Configuracao), 1, SUM(QtdSuprida),');
+      Fconexao.Query.Sql.Add('							   (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      Fconexao.Query.Sql.Add('							   (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
       Fconexao.Query.Sql.Add('							   Null, Null, Null, Null');
-      Fconexao.Query.Sql.Add
-        ('    from (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
-      Fconexao.Query.Sql.Add('                from PedidoVolumeLotes Vl');
-      Fconexao.Query.Sql.Add
-        ('                Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      Fconexao.Query.Sql.Add
-        ('				Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
-      Fconexao.Query.Sql.Add
-        ('                Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      Fconexao.Query.Sql.Add
-        ('                      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      Fconexao.Query.Sql.Add
-        ('					  DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1) and');
-      Fconexao.Query.Sql.Add
-        ('					  DE.ProcessoId >= 13 and DE.ProcessoId <> 15');
-      Fconexao.Query.Sql.Add('                Group by LoteId, EnderecoId) Vl');
-      Fconexao.Query.Sql.Add
-        ('	Left Join Estoque Est On Est.LoteId = Vl.Loteid And Est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
-      Fconexao.Query.Sql.Add('	where Est.LoteId Is Null');
-      Fconexao.Query.Sql.Add('	Group by Vl.LoteId, Vl.EnderecoId');
+      Fconexao.Query.Sql.Add('    from (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
+      Fconexao.Query.Sql.Add('          from PedidoVolumeLotes Vl');
+      Fconexao.Query.Sql.Add('          Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
+      Fconexao.Query.Sql.Add('				      Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
+      Fconexao.Query.Sql.Add('                                           De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento)');
+      Fconexao.Query.Sql.Add('          Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
+      Fconexao.Query.Sql.Add('                (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
+      Fconexao.Query.Sql.Add('					           DE.ProcessoId >= 13 and DE.ProcessoId <> 15');
+      Fconexao.Query.Sql.Add('          Group by LoteId, EnderecoId) Vl');
+      Fconexao.Query.Sql.Add('	   Left Join Estoque Est On Est.LoteId = Vl.Loteid And Est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
+      Fconexao.Query.Sql.Add('	   where Est.LoteId Is Null');
+      Fconexao.Query.Sql.Add('	   Group by Vl.LoteId, Vl.EnderecoId');
       Fconexao.Query.Sql.Add('--Registrar Cancelamento');
       Fconexao.Query.Sql.Add('Insert Into DocumentoEtapas');
-      Fconexao.Query.Sql.Add
-        ('   Select Uuid, 15, (Case When @UsuarioId=0 Then Null Else @UsuarioId End),');
-      Fconexao.Query.Sql.Add
-        ('          (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      Fconexao.Query.Sql.Add
-        ('		  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
+      Fconexao.Query.Sql.Add('   Select Uuid, 15, (Case When @UsuarioId=0 Then Null Else @UsuarioId End),');
+      Fconexao.Query.Sql.Add('          (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      Fconexao.Query.Sql.Add('		  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
       Fconexao.Query.Sql.Add('		  GetDate(), @Terminal, 1');
       Fconexao.Query.Sql.Add('   From PedidoVolumes');
-      Fconexao.Query.Sql.Add
-        ('   where (@PedidoId = 0 or @PedidoId = PedidoId) and');
-      Fconexao.Query.Sql.Add
-        ('         (@PedidoVolumeId = 0 or @PedidoVolumeId = PedidoVolumeId)');
-
-      Fconexao.Query.Sql.Add
-        ('Insert Into DocumentoEtapas Values ((Select Uuid From Pedido Where PedidoId = (Case when @PedidoId = 0 then (Select PedidoId From PedidoVolumes Where PedidoVolumeId = @PedidoVolumeId) Else @PedidoId End) ),');
+      Fconexao.Query.Sql.Add('   where (@PedidoId = 0 or @PedidoId = PedidoId) and');
+      Fconexao.Query.Sql.Add('         (@PedidoVolumeId = 0 or @PedidoVolumeId = PedidoVolumeId)');
+      Fconexao.Query.Sql.Add('Insert Into DocumentoEtapas Values ((Select Uuid From Pedido Where PedidoId = ');
+      Fconexao.Query.Sql.Add('                                    (Case when @PedidoId = 0 then ');
+      Fconexao.Query.Sql.Add('                                    (Select PedidoId From PedidoVolumes Where PedidoVolumeId = @PedidoVolumeId) Else @PedidoId End) ),');
       Fconexao.Query.Sql.Add('       (select Coalesce(Min(DE.ProcessoId), 15)');
       Fconexao.Query.Sql.Add('        From PedidoVolumes PV');
-      Fconexao.Query.Sql.Add
-        ('        Inner Join Pedido Ped On Ped.PedidoId = Pv.PedidoId');
-      Fconexao.Query.Sql.Add
-        ('        Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
-      Fconexao.Query.Sql.Add
-        ('        where (Pv.PedidoId = (Select PedidoId From PedidoVolumes Where PedidoVolumeId = @PedidoVolumeId)) and');
-      Fconexao.Query.Sql.Add
-        ('	             DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = PV.uuid and Status = 1) ),');
-      Fconexao.Query.Sql.Add
-        ('       @UsuarioId, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      Fconexao.Query.Sql.Add
-        ('       (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), GetDate(), @Terminal, 1)');
+      Fconexao.Query.Sql.Add('        Inner Join Pedido Ped On Ped.PedidoId = Pv.PedidoId');
+      Fconexao.Query.Sql.Add('        Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
+      Fconexao.Query.Sql.Add('        where (Pv.PedidoId = (Select PedidoId From PedidoVolumes Where PedidoVolumeId = @PedidoVolumeId))');
+      Fconexao.Query.Sql.Add('	              ),');
+      Fconexao.Query.Sql.Add('       @UsuarioId, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      Fconexao.Query.Sql.Add('       (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), GetDate(), @Terminal, 1)');
       if DebugHook <> 0 then
-        Fconexao.Query.Sql.SaveToFile('VolumeCancelar.Sql');
+         Fconexao.Query.Sql.SaveToFile('VolumeCancelar.Sql');
       Fconexao.Query.ExecSQL;
       if vTransacao then
-        Fconexao.Query.connection.commit;
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Ok',
-        'Volume Cancelado com sucesso!')));
-
-    Except
-      ON E: Exception do
+         Fconexao.Query.connection.commit;
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Ok', 'Volume Cancelado com sucesso!')));
+    Except ON E: Exception do
       Begin
         If vTransacao then
-          Fconexao.Query.connection.Rollback;
-
-        raise Exception.Create('Tabela: PedidoVolumes - ' +
-          StringReplace(E.Message,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]));
+           Fconexao.Query.connection.Rollback;
+       raise Exception.Create('Tabela: PedidoVolumes - '+StringReplace(E.Message,
+                              '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
       End;
     end;
   Finally
@@ -1463,15 +1409,13 @@ end;
 
 function TPedidoVolumeDao.GetPedidoVolumeSeparacao(pPedidoId: Integer;
   pPedidoVolumeId: Integer): TJsonArray;
-var
-  VQry, vQryLotes: TFdQuery;
-  ObjJson: TJsonObject;
-  PedidoVolumeItensDAO: TJsonArray;
-  ObjVolumeLotes: TPedidoVolumeLote;
-
+var vQry, vQryLotes: TFdQuery;
+    ObjJson: TJsonObject;
+    PedidoVolumeItensDAO: TJsonArray;
+    ObjVolumeLotes: TPedidoVolumeLote;
 begin
   if (pPedidoId = 0) and (pPedidoVolumeId = 0) then
-    raise Exception.Create('Identificação de Pedido/volume não informado!');
+     raise Exception.Create('Identificação de Pedido/volume não informado!');
   // Informe a Amanda
   Result := TJsonArray.Create;
   VQry := Fconexao.GetQuery;
@@ -1481,30 +1425,27 @@ begin
     VQry.ParamByName('pPedidoId').Value := pPedidoId;
     VQry.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
     if DebugHook <> 0 then
-      VQry.Sql.SaveToFile('VolumeParaSeparacao.Sql');
+       vQry.Sql.SaveToFile('VolumeParaSeparacao.Sql');
     VQry.Open;
     while Not VQry.Eof do
       With ObjPedidoVolume do
       Begin
-        PedidoVolumeId := VQry.FieldByName('PedidoVolumeId').AsInteger;
-        VolumeEmbalagem.EmbalagemId := VQry.FieldByName('EmbalagemId')
-          .AsInteger;
-        VolumeEmbalagem.Descricao := VQry.FieldByName('Descricao').AsString;
-        VolumeEmbalagem.Tipo := VQry.FieldByName('Tipo').AsString;
-        VolumeEmbalagem.TipoDescricao :=
-          VQry.FieldByName('TipoDescricao').AsString;
-        VolumeEmbalagem.Altura := VQry.FieldByName('Altura').AsFloat;
-        VolumeEmbalagem.Largura := VQry.FieldByName('Largura').AsFloat;
-        VolumeEmbalagem.Comprimento := VQry.FieldByName('Comprimento').AsFloat;
-        VolumeEmbalagem.Volume := VQry.FieldByName('Volume').AsFloat;
-        VolumeEmbalagem.Aproveitamento := VQry.FieldByName('Aproveitamento')
-          .AsInteger;
-        VolumeEmbalagem.Tara := VQry.FieldByName('Tara').AsFloat;
-        VolumeEmbalagem.Capacidade := VQry.FieldByName('Capacidade').AsFloat;
-        VolumeEmbalagem.QtdLacres := VQry.FieldByName('QtdLacres').AsInteger;
-        VolumeEmbalagem.CodBarras := VQry.FieldByName('CodBarras').AsInteger;
-        VolumeEmbalagem.Disponivel := VQry.FieldByName('Disponivel').AsInteger;
-        VolumeEmbalagem.PrecoCusto := VQry.FieldByName('PrecoCusto').AsFloat;
+        PedidoVolumeId                 := vQry.FieldByName('PedidoVolumeId').AsInteger;
+        VolumeEmbalagem.EmbalagemId    := vQry.FieldByName('EmbalagemId').AsInteger;
+        VolumeEmbalagem.Descricao      := vQry.FieldByName('Descricao').AsString;
+        VolumeEmbalagem.Tipo           := vQry.FieldByName('Tipo').AsString;
+        VolumeEmbalagem.TipoDescricao  := vQry.FieldByName('TipoDescricao').AsString;
+        VolumeEmbalagem.Altura         := vQry.FieldByName('Altura').AsFloat;
+        VolumeEmbalagem.Largura        := vQry.FieldByName('Largura').AsFloat;
+        VolumeEmbalagem.Comprimento    := vQry.FieldByName('Comprimento').AsFloat;
+        VolumeEmbalagem.Volume         := vQry.FieldByName('Volume').AsFloat;
+        VolumeEmbalagem.Aproveitamento := VQry.FieldByName('Aproveitamento').AsInteger;
+        VolumeEmbalagem.Tara           := VQry.FieldByName('Tara').AsFloat;
+        VolumeEmbalagem.Capacidade     := VQry.FieldByName('Capacidade').AsFloat;
+        VolumeEmbalagem.QtdLacres      := VQry.FieldByName('QtdLacres').AsInteger;
+        VolumeEmbalagem.CodBarras      := VQry.FieldByName('CodBarras').AsInteger;
+        VolumeEmbalagem.Disponivel     := VQry.FieldByName('Disponivel').AsInteger;
+        VolumeEmbalagem.PrecoCusto     := VQry.FieldByName('PrecoCusto').AsFloat;
         // VolumeEmbalagem.DtInclusao     := vQry.FieldByName('DtInclusao').AsDateTime;
         // VolumeEmbalagem.HrInclusao     := vQry.FieldByName('HrInclusao').AsDateTime;
         VolumeEmbalagem.Status := VQry.FieldByName('Status').AsInteger;
@@ -1514,8 +1455,7 @@ begin
         Pedido.Pessoa.PessoaId := VQry.FieldByName('PessoaId').AsInteger;
         Pedido.Pessoa.Razao := VQry.FieldByName('Razao').AsString;
         NumSequencia := VQry.FieldByName('Sequencia').AsInteger;
-        CaixaEmbalagem.CaixaEmbalagemId := VQry.FieldByName('CaixaEmbalagemId')
-          .AsInteger;
+        CaixaEmbalagem.CaixaEmbalagemId := VQry.FieldByName('CaixaEmbalagemId').AsInteger;
         ProcessoEtapaId := VQry.FieldByName('ProcessoId').AsInteger;
         ProcessoEtapa := VQry.FieldByName('Processo').AsString;
         Status := VQry.FieldByName('Status').AsInteger;
@@ -1523,86 +1463,52 @@ begin
         vQryLotes.Close;
         vQryLotes.Sql.Clear;
         vQryLotes.Sql.Add(TuEvolutConst.SqlPedidoVolumeLote);
-        vQryLotes.ParamByName('pPedidoVolumeId').Value :=
-          VQry.FieldByName('PedidoVolumeId').AsInteger;
+        vQryLotes.ParamByName('pPedidoVolumeId').Value := vQry.FieldByName('PedidoVolumeId').AsInteger;
         vQryLotes.Open;
-        while Not vQryLotes.Eof do
-          With Lotes do
+        while Not vQryLotes.Eof do With Lotes do
           Begin // Lotes do Volume
             ObjVolumeLotes := TPedidoVolumeLote.Create();
-            ObjVolumeLotes.PedidoVolumeLoteId :=
-              vQryLotes.FieldByName('PedidoVolumeLoteId').AsInteger;
-            ObjVolumeLotes.PedidoVolumeId :=
-              vQryLotes.FieldByName('PedidoVolumeId').AsInteger;
-            ObjVolumeLotes.Lote.Produto.IdProduto :=
-              vQryLotes.FieldByName('ProdutoId').AsInteger;
-            ObjVolumeLotes.Lote.Produto.CodProduto :=
-              vQryLotes.FieldByName('CodProduto').AsInteger;
-            ObjVolumeLotes.Lote.Produto.Descricao :=
-              vQryLotes.FieldByName('Descricao').AsString;
-            ObjVolumeLotes.Lote.Produto.IdProduto :=
-              vQryLotes.FieldByName('ProdutoId').AsInteger;
-            ObjVolumeLotes.Lote.Produto.CodProduto :=
-              vQryLotes.FieldByName('CodProduto').AsInteger;
-            ObjVolumeLotes.Lote.Lotes.LoteId := vQryLotes.FieldByName('LoteId')
-              .AsInteger;
-            ObjVolumeLotes.Lote.Lotes.DescrLote :=
-              vQryLotes.FieldByName('DescrLote').AsString;
-            ObjVolumeLotes.Lote.Lotes.Vencimento :=
-              vQryLotes.FieldByName('Vencimento').AsDateTime;
-            ObjVolumeLotes.Endereco.EnderecoId :=
-              vQryLotes.FieldByName('EnderecoId').AsInteger;
-            ObjVolumeLotes.Endereco.Descricao :=
-              vQryLotes.FieldByName('Endereco').AsString;
-            ObjVolumeLotes.Endereco.EnderecoRua.RuaId :=
-              vQryLotes.FieldByName('RuaId').AsInteger;
-            ObjVolumeLotes.Endereco.EnderecoRua.Descricao :=
-              vQryLotes.FieldByName('Rua').AsString;
-            ObjVolumeLotes.Endereco.EnderecoEstrutura.EstruturaId :=
-              vQryLotes.FieldByName('EstruturaId').AsInteger;
-            ObjVolumeLotes.Endereco.EnderecoEstrutura.Descricao :=
-              vQryLotes.FieldByName('Estrutura').AsString;
-            ObjVolumeLotes.Endereco.EnderecoEstrutura.Mascara :=
-              vQryLotes.FieldByName('Mascara').AsString;
-            ObjVolumeLotes.EstoqueTipoId :=
-              vQryLotes.FieldByName('EstoqueTipoId').AsInteger;
-            ObjVolumeLotes.EstoqueTipo :=
-              vQryLotes.FieldByName('EstoqueTipo').AsString;
-            ObjVolumeLotes.Quantidade := vQryLotes.FieldByName('Demanda')
-              .AsInteger; // Quantidade
-            ObjVolumeLotes.EmbalagemPadrao :=
-              vQryLotes.FieldByName('EmbalagemPadrao').AsInteger;
-            ObjVolumeLotes.QtdSuprida := vQryLotes.FieldByName('QtdSuprida')
-              .AsInteger;
-            ObjVolumeLotes.DtInclusao := vQryLotes.FieldByName('DtInclusao')
-              .AsDateTime;
-            ObjVolumeLotes.HrInclusao := vQryLotes.FieldByName('HrInclusao')
-              .AsDateTime;
-            ObjVolumeLotes.Terminal :=
-              vQryLotes.FieldByName('Terminal').AsString;
-            ObjVolumeLotes.Usuario.UsuarioId :=
-              vQryLotes.FieldByName('UsuarioId').AsInteger;
-            ObjVolumeLotes.Usuario.Nome :=
-              vQryLotes.FieldByName('Nome').AsString;
+            ObjVolumeLotes.PedidoVolumeLoteId      := vQryLotes.FieldByName('PedidoVolumeLoteId').AsInteger;
+            ObjVolumeLotes.PedidoVolumeId          := vQryLotes.FieldByName('PedidoVolumeId').AsInteger;
+            ObjVolumeLotes.Lote.Produto.IdProduto  := vQryLotes.FieldByName('ProdutoId').AsInteger;
+            ObjVolumeLotes.Lote.Produto.CodProduto := vQryLotes.FieldByName('CodProduto').AsInteger;
+            ObjVolumeLotes.Lote.Produto.Descricao  := vQryLotes.FieldByName('Descricao').AsString;
+            ObjVolumeLotes.Lote.Produto.IdProduto  := vQryLotes.FieldByName('ProdutoId').AsInteger;
+            ObjVolumeLotes.Lote.Produto.CodProduto := vQryLotes.FieldByName('CodProduto').AsInteger;
+            ObjVolumeLotes.Lote.Lotes.LoteId       := vQryLotes.FieldByName('LoteId').AsInteger;
+            ObjVolumeLotes.Lote.Lotes.DescrLote    := vQryLotes.FieldByName('DescrLote').AsString;
+            ObjVolumeLotes.Lote.Lotes.Vencimento   := vQryLotes.FieldByName('Vencimento').AsDateTime;
+            ObjVolumeLotes.Endereco.EnderecoId     := vQryLotes.FieldByName('EnderecoId').AsInteger;
+            ObjVolumeLotes.Endereco.Descricao      := vQryLotes.FieldByName('Endereco').AsString;
+            ObjVolumeLotes.Endereco.EnderecoRua.RuaId     := vQryLotes.FieldByName('RuaId').AsInteger;
+            ObjVolumeLotes.Endereco.EnderecoRua.Descricao := vQryLotes.FieldByName('Rua').AsString;
+            ObjVolumeLotes.Endereco.EnderecoEstrutura.EstruturaId := vQryLotes.FieldByName('EstruturaId').AsInteger;
+            ObjVolumeLotes.Endereco.EnderecoEstrutura.Descricao   := vQryLotes.FieldByName('Estrutura').AsString;
+            ObjVolumeLotes.Endereco.EnderecoEstrutura.Mascara     := vQryLotes.FieldByName('Mascara').AsString;
+            ObjVolumeLotes.EstoqueTipoId := vQryLotes.FieldByName('EstoqueTipoId').AsInteger;
+            ObjVolumeLotes.EstoqueTipo   := vQryLotes.FieldByName('EstoqueTipo').AsString;
+            ObjVolumeLotes.Quantidade := vQryLotes.FieldByName('Demanda').AsInteger; // Quantidade
+            ObjVolumeLotes.EmbalagemPadrao := vQryLotes.FieldByName('EmbalagemPadrao').AsInteger;
+            ObjVolumeLotes.QtdSuprida := vQryLotes.FieldByName('QtdSuprida').AsInteger;
+            ObjVolumeLotes.DtInclusao := vQryLotes.FieldByName('DtInclusao').AsDateTime;
+            ObjVolumeLotes.HrInclusao := vQryLotes.FieldByName('HrInclusao').AsDateTime;
+            ObjVolumeLotes.Terminal   := vQryLotes.FieldByName('Terminal').AsString;
+            ObjVolumeLotes.Usuario.UsuarioId := vQryLotes.FieldByName('UsuarioId').AsInteger;
+            ObjVolumeLotes.Usuario.Nome      := vQryLotes.FieldByName('Nome').AsString;
             ObjVolumeLotes.Processado := 0;
             vQryLotes.Next;
             ObjPedidoVolume.Lotes.Add(ObjVolumeLotes);
           End;
-        Result.AddElement(tJson.ObjectToJsonObject(ObjPedidoVolume,
-          [joDateFormatISO8601]));
+        Result.AddElement(tJson.ObjectToJsonObject(ObjPedidoVolume, [joDateFormatISO8601]));
         VQry.Next;
       End;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-
-      raise Exception.Create('Tabela: PedidoVolumes - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: PedidoVolumes - ' + StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
-  VQry.Close;
+  vQry.Close;
   vQryLotes.Close;
   Fconexao.Query.Close;
 end;

@@ -7,6 +7,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
   inherited PgcBase: TcxPageControl
     Top = 63
     Height = 626
+    Properties.ActivePage = TabPrincipal
     ExplicitTop = 63
     ExplicitHeight = 626
     ClientRectBottom = 626
@@ -530,7 +531,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label24: TLabel
           Left = 258
-          Top = 62
+          Top = 54
           Width = 146
           Height = 17
           CustomHint = BalloonHint1
@@ -538,7 +539,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label33: TLabel
           Left = 13
-          Top = 100
+          Top = 86
           Width = 151
           Height = 17
           CustomHint = BalloonHint1
@@ -546,7 +547,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label34: TLabel
           Left = 7
-          Top = 141
+          Top = 117
           Width = 156
           Height = 17
           CustomHint = BalloonHint1
@@ -554,7 +555,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object EdtBeepIndividualQtdMinima: TLabel
           Left = 313
-          Top = 100
+          Top = 86
           Width = 93
           Height = 17
           CustomHint = BalloonHint1
@@ -562,7 +563,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label36: TLabel
           Left = 280
-          Top = 141
+          Top = 117
           Width = 126
           Height = 17
           CustomHint = BalloonHint1
@@ -570,7 +571,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label37: TLabel
           Left = 17
-          Top = 183
+          Top = 149
           Width = 146
           Height = 17
           CustomHint = BalloonHint1
@@ -578,7 +579,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label46: TLabel
           Left = 253
-          Top = 183
+          Top = 149
           Width = 94
           Height = 17
           CustomHint = BalloonHint1
@@ -586,7 +587,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label48: TLabel
           Left = 90
-          Top = 217
+          Top = 179
           Width = 317
           Height = 17
           CustomHint = BalloonHint1
@@ -594,7 +595,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label49: TLabel
           Left = 27
-          Top = 62
+          Top = 54
           Width = 137
           Height = 17
           CustomHint = BalloonHint1
@@ -602,7 +603,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label50: TLabel
           Left = 14
-          Top = 252
+          Top = 211
           Width = 149
           Height = 17
           CustomHint = BalloonHint1
@@ -610,11 +611,19 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object Label51: TLabel
           Left = 270
-          Top = 252
+          Top = 208
           Width = 137
           Height = 17
           CustomHint = BalloonHint1
           Caption = 'Reconferir p/Expedi'#231#227'o'
+        end
+        object Label54: TLabel
+          Left = 21
+          Top = 243
+          Width = 142
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Auditar Volume c/Cortes'
         end
         object CbRegApanhe: TComboBox
           Left = 170
@@ -654,7 +663,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbPrinterEtqVolumeExtraAuto: TComboBox
           Left = 414
-          Top = 60
+          Top = 52
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -672,7 +681,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbBeepProdIndividual: TComboBox
           Left = 170
-          Top = 98
+          Top = 84
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -690,7 +699,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbIdentCaixaApanhe: TComboBox
           Left = 169
-          Top = 139
+          Top = 115
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -708,7 +717,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object EdtBeepIndividualLimiteUnid: TEdit
           Left = 414
-          Top = 96
+          Top = 82
           Width = 70
           Height = 25
           CustomHint = BalloonHint1
@@ -724,7 +733,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbCorteSupervisionado: TComboBox
           Left = 413
-          Top = 139
+          Top = 115
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -742,7 +751,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbLacreSeguranca: TComboBox
           Left = 169
-          Top = 181
+          Top = 147
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -760,7 +769,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbModeloEtqVolume: TComboBox
           Left = 354
-          Top = 181
+          Top = 147
           Width = 130
           Height = 22
           CustomHint = BalloonHint1
@@ -779,7 +788,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbVolCxaFechadaExpedicao: TComboBox
           Left = 413
-          Top = 215
+          Top = 177
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -797,7 +806,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbSeparacaoCodigoInterno: TComboBox
           Left = 170
-          Top = 60
+          Top = 52
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -815,7 +824,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbReconferirCorteReconferencia: TComboBox
           Left = 169
-          Top = 250
+          Top = 206
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -833,7 +842,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbExigirReconferenciaToExpedicao: TComboBox
           Left = 413
-          Top = 250
+          Top = 206
           Width = 71
           Height = 22
           CustomHint = BalloonHint1
@@ -845,6 +854,24 @@ inherited FrmConfiguracao: TFrmConfiguracao
           Font.Style = []
           ParentFont = False
           TabOrder = 12
+          Items.Strings = (
+            'N'#227'o'
+            'Sim')
+        end
+        object CbVolumeAuditoria: TComboBox
+          Left = 169
+          Top = 238
+          Width = 71
+          Height = 22
+          CustomHint = BalloonHint1
+          Style = csOwnerDrawFixed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 13
           Items.Strings = (
             'N'#227'o'
             'Sim')

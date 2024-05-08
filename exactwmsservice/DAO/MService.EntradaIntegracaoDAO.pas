@@ -11,10 +11,8 @@ uses
 Const SqlEntradaIntegracaoConsulta = ';With' + sLineBreak +
     'Ped as (Select Ped.*'+sLineBreak +
     '        From VPedidos Ped' + sLineBreak +
-//    '        Inner Join vDocumentoEtapas DE On De.Documento = Ped.Uuid' +sLineBreak +
-    '--Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Ped.Uuid'+sLineBreak+
-    'Inner Join vDocumentoEtapas De on De.Documento = Ped.uuid and --De.Horario = DeM.horario and'+sLineBreak+
-    '                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento )--and Horario = De.Horario) '+sLineBreak+
+    '        Inner Join vDocumentoEtapas De on De.Documento = Ped.uuid and --De.Horario = DeM.horario and'+sLineBreak+
+    '                                          De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento )--and Horario = De.Horario) '+sLineBreak+
     '        Where Ped.OperacaoTipoId = 3 and DE.ProcessoId in ( 5, 15, 31) and Ped.Status <> 31'+ sLineBreak +
     '          --And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+sLineBreak+
     '), '+ sLineBreak +

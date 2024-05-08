@@ -1255,31 +1255,21 @@ begin
     Tutil.Gravalog('1357-GetVolumeLote] terminal ' + ClientIP(Req));
     Try
       PedidoVolumeDAO := TPedidoVolumeDAO.Create;
-      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeLote
-        (StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
-      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno)
-        .Status(THTTPStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/lotes/:pedidovolumeid', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-    Except
-      on E: Exception do
+      JsonArrayRetorno := PedidoVolumeDAO.GetVolumeLote(StrToIntDef(Req.Params.Items['pedidovolumeid'], 0));
+      Res.Status(200).Send<TJsonArray>(JsonArrayRetorno).Status(THTTPStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/lotes/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
+                      'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except on E: Exception do
       Begin
         Tutil.Gravalog('GetVolumeLote] ' + E.Message);
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/lotes/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
-          500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/lotes/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayRetorno.ToString, #39, '', [rfReplaceAll]),
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
       End;
     End;
   Finally

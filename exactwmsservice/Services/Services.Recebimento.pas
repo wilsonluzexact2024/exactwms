@@ -41,9 +41,11 @@ Const
     sLineBreak + 'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData ' +
     sLineBreak + 'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao ' +
     sLineBreak + 'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao ' +
-    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid' + sLineBreak +
-    sLineBreak + 'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' + sLineBreak +
-                 'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi' + sLineBreak +
+    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid and' + sLineBreak +
+    '                                              De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) '+SlineBreak+
+    ''+sLineBreak+
+    'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' + sLineBreak +
+    'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi' + sLineBreak +
     sLineBreak + '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId' + sLineBreak +
 		  sLineBreak + '           Where Pl.CodProduto = @CodProduto' + sLineBreak +
 		  sLineBreak + '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'+slinebreak+
@@ -52,7 +54,6 @@ Const
     '      (@DocumentoNr = ' + #39 + #39 +' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak +
     '      (@Razao = '+ #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
     '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)' + sLineBreak +
-    '      And De.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1)'+
     sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
     sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' + sLineBreak +
     '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+ sLineBreak +
@@ -339,42 +340,30 @@ begin
         vQryValida.Sql.Clear;
         vQryValida.Sql.Add('Declare @RegistroERP VarChar(36) = :pRegistroERP');
         vQryValida.Sql.Add('Declare @PedidoId VarChar(36)    = :pPedidoId');
-        vQryValida.Sql.Add
-          ('select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Processo, De.Horario, Ped.Status');
+        vQryValida.Sql.Add('select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Processo, De.Horario, Ped.Status');
         vQryValida.Sql.Add('From pedido Ped');
-        vQryValida.Sql.Add
-          ('Left join vDocumentoEtapas De On De.Documento = Ped.uuid');
-        vQryValida.Sql.Add
-          ('where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and');
-        vQryValida.Sql.Add('      Ped.OperacaoTipoId = 3 And');
-        vQryValida.Sql.Add
-          ('      ((Cast(Ped.RegistroERP as VarChar(36)) = @RegistroERP) ');
-        vQryValida.Sql.Add
-          ('       Or (Cast(PedidoId as VarChar(36))        = @PedidoId))');
-        vQryValida.ParamByName('pRegistroERP').Value :=
-          pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
-        vQryValida.ParamByName('pPedidoId').Value := pJsonArray.Items[xPedido]
-          .GetValue<String>('pedidoid');
+        vQryValida.Sql.Add('Left join vDocumentoEtapas De On De.Documento = Ped.uuid');
+        vQryValida.Sql.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+        vQryValida.Sql.Add('where Ped.OperacaoTipoId = 3 And');
+        vQryValida.Sql.Add('      ((Cast(Ped.RegistroERP as VarChar(36)) = @RegistroERP) ');
+        vQryValida.Sql.Add('       Or (Cast(PedidoId as VarChar(36))        = @PedidoId))');
+        vQryValida.ParamByName('pRegistroERP').Value := pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
+        vQryValida.ParamByName('pPedidoId').Value := pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
         If DebugHook <> 0 Then
-          vQryValida.Sql.SaveToFile('ValidaEntrada.Sql');
+           vQryValida.Sql.SaveToFile('ValidaEntrada.Sql');
         vQryValida.Open;
-        if (vQryValida.IsEmpty) then
-        Begin
-          Result.AddElement(TJsonObject.Create.AddPair('status', '500')
-            .AddPair('entradaid', pJsonArray.Items[xPedido].GetValue<String>
-            ('pedidoid')).AddPair('documentoerp',
-            pJsonArray.Items[xPedido].GetValue<String>('pedidoid'))
-            .AddPair('mensagem', 'Documento não localizacado.'));
+        if (vQryValida.IsEmpty) then Begin
+           Result.AddElement(TJsonObject.Create.AddPair('status', '500')
+                 .AddPair('entradaid', pJsonArray.Items[xPedido].GetValue<String>('pedidoid')).AddPair('documentoerp',
+                                       pJsonArray.Items[xPedido].GetValue<String>('pedidoid'))
+                 .AddPair('mensagem', 'Documento não localizacado.'));
         End
         Else If ((vQryValida.FieldByName('ProcessoId').AsInteger > 4) or
-          (vQryValida.FieldByName('Status').AsInteger = 2)) then
-        Begin
+          (vQryValida.FieldByName('Status').AsInteger = 2)) then Begin
           Result.AddElement(TJsonObject.Create.AddPair('status', '500')
-            .AddPair('entradaid', pJsonArray.Items[xPedido].GetValue<String>
-            ('pedidoid')).AddPair('documentoerp',
-            pJsonArray.Items[xPedido].GetValue<String>('pedidoid'))
-            .AddPair('mensagem', 'Entrada não pode ser excluída. Processo: ' +
-            vQryValida.FieldByName('Processo').AsString));
+                .AddPair('entradaid', pJsonArray.Items[xPedido].GetValue<String>('pedidoid'))
+                .AddPair('documentoerp', pJsonArray.Items[xPedido].GetValue<String>('pedidoid'))
+                .AddPair('mensagem', 'Entrada não pode ser excluída. Processo: ' +vQryValida.FieldByName('Processo').AsString));
         End
         Else
         begin
@@ -408,12 +397,9 @@ begin
       End;
     End;
     vQryDelete.connection.Commit;
-
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
       vQryDelete.connection.Rollback;
-
       Result.AddElement(TJsonObject.Create.AddPair('status', '500')
         .AddPair('entradaid', TJsonNumber.Create(0)).AddPair('documentoerp', '')
         .AddPair('mensagem', E.Message));
@@ -464,24 +450,18 @@ begin
         vQryValida.Sql.Clear;
         vQryValida.Sql.Add('Declare @RegistroERP VarChar(36) = :pRegistroERP');
         vQryValida.Sql.Add('Declare @PedidoId VarChar(36)    = :pPedidoId');
-        vQryValida.Sql.Add
-          ('select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Processo, De.Horario, Ped.Status');
+        vQryValida.Sql.Add('select Ped.DocumentoNr, Ped.RegistroERP, De.ProcessoId, De.Descricao Processo, De.Horario, Ped.Status');
         vQryValida.Sql.Add('From pedido Ped');
-        vQryValida.Sql.Add
-          ('Left join vDocumentoEtapas De On De.Documento = Ped.uuid');
-        vQryValida.Sql.Add
-          ('where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and');
+        vQryValida.Sql.Add('Left join vDocumentoEtapas De On De.Documento = Ped.uuid and');
+        vQryValida.Sql.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+        vQryValida.Sql.Add('where --DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and');
         vQryValida.Sql.Add('      Ped.OperacaoTipoId = 3 And');
-        vQryValida.Sql.Add
-          ('      ((Cast(Ped.RegistroERP as VarChar(36)) = @RegistroERP) ');
-        vQryValida.Sql.Add
-          ('       Or (Cast(PedidoId as VarChar(36))        = @PedidoId))');
-        vQryValida.ParamByName('pRegistroERP').Value :=
-          pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
-        vQryValida.ParamByName('pPedidoId').Value := pJsonArray.Items[xPedido]
-          .GetValue<String>('pedidoid');
+        vQryValida.Sql.Add('      ((Cast(Ped.RegistroERP as VarChar(36)) = @RegistroERP) ');
+        vQryValida.Sql.Add('       Or (Cast(PedidoId as VarChar(36))        = @PedidoId))');
+        vQryValida.ParamByName('pRegistroERP').Value := pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
+        vQryValida.ParamByName('pPedidoId').Value := pJsonArray.Items[xPedido].GetValue<String>('pedidoid');
         If DebugHook <> 0 Then
-          vQryValida.Sql.SaveToFile('ValidaEntrada.Sql');
+           vQryValida.Sql.SaveToFile('ValidaEntrada.Sql');
         vQryValida.Open;
         if (vQryValida.IsEmpty) then
         Begin
@@ -566,9 +546,10 @@ begin
     vQryItens.Close;
     vQryItens.Sql.Clear;
     vQryItens.Sql.Add('Select De.ProcessoId, Ped.Status ');
-    vQryItens.Sql.Add('From vDocumentoEtapas De');
-    vQryItens.Sql.Add('Inner join Pedido Ped On Ped.Uuid = De.Documento');
-    vQryItens.Sql.Add('Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Ped.uuid and Status = 1) and Ped.PedidoId = '+EntradaId.ToString());
+    vQryItens.Sql.Add('From Pedido Ped');
+    vQryItens.Sql.Add('Inner join vDocumentoEtapas De On De.Documento = Ped.Uuid and');
+    vQryItens.Sql.Add('                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+    vQryItens.Sql.Add('Where Ped.PedidoId = '+EntradaId.ToString());
     vQryItens.Open;
     if (vQryItens.FieldByName('ProcessoId').AsInteger = 5) or (vQryItens.FieldByName('Status').AsInteger = 2) then
     Begin

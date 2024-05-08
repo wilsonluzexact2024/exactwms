@@ -321,10 +321,8 @@ function TServicePedidoSaida.GetPedidoAll(pPedidoId: Integer;
   pDataIni, pDataFin: TDate; pCodigoERP, pPessoaId: Integer;
   pRazao, pDocumentoNr, pRegistroERP: String; pRotaId, pRotaIdFinal, pZonaId,
   pProcessoId, pMontarCarga: Integer; pCodProduto: Int64;
-  pPedidoPendente: Integer; pCargaId: Integer; pNotaFiscalERP: String)
-  : TjSonArray;
-var
-  JsonRetorno: TJsonObject;
+  pPedidoPendente: Integer; pCargaId: Integer; pNotaFiscalERP: String) : TjSonArray;
+var JsonRetorno: TJsonObject;
 begin
   Result := TjSonArray.Create;
   try

@@ -366,36 +366,23 @@ begin
     FConexao.Query.SQL.Add('FROM dbo.PedidoVolumeLotes AS Vl');
     FConexao.Query.SQL.Add
       ('Inner join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-    FConexao.Query.SQL.Add
-      ('Inner Join vPedidos Ped on Ped.PedidoId = Pv .PedidoId');
-    FConexao.Query.SQL.Add
-      ('INNER JOIN dbo.vDocumentoEtapas De ON De.Documento = Pv.Uuid');
-    FConexao.Query.SQL.Add
-      ('INNER JOIN dbo.usuarios AS Usu ON Usu.usuarioid = Vl.usuarioid');
-    FConexao.Query.SQL.Add
-      ('INNER JOIN dbo.vProdutoLotes AS Pl ON Pl.LoteId = Vl.loteid');
-    FConexao.Query.SQL.Add
-      ('Inner join Rhema_Data Rd On Rd.IdData = Vl.DtInclusao');
-    FConexao.Query.SQL.Add
-      ('inner join rhema_Hora Rh On Rh.IdHora = Vl.HrInclusao');
-    FConexao.Query.SQL.Add
-      ('WHERE DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
-    FConexao.Query.SQL.Add
-      ('  And De.ProcessoId >7 and De.ProcessoId Not In (15,31)');
-    FConexao.Query.SQL.Add
-      ('  And (@DataPedidoInicial = 0 or  Ped.DocumentoData >= @DataPedidoInicial)');
-    FConexao.Query.SQL.Add
-      ('  And (@DataPedidoFinal = 0   or  Ped.DocumentoData <= @DataPedidoFinal)');
-    FConexao.Query.SQL.Add
-      ('  And (@DataProducaoInicial = 0 or  Rd.Data >= @DataProducaoInicial)');
-    FConexao.Query.SQL.Add
-      ('  And (@DataProducaoFinal = 0   or  Rd.Data <= @DataProducaoFinal)');
+    FConexao.Query.SQL.Add('Inner Join vPedidos Ped on Ped.PedidoId = Pv .PedidoId');
+    FConexao.Query.SQL.Add('INNER JOIN dbo.vDocumentoEtapas De ON De.Documento = Pv.Uuid and ');
+    FConexao.Query.SQL.Add('                                      De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
+    FConexao.Query.SQL.Add('INNER JOIN dbo.usuarios AS Usu ON Usu.usuarioid = Vl.usuarioid');
+    FConexao.Query.SQL.Add('INNER JOIN dbo.vProdutoLotes AS Pl ON Pl.LoteId = Vl.loteid');
+    FConexao.Query.SQL.Add('Inner join Rhema_Data Rd On Rd.IdData = Vl.DtInclusao');
+    FConexao.Query.SQL.Add('inner join rhema_Hora Rh On Rh.IdHora = Vl.HrInclusao');
+    FConexao.Query.SQL.Add('WHERE De.ProcessoId >7 and De.ProcessoId Not In (15,31)');
+    FConexao.Query.SQL.Add('  And (@DataPedidoInicial = 0 or  Ped.DocumentoData >= @DataPedidoInicial)');
+    FConexao.Query.SQL.Add('  And (@DataPedidoFinal = 0   or  Ped.DocumentoData <= @DataPedidoFinal)');
+    FConexao.Query.SQL.Add('  And (@DataProducaoInicial = 0 or  Rd.Data >= @DataProducaoInicial)');
+    FConexao.Query.SQL.Add('  And (@DataProducaoFinal = 0   or  Rd.Data <= @DataProducaoFinal)');
     FConexao.Query.SQL.Add('  And Pv.EmbalagemId Is Not null');
     FConexao.Query.SQL.Add('  And (@ZonaId = 0  or Pl.ZonaId = @ZonaId)');
     FConexao.Query.SQL.Add('  and (@UsuarioId = 0 or Vl.UsuarioId = @UsuarioId)');
     FConexao.Query.SQL.Add('Group by Rd.Data, --Ped.DocumentoData,');
-    FConexao.Query.SQL.Add
-      ('         Vl.UsuarioId, Usu.Nome--, De.ProcessoId, De.Descricao');
+    FConexao.Query.SQL.Add('         Vl.UsuarioId, Usu.Nome--, De.ProcessoId, De.Descricao');
     FConexao.Query.SQL.Add('order by Usu.Nome, Rd.Data');
     if aParams.ContainsKey('usuarioid') then
     Begin

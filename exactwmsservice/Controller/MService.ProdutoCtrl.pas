@@ -11,7 +11,8 @@ interface
 Uses System.UITypes, System.StrUtils, System.SysUtils, Generics.Collections,
   ProdutoClass,
   Horse,
-  System.JSON, Services.Produto;
+  System.JSON, Services.Produto,
+  Exactwmsservice.lib.utils, Horse.utils.ClientIP;
 
 Type
 
@@ -498,23 +499,27 @@ Var
   ProdutoDAO: TProdutoDAO;
   JsonArrayErro: TJsonArray;
   JsonArrayProduto: TJsonArray;
+  HrInicioLog: TTime;
 Begin
   Try
+    HrInicioLog := Time;
     ProdutoDAO := TProdutoDAO.Create;
     Try
       JsonArrayProduto := TJsonArray.Create;
-      JsonArrayProduto := TJSONObject.ParseJSONValue
-        (TEncoding.ASCII.GetBytes(Req.Body), 0) as TJsonArray;
-      Res.Send<TJsonArray>(ProdutoDAO.ImportDados(JsonArrayProduto))
-        .Status(THttpStatus.Created);
-    Except
-      ON E: Exception do
+      JsonArrayProduto := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0) as TJsonArray;
+      Res.Send<TJsonArray>(ProdutoDAO.ImportDados(JsonArrayProduto)).Status(THttpStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/monitorlog/lista', Trim(Req.Params.Content.Text), Req.Body, '','Retorno: ' + jsonArrayProduto.Count.ToString +
+                      ' Registros.', 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+    Except ON E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(TJSONObject.Create.AddPair('status', '500')
-          .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem',
-          E.Message));
+                     .AddPair('codproduto', TJsonNumber.Create(0)).AddPair('mensagem', E.Message));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/monitorlog/delete/:idreq', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString,
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     End;
   Finally

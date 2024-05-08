@@ -1154,24 +1154,22 @@ begin
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedido);
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
     if pDataIni = 0 then
-      FConexao.Query.ParamByName('pDataIni').Value := pDataIni
+       FConexao.Query.ParamByName('pDataIni').Value := pDataIni
     Else
-      FConexao.Query.ParamByName('pDataIni').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataIni);
+       FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', pDataIni);
     if pDataFin = 0 then
-      FConexao.Query.ParamByName('pDataFin').Value := pDataFin
+       FConexao.Query.ParamByName('pDataFin').Value := pDataFin
     Else
-      FConexao.Query.ParamByName('pDataFin').Value :=
-        FormatDateTime('YYYY-MM-DD', pDataFin);
-    FConexao.Query.ParamByName('pCodigoERP').Value := pCodigoERP;
-    FConexao.Query.ParamByName('pPessoaId').Value := pPessoaId;
+       FConexao.Query.ParamByName('pDataFin').Value  := FormatDateTime('YYYY-MM-DD', pDataFin);
+    FConexao.Query.ParamByName('pCodigoERP').Value   := pCodigoERP;
+    FConexao.Query.ParamByName('pPessoaId').Value    := pPessoaId;
     FConexao.Query.ParamByName('pDocumentoNr').Value := pDocumentoNr;
-    FConexao.Query.ParamByName('pRazao').Value := '%' + pRazao + '%';
+    FConexao.Query.ParamByName('pRazao').Value       := '%' + pRazao + '%';
     FConexao.Query.ParamByName('pRegistroERP').Value := pRegistroERP;
-    FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
-    FConexao.Query.ParamByName('pProcessoId').Value := pProcessoId;
+    FConexao.Query.ParamByName('pRotaId').Value      := pRotaId;
+    FConexao.Query.ParamByName('pProcessoId').Value  := pProcessoId;
     FConexao.Query.ParamByName('pMontarCarga').Value := pMontarCarga;
-    FConexao.Query.ParamByName('pCodProduto').Value := pCodProduto;
+    FConexao.Query.ParamByName('pCodProduto').Value  := pCodProduto;
     FConexao.Query.ParamByName('pPedidoPendente').Value := pPedidoPendente;
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('PedidoAll.Sql');
@@ -1792,17 +1790,15 @@ begin
     FConexao.Query.SQL.Add('			Inner Join Produto Prd On Prd.IdProduto = Pp.ProdutoId');
     FConexao.Query.SQL.Add('			Left Join Enderecamentos TEnd On TEnd.EnderecoId = Prd.EnderecoId');
     FConexao.Query.SQL.Add('   Inner join Rhema_Data DP On Dp.IdData = Ped.DocumentoData');
-    FConexao.Query.Sql.Add('Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid');
-    FConexao.Query.Sql.Add('Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and De.Horario = DeM.horario and');
-    FConexao.Query.Sql.Add('                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento and Horario = De.Horario) ');
+//    FConexao.Query.Sql.Add('Inner join (Select Documento, Max(DataHora) horario From DocumentoEtapas Where Status = 1 Group by Documento) DeM On DeM.Documento = Pv.Uuid');
+    FConexao.Query.Sql.Add('Inner Join vDocumentoEtapas De on De.Documento = Pv.uuid and --De.Horario = DeM.horario and');
+    FConexao.Query.Sql.Add('                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento) --and Horario = De.Horario) ');
     //    FConexao.Query.SQL.Add('   Left  Join vDocumentoEtapas De On De.Documento = Ped.uuid');
     FConexao.Query.SQL.Add('			Left Join (Select ProdutoId, SUM(Qtde) Estoque ');
     FConexao.Query.SQL.Add('              From vEstoqueProducao ');
     FConexao.Query.SQL.Add('              where PickingFixo = 1');
     FConexao.Query.SQL.Add('              Group by ProdutoId) Est ON Est.ProdutoId = PP.ProdutoId');
-    FConexao.Query.SQL.Add('			Where --Ped.PedidoId in (20, 1044) And--= @PedidoId');
-    FConexao.Query.SQL.Add('			      --DE.Horario = (Select Max(Horario) From vDocumentoEtapas Where Documento = Ped.Uuid and Status = 1) and');
-    FConexao.Query.SQL.Add('         De.ProcessoId <> 15');
+    FConexao.Query.SQL.Add('			Where De.ProcessoId <> 15');
     FConexao.Query.SQL.Add('		   and Ped.OperacaoTipoId = 2');
     if AParams.ContainsKey('datapedido') then begin
        FConexao.Query.SQL.Add(' 		      and Dp.Data = :DataPedido ');

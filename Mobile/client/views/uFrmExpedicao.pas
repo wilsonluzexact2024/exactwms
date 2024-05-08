@@ -159,7 +159,7 @@ end;
 
 Function TFrmExpedicao.GetVolume : Boolean;
 Var JsonArrayRetorno : TjsonArray;
-    vErro : String;
+    vErro, vVolumeId : String;
     ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
 begin
   Limpar;
@@ -184,7 +184,17 @@ begin
        Limpar;
        Exit;
     End
-    Else Begin
+{    Else If (FrmeXactWMS.ConfigWMS.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <>
+                                                             JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
+       vVolumeId := EdtCodigo.Text;
+       SetCampoDefault('EdtCodigo');
+       ShowErro('Enviar Volume'+vVolumeId+' para Auditoria!', 'alarme');
+       JsonArrayRetorno := Nil;
+       ObjPedidoVolumeCtrl.Free;
+       Limpar;
+       Exit;
+    End
+}    Else Begin
        EdtPedido.Text        := JsonArrayRetorno.Items[0].GetValue<String>('pedidoid')+' / '+JsonArrayRetorno.Items[0].GetValue<String>('pedidovolumeid');
        EdtDataDocumento.Text := JsonArrayRetorno.Items[0].GetValue<String>('documentodata');
        EdtDestino.Text       := JsonArrayRetorno.Items[0].GetValue<String>('codpessoaerp')+' '+

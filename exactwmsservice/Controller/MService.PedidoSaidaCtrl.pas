@@ -1267,48 +1267,46 @@ begin
       vMontarCarga := 0;
       vCargaId := 0;
       AQueryParam := Req.Query.Dictionary;
-      If AQueryParam.Count <= 0 then
-      Begin
-        JsonErro := TJSonArray.Create();
-        JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Parâmetros da consulta não definidos!')));
-        Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
-                        403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
-        FreeAndNil(LService);
-        Exit;
+      If AQueryParam.Count <= 0 then Begin
+         JsonErro := TJSonArray.Create();
+         JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Parâmetros da consulta não definidos!')));
+         Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
+                         403, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
+         FreeAndNil(LService);
+         Exit;
       End;
       vParamsOk := 0;
       if AQueryParam.ContainsKey('dataini') then Begin
-        Try
-          vDataIni := StrToDate(AQueryParam.Items['dataini']);
-          vParamsOk := vParamsOk + 1;
-        Except
-          JsonErro := TJSonArray.Create;
-          JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Inicial dos Pedidos é inválida!')));
-          Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
-          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                          '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
-                          403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-          FreeAndNil(LService);
-          Exit;
-        End;
+         Try
+           vDataIni := StrToDate(AQueryParam.Items['dataini']);
+           vParamsOk := vParamsOk + 1;
+         Except
+           JsonErro := TJSonArray.Create;
+           JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Inicial dos Pedidos é inválida!')));
+           Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
+           Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                           '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
+                           403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+           FreeAndNil(LService);
+           Exit;
+         End;
       End;
       if AQueryParam.ContainsKey('datafin') then Begin
-        Try
-          vDataFin := StrToDate(AQueryParam.Items['datafin']);
-          vParamsOk := vParamsOk + 1;
-        Except
-          JsonErro := TJSonArray.Create;
-          JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Final dos Pedidos é inválida!')));
-          Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
-          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                          '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
-                          403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-          FreeAndNil(LService);
-          Exit;
-        End;
+         Try
+           vDataFin := StrToDate(AQueryParam.Items['datafin']);
+           vParamsOk := vParamsOk + 1;
+         Except
+           JsonErro := TJSonArray.Create;
+           JsonErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Final dos Pedidos é inválida!')));
+           Res.Send<TJSonArray>(JsonErro).Status(THttpStatus.InternalServerError);
+           Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                           '/v1/saida/pedido', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonErro.ToString, #39, '', [rfReplaceAll]),
+                           403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+           FreeAndNil(LService);
+           Exit;
+         End;
       End;
       if AQueryParam.ContainsKey('pedidoid') then Begin
          vPedidoId := StrToIntDef(AQueryParam.Items['pedidoid'], 0);

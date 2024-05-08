@@ -59,6 +59,7 @@ Type
     FSeparacaoCodInterno            : Integer;
     FReconferirCorteReconferencia   : Integer;
     FExigirReconferenciaToExpedicao : Integer;
+    FVolumeAuditoria                : Integer;
     //Inventario
     FInventarioForcarMaxContagem    : Integer;
     FInventarioDivergenciaSegregado : Integer;
@@ -152,6 +153,7 @@ Type
     Property ApanheConsolidado              : Integer Read FApanheConsolidado              Write FApanheConsolidado;
     Property ReconferirCorteReconferencia   : Integer Read FReconferirCorteReconferencia   Write FReconferirCorteReconferencia;
     Property ExigirReconferenciaToExpedicao : Integer Read FExigirReconferenciaToExpedicao Write FExigirReconferenciaToExpedicao;
+    Property VolumeAuditoria                : Integer Read FVolumeAuditoria                Write FVolumeAuditoria;
     Property InventarioForcarMaxContagem    : Integer Read FInventarioForcarMaxContagem    Write FInventarioForcarMaxContagem;
     Property InventarioDivergenciaSegregado : Integer Read FInventarioDivergenciaSegregado Write FInventarioDivergenciaSegregado;
     Property IntegrarAjusteERP              : Integer Read FIntegrarAjusteERP       Write FIntegrarAjusteERP;
@@ -234,6 +236,7 @@ begin
   FApanheConsolidado          := 0;
   FReconferirCorteReconferencia   := 1;
   FExigirReconferenciaToExpedicao := 0;
+  FVolumeAuditoria                := 0;
   FInventarioForcarMaxContagem    := 0;
   FInventarioDivergenciaSegregado := 0;
   FIntegrarAjusteERP              := 0;

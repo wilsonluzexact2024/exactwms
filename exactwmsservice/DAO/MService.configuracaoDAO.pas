@@ -197,6 +197,7 @@ begin
       '     , IdentCaixaApanhe               = ' + pJsonConfiguracao.GetValue<Integer>('identCaixaApanhe').ToString + sLineBreak +
       '     , ReconferirCorteReconferencia         = ' + pJsonConfiguracao.GetValue<Integer>('reconferirCorteReconferencia').ToString + sLineBreak +
       '     , ExigirReconferenciaToExpedicao = ' +pJsonConfiguracao.GetValue<Integer>('exigirReconferenciaToExpedicao').ToString + sLineBreak +
+      '     , VolumeAuditoria                = '+pJsonConfiguracao.GetValue<Integer>('volumeAuditoria').ToString + sLineBreak +
       '     , CorteSupervisionado = ' +pJsonConfiguracao.GetValue<Integer>('corteSupervisionado').ToString + sLineBreak +
       '     , VolCxaFechadaExpedicao = ' + pJsonConfiguracao.GetValue<Integer>('volCxaFechadaExpedicao').ToString + sLineBreak +
       '     , InventarioForcarMaxContagem    = ' + pJsonConfiguracao.GetValue<Integer>('inventarioForcarMaxContagem').ToString + sLineBreak +

@@ -271,12 +271,12 @@
         <Android_LauncherIcon144>Images\Icone\res\mipmap-xxhdpi144x144\GrupoX3.png</Android_LauncherIcon144>
         <Android_SplashImage426>Images\Splash 426x320.png</Android_SplashImage426>
         <DCC_ExeOutput>C:\App\eXactWMS\Mobile\</DCC_ExeOutput>
-        <VerInfo_Keys>package=br.com.rhemasyssolucoes.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=6;versionName=2.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=br.com.rhemasyssolucoes.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=7;versionName=2.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <DCC_GenerateAndroidAppBundleFile>true</DCC_GenerateAndroidAppBundleFile>
         <AUP_REQUEST_INSTALL_PACKAGES>true</AUP_REQUEST_INSTALL_PACKAGES>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
-        <VerInfo_Build>6</VerInfo_Build>
+        <VerInfo_Build>7</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
