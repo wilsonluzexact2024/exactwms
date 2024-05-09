@@ -724,12 +724,10 @@ begin
   End;
 End;
 
-Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-var
-  PedidoVolumeDAO: TPedidoVolumeDAO;
-  JsonArrayRetorno: TJsonArray;
-  HrInicioLog: Ttime;
+Procedure EtiquetaPorVolume(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var PedidoVolumeDAO: TPedidoVolumeDAO;
+    JsonArrayRetorno: TJsonArray;
+    HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;

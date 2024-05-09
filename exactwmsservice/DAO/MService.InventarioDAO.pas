@@ -596,60 +596,39 @@ begin
   FConexao.Query.connection.StartTransaction;
   FConexao.Query.connection.TxOptions.Isolation := xiReadCommitted;
   FConexao.Query.SQL.Add(TuEvolutConst.SqlSaveContagem);
-  vErro := False;
-  vInventarioId := pJsonArray.Items[0].GetValue<Integer>('inventarioid');
-  vUsuarioId := pJsonArray.Items[0].GetValue<Integer>('usuarioid');
-  vEstacao := pJsonArray.Items[0].GetValue<String>('estacao');
+  vErro             := False;
+  vInventarioId     := pJsonArray.Items[0].GetValue<Integer>('inventarioid');
+  vUsuarioId        := pJsonArray.Items[0].GetValue<Integer>('usuarioid');
+  vEstacao          := pJsonArray.Items[0].GetValue<String>('estacao');
   For xItemContagem := 0 to Pred(pJsonArray.Count) do
   Begin
     Try
       FConexao.Query.Close;
       FConexao.Query.SQL.Clear;
       FConexao.Query.SQL.Add(TuEvolutConst.SqlSaveContagem);
-      FConexao.Query.ParamByName('pInventarioId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('inventarioid');
-      FConexao.Query.ParamByName('pEnderecoId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('enderecoid');
-      FConexao.Query.ParamByName('ProdutoId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('produtoid');
-      FConexao.Query.ParamByName('pLoteId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('loteid');
-      FConexao.Query.ParamByName('pDescrLote').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<String>('descrlote');
-      if pJsonArray.Items[xItemContagem].GetValue<String>('descrlote') = '' then
-      Begin
-        FConexao.Query.ParamByName('pDtFabricacao').Value := 0;
-        FConexao.Query.ParamByName('pDtVencimento').Value := 0;
+      FConexao.Query.ParamByName('pInventarioId').Value := pJsonArray.Items[xItemContagem].GetValue<Integer>('inventarioid');
+      FConexao.Query.ParamByName('pEnderecoId').Value   := pJsonArray.Items[xItemContagem].GetValue<Integer>('enderecoid');
+      FConexao.Query.ParamByName('ProdutoId').Value     := pJsonArray.Items[xItemContagem].GetValue<Integer>('produtoid');
+      FConexao.Query.ParamByName('pLoteId').Value       := pJsonArray.Items[xItemContagem].GetValue<Integer>('loteid');
+      FConexao.Query.ParamByName('pDescrLote').Value    := pJsonArray.Items[xItemContagem].GetValue<String>('descrlote');
+      if pJsonArray.Items[xItemContagem].GetValue<String>('descrlote') = '' then Begin
+         FConexao.Query.ParamByName('pDtFabricacao').Value := 0;
+         FConexao.Query.ParamByName('pDtVencimento').Value := 0;
       End
-      Else
-      begin
-        FConexao.Query.ParamByName('pDtFabricacao').Value :=
-          FormatDateTime('YYYY-MM-DD',
-          StrtoDate(pJsonArray.Items[xItemContagem].GetValue<String>
-          ('dtfabricacao')));
-        FConexao.Query.ParamByName('pDtVencimento').Value :=
-          FormatDateTime('YYYY-MM-DD',
-          StrtoDate(pJsonArray.Items[xItemContagem].GetValue<String>
-          ('dtvencimento')));
+      Else begin
+         FConexao.Query.ParamByName('pDtFabricacao').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(pJsonArray.Items[xItemContagem].GetValue<String>('dtfabricacao')));
+         FConexao.Query.ParamByName('pDtVencimento').Value := FormatDateTime('YYYY-MM-DD', StrtoDate(pJsonArray.Items[xItemContagem].GetValue<String>('dtvencimento')));
       end;
-      FConexao.Query.ParamByName('pItemId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('itemid');
-      FConexao.Query.ParamByName('pQuantidade').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('quantidade');
-      FConexao.Query.ParamByName('pStatus').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<String>('status');
-      FConexao.Query.ParamByName('pUsuarioId').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<Integer>('usuarioid');
-      FConexao.Query.ParamByName('pEstacao').Value :=
-        pJsonArray.Items[xItemContagem].GetValue<String>('estacao');
-
+      FConexao.Query.ParamByName('pItemId').Value     := pJsonArray.Items[xItemContagem].GetValue<Integer>('itemid');
+      FConexao.Query.ParamByName('pQuantidade').Value := pJsonArray.Items[xItemContagem].GetValue<Integer>('quantidade');
+      FConexao.Query.ParamByName('pStatus').Value     := pJsonArray.Items[xItemContagem].GetValue<String>('status');
+      FConexao.Query.ParamByName('pUsuarioId').Value  := pJsonArray.Items[xItemContagem].GetValue<Integer>('usuarioid');
+      FConexao.Query.ParamByName('pEstacao').Value    := pJsonArray.Items[xItemContagem].GetValue<String>('estacao');
       if DebugHook <> 0 then
-        FConexao.Query.SQL.SaveToFile('SaveContagem' + pJsonArray.Items
-          [xItemContagem].GetValue<Integer>('inventarioid').ToString + '_' +
-          pJsonArray.Items[xItemContagem].GetValue<Integer>('enderecoid')
-          .ToString + '_' + pJsonArray.Items[xItemContagem].GetValue<Integer>
-          ('produtoid').ToString + '_' + pJsonArray.Items[xItemContagem]
-          .GetValue<Integer>('loteid').ToString + '.Sql');
+         FConexao.Query.SQL.SaveToFile('SaveContagem' + pJsonArray.Items[xItemContagem].GetValue<Integer>('inventarioid').ToString + '_'+
+                                       pJsonArray.Items[xItemContagem].GetValue<Integer>('enderecoid').ToString+
+                                       '_' + pJsonArray.Items[xItemContagem].GetValue<Integer>('produtoid').ToString + '_'+
+                                       pJsonArray.Items[xItemContagem].GetValue<Integer>('loteid').ToString + '.Sql');
       FConexao.Query.ExecSQL;
     Except
       On E: Exception do
@@ -665,10 +644,8 @@ begin
   End;
   Result := TJsonObject.Create;
   if vErro then
-    Result.AddPair('Erro', 'Tabela: InventarioContagem - ' +
-      StringReplace(vErroMens,
-      '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-      '', [rfReplaceAll]))
+     Result.AddPair('Erro', 'Tabela: InventarioContagem - '+StringReplace( vErroMens,
+                    '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]))
   Else
   Begin
     Try
@@ -685,11 +662,9 @@ begin
       FConexao.Query.SQL.Add('   From Inventarios I');
       FConexao.Query.SQL.Add('   Inner Join vDocumentoEtapas DE On De.Documento = I.uuid and');
       FConexao.Query.SQL.Add('                                     De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
-      FConexao.Query.SQL.Add('   where I.InventarioId = '+vInventarioId.ToString()+')');
-//      FConexao.Query.SQL.Add('         and DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = I.uuid and Status = 1)) = '
-      FConexao.Query.SQL.Add('  '+#39+'Inventario - Gerado'+#39+' Begin');
-      FConexao.Query.SQL.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where InventarioId = '
-        + vInventarioId.ToString() + ')');
+      FConexao.Query.SQL.Add('   where I.InventarioId = '+vInventarioId.ToString()+') = '#39+'Inventario - Gerado'+#39);
+      FConexao.Query.SQL.Add('Begin');
+      FConexao.Query.SQL.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where InventarioId = '+vInventarioId.ToString() + ')');
       FConexao.Query.SQL.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
       FConexao.Query.ParamByName('pTerminal').Value := vEstacao;
       FConexao.Query.ParamByName('pProcessoId').Value := vProcessoId;
@@ -703,10 +678,8 @@ begin
       On E: Exception do
       Begin
         FConexao.Query.connection.Rollback;
-        Result.AddPair('Erro', 'Tabela: InventarioContagem - ' +
-          StringReplace(vErroMens,
-          '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-          '', [rfReplaceAll]))
+        Result.AddPair('Erro', 'Tabela: InventarioContagem - '+StringReplace(vErroMens,
+                       '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]))
       End;
     End;
   End;

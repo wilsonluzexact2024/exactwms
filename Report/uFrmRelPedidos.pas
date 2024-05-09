@@ -300,7 +300,7 @@ type
     Procedure TotalizarLstVolumeConsulta;
     Procedure LimparConsultaVolumes(Sender: TObject);
     Procedure MontaListaVolumeConsulta(pJsonArrayRetorno : TJsonArray);
-    Procedure ReimpressaoTAGVolume;
+    Procedure ReimpressaoTAGVolume(pPedidoVolumeId : Integer);
   public
     { Public declarations }
   end;
@@ -314,7 +314,8 @@ implementation
 
 uses uFuncoes, RotaCtrl, PessoaCtrl, Views.Pequisa.Pessoas, Views.Pequisa.Rotas,
   uFrmeXactWMS, Views.Pequisa.Processos, ProcessoCtrl, uFrmRelResumoPedidos, Views.Pequisa.Produtos,
-  ProdutoCtrl, EnderecoCtrl, EnderecamentoZonaCtrl, Views.Pequisa.EnderecamentoZonas;
+  ProdutoCtrl, EnderecoCtrl, EnderecamentoZonaCtrl, Views.Pequisa.EnderecamentoZonas,
+  uFrmPrintTAG;
 
 procedure TFrmRelPedidos.BtnExportarStandClick(Sender: TObject);
 begin
@@ -1246,10 +1247,10 @@ begin
      TAdvStringGrid(Sender).QSort;
      Exit;
   End
-  Else if (aCol = 9) and (Sender=LstVolumeConsulta) then Begin
+  Else if (aRow > 0) and (aCol = 9) and (Sender=LstVolumeConsulta) then Begin
      If (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Relatórios - Re-Impressão de TAG')) then
         raise Exception.Create('Acesso não autorizado para Reimpressão de TAG!');
-     ReimpressaoTAGVolume;
+     ReimpressaoTAGVolume(TAdvStringGrid(Sender).Cells[0, aRow].ToInteger());
   End
   Else if (aColGrid = aCol) and (ARow>0) and (TAdvStringGrid(Sender).Cells[8, aRow]='2') and (TAdvStringGrid(Sender).Cells[8, 0]='Ação') then Begin
      //APlicar Controle de Acesso
@@ -2439,63 +2440,68 @@ begin
 
 end;
 
-procedure TFrmRelPedidos.ReimpressaoTAGVolume;
-Var vPrintTag, vEmbalagem, vPedidoVolumeId : Integer;
+procedure TFrmRelPedidos.ReimpressaoTAGVolume(pPedidoVolumeId : Integer);
+Var vPrintTag, vEmbalagem : Integer;
     ObjPedidoVolumeCtrl    : TPedidoVOlumeCtrl;
     jsonEtiquetasPorVolume : tjsonArray;
-    vErro : String;
+    vErro, vPredIni, vPredFin, pMascara : String;
+    vCaixaEmbalagemId : Integer;
 begin
-  raise Exception.Create('Funcionalidade em Desenvolvimento...');
+  if DebugHook = 0 then
+     raise Exception.Create('Funcionalidade em Desenvolvimento...');
+
+
+
+
   vPrintTag  := 2;
   vEmbalagem := 2;
   ObjPedidoVolumeCtrl := TPedidoVOlumeCtrl.Create;
-  jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume( vPedidoVolumeId);
+  jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume(pPedidoVolumeId);
   if jsonEtiquetasPorVolume.Items[0].tryGetValue<String>('Erro', vErro) then Begin
-     ShowErro('Erro na Impressão. Volume: '+EdtPedidoVolumeId.Text+' - '+vErro);
+     ShowErro('Erro na Impressão. Volume: '+pPedidoVolumeId.ToString()+' - '+vErro);
      jsonEtiquetasPorVolume := Nil;
      ObjPedidoVolumeCtrl.Free;
   End;
- {
-               if (StrToIntDef(EdtPedidoVolumeId.Text, 0) = 0) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) = vPedidoVolumeId) then Begin
-                  vCaixaEmbalagemId := JsonArrayRetorno.Items[xVolumes].GetValue<Integer>('embalagemid');
-                  if (vCaixaEmbalagemId <> 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [1, 2])) then Begin
-                     jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume( vPedidoVolumeId);
-                     If (((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 3) and (RbProcesso.ItemIndex = 0)) or
-                        ((jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') > 2) and (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') < 13) and (RbProcesso.ItemIndex > 0))) or (EdtPedidoVolumeId.Text<>'') then Begin
-                        pPedidoId          := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid');
-                        pDocumentoOriginal := jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal');
-                        pDtPedido          := DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido')));
-                        pPedidoVolumeId    := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidovolumeid');
-                        pSequencia         := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia');
-                        pCodPessoaERP      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp');
-                        prazao             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia');
-                        pRotaId            := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid');
-                        protas             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas');
-                        pProcessoId        := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid');
-                        pMascara           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('mascara');
-                        vPredini           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('inicio');
-                        vPredIni           := copy(EnderecoMask(vPredIni, pMascara, True), 1, 5);
-                        vPredFin           := jsonEtiquetasPorVolume.items[0].GetValue<String>('termino');
-                        vPredFin           := copy(EnderecoMask(vPredFin, pMascara, True), 1, 5);
-                        vItens             := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens');
-                        vTotUnid           := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida');
-                        vTotalVolumes      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes');
-                        if (pProcessoId < 13) or (StrToIntDef(EdtPedidoVolumeId.Text, 0) <> 0) then
-                           TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
-                                                          jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), vItens,
-                                                          vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal, pProcessoId, pRotaId, vTotalVolumes);
-                     End;
-                  End
-                  Else If (vCaixaEmbalagemId = 0) and ((StrtoIntDef(EdtPedidoVolumeId.Text,0)>0) or (RgEmbalagemTipo.ItemIndex in [0, 2])) then Begin
-                    //Buscar os dados para o VOlume
-                    if FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then //Padrão eXactWMS
-                       TagVolumeCaixaFechada8x10etqEpl2(vPedidoVolumeId)
-                    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then //Padrão eXactWMS com Endereço
-                       TagVolumeCaixaFechada_Address_8x10etqEpl2(vPedidoVolumeId)
-                    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then //Destaque para Cliente e Rota
-                       TagVolumeCaixaFechada_RotaClienteDestaque_8x10etqEpl2(vPedidoVolumeId);
-                  End;
-}
+  vCaixaEmbalagemId := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('embalagemid');
+  if (vCaixaEmbalagemId = 1)then Begin
+     jsonEtiquetasPorVolume := ObjPedidoVolumeCtrl.EtiquetasPorVolume(pPedidoVolumeId);
+     If (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') > 2)and
+        (jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid') <> 15) then Begin
+        pMascara           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('mascara');
+        vPredini           := jsonEtiquetasPorVolume.Items[0].GetValue<String>('inicio');
+        vPredIni           := copy(EnderecoMask(vPredIni, pMascara, True), 1, 5);
+        vPredFin           := jsonEtiquetasPorVolume.items[0].GetValue<String>('termino');
+        vPredFin           := copy(EnderecoMask(vPredFin, pMascara, True), 1, 5);
+        if (Assigned(frmPrintTAG) = False) then
+           FrmPrintTAG := TfrmPrintTAG.Create(Application);
+        try
+          FrmPrintTAG.Module     := 'Relatórios';
+          FrmPrintTAG.ModuleMenu := 'Impressão Tag';//+#39+'s';
+          FrmPrintTag.TagVolumeFracionado8x10etqEpl2(jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid'),
+                      pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp'),
+                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens'),
+                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida'), jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia'),
+                      jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'))),
+                      jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid'),
+                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes'));
+        except on e: Exception do
+          begin
+            FreeAndNil(frmPrintTAG);
+            raise Exception.Create(e.Message);
+          end;
+        end;
+     End;
+  End
+  Else Begin
+    //Buscar os dados para o VOlume
+    if FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then //Padrão eXactWMS
+       FrmPrintTag.TagVolumeCaixaFechada8x10etqEpl2(pPedidoVolumeId)
+    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then //Padrão eXactWMS com Endereço
+       FrmPrintTag.TagVolumeCaixaFechada_Address_8x10etqEpl2(pPedidoVolumeId)
+    Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then //Destaque para Cliente e Rota
+       FrmPrintTag.TagVolumeCaixaFechada_RotaClienteDestaque_8x10etqEpl2(pPedidoVolumeId);
+  End;
+
 end;
 
 procedure TFrmRelPedidos.TabPedidosShow(Sender: TObject);

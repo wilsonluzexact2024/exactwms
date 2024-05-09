@@ -3263,7 +3263,7 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
       'Declare @PedidoVolumeId Integer = :pPedidoVolumeId' + sLineBreak +
       'Select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pe.CodPessoaERP, Pe.Razao, pe.Fantasia, '+sLineBreak+
       '       Ro.RotaId, Ro.Descricao Rotas, Dp.Data as DtPedido, De.ProcessoId, De.Descricao ProcessoEtapa,'+sLineBreak +
-      '	   Vl.Itens, PVL.QtdSuprida, LEnd.Inicio, LEnd.Termino, LEnd.Mascara, Pr.Ordem, TotalVolumes'+sLineBreak+
+      '	      Vl.Itens, PVL.QtdSuprida, LEnd.Inicio, LEnd.Termino, LEnd.Mascara, Pr.Ordem, TotalVolumes, Pv.EmbalagemId'+sLineBreak+
       'From PedidoVolumes Pv' + sLineBreak +
       'Inner join Pedido Pd On Pd.PedidoId = Pv.PedidoId' + sLineBreak +
       'Inner Join Pessoa Pe On Pe.PessoaId = Pd.PessoaId' + sLineBreak +
@@ -5114,10 +5114,10 @@ Const SqlRelColetaPulmao = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak 
       '   Inner Join inventarioinicial II On II.itemid = Ic.itemid' + sLineBreak
       + '   Where II.ProdutoId = @ProdutoId' + sLineBreak + 'End';
 
-  Const
-    SqlSaveContagem = 'Declare @InventarioId Integer  = :pInventarioId' +
-      sLineBreak + 'Declare @Enderecoid Integer    = :pEnderecoId' + sLineBreak
-      + 'Declare @ProdutoId Integer     = :ProdutoId' + sLineBreak +
+Const SqlSaveContagem =
+      'Declare @InventarioId Integer  = :pInventarioId'+sLineBreak+
+      'Declare @Enderecoid Integer    = :pEnderecoId' + sLineBreak+
+      'Declare @ProdutoId Integer     = :ProdutoId' + sLineBreak +
       'Declare @LoteId Integer        = :pLoteId' + sLineBreak +
       'Declare @DescrLote VarChar(30) = :pDescrLote' + sLineBreak +
       'Declare @DtFabricacao DateTime = :pDtFabricacao' + sLineBreak +
@@ -5129,42 +5129,34 @@ Const SqlRelColetaPulmao = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak 
       'Declare @Estacao Varchar(50)   = :pEstacao' + sLineBreak +
       'if @DescrLote <> ' + #39 + #39 + ' Begin ' + sLineBreak +
       '   If @LoteId = 0 Begin' + sLineBreak +
-      '      Insert ProdutoLotes Values (@ProdutoId, @DescrLote, ' + sLineBreak
-      + '            (Select IdData From Rhema_Data Where Data = @DtFabricacao),'
-      + sLineBreak +
-      '            (Select IdData From Rhema_Data Where Data = @DtVencimento), '
-      + sLineBreak + '          ' + SqlDataAtual + ', ' + SqlHoraAtual +
-      ', NewId())' + sLineBreak + '   	  Set @LoteId = SCOPE_IDENTITY()' +
-      sLineBreak + '   End' + sLineBreak + '   Else Begin' + sLineBreak +
-      '      Update ProdutoLotes set Fabricacao = (Select IdData From Rhema_Data Where Data = @DtFabricacao), '
-      + sLineBreak +
-      '                              Vencimento = (Select IdData From Rhema_Data Where Data = @DtVencimento)'
-      + sLineBreak + '      Where LoteId = @LoteId' + sLineBreak + '   End' +
-      sLineBreak + '   If @ItemId = 0 Begin' + sLineBreak +
-      '      Insert Into InventarioInicial Values (@InventarioId, @EnderecoId, @ProdutoId, @LoteId, @DtFabricacao,	@DtVencimento,	0,	'
-      + #39 + 'C' + #39 + ',	0)' + sLineBreak +
+      '      Insert ProdutoLotes Values (@ProdutoId, @DescrLote, ' + sLineBreak+
+      '            (Select IdData From Rhema_Data Where Data = @DtFabricacao),'+sLineBreak +
+      '            (Select IdData From Rhema_Data Where Data = @DtVencimento), '+sLineBreak+
+      '          ' +SqlDataAtual+', '+SqlHoraAtual+', NewId())' + sLineBreak +
+      '   	  Set @LoteId = SCOPE_IDENTITY()'+sLineBreak +
+      '   End' + sLineBreak +
+      '   Else Begin' + sLineBreak +
+      '      Update ProdutoLotes set Fabricacao = (Select IdData From Rhema_Data Where Data = @DtFabricacao), '+sLineBreak +
+      '                              Vencimento = (Select IdData From Rhema_Data Where Data = @DtVencimento)'+sLineBreak +
+      '      Where LoteId = @LoteId' + sLineBreak +
+      '   End'+sLineBreak +
+      '   If @ItemId = 0 Begin' + sLineBreak +
+      '      Insert Into InventarioInicial Values (@InventarioId, @EnderecoId, @ProdutoId, @LoteId, @DtFabricacao,	'+sLineBreak+
+      '                                            @DtVencimento,	0,	'+#39+'C'+#39+',	0)' + sLineBreak +
       '     	Set @ItemId = SCOPE_IDENTITY()' + sLineBreak +
-      '      Set @StatusItem = (Select Status From InventarioInicial Where ItemId = @ItemId)'
-      + sLineBreak + '   End' + sLineBreak + '--   Else' + sLineBreak +
-      '--      Set @StatusItem = (Select Status From InventarioInicial Where ItemId = @ItemId)'
-      + sLineBreak +
-      '   Insert Into InventarioContagem Values (@ItemId, @Quantidade, @UsuarioId, GetDate(), CONVERT (time, SYSDATETIME()), 1, @Estacao)'
-      + sLineBreak + '   declare @ContagemId integer =  SCOPE_IDENTITY()' +
-      sLineBreak +
-      '   Update InventarioInicial Set Status = @StatusItem Where ItemId = @ItemId'
-      + sLineBreak +
-    // +#39+'F'+#39+' Where ItemId = @ItemId and (((Select InventarioForcarMaxContagem From configuracao) = 0 and Status='+#39+'I'+#39+sLineBreak+
-    // '                                                                                              and @Quantidade = EstoqueInicial) or (Status = '+#39+'C'+#39+' and @Quantidade ='+sLineBreak+
-    // '                                                                                                  (Select Quantidade From InventarioContagem Where ContagemId = '+sLineBreak+
-    // '                                                                                                  (Select Max(ContagemId) From InventarioContagem'+sLineBreak+
-    // '                                                                                      Where Itemid=@ItemId and Contagemid <> @ContagemId))) )'+sLineBreak+
-      'End' + sLineBreak + 'else Begin' + sLineBreak +
-      '   Update InventarioInicial Set Status = @StatusItem Where (ItemId = @ItemId) --'
-      + #39 + 'F' + #39 + '  Where (ItemId = @ItemId)' + sLineBreak +
-      '                            --and ((Select Status From InventarioInicial where InventarioId = @InventarioId and ItemId = @ItemId) <> '
-      + #39 + 'I' + #39 + ')' + sLineBreak + 'end;' + sLineBreak +
-      '--Update InventarioInicial Set Status = ' + #39 + 'C' + #39 +
-      ' Where ItemId = @ItemId and Status <> ' + #39 + 'F' + #39;
+      '      Set @StatusItem = (Select Status From InventarioInicial Where ItemId = @ItemId)'+sLineBreak+
+      '   End' + sLineBreak +
+      '--   Else' + sLineBreak +
+      '--      Set @StatusItem = (Select Status From InventarioInicial Where ItemId = @ItemId)'+sLineBreak +
+      '   Insert Into InventarioContagem Values (@ItemId, @Quantidade, @UsuarioId, GetDate(), CONVERT (time, SYSDATETIME()), 1, @Estacao)'+sLineBreak +
+      '   declare @ContagemId integer =  SCOPE_IDENTITY()'+sLineBreak +
+      '   Update InventarioInicial Set Status = @StatusItem Where ItemId = @ItemId'+sLineBreak +
+      'End' + sLineBreak +
+      'else Begin' + sLineBreak +
+      '   Update InventarioInicial Set Status = @StatusItem  Where (ItemId = @ItemId) --'+#39+'F'+#39+'   Where (ItemId = @ItemId)' + sLineBreak +
+      '     --and ((Select Status From InventarioInicial where InventarioId = @InventarioId and ItemId = @ItemId) <> '+#39+'I'+#39+')'+sLineBreak +
+      'end;' + sLineBreak +
+      '--Update InventarioInicial Set Status = '+#39+'C'+#39+' Where ItemId = @ItemId and Status <> '+#39+'F'+#39;
 
   Const
     SqlInventarioCancelar = 'Declare @InventarioId Integer = :pInventarioId' +

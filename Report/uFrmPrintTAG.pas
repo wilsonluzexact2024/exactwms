@@ -3179,193 +3179,187 @@ begin
       IniciarEtiqueta;
       //Selecionar os volumes
       For xEtq := 1 to 1 do Begin //Pred(LstEnderecoAdv.RowCount) do begin
-        //if LstEnderecoAdv.Cells[8, xEtq] = '1' then Begin
-//           if Not device.EmLinha() then
-//              raise Exception.Create('ocorreu um erro na impressora.');
-           Repeat
-           Try
-             if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume in [0, 1] then Begin;
-                Lin := 1;                                //
-                ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+5, 'FRACIONADOS', 0, True);
-                ImprimirCaixa(Lin+5, 5, 95, 20, 0, 0);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+7,  ColIni+7, 'Filial', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 3, Lin+10, ColIni+7, Repl(' ',6-Length(pCodPessoaERP.ToString))+  pCodPessoaERP.ToString, 0, False);
-                ImprimirTexto(orNormal, 2, 1, 2, Lin+10, ColIni+26, Copy(pRazao, 1, 40), 0, False);
+        Repeat
+        Try
+          if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume in [0, 1] then Begin;
+             Lin := 1;                                //
+             ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+5, 'FRACIONADOS', 0, True);
+             ImprimirCaixa(Lin+5, 5, 95, 20, 0, 0);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+7,  ColIni+7, 'Filial', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 3, Lin+10, ColIni+7, Repl(' ',6-Length(pCodPessoaERP.ToString))+  pCodPessoaERP.ToString, 0, False);
+             ImprimirTexto(orNormal, 2, 1, 2, Lin+10, ColIni+26, Copy(pRazao, 1, 40), 0, False);
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+16, ColIni+7, 'Rota', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+16, ColIni+80, 'Ordem', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+20, ColIni+7, pRotas, 0, False);
-                ImprimirTexto(orNormal, 2, 1, 2, Lin+20, ColIni+85, FormatFloat('###0', pOrdem), 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+16, ColIni+7, 'Rota', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+16, ColIni+80, 'Ordem', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+20, ColIni+7, pRotas, 0, False);
+             ImprimirTexto(orNormal, 2, 1, 2, Lin+20, ColIni+85, FormatFloat('###0', pOrdem), 0, False);
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+27,  ColIni+5, 'Endereço:', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+7, 'Inicio', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+29, 'Término', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+53, 'Itens', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+76, 'Unid', 0, False);
-                ImprimirCaixa(Lin+30, ColIni+5, 20, 8, 0, 0);
-                ImprimirCaixa(Lin+30, ColIni+27, 22, 8, 0, 0);
-                ImprimirCaixa(Lin+30, ColIni+52, 20, 8, 0, 0);
-                ImprimirCaixa(Lin+30, ColIni+74, 17, 8, 0, 0);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+3,  ' '+vPredIni+' ', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+27, ' '+vPredFin+' ', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+60, FormatFloat('###0', vItens),   0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+82, FormatFloat('###0', vTotUnid), 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+27,  ColIni+5, 'Endereço:', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+7, 'Inicio', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+29, 'Término', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+53, 'Itens', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+31,  ColIni+76, 'Unid', 0, False);
+             ImprimirCaixa(Lin+30, ColIni+5, 20, 8, 0, 0);
+             ImprimirCaixa(Lin+30, ColIni+27, 22, 8, 0, 0);
+             ImprimirCaixa(Lin+30, ColIni+52, 20, 8, 0, 0);
+             ImprimirCaixa(Lin+30, ColIni+74, 17, 8, 0, 0);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+3,  ' '+vPredIni+' ', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+27, ' '+vPredFin+' ', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+60, FormatFloat('###0', vItens),   0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+34,  ColIni+82, FormatFloat('###0', vTotUnid), 0, False);
 
-                //ImprimirBarras(orNormal, barEAN13, 2, 2, Lin+40,  1, '7896003701685', 10, becSIM);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+41, ColIni+7,  '  Pedido Vol.', 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  ColIni+2,  '   '+pPedidoId.ToString+' '+pSequencia.ToString()+'/'+
-                                                                           pTotalVolumes.ToString(), 0, False);
+             //ImprimirBarras(orNormal, barEAN13, 2, 2, Lin+40,  1, '7896003701685', 10, becSIM);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+41, ColIni+7,  '  Pedido Vol.', 0, False);
+             ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  ColIni+2,  '   '+pPedidoId.ToString+' '+pSequencia.ToString()+'/'+
+                                                                        pTotalVolumes.ToString(), 0, False);
 
-                //ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  28,  '/01', 0, False);
+             //ImprimirTexto(orNormal, 3, 2, 2, Lin+45,  28,  '/01', 0, False);
 
-                ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+40, ColIni+60, pPedidoVolumeId.toString, 12, becSIM);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+52,  ColIni+14, '    '+pDtPedido, 0, False);
-                if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then Begin
-                   ImprimirCaixa(Lin+56, ColIni+5, 88, 17, 1, 1);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Obs: ', 0, False);
-                   if pProcessoId = 2 then
-                      ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
-                      DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
-                   Else ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
-                        ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+65,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+68,  ColIni+7, 'Ressuprimento: '+pdocumentooriginal, 0, False);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+68, ColIni+75, 'eXactWMS(r)', 0, False);
-                End
-                Else If FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then Begin
-                   ImprimirCaixa(Lin+56, ColIni+5, 95, 19, 0, 0);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Obs: ', 0, False);
-                   if pProcessoId = 2 then
-                      ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
-                      DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
-                   Else ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
-                        ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+64,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+64, ColIni+60, 'Ressuprimento: '+pdocumentooriginal, 0, False);
-
-                   ObjPessoaCtrl := TPessoaCtrl.Create;
-                   JsonArrayPessoa := ObjPessoaCtrl.GetAddressToVolume( pCodPessoaERP );
-                   if Not JsonArrayPessoa.Items[0].TryGetValue('Erro', vErroStr) then Begin
-                      ImprimirTexto(orNormal, 2, 1, 1, Lin+67,  ColIni+7, Copy(JsonArrayPessoa.Items[0].GetValue<String>('endereco'), 1, 60), 0, False);
-                      if Length(JsonArrayPessoa.Items[0].GetValue<String>('endereco')) > 60 then Begin
-                         ImprimirTexto(orNormal, 2, 1, 1, Lin+ 69,  ColIni+7, Trim(Copy(JsonArrayPessoa.Items[0].GetValue<String>('endereco'), 61, 20)+'    '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('complemento'),1, 50)), 0, False);
-                         ImprimirTexto(orNormal, 2, 1, 1, Lin+72,  ColIni+7, 'Cep: '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 1, 2)+'.'+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 3, 3)+'-'+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 6, 3)+'   '+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('bairro'), 1, 20)+
-                                       JsonArrayPessoa.Items[0].GetValue<String>('municipio')+'-'+
-                                       JsonArrayPessoa.Items[0].GetValue<String>('uf') , 0, False);
-                      End
-                      Else Begin
-                         ImprimirTexto(orNormal, 2, 1, 1, Lin+70,  ColIni+7, 'Cep: '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 1, 2)+'.'+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 3, 3)+'-'+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 6, 3)+'   '+
-                                       Copy(JsonArrayPessoa.Items[0].GetValue<String>('bairro'), 1, 20)+' '+
-                                       JsonArrayPessoa.Items[0].GetValue<String>('municipio')+'-'+
-                                       JsonArrayPessoa.Items[0].GetValue<String>('uf') , 0, False);
-                      End;
-                   End;
-                   JsonArrayPessoa := Nil;
-                   ObjPessoaCtrl.Free;
-
-
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+72, ColIni+80, 'eXactWMS(r)', 0, False);
-                End;
+             ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+40, ColIni+60, pPedidoVolumeId.toString, 12, becSIM);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+52,  ColIni+14, '    '+pDtPedido, 0, False);
+             if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 0 then Begin
+                ImprimirCaixa(Lin+56, ColIni+5, 88, 17, 1, 1);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Obs: ', 0, False);
+                if pProcessoId = 2 then
+                   ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
+                   DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
+                Else ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
+                     ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+65,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+68,  ColIni+7, 'Ressuprimento: '+pdocumentooriginal, 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+68, ColIni+75, 'eXactWMS(r)', 0, False);
              End
-             Else if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then Begin
-                Lin := 1;
-                ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+2, 'FRACIONADOS', 0, True);
+             Else If FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 1 then Begin
+                ImprimirCaixa(Lin+56, ColIni+5, 95, 19, 0, 0);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Obs: ', 0, False);
+                if pProcessoId = 2 then
+                   ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
+                   DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
+                Else ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
+                     ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+64,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+64, ColIni+60, 'Ressuprimento: '+pdocumentooriginal, 0, False);
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin,   50, 'Pedido', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin,   88, 'Volume', 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 50, pPedidoId.ToString, 0, False);
-                ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 75, Repl(' ', 4 - Length(psequencia.ToString()))+
-                                                            pSequencia.ToString()+'/'+pTotalVolumes.ToString, 0, False);
+                ObjPessoaCtrl := TPessoaCtrl.Create;
+                JsonArrayPessoa := ObjPessoaCtrl.GetAddressToVolume( pCodPessoaERP );
+                if Not JsonArrayPessoa.Items[0].TryGetValue('Erro', vErroStr) then Begin
+                   ImprimirTexto(orNormal, 2, 1, 1, Lin+67,  ColIni+7, Copy(JsonArrayPessoa.Items[0].GetValue<String>('endereco'), 1, 60), 0, False);
+                   if Length(JsonArrayPessoa.Items[0].GetValue<String>('endereco')) > 60 then Begin
+                      ImprimirTexto(orNormal, 2, 1, 1, Lin+ 69,  ColIni+7, Trim(Copy(JsonArrayPessoa.Items[0].GetValue<String>('endereco'), 61, 20)+'    '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('complemento'),1, 50)), 0, False);
+                      ImprimirTexto(orNormal, 2, 1, 1, Lin+72,  ColIni+7, 'Cep: '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 1, 2)+'.'+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 3, 3)+'-'+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 6, 3)+'   '+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('bairro'), 1, 20)+
+                                    JsonArrayPessoa.Items[0].GetValue<String>('municipio')+'-'+
+                                    JsonArrayPessoa.Items[0].GetValue<String>('uf') , 0, False);
+                   End
+                   Else Begin
+                      ImprimirTexto(orNormal, 2, 1, 1, Lin+70,  ColIni+7, 'Cep: '+Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 1, 2)+'.'+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 3, 3)+'-'+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('cep'), 6, 3)+'   '+
+                                    Copy(JsonArrayPessoa.Items[0].GetValue<String>('bairro'), 1, 20)+' '+
+                                    JsonArrayPessoa.Items[0].GetValue<String>('municipio')+'-'+
+                                    JsonArrayPessoa.Items[0].GetValue<String>('uf') , 0, False);
+                   End;
+                End;
+                JsonArrayPessoa := Nil;
+                ObjPessoaCtrl.Free;
 
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+6,  5,  'Data', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+5, 13,  pDtPedido, 0, False);
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+72, ColIni+80, 'eXactWMS(r)', 0, False);
+             End;
+          End
+          Else if FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then Begin
+             Lin := 1;
+             ImprimirTexto(orNormal, 2, 2, 2, Lin,  ColIni+2, 'FRACIONADOS', 0, True);
+
+             ImprimirTexto(orNormal, 3, 1, 1, Lin,   50, 'Pedido', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin,   88, 'Volume', 0, False);
+             ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 50, pPedidoId.ToString, 0, False);
+             ImprimirTexto(orNormal, 3, 2, 2, Lin+3, 75, Repl(' ', 4 - Length(psequencia.ToString()))+
+                                                         pSequencia.ToString()+'/'+pTotalVolumes.ToString, 0, False);
+
+
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+6,  5,  'Data', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+5, 13,  pDtPedido, 0, False);
 
 {                ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+2,  'Pedido', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+32, 'Volume', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+60, 'Data', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+43, pSequencia.ToString(), 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+68, pDtPedido, 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+8,  ColIni+2, pPedidoId.ToString, 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+32, 'Volume', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5, ColIni+60, 'Data', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+43, pSequencia.ToString(), 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+5, ColIni+68, pDtPedido, 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+8,  ColIni+2, pPedidoId.ToString, 0, False);
 }
-                Lin := Lin + 2;
-                ImprimirCaixa(Lin+10,  ColIni+2, 30, 11, 0, 0);
-                ImprimirCaixa(Lin+8,  ColIni+35, 50, 13, 0, 0);
-                ImprimirTexto(orNormal, 2,  1, 1, Lin+11,  ColIni+4, 'Rota', 0, False);
-                ImprimirTexto(orNormal, 2,  1, 1, Lin+9 , ColIni+37, 'Destino', 0, False);
-                ImprimirTexto(orNormal, 2,  1, 1, Lin+9 , ColIni+87, 'Ordem', 0, False);
-                ImprimirTexto(orNormal, 4,  3, 4, Lin+11, ColIni+12, pRotaId.ToString(), 0, False);
-                ImprimirTexto(orNormal, 4,  5, 5, Lin+9 , ColIni+49, pCodPessoaERP.ToString, 0, False);
-                ImprimirTexto(orNormal, 3,  3, 3, Lin+13, ColIni+93, FormatFloat('###0', pOrdem), 0, False);
-                ImprimirTexto(orNormal, 2,  1, 1, Lin+23,  ColIni+4, Copy(pRazao, 1, 60)+' - '+pRotas, 0, False);
-        //        if Zona then
-        //           ImprimirTexto(orNormal, 3, 1, 1, Lin, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
-                Lin := 30;
+             Lin := Lin + 2;
+             ImprimirCaixa(Lin+10,  ColIni+2, 30, 11, 0, 0);
+             ImprimirCaixa(Lin+8,  ColIni+35, 50, 13, 0, 0);
+             ImprimirTexto(orNormal, 2,  1, 1, Lin+11,  ColIni+4, 'Rota', 0, False);
+             ImprimirTexto(orNormal, 2,  1, 1, Lin+9 , ColIni+37, 'Destino', 0, False);
+             ImprimirTexto(orNormal, 2,  1, 1, Lin+9 , ColIni+87, 'Ordem', 0, False);
+             ImprimirTexto(orNormal, 4,  3, 4, Lin+11, ColIni+12, pRotaId.ToString(), 0, False);
+             ImprimirTexto(orNormal, 4,  5, 5, Lin+9 , ColIni+49, pCodPessoaERP.ToString, 0, False);
+             ImprimirTexto(orNormal, 3,  3, 3, Lin+13, ColIni+93, FormatFloat('###0', pOrdem), 0, False);
+             ImprimirTexto(orNormal, 2,  1, 1, Lin+23,  ColIni+4, Copy(pRazao, 1, 60)+' - '+pRotas, 0, False);
+     //        if Zona then
+     //           ImprimirTexto(orNormal, 3, 1, 1, Lin, 30, JsonArrayIdentVolume.Items[0].GetValue<String>('zona'), 0, True);
+             Lin := 30;
 
-                ImprimirTexto(orNormal, 3, 1, 1, Lin,  ColIni+5, 'Endereço:', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+7, 'Inicio', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+29, 'Término', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+53, 'Itens', 0, False);
-                ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+76, 'Unid', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin,  ColIni+5, 'Endereço:', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+7, 'Inicio', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+29, 'Término', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+53, 'Itens', 0, False);
+             ImprimirTexto(orNormal, 3, 1, 1, Lin+5,  ColIni+76, 'Unid', 0, False);
 
-                ImprimirCaixa(Lin+4,  ColIni+5, 20, 10, 0, 0);
-                ImprimirCaixa(Lin+4, ColIni+27, 22, 10, 0, 0);
-                ImprimirCaixa(Lin+4, ColIni+52, 20, 10, 0, 0);
-                ImprimirCaixa(Lin+4, ColIni+74, 17, 10, 0, 0);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+4,  ' '+vPredIni+' ', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+27, ' '+vPredFin+' ', 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+60, FormatFloat('###0', vItens),   0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+87, FormatFloat('###0', vTotUnid), 0, False);
+             ImprimirCaixa(Lin+4,  ColIni+5, 20, 10, 0, 0);
+             ImprimirCaixa(Lin+4, ColIni+27, 22, 10, 0, 0);
+             ImprimirCaixa(Lin+4, ColIni+52, 20, 10, 0, 0);
+             ImprimirCaixa(Lin+4, ColIni+74, 17, 10, 0, 0);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+4,  ' '+vPredIni+' ', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+27, ' '+vPredFin+' ', 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+60,  FormatFloat('###0', vItens),   0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+87,  FormatFloat('###0', vTotUnid), 0, False);
 
-                ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+15, ColIni+40, pPedidoVolumeId.toString, 12, becNAO);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+87, FormatFloat('###0', vTotUnid), 0, False);
-                ImprimirTexto(orNormal, 2, 2, 2, Lin+28, ColIni+45, pPedidoVolumeId.toString , 0, False);
+             ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+15, ColIni+40, pPedidoVolumeId.toString, 12, becNAO);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+9,  ColIni+87, FormatFloat('###0', vTotUnid), 0, False);
+             ImprimirTexto(orNormal, 2, 2, 2, Lin+28, ColIni+45, pPedidoVolumeId.toString , 0, False);
 
-                Lin := Lin - 24;
-                ImprimirCaixa(Lin+56, ColIni+5, 93, 12, 0, 0);
-                if pProcessoId = 2 then
-                   ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
-                   DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
-                Else ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
-                     ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
-                ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
-                ImprimirTexto(orNormal, 2, 1, 1, Lin+64,  ColIni+7, 'Ressuprimento: '+pdocumentooriginal, 0, False);
-                ImprimirTexto(orNormal, 2, 1, 1, Lin+64, ColIni+75, 'eXactWMS(r)', 0, False);
-
-
+             Lin := Lin - 24;
+             ImprimirCaixa(Lin+56, ColIni+5, 93, 12, 0, 0);
+             if pProcessoId = 2 then
+                ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+' '+
+                DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False)
+             Else ImprimirTexto(orNormal, 2, 1, 1, Lin+58,  ColIni+7, 'Re-impressão: '+Copy(FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Nome,1,20)+
+                  ' '+DateToStr(date())+' às '+Copy(TimeToStr(Time()),1,5)+'h', 0, False);
+             ImprimirTexto(orNormal, 2, 1, 1, Lin+61,  ColIni+7, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
+             ImprimirTexto(orNormal, 2, 1, 1, Lin+64,  ColIni+7, 'Ressuprimento: '+pdocumentooriginal, 0, False);
+             ImprimirTexto(orNormal, 2, 1, 1, Lin+64, ColIni+75, 'eXactWMS(r)', 0, False);
+          End;
+          FinalizarEtiqueta;
+          Imprimir(1, 0);
+          ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create;
+          ObjPedidoVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := pPedidoVolumeId;
+          if pProcessoId = 2 then Begin
+             Try
+               ObjPedidoVolumeCtrl.RegistrarDocumentoEtapa(3);
+             Except On E: Exception do
+               showErro('Volume: '+pPedidoVolumeId.ToString+' s/registro de impressão!');
              End;
-             FinalizarEtiqueta;
-             Imprimir(1, 0);
-             ObjPedidoVolumeCtrl := TPedidoVolumeCtrl.Create;
-             ObjPedidoVolumeCtrl.ObjPedidoVolume.PedidoVolumeId := pPedidoVolumeId;
-             if pProcessoId = 2 then Begin
-                Try
-                  ObjPedidoVolumeCtrl.RegistrarDocumentoEtapa(3);
-                Except On E: Exception do
-                  showErro('Volume: '+pPedidoVolumeId.ToString+' s/registro de impressão!');
-                End;
-             End;
-             ObjPedidoVolumeCtrl.Free;
-             Sleep(vTimeEtiqueta);
+          End;
+          ObjPedidoVolumeCtrl.Free;
+          Sleep(vTimeEtiqueta);
+          vErro := False;
+        Except On E: Exception do Begin
+          vErro := True;
+          if (Confirmacao('Erro Impressora!', 'Reimprimir Volume: '+pPedidoVolumeId.ToString+'?')) then
+             vErro := True //ShowErro('Erro: Problema de comunicação com impressora...');
+          Else
              vErro := False;
-           Except On E: Exception do Begin
-             vErro := True;
-             if (Confirmacao('Erro Impressora!', 'Reimprimir Volume: '+pPedidoVolumeId.ToString+'?')) then
-                vErro := True //ShowErro('Erro: Problema de comunicação com impressora...');
-             Else vErro := False;
-             if Assigned(ObjPedidoVolumeCtrl) then
-                ObjPedidoVolumeCtrl.Free;
-             End;
-           End;
-           Until vErro = False;
-        //End;
+          if Assigned(ObjPedidoVolumeCtrl) then
+             ObjPedidoVolumeCtrl.Free;
+          End;
+        End;
+        Until vErro = False;
       End;
-      //Imprimir(SpCopias.Value, 0);
       Desativar;
     end;
   Except On E: Exception do

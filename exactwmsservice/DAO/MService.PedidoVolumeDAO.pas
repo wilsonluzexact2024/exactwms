@@ -233,6 +233,7 @@ begin
         ObjJson.AddPair('mascara', FieldByName('mascara').AsString);
         ObjJson.AddPair('ordem', tjsonNumber.Create(FieldByName('Ordem').AsInteger));
         ObjJson.AddPair('totalvolumes', tjsonNumber.Create(FieldByName('TotalVolumes').AsInteger));
+        ObjJson.AddPair('embalagemid', tjsonNumber.Create(FieldByName('EmbalagemId').AsInteger));
         Result.AddElement(ObjJson);
         Fconexao.Query.Next;
       End;

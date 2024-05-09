@@ -2,7 +2,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
   Caption = 'FrmRelPedidos'
   ClientHeight = 768
   ClientWidth = 1366
-  ExplicitTop = -45
   ExplicitWidth = 1368
   ExplicitHeight = 770
   PixelsPerInch = 96
@@ -11,13 +10,13 @@ inherited FrmRelPedidos: TFrmRelPedidos
     Width = 1367
     Height = 713
     Properties.ActivePage = TabRelVolumes
-    ExplicitWidth = 1363
-    ExplicitHeight = 740
+    ExplicitWidth = 1367
+    ExplicitHeight = 713
     ClientRectBottom = 713
     ClientRectRight = 1367
     inherited TabListagem: TcxTabSheet
-      ExplicitWidth = 1363
-      ExplicitHeight = 716
+      ExplicitWidth = 1367
+      ExplicitHeight = 689
       inherited LstCadastro: TAdvStringGrid
         Width = 1347
         Height = 651
@@ -30,7 +29,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
       end
       inherited PnlPesquisaCadastro: TPanel
         Width = 1367
-        ExplicitWidth = 1363
+        ExplicitWidth = 1367
         inherited BtnPesqConsGeral: TsImage
           Left = 808
           ExplicitLeft = 804
@@ -55,11 +54,11 @@ inherited FrmRelPedidos: TFrmRelPedidos
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Pedidos - Sa'#237'das'
-      ExplicitWidth = 1363
-      ExplicitHeight = 716
+      ExplicitWidth = 1367
+      ExplicitHeight = 689
       inherited PnlInfo: TPanel
         Top = 503
-        ExplicitTop = 530
+        ExplicitTop = 503
       end
       inherited ChkCadastro: TCheckBox
         TabOrder = 5
@@ -464,8 +463,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
         Properties.ActivePage = TabVolumes
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
-        ExplicitWidth = 1346
-        ExplicitHeight = 522
         ClientRectBottom = 495
         ClientRectRight = 1350
         ClientRectTop = 24
@@ -474,8 +471,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
           Caption = 'Pedidos'
           ImageIndex = 0
           OnShow = TabPedidosShow
-          ExplicitWidth = 1346
-          ExplicitHeight = 498
           object LstPedidosAdv: TAdvStringGrid
             Left = 0
             Top = 0
@@ -1321,8 +1316,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'Volumes'
           ImageIndex = 1
-          ExplicitWidth = 1346
-          ExplicitHeight = 498
           object LstVolumesAdv: TAdvStringGrid
             Left = 0
             Top = 0
@@ -1752,8 +1745,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitTop = 274
-            ExplicitWidth = 1346
             ColWidths = (
               74
               78
@@ -2020,8 +2011,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitWidth = 665
-            ExplicitHeight = 274
             ColWidths = (
               74
               78
@@ -3925,7 +3914,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitLeft = -1
             ColWidths = (
               74
               78
@@ -6167,7 +6155,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   end
   inherited PnHeader: TPanel
     Width = 1366
-    ExplicitWidth = 1362
+    ExplicitWidth = 1366
     inherited ImgClose: TImage
       Left = 1333
       ExplicitLeft = 1329
@@ -6178,7 +6166,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
     end
     inherited PanWin8: TPanel
       Width = 1366
-      ExplicitWidth = 1362
+      ExplicitWidth = 1366
       inherited BtnIncluir: TsImage
         Left = 485
         Visible = False
@@ -6235,14 +6223,14 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PnlImgObjeto: TPanel
     Left = 1313
     Top = 330
-    ExplicitLeft = 1309
+    ExplicitLeft = 1313
     ExplicitTop = 330
   end
   inherited PnlErro: TPanel
     Top = 746
     Width = 1366
-    ExplicitTop = 773
-    ExplicitWidth = 1362
+    ExplicitTop = 746
+    ExplicitWidth = 1366
     inherited LblMensShowErro: TLabel
       Width = 1366
     end
