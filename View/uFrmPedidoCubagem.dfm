@@ -10,7 +10,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 663
-    Properties.ActivePage = TabPrincipal
+    Properties.ActivePage = TabResumoAtendimento
     OnDrawTab = PgcBaseDrawTab
     ExplicitTop = 59
     ExplicitHeight = 663
@@ -67,6 +67,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Par'#226'metros para Processamento'
+      ExplicitTop = 22
       ExplicitHeight = 639
       DesignSize = (
         1157
@@ -282,13 +283,13 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
           end
           object LstPedidosAdv: TAdvStringGrid
             Left = 8
-            Top = 244
+            Top = 247
             Width = 806
             Height = 264
             Cursor = crDefault
             CustomHint = BalloonHint1
             Anchors = [akLeft, akTop, akRight, akBottom]
-            ColCount = 11
+            ColCount = 13
             DefaultColWidth = 74
             DefaultRowHeight = 25
             DrawingStyle = gdsClassic
@@ -304,6 +305,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
             HoverRowColor = 15658717
             HoverRowCells = [hcNormal, hcSelected]
             OnClickCell = LstPedidosAdvClickCell
+            OnDblClickCell = LstPedidosAdvDblClickCell
             HintColor = 5080903
             ActiveCellShow = True
             ActiveCellFont.Charset = DEFAULT_CHARSET
@@ -328,7 +330,8 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
               'Rota'
               'Selecione'
               'Rota'
-              'StatusMax')
+              'StatusMax'
+              'Rota_Descricao')
             ControlLook.FixedGradientHoverFrom = 13619409
             ControlLook.FixedGradientHoverTo = 12502728
             ControlLook.FixedGradientHoverMirrorFrom = 12502728
@@ -442,6 +445,8 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
             ColWidths = (
               74
               63
+              74
+              74
               74
               74
               74
@@ -21787,6 +21792,8 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       Caption = 'Excluir Pedidos'
       ImageIndex = 4
       OnShow = TabExcuirPedidoShow
+      ExplicitLeft = -1
+      ExplicitTop = 22
       DesignSize = (
         1157
         639)
@@ -23399,6 +23406,437 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
             ExplicitWidth = 39
             ExplicitHeight = 39
           end
+        end
+      end
+    end
+    object TabResumoAtendimento: TcxTabSheet
+      CustomHint = BalloonHint1
+      Caption = 'ResumoAtendimento'
+      ImageIndex = 5
+      ExplicitTop = 22
+      object LstPedidoResumoAdv: TAdvStringGrid
+        Left = 0
+        Top = 174
+        Width = 1157
+        Height = 465
+        Cursor = crDefault
+        CustomHint = BalloonHint1
+        Align = alBottom
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        ColCount = 10
+        DefaultColWidth = 74
+        DefaultRowHeight = 25
+        DrawingStyle = gdsClassic
+        RowCount = 25
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        ScrollBars = ssBoth
+        TabOrder = 0
+        HoverRowCells = [hcNormal, hcSelected]
+        HintColor = 5080903
+        ActiveCellShow = True
+        ActiveCellFont.Charset = DEFAULT_CHARSET
+        ActiveCellFont.Color = clWindowText
+        ActiveCellFont.Height = -11
+        ActiveCellFont.Name = 'MS Sans Serif'
+        ActiveCellFont.Style = []
+        ActiveCellColor = 5080903
+        Bands.Active = True
+        Bands.PrimaryColor = 16117735
+        CellNode.ShowTree = False
+        ColumnHeaders.Strings = (
+          'Id'
+          'C'#243'digo'
+          'Descri'#231#227'o'
+          'Picking'
+          'Zona'
+          'Demanda'
+          'Embal.'
+          'Suprida'
+          'Volume(Cm3)'
+          'Peso(Kg)')
+        ControlLook.FixedGradientHoverFrom = 13619409
+        ControlLook.FixedGradientHoverTo = 12502728
+        ControlLook.FixedGradientHoverMirrorFrom = 12502728
+        ControlLook.FixedGradientHoverMirrorTo = 11254975
+        ControlLook.FixedGradientDownFrom = 8816520
+        ControlLook.FixedGradientDownTo = 7568510
+        ControlLook.FixedGradientDownMirrorFrom = 7568510
+        ControlLook.FixedGradientDownMirrorTo = 6452086
+        ControlLook.FixedGradientDownBorder = 14007466
+        ControlLook.ControlStyle = csClassic
+        ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+        ControlLook.DropDownHeader.Font.Color = clWindowText
+        ControlLook.DropDownHeader.Font.Height = -11
+        ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+        ControlLook.DropDownHeader.Font.Style = []
+        ControlLook.DropDownHeader.Visible = True
+        ControlLook.DropDownHeader.Buttons = <>
+        ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+        ControlLook.DropDownFooter.Font.Color = clWindowText
+        ControlLook.DropDownFooter.Font.Height = -11
+        ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+        ControlLook.DropDownFooter.Font.Style = []
+        ControlLook.DropDownFooter.Visible = True
+        ControlLook.DropDownFooter.Buttons = <>
+        Filter = <>
+        FilterDropDown.Font.Charset = DEFAULT_CHARSET
+        FilterDropDown.Font.Color = clWindowText
+        FilterDropDown.Font.Height = -11
+        FilterDropDown.Font.Name = 'Tahoma'
+        FilterDropDown.Font.Style = []
+        FilterDropDown.TextChecked = 'Checked'
+        FilterDropDown.TextUnChecked = 'Unchecked'
+        FilterDropDownClear = '(All)'
+        FilterEdit.TypeNames.Strings = (
+          'Starts with'
+          'Ends with'
+          'Contains'
+          'Not contains'
+          'Equal'
+          'Not equal'
+          'Larger than'
+          'Smaller than'
+          'Clear')
+        FixedColWidth = 74
+        FixedRowHeight = 25
+        FixedFont.Charset = DEFAULT_CHARSET
+        FixedFont.Color = clBlack
+        FixedFont.Height = -11
+        FixedFont.Name = 'MS Sans Serif'
+        FixedFont.Style = []
+        FloatFormat = '%.2f'
+        GridImages = ImgListSimNao
+        HoverButtons.Buttons = <>
+        HoverButtons.Position = hbLeftFromColumnLeft
+        HTMLSettings.ImageFolder = 'images'
+        HTMLSettings.ImageBaseName = 'img'
+        Look = glListView
+        Lookup = True
+        MouseActions.DirectEdit = True
+        Multilinecells = True
+        Navigation.AdvanceOnEnter = True
+        Navigation.AdvanceInsert = True
+        PrintSettings.DateFormat = 'dd/mm/yyyy'
+        PrintSettings.Font.Charset = DEFAULT_CHARSET
+        PrintSettings.Font.Color = clWindowText
+        PrintSettings.Font.Height = -11
+        PrintSettings.Font.Name = 'MS Sans Serif'
+        PrintSettings.Font.Style = []
+        PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+        PrintSettings.FixedFont.Color = clWindowText
+        PrintSettings.FixedFont.Height = -11
+        PrintSettings.FixedFont.Name = 'Tahoma'
+        PrintSettings.FixedFont.Style = []
+        PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+        PrintSettings.HeaderFont.Color = clWindowText
+        PrintSettings.HeaderFont.Height = -11
+        PrintSettings.HeaderFont.Name = 'MS Sans Serif'
+        PrintSettings.HeaderFont.Style = []
+        PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+        PrintSettings.FooterFont.Color = clWindowText
+        PrintSettings.FooterFont.Height = -11
+        PrintSettings.FooterFont.Name = 'MS Sans Serif'
+        PrintSettings.FooterFont.Style = []
+        PrintSettings.Borders = pbNoborder
+        PrintSettings.Centered = False
+        PrintSettings.PageNumSep = '/'
+        RowIndicator.Data = {
+          36090000424D3609000000000000360000002800000018000000180000000100
+          2000000000000009000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000277FFFFF277FFFFF00000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000000000000000000277F
+          FFFF00000000000000000000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000277FFFFF277F
+          FFFF277FFFFF000000000000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000277FFFFF277F
+          FFFF277FFFFF277FFFFF0000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          000000000000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF0000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF00000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF00000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF0000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF277FFFFF000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          000000000000277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277FFFFF277F
+          FFFF277FFFFF277FFFFF277FFFFF00000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000277FFFFF277F
+          FFFF277FFFFF277FFFFF0000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000277FFFFF277F
+          FFFF277FFFFF000000000000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000000000000000000277F
+          FFFF00000000000000000000000000000000000000000000000000000000277F
+          FFFF277FFFFF277FFFFF277FFFFF000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000277FFFFF277FFFFF00000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+        ScrollWidth = 16
+        SearchFooter.Color = clBtnFace
+        SearchFooter.FindNextCaption = 'Find &next'
+        SearchFooter.FindPrevCaption = 'Find &previous'
+        SearchFooter.Font.Charset = DEFAULT_CHARSET
+        SearchFooter.Font.Color = clWindowText
+        SearchFooter.Font.Height = -11
+        SearchFooter.Font.Name = 'Tahoma'
+        SearchFooter.Font.Style = []
+        SearchFooter.HighLightCaption = 'Highlight'
+        SearchFooter.HintClose = 'Close'
+        SearchFooter.HintFindNext = 'Find next occurence'
+        SearchFooter.HintFindPrev = 'Find previous occurence'
+        SearchFooter.HintHighlight = 'Highlight occurences'
+        SearchFooter.MatchCaseCaption = 'Match case'
+        SearchFooter.ResultFormat = '(%d of %d)'
+        SelectionColor = clHighlight
+        SelectionTextColor = clHighlightText
+        SortSettings.DefaultFormat = ssAutomatic
+        SortSettings.HeaderColorTo = 16579058
+        SortSettings.HeaderMirrorColor = 16380385
+        SortSettings.HeaderMirrorColorTo = 16182488
+        Version = '8.4.2.2'
+        WordWrap = False
+        ExplicitLeft = -1
+        ExplicitTop = 176
+        ColWidths = (
+          74
+          78
+          74
+          74
+          74
+          74
+          74
+          74
+          74
+          74)
+        RowHeights = (
+          24
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25
+          25)
+      end
+      object GroupBox15: TGroupBox
+        Left = 8
+        Top = 17
+        Width = 1075
+        Height = 138
+        CustomHint = BalloonHint1
+        Caption = '[ Detalhes ]'
+        Enabled = False
+        TabOrder = 1
+        object Label30: TLabel
+          Left = 494
+          Top = 27
+          Width = 31
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'SKU: '
+        end
+        object LblTotalSku: TLabel
+          Left = 584
+          Top = 27
+          Width = 7
+          Height = 17
+          CustomHint = BalloonHint1
+          Alignment = taRightJustify
+          Caption = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label32: TLabel
+          Left = 463
+          Top = 60
+          Width = 62
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Unidades: '
+        end
+        object LblTotalUnidade: TLabel
+          Left = 584
+          Top = 60
+          Width = 7
+          Height = 17
+          CustomHint = BalloonHint1
+          Alignment = taRightJustify
+          Caption = '0'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label34: TLabel
+          Left = 10
+          Top = 27
+          Width = 94
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Ressuprimento: '
+        end
+        object LblRessuprimento: TLabel
+          Left = 107
+          Top = 27
+          Width = 12
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label36: TLabel
+          Left = 27
+          Top = 67
+          Width = 77
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Destinat'#225'rio: '
+        end
+        object LblDestinatarioResumo: TLabel
+          Left = 107
+          Top = 67
+          Width = 12
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object Label38: TLabel
+          Left = 66
+          Top = 107
+          Width = 38
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Rota:  '
+        end
+        object LblRotaResumo: TLabel
+          Left = 107
+          Top = 107
+          Width = 12
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = '...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = 4227327
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+        end
+        object ChkProdutoSemPicking: TCheckBox
+          Left = 700
+          Top = 27
+          Width = 153
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Produto Sem Picking'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+        end
+        object ChkRupturaEstoque: TCheckBox
+          Left = 700
+          Top = 61
+          Width = 139
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Ruptura Estoque'
+          Enabled = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 1
+          Visible = False
         end
       end
     end
@@ -29160,5 +29598,16 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     object QryMapaSeparacaoCodPessoaERP: TIntegerField
       FieldName = 'CodPessoaERP'
     end
+  end
+  object FdMemPesqPedidoResumoAtendimento: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 159
+    Top = 429
   end
 end

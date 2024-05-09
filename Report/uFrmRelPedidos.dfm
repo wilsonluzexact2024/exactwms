@@ -9,12 +9,13 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PgcBase: TcxPageControl
     Width = 1367
     Height = 713
-    Properties.ActivePage = TabRelVolumes
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1367
     ExplicitHeight = 713
     ClientRectBottom = 713
     ClientRectRight = 1367
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1367
       ExplicitHeight = 689
       inherited LstCadastro: TAdvStringGrid
@@ -460,7 +461,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabVolumes
+        Properties.ActivePage = TabResumo
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 495
@@ -1001,8 +1002,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitWidth = 665
-            ExplicitHeight = 498
             ColWidths = (
               74
               78
@@ -1271,8 +1270,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitWidth = 1346
-            ExplicitHeight = 498
+            ExplicitLeft = -1
             ColWidths = (
               74
               78
@@ -2597,6 +2595,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
       ExplicitHeight = 689
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1367
       ExplicitHeight = 689
       inherited DbgImporta: TDBGrid
@@ -6233,6 +6232,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
     ExplicitWidth = 1366
     inherited LblMensShowErro: TLabel
       Width = 1366
+      Height = 22
     end
   end
   inherited PnlConfigPrinter: TPanel
@@ -6240,6 +6240,11 @@ inherited FrmRelPedidos: TFrmRelPedidos
     Top = 118
     ExplicitLeft = 1151
     ExplicitTop = 118
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited BalloonHint1: TBalloonHint
     Left = 653

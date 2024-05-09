@@ -1611,31 +1611,27 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetCortes(const AParams: TDictionary<string, string>)
-  : TjSonArray;
-var
-  JsonProduto: TJsonObject;
-  pPedidoId, pCodProduto: Integer;
+function TPedidoSaidaDao.GetCortes(const AParams: TDictionary<string, string>) : TjSonArray;
+var JsonProduto: TJsonObject;
+    pPedidoId, pCodProduto: Integer;
 begin
   Try
     if AParams.ContainsKey('sintetico') then
-      FConexao.Query.SQL.Add(TuEvolutConst.SqlGetPedidoCortesSintetico)
+       FConexao.Query.SQL.Add(TuEvolutConst.SqlGetPedidoCortesSintetico)
     Else
       FConexao.Query.SQL.Add(TuEvolutConst.SqlGetPedidoCortes);
     if AParams.ContainsKey('dataini') then
-      FConexao.Query.ParamByName('pDataIni').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
+       FConexao.Query.ParamByName('pDataIni').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['dataini']))
     Else
-      FConexao.Query.ParamByName('pDataIni').Value := 0;
+       FConexao.Query.ParamByName('pDataIni').Value := 0;
     if AParams.ContainsKey('datafin') then
-      FConexao.Query.ParamByName('pDataFin').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
+       FConexao.Query.ParamByName('pDataFin').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafin']))
     Else
-      FConexao.Query.ParamByName('pDataFin').Value := 0;
-    pPedidoId := 0;
+       FConexao.Query.ParamByName('pDataFin').Value := 0;
+    pPedidoId   := 0;
     pCodProduto := 0;
     if AParams.ContainsKey('pedidoid') then
-      pPedidoId := AParams.Items['pedidoid'].ToInteger;
+       pPedidoId := AParams.Items['pedidoid'].ToInteger;
     if AParams.ContainsKey('codproduto') then
        pCodProduto := AParams.Items['codproduto'].ToInteger;
     FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
@@ -1645,25 +1641,21 @@ begin
     Else
        FConexao.Query.ParamByName('pZonaId').Value := 0;
     if DebugHook <> 0 then
-      if AParams.ContainsKey('sintetico') then
-        FConexao.Query.SQL.SaveToFile('CortesSintetico.Sql')
-      Else
-        FConexao.Query.SQL.SaveToFile('CortesAnalitico.Sql');
+       if AParams.ContainsKey('sintetico') then
+          FConexao.Query.SQL.SaveToFile('CortesSintetico.Sql')
+       Else
+          FConexao.Query.SQL.SaveToFile('CortesAnalitico.Sql');
     FConexao.Query.Open();
-    if FConexao.Query.IsEmpty then
-    Begin
-      Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Sem Dados para a consulta.'));
+    if FConexao.Query.IsEmpty then Begin
+       Result := TjSonArray.Create;
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Sem Dados para a consulta.'));
     End
     Else
-      Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
+       Result := FConexao.Query.ToJSONArray();
+  Except ON E: Exception do
     Begin
       raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   End;
 end;

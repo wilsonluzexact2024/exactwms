@@ -31,6 +31,7 @@ inherited FrmPrintTag: TFrmPrintTag
     ClientRectBottom = 713
     ClientRectRight = 1309
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1309
       ExplicitHeight = 689
       inherited LstCadastro: TAdvStringGrid
@@ -30384,6 +30385,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Produtos'
           ImageIndex = 1
           OnShow = TabListagemShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label8: TLabel
             Left = 90
             Top = 64
@@ -32600,6 +32604,9 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Volumes'
           ImageIndex = 2
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LblEtiquetas: TLabel
             Left = 1001
             Top = 130
@@ -33709,12 +33716,18 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
         object TbTagArmazenagem: TcxTabSheet
           CustomHint = BalloonHint1
           Caption = 'Tag Armazenagem'
           ImageIndex = 4
           OnShow = TbTagArmazenagemShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LblTotRegCaption: TLabel
             Left = 2
             Top = 182
@@ -39848,6 +39861,7 @@ inherited FrmPrintTag: TFrmPrintTag
     ExplicitWidth = 1308
     inherited LblMensShowErro: TLabel
       Width = 1308
+      Height = 22
     end
   end
   inherited PnlConfigPrinter: TPanel
@@ -39866,6 +39880,11 @@ inherited FrmPrintTag: TFrmPrintTag
       Top = 107
       ExplicitLeft = 146
       ExplicitTop = 107
+    end
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
     end
   end
   inherited BalloonHint1: TBalloonHint

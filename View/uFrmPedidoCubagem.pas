@@ -219,6 +219,22 @@ type
     ImgBtnExcluirPedido: TImage;
     PgrExcluir: TGauge;
     QryEstoqueDisponivel_CaixaFracionadaVolumeCm3: TFloatField;
+    TabResumoAtendimento: TcxTabSheet;
+    LstPedidoResumoAdv: TAdvStringGrid;
+    GroupBox15: TGroupBox;
+    Label30: TLabel;
+    LblTotalSku: TLabel;
+    Label32: TLabel;
+    LblTotalUnidade: TLabel;
+    Label34: TLabel;
+    LblRessuprimento: TLabel;
+    Label36: TLabel;
+    LblDestinatarioResumo: TLabel;
+    Label38: TLabel;
+    LblRotaResumo: TLabel;
+    ChkProdutoSemPicking: TCheckBox;
+    ChkRupturaEstoque: TCheckBox;
+    FdMemPesqPedidoResumoAtendimento: TFDMemTable;
     procedure FormCreate(Sender: TObject);
     procedure TabPrincipalShow(Sender: TObject);
     procedure BtnPesquisarStandClick(Sender: TObject);
@@ -255,6 +271,9 @@ type
     procedure EdtZonaIdChange(Sender: TObject);
     procedure TabExcuirPedidoShow(Sender: TObject);
     procedure EdtZonaIdEnter(Sender: TObject);
+    procedure LstPedidosAdvDblClickCell(Sender: TObject; ARow, ACol: Integer);
+    procedure TabListagemShow(Sender: TObject);
+    procedure TabimportacaoCSVShow(Sender: TObject);
   private
     { Private declarations }
     SelRota, SelPessoa, SelPedido : Boolean;
@@ -277,6 +296,7 @@ type
     Procedure ColorPedido(pColorProcesso : TColor; aRow : Integer);
     Function GetEstoqueParaCaixaFechada(pIndiceLstPedido : Integer) : Boolean;
     Function ExcluirPedidos : Boolean;
+    Procedure MontaListaPedidoResumo(pJsonArray : TJsonArray);
   Protected
     Procedure ShowDados; override;  public
     Procedure PesquisarClickInLstCadastro(aCol, aRow : Integer); OverRide;
@@ -1096,17 +1116,17 @@ begin
   LstPedidosAdv.RowCount := 2;
 //  ObjPedidoCtrl := TPedidoSaidaCtrl.Create;
   With LstCadastro do Begin
-    ColWidths[0]  := 80	;
-    ColWidths[1]  := 75	;
-    ColWidths[2]  := 130	;
-    ColWidths[3]  := 60	;
-    ColWidths[4]  := 280	;
-    ColWidths[5]  := 80	;
-    ColWidths[6]  := 125	;
-    ColWidths[7]  := 50	;
-    ColWidths[8]  := 90	;
-    ColWidths[9]  := 60	;
-    ColWidths[10] := 250	;
+    ColWidths[0]  :=  80+Trunc(80*ResponsivoVideo);
+    ColWidths[1]  :=  75+Trunc(75*ResponsivoVideo)	;
+    ColWidths[2]  := 130+Trunc(130*ResponsivoVideo)	;
+    ColWidths[3]  :=  60+Trunc(60*ResponsivoVideo)	;
+    ColWidths[4]  := 280+Trunc(280*ResponsivoVideo)	;
+    ColWidths[5]  :=  80+Trunc(80*ResponsivoVideo)	;
+    ColWidths[6]  := 125+Trunc(125*ResponsivoVideo)	;
+    ColWidths[7]  :=  50+Trunc(50*ResponsivoVideo)	;
+    ColWidths[8]  :=  90+Trunc(90*ResponsivoVideo)	;
+    ColWidths[9]  :=  60+Trunc(60*ResponsivoVideo)	;
+    ColWidths[10] := 250+Trunc(250*ResponsivoVideo)	;
     Alignments[1, 0] := taRightJustify;
     Alignments[1, 0] := taCenter;
     Alignments[7, 0] := taRightJustify;
@@ -1115,18 +1135,18 @@ begin
     FontStyles[0, 0] := [FsBold];
   End;
   With LstRotasAdv do Begin
-    ColWidths[0] :=  40;
-    ColWidths[1] := 270;
-    ColWidths[2] :=  65;
+    ColWidths[0] :=  40+Trunc(40*ResponsivoVideo);
+    ColWidths[1] := 270+Trunc(270*ResponsivoVideo);
+    ColWidths[2] :=  65+Trunc(65*ResponsivoVideo);
     Alignments[2, 0] := taCenter;
     FontStyles[0, 0] := [FsBold];
     FontStyles[2, 0] := [FsBold];
   End;
   With LstPessoasAdv do Begin
-    ColWidths[0] :=  60;
-    ColWidths[1] :=  70;
-    ColWidths[2] := 180;
-    ColWidths[3] :=  65;
+    ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[1] :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[2] := 180+Trunc(180*ResponsivoVideo);
+    ColWidths[3] :=  65+Trunc(65*ResponsivoVideo);
     Alignments[0, 0] := taCenter;
     FontStyles[0, 0] := [FsBold];
     Alignments[1, 0] := taCenter;
@@ -1135,16 +1155,16 @@ begin
   End;
   LstPessoasAdv.HideColumn(4);
   With LstPedidosAdv do Begin
-    ColWidths[0] := 55	;
-    ColWidths[1] := 80	;
-    ColWidths[2] := 80	;
-    ColWidths[3] := 65	;
-    ColWidths[4] := 220	;
-    ColWidths[5] := 110	;
-    ColWidths[6] := 45	;
-    ColWidths[7] := 40	;
-    ColWidths[8] := 30	;
-    ColWidths[9] := 65;
+    ColWidths[0] :=  55+Trunc(55*ResponsivoVideo)	;
+    ColWidths[1] :=  80+Trunc(80*ResponsivoVideo)	;
+    ColWidths[2] :=  80+Trunc(80*ResponsivoVideo)	;
+    ColWidths[3] :=  65+Trunc(65*ResponsivoVideo)	;
+    ColWidths[4] := 220+Trunc(220*ResponsivoVideo)	;
+    ColWidths[5] := 110+Trunc(110*ResponsivoVideo)	;
+    ColWidths[6] :=  45+Trunc(45*ResponsivoVideo)	;
+    ColWidths[7] :=  40+Trunc(40*ResponsivoVideo)	;
+    ColWidths[8] :=  30+Trunc(30*ResponsivoVideo)	;
+    ColWidths[9] :=  65+Trunc(65*ResponsivoVideo);
     Alignments[ 0, 0] := taRightJustify;
     FontStyles[ 0, 0] := [FsBold];
     Alignments[ 3, 0] := taRightJustify;
@@ -1155,20 +1175,22 @@ begin
     FontStyles[10, 0] := [FsBold];
     FontStyles[ 9, 0] := [FsBold];
   End;
+  LstPedidosAdv.HideColumn(11);
+  LstPedidosAdv.HideColumn(12);
 //
   With LstRotasExcluir do Begin
-    ColWidths[0] :=  40;
-    ColWidths[1] := 270;
-    ColWidths[2] :=  65;
+    ColWidths[0] :=  40+Trunc(40*ResponsivoVideo);
+    ColWidths[1] := 270+Trunc(270*ResponsivoVideo);
+    ColWidths[2] :=  65+Trunc(65*ResponsivoVideo);
     Alignments[2, 0] := taCenter;
     FontStyles[0, 0] := [FsBold];
     FontStyles[2, 0] := [FsBold];
   End;
   With LstPessoasExcluir do Begin
-    ColWidths[0] :=  60;
-    ColWidths[1] :=  70;
-    ColWidths[2] := 180;
-    ColWidths[3] :=  65;
+    ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[1] :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[2] := 180+Trunc(180*ResponsivoVideo);
+    ColWidths[3] :=  65+Trunc(65*ResponsivoVideo);
     Alignments[0, 0] := taCenter;
     FontStyles[0, 0] := [FsBold];
     Alignments[1, 0] := taCenter;
@@ -1177,16 +1199,16 @@ begin
   End;
   LstPessoasExcluir.HideColumn(4);
   With LstPedidosExcluir do Begin
-    ColWidths[0]  := 55	;
-    ColWidths[1]  := 80	;
-    ColWidths[2]  := 80	;
-    ColWidths[3]  := 65	;
-    ColWidths[4]  := 220	;
-    ColWidths[5]  := 110	;
-    ColWidths[6]  := 45	;
-    ColWidths[7]  := 40	;
-    ColWidths[8]  := 30	;
-    ColWidths[9]  := 65;
+    ColWidths[0]  :=  55+Trunc(55*ResponsivoVideo)	;
+    ColWidths[1]  :=  80+Trunc(80*ResponsivoVideo)	;
+    ColWidths[2]  :=  80+Trunc(80*ResponsivoVideo);
+    ColWidths[3]  :=  65+Trunc(65*ResponsivoVideo)	;
+    ColWidths[4]  := 220+Trunc(220*ResponsivoVideo)	;
+    ColWidths[5]  := 110+Trunc(110*ResponsivoVideo)	;
+    ColWidths[6]  :=  45+Trunc(45*ResponsivoVideo)	;
+    ColWidths[7]  :=  40+Trunc(40*ResponsivoVideo)	;
+    ColWidths[8]  :=  30+Trunc(30*ResponsivoVideo)	;
+    ColWidths[9]  :=  65+Trunc(65*ResponsivoVideo);
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[3, 0] := taRightJustify;
@@ -1206,6 +1228,27 @@ begin
   PnlDetalhe.Caption         := '👆🏻Informe os dados para pesquisar os pedidos!';
   PnlDetalheExcluir.Caption  := '👆🏻Informe os dados para Excluir os pedidos!';
   TabExcuirPedido.TabVisible := FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Produção - Excluir Pedidos');
+  TabResumoAtendimento.TabVisible := False;
+  //Resumo Atendimento do Pedido
+  LstPedidoResumoAdv.ColWidths[0] := 80+Trunc(80*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[1] := 60+Trunc(60*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[2] := 250+Trunc(250*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[3] := 120+Trunc(120*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[4] := 200+Trunc(200*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[5] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[6] := 90+Trunc(90*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[7] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[8] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.ColWidths[9] := 70+Trunc(70*ResponsivoVideo);
+  LstPedidoResumoAdv.Alignments[0, 0] := taRightJustify;
+  LstPedidoResumoAdv.FontStyles[0, 0] := [FsBold];
+  LstPedidoResumoAdv.Alignments[5, 0] := taRightJustify;
+  LstPedidoResumoAdv.Alignments[7, 0] := taRightJustify;
+  LstPedidoResumoAdv.Alignments[8, 0] := taRightJustify;
+  LstPedidoResumoAdv.Alignments[9, 0] := taRightJustify;
+  LstPedidoResumoAdv.HideColumn(7);
+  LstPedidoResumoAdv.HideColumn(8);
+  LstPedidoResumoAdv.HideColumn(9);
 end;
 
 procedure TFrmPedidoCubagem.FormDestroy(Sender: TObject);
@@ -1382,6 +1425,32 @@ begin
   End;
 end;
 
+procedure TFrmPedidoCubagem.LstPedidosAdvDblClickCell(Sender: TObject; ARow,
+  ACol: Integer);
+begin
+  inherited;
+  TabResumoAtendimento.TabVisible := LstPedidosAdv.Row > 0;
+  TDialogMessage.ShowWaitMessage('Buscando Produtos do Pedido...',
+    procedure
+    Var ReturnJsonArray     : TJsonArray;
+        ObjPedidoCtrl       : TPedidoSaidaCtrl;
+        vErro : String;
+    begin
+       ReturnJsonArray := ObjPedidoCtrl.GetPedidoResumoAtendimento(StrToIntDef(LstPedidosAdv.Cells[Acol, ARow], 0), 0, 0,0);
+       if ReturnJsonArray.Get(0).tryGetValue<String>('Erro', vErro) then Begin
+          ShowErro('😢Erro: '+vErro);
+          LstPedidoResumoAdv.ClearRect(0, 1, LstPedidosAdv.ColCount-1, LstPedidosAdv.RowCount-1);
+          LstPedidoResumoAdv.RowCount := 1;
+       End
+       Else Begin
+          LstPedidosAdv.Row := aRow;
+          MontaListaPedidoResumo(ReturnJsonArray);
+       End;
+       ReturnJsonArray := Nil;
+       ObjPedidoCtrl   := Nil;
+    End);
+end;
+
 procedure TFrmPedidoCubagem.LstPessoasAdvClickCell(Sender: TObject; ARow,
   ACol: Integer);
 Var xPessoa, xTotPessoas : Integer;
@@ -1549,6 +1618,7 @@ begin
           Else LstAdv.Cells[9, vTotPedido+1]    := '0';
           LstAdv.Cells[10, xRetorno+1]    := jsonPessoa.GetValue<Integer>('rotaid', 0).ToString;
           LstAdv.Cells[11, xRetorno+1]    := jsonPedido.GetValue<Integer>('statusmax', 0).ToString;
+          LstAdv.Cells[12, xRetorno+1]    := jsonPessoa.GetValue<String>('rota');
           LstAdv.FontStyles[0, vTotPedido+1] := [FsBold];
           LstAdv.Alignments[0, vTotPedido+1] := taRightJustify;
           LstAdv.Alignments[3, vTotPedido+1] := taRightJustify;
@@ -1566,6 +1636,63 @@ begin
      jsonPessoa   := Nil;
   end;
   jsonArrayPedidos := Nil;
+end;
+
+procedure TFrmPedidoCubagem.MontaListaPedidoResumo(pJsonArray: TJsonArray);
+Var xProd         : Integer;
+    vTotalUnidade : Integer;
+begin
+  vTotalUnidade := 0;
+  FdMemPesqPedidoResumoAtendimento.LoadFromJSON(pJsonArray, False);
+  LstPedidoResumoAdv.RowCount := pjsonArray.Count+1;
+  LblTotalSku.Caption      := FdMemPesqPedidoResumoAtendimento.RecordCount.ToString();
+  LblRessuprimento.Caption := LstPedidosAdv.Cells[0, LstPedidosAdv.Row];
+  LblDestinatarioResumo.Caption := LstPedidosAdv.Cells[3, LstPedidosAdv.Row]+' '+LstPedidosAdv.Cells[4, LstPedidosAdv.Row];
+  LblRotaResumo.Caption    := LstPedidosAdv.Cells[12, LstPedidosAdv.Row];
+
+  If LstPedidoResumoAdv.RowCount > 1 Then LstPedidoResumoAdv.FixedRows := 1;
+  for xProd := 0 to Pred(pJsonArray.Count) do Begin
+    LstPedidoResumoAdv.Cells[0, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('produtoid');
+    LstPedidoResumoAdv.Cells[1, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('codproduto');
+    LstPedidoResumoAdv.FontColors[1, xProd+1] := LstPedidoResumoAdv.FontColors[0, xProd+1];
+    LstPedidoResumoAdv.FontStyles[1, xProd+1] := [];
+    LstPedidoResumoAdv.Cells[2, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('descricao');
+    LstPedidoResumoAdv.Cells[3, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('picking');
+    if pJsonArray.Get(xProd).GetValue<String>('picking') = '' then
+       ChkProdutoSemPicking.Checked := True;
+    LstPedidoResumoAdv.Cells[4, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('zonadescricao');
+    LstPedidoResumoAdv.Cells[5, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('demanda');
+    vTotalUnidade := vTotalUnidade + pJsonArray.Get(xProd).GetValue<Integer>('demanda');
+    LstPedidoResumoAdv.Cells[6, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('embalagempadrao');
+    LstPedidoResumoAdv.Cells[7, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('qtdsuprida');
+    LstPedidoResumoAdv.Cells[8, xProd+1]    := pJsonArray.Get(xProd).GetValue<String>('volume(cm3)');
+    LstPedidoResumoAdv.Cells[9, xProd+1]    := FormatFloat('#0.000', pJsonArray.Get(xProd).GetValue<Double>('peso'));
+    if LstPedidosAdv.Cells[5, LstPedidosAdv.Row] <> 'Recebido do ERP' then Begin
+       if pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') = 0 then
+          LstPedidoResumoAdv.Colors[7, xProd+1] := ClRed
+       Else if pJsonArray.Get(xProd).GetValue<Integer>('demanda') > pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') then
+          LstPedidoResumoAdv.Colors[7, xProd+1] := ClYellow
+       Else If pJsonArray.Get(xProd).GetValue<Integer>('demanda') = pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') then
+          LstPedidoResumoAdv.Colors[7, xProd+1] := clGreen
+       Else Begin
+          LstPedidoResumoAdv.Colors[7, xProd+1] := LstPedidoResumoAdv.Colors[4, xProd+1];
+          if pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') > pJsonArray.Get(xProd).GetValue<Integer>('demanda') then
+             LstPedidoResumoAdv.FontColors[7, xProd+1] := clRed;
+       End;
+    End
+    Else
+       LstPedidoResumoAdv.Colors[7, xProd+1] := LstPedidoResumoAdv.Colors[4, xProd+1];
+    LstPedidoResumoAdv.Colors[5, xProd+1] := LstPedidoResumoAdv.Colors[7, xProd+1];
+    LstPedidoResumoAdv.Colors[6, xProd+1] := LstPedidoResumoAdv.Colors[7, xProd+1];
+    LstPedidoResumoAdv.Alignments[0, xProd+1] := taRightJustify;
+    LstPedidoResumoAdv.FontStyles[0, xProd+1] := [FsBold];
+    LstPedidoResumoAdv.Alignments[5, xProd+1] := taRightJustify;
+    LstPedidoResumoAdv.Alignments[7, xProd+1] := taRightJustify;
+    LstPedidoResumoAdv.Alignments[8, xProd+1] := taRightJustify;
+    LstPedidoResumoAdv.Alignments[9, xProd+1] := taRightJustify;
+  End;
+  LblTotalUnidade.Caption := vTotalUnidade.ToString();
+  PgcBase.ActivePage      := TabResumoAtendimento;
 end;
 
 procedure TFrmPedidoCubagem.MontaListaRota(LstAdv : TAdvStringGrid);
@@ -2218,6 +2345,19 @@ begin
   ChkProcCubagemExcluir.Checked   := False;
   ChkProcEtiquetaExcluir.Checked  := False;
   EdtDtInicioExcluir.SetFocus;
+  TabResumoAtendimento.TabVisible := False;
+end;
+
+procedure TFrmPedidoCubagem.TabimportacaoCSVShow(Sender: TObject);
+begin
+  inherited;
+  TabResumoAtendimento.TabVisible := False;
+end;
+
+procedure TFrmPedidoCubagem.TabListagemShow(Sender: TObject);
+begin
+  inherited;
+  TabResumoAtendimento.TabVisible := False;
 end;
 
 procedure TFrmPedidoCubagem.TabPrincipalShow(Sender: TObject);
@@ -2236,6 +2376,7 @@ begin
   ChkProcCubagem.Checked   := False;
   ChkProcEtiqueta.Checked  := False;
   EdtInicio.SetFocus;
+  TabResumoAtendimento.TabVisible := False;
 end;
 
 procedure TFrmPedidoCubagem.TmProcessandoTimer(Sender: TObject);

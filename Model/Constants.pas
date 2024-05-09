@@ -5993,8 +5993,51 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       sLineBreak +
       'where (@PedidoId = 0 or @PedidoId=Ped.PedidoId) and (@CodProduto = 0 or Prd.CodProduto = @CodProduto )';
 
-  Const
-    SqlGetPedidoCortes = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
+Const SqlGetPedidoCortes =
+      'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
+      'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
+      'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
+      'Declare @CodProduto Integer = :pCodProduto' + sLineBreak +
+      'Declare @ZonaId Integer     = :pZonaId' + sLineBreak +
+      'Select PP.PedidoId, Rd.Data, Pp.ProdutoId, Prd.CodProduto, Prd.Descricao, Pp.Quantidade,' + sLineBreak +
+      '      (Case When EmbalagemPadrao = 1 then '+#39+'Unid'+#39+' Else '+#39+'Cxa c/'+#39+'+Cast(EmbalagemPadrao as VarChar) End) Embalagem, De.ProcessoId Into #PedProd' + sLineBreak +
+      'From pedidoprodutos Pp' + sLineBreak +
+      'inner join Pedido ped on ped.pedidoid = Pp.pedidoid' + sLineBreak +
+      'inner join Rhema_Data Rd on Rd.IdData = ped.DocumentoData' + sLineBreak +
+      'Inner Join Produto Prd On Prd.IdProduto = Pp.ProdutoId' + sLineBreak +
+      'Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid And' + sLineBreak +
+      '                                  DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = Ped.uuid )' + sLineBreak +
+      'Left Join Enderecamentos TEnd on TEnd.EnderecoId = Prd.EnderecoId' + sLineBreak +
+      'where (@DataIni = 0 or Rd.Data >= @DataIni) and (@DataFin = 0 or Rd.Data <= @DataFin)' + sLineBreak +
+      '  and (@Pedidoid = 0 or ped.PedidoId = @Pedidoid) and (@CodProduto =0 or Prd.CodProduto = @CodProduto)' + sLineBreak +
+      '  and De.ProcessoId > 1 and De.ProcessoId <> 31' + sLineBreak +
+      '  And @ZonaId = 0 or @Zonaid = TEnd.ZonaId' + sLineBreak +
+      'Select Corte.PedidoId, Corte.ProdutoId, Corte.Demanda, Corte.QtdSuprida, Corte.QtdCancelado Into #Corte' + sLineBreak +
+      'From #PedProd PedProd' + sLineBreak +
+      'Left Join (select VLote.PedidoId, VLote.ProdutoId, SUM(VLote.Demanda) Demanda, SUM(VLote.QtdSuprida) QtdSuprida, SUM(VLote.QtdCancelado) QtdCancelado' + sLineBreak +
+      '           From (Select Pv.PedidoId, Pl.ProdutoId, Coalesce(Sum(Vl.Quantidade), 0) Demanda,' + sLineBreak +
+      '                 Sum((Case When De.ProcessoId<>15 then Vl.QtdSuprida Else 0 End)) QtdSuprida,' + sLineBreak +
+      '            				 (Case When De.ProcessoId=15 then Sum(Vl.Quantidade) Else 0 End) QtdCancelado' + sLineBreak +
+      '                 From PedidoVolumeLotes Vl' + sLineBreak +
+      '                 Inner Join PedidoVolumes  Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId' + sLineBreak +
+      '		               Inner Join ProdutoLotes   Pl on Pl.LoteId         = Vl.LoteId' + sLineBreak +
+      '		               Inner Join vDocumentoEtapas De on De.Documento = Pv.Uuid' + sLineBreak +
+      '		               Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid)' + sLineBreak +
+      '                 Group by Pv.PedidoId, Pl.ProdutoId, De.ProcessoId) VLote' + sLineBreak +
+      '           Group by VLote.PedidoId, VLote.ProdutoId) Corte On Corte.PedidoId = PedProd.PedidoId and Corte.ProdutoId = PedProd.ProdutoId' + sLineBreak +
+      'Select PedProd.PedidoId, Data, PedProd.ProdutoId, CodProduto, Descricao, PedProd.Quantidade Demanda, Embalagem,' + sLineBreak +
+      '       (Case When Coalesce(Demanda, 0) > 0 then PedProd.Quantidade - Coalesce(Demanda, 0) Else (Case When PedProd.ProcessoId<>15 then PedProd.Quantidade Else 0 End) End) Cubagem,' + sLineBreak +
+      '       Coalesce((Case When Demanda>0 and Coalesce(Demanda, 0) > (QtdSuprida+QtdCancelado) then Coalesce(Demanda, 0) - QtdSuprida - QtdCancelado else 0 End), 0) Checkout,' + sLineBreak +
+      '	    (Case When Coalesce(Demanda, 0) = 0 and PedProd.ProcessoId = 15 then PedProd.Quantidade Else 0 End)+Coalesce(Corte.QtdCancelado, 0) Cancelado, Coalesce(QtdSuprida, 0) QtdSuprida' + sLineBreak +
+      '     , Coalesce(Est.Estoque, 0) Estoque, Coalesce(Est.Vencido, 0) Vencido' + sLineBreak +
+      'From #PedProd PedProd' + sLineBreak +
+      'Left Join #Corte  Corte on Corte.PedidoId = PedProd.PedidoId and Corte.ProdutoId = PedProd.ProdutoId' + sLineBreak +
+      'Left Join (Select CodigoERP, Sum(Qtde) Estoque, Sum(Iif(vencimento<@DataIni, qtde, 0)) Vencido' + sLineBreak +
+      '           From vEstoqueProducao Group By CodigoERP) Est On Est.CodigoERP = CodProduto' + sLineBreak +
+      'Where PedProd.Quantidade > Coalesce(QtdSuprida, 0)' + sLineBreak +
+      'Order by PedProd.Descricao asc';
+
+Const SqlGetPedidoCortes_090524 = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak +
       'Declare @DataFin DateTime = :pDataFin' + sLineBreak +
       'Declare @PedidoId Integer = :pPedidoId' + sLineBreak +
       'Declare @CodProduto Integer = :pCodProduto' + sLineBreak +
@@ -6081,7 +6124,50 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       'Declare @PedidoId Integer   = :pPedidoId' + sLineBreak +
       'Declare @CodProduto Integer = :pCodProduto' + sLineBreak +
       'Declare @ZonaId Integer     = :pZonaId' + sLineBreak +
-      'Select PedProd.ProdutoId, CodProduto, Descricao, Embalagem, Sum(PedProd.Quantidade) Demanda,'+sLineBreak+
+      'Drop table if exists #PedProd' + sLineBreak +
+      'Drop table if exists #Corte' + sLineBreak +
+      'Select PP.PedidoId, Rd.Data, Pp.ProdutoId, Prd.CodProduto, Prd.Descricao, Pp.Quantidade,' + sLineBreak +
+      '      (Case When EmbalagemPadrao = 1 then '+#39+'Unid'+#39+' Else '+#39+'Cxa c/'+#39+'+Cast(EmbalagemPadrao as VarChar) End) Embalagem, De.ProcessoId Into #PedProd' + sLineBreak +
+      '      From pedidoprodutos Pp' + sLineBreak +
+      '      inner join Pedido ped on ped.pedidoid = Pp.pedidoid' + sLineBreak +
+      '      inner join Rhema_Data Rd on Rd.IdData = ped.DocumentoData' + sLineBreak +
+      '      Inner Join Produto Prd On Prd.IdProduto = Pp.ProdutoId' + sLineBreak +
+      '      Inner Join vDocumentoEtapas De On De.Documento = ped.Uuid And' + sLineBreak +
+      '	                                    DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = Ped.uuid )' + sLineBreak +
+      '      Left Join Enderecamentos TEnd on TEnd.EnderecoId = Prd.EnderecoId' + sLineBreak +
+      '      where (@DataIni = 0 or Rd.Data >= @DataIni) and (@DataFin = 0 or Rd.Data <= @DataFin)' + sLineBreak +
+      '            and (@Pedidoid = 0 or ped.PedidoId = @Pedidoid) and (@CodProduto =0 or Prd.CodProduto = @CodProduto)' + sLineBreak +
+      '            and De.ProcessoId > 1 and De.ProcessoId <> 31' + sLineBreak +
+      '            And @ZonaId = 0 or @Zonaid = TEnd.ZonaId' + sLineBreak +
+      'Select Corte.PedidoId, Corte.ProdutoId, Corte.Demanda, Corte.QtdSuprida, Corte.QtdCancelado Into #Corte' + sLineBreak +
+      'From #PedProd PedProd' + sLineBreak +
+      'Left Join (select VLote.PedidoId, VLote.ProdutoId, SUM(VLote.Demanda) Demanda, SUM(VLote.QtdSuprida) QtdSuprida, SUM(VLote.QtdCancelado) QtdCancelado' + sLineBreak +
+      '           From (Select Pv.PedidoId, Pl.ProdutoId, Coalesce(Sum(Vl.Quantidade), 0) Demanda,' + sLineBreak +
+      '                 Sum((Case When De.ProcessoId<>15 then Vl.QtdSuprida Else 0 End)) QtdSuprida,' + sLineBreak +
+      '				 (Case When De.ProcessoId=15 then Sum(Vl.Quantidade) Else 0 End) QtdCancelado' + sLineBreak +
+      '           From PedidoVolumeLotes Vl' + sLineBreak +
+      '           Inner Join PedidoVolumes  Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId' + sLineBreak +
+      '		   Inner Join ProdutoLotes   Pl on Pl.LoteId         = Vl.LoteId' + sLineBreak +
+      '		   Inner Join vDocumentoEtapas De on De.Documento = Pv.Uuid' + sLineBreak +
+      '		   Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid)' + sLineBreak +
+      '           Group by Pv.PedidoId, Pl.ProdutoId, De.ProcessoId) VLote' + sLineBreak +
+      '           Group by VLote.PedidoId, VLote.ProdutoId) Corte On Corte.PedidoId = PedProd.PedidoId and Corte.ProdutoId = PedProd.ProdutoId' + sLineBreak +
+      'Select PedProd.ProdutoId, PedProd.CodProduto, PedProd.Descricao, PedProd.Embalagem,' + sLineBreak +
+      '       Sum(PedProd.Quantidade) Demanda,' + sLineBreak +
+      '       Sum((Case When Coalesce(Demanda, 0) > 0 then PedProd.Quantidade - Coalesce(Demanda, 0) Else' + sLineBreak +
+      '           (Case When PedProd.ProcessoId<>15 then PedProd.Quantidade Else 0 End) End)) Cubagem,' + sLineBreak +
+      '       Sum(Coalesce((Case When Demanda>0 and Coalesce(Demanda, 0) > (QtdSuprida+QtdCancelado) then Coalesce(Demanda, 0) - QtdSuprida - QtdCancelado else 0 End), 0)) Checkout,' + sLineBreak +
+      '   	   Sum((Case When Coalesce(Demanda, 0) = 0 and PedProd.ProcessoId = 15 then PedProd.Quantidade Else 0 End)+Coalesce(C.QtdCancelado, 0)) Cancelado,' + sLineBreak +
+      '   	   Sum(Coalesce(QtdSuprida, 0)) QtdSuprida, Sum(Coalesce(Est.Estoque, 0)) Estoque, Sum(Coalesce(Est.Vencido, 0)) Vencido' + sLineBreak +
+      'From #PedProd PedProd' + sLineBreak +
+      'left Join #Corte C On C.PedidoId = PedProd.PedidoId and C.ProdutoId = PedProd.ProdutoId' + sLineBreak +
+      'Left Join (Select CodigoERP, Sum(Qtde) Estoque, Sum(Iif(vencimento<@DataIni, qtde, 0)) Vencido' + sLineBreak +
+      '           From vEstoqueProducao Group By CodigoERP) Est On Est.CodigoERP = PedProd.CodProduto' + sLineBreak +
+      'Where PedProd.Quantidade > Coalesce(C.QtdSuprida, 0)' + sLineBreak +
+      'Group By PedProd.ProdutoId, PedProd.CodProduto, PedProd.Descricao, PedProd.Embalagem' + sLineBreak +
+      'Order by PedProd.Descricao';
+
+Const SqlGetPedidoCorteSinteticoOLD =      'Select PedProd.ProdutoId, CodProduto, Descricao, Embalagem, Sum(PedProd.Quantidade) Demanda,'+sLineBreak+
       '       Sum((Case When Coalesce(Demanda, 0) > 0 then PedProd.Quantidade - Coalesce(Demanda, 0) Else '+sLineBreak+
       '           (Case When PedProd.ProcessoId<>15 then PedProd.Quantidade Else 0 End) End)) Cubagem,' + sLineBreak +
       '       Sum(Coalesce((Case When Demanda>0 and Coalesce(Demanda, 0) > (QtdSuprida+QtdCancelado) then Coalesce(Demanda, 0) - QtdSuprida - QtdCancelado else 0 End), 0)) Checkout,' + sLineBreak +

@@ -2068,7 +2068,7 @@ begin
        Else If pJsonArray.Get(xProd).GetValue<Integer>('demanda') = pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') then
           LstPedidoResumoAdv.Colors[7, xProd+1] := clGreen
        Else Begin
-          LstPedidoResumoAdv.Colors[7, xProd+1] := LstVolumesAdv.Colors[4, xProd+1];
+          LstPedidoResumoAdv.Colors[7, xProd+1] := LstPedidoResumoAdv.Colors[4, xProd+1];
           if pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') > pJsonArray.Get(xProd).GetValue<Integer>('demanda') then
              LstPedidoResumoAdv.FontColors[7, xProd+1] := clRed;
        End;
@@ -2084,7 +2084,6 @@ begin
     LstPedidoResumoAdv.Alignments[8, xProd+1] := taRightJustify;
     LstPedidoResumoAdv.Alignments[9, xProd+1] := taRightJustify;
   End;
-
   TabVolumes.TabVisible := True;
   TabResumo.TabVisible  := True;
   PgcPedidos.ActivePage := TabResumo;
@@ -2449,10 +2448,6 @@ Var vPrintTag, vEmbalagem : Integer;
 begin
   if DebugHook = 0 then
      raise Exception.Create('Funcionalidade em Desenvolvimento...');
-
-
-
-
   vPrintTag  := 2;
   vEmbalagem := 2;
   ObjPedidoVolumeCtrl := TPedidoVOlumeCtrl.Create;
@@ -2476,14 +2471,25 @@ begin
            FrmPrintTAG := TfrmPrintTAG.Create(Application);
         try
           FrmPrintTAG.Module     := 'Relatórios';
-          FrmPrintTAG.ModuleMenu := 'Impressão Tag';//+#39+'s';
-          FrmPrintTag.TagVolumeFracionado8x10etqEpl2(jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid'),
-                      pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp'),
-                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens'),
-                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida'), jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia'),
-                      jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'))),
-                      jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid'),
-                      jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes'));
+          FrmPrintTAG.ModuleMenu := 'Impressão Tag';
+          if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then Begin
+             FrmPrintTag.TagVolumeFracionado8x10etqPpla(jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid'),
+                         pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida'), jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'))),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes'))
+          End
+          Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) then Begin
+             FrmPrintTag.TagVolumeFracionado8x10etqEpl2(jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid'),
+                         pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida'), jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'))),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid'),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes'))
+          End;
         except on e: Exception do
           begin
             FreeAndNil(frmPrintTAG);
@@ -2501,7 +2507,8 @@ begin
     Else If FrmeXactWMs.ConfigWMS.ObjConfiguracao.ModeloEtqVolume = 2 then //Destaque para Cliente e Rota
        FrmPrintTag.TagVolumeCaixaFechada_RotaClienteDestaque_8x10etqEpl2(pPedidoVolumeId);
   End;
-
+  jsonEtiquetasPorVolume := Nil;
+  ObjPedidoVolumeCtrl.Free;
 end;
 
 procedure TFrmRelPedidos.TabPedidosShow(Sender: TObject);
