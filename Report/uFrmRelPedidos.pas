@@ -917,6 +917,7 @@ begin
   LstVolumesAdv.Alignments[9, 0] := taCenter;
   LstVolumesAdv.HideColumn(3);
   LstVolumesAdv.HideColumn(5);
+  LstVolumesAdv.HideColumn(11);
   //Resumo Atendimento do Pedido
   LstPedidoResumoAdv.ColWidths[0] := 80+Trunc(80*ResponsivoVideo);
   LstPedidoResumoAdv.ColWidths[1] := 60+Trunc(60*ResponsivoVideo);
@@ -1236,12 +1237,17 @@ Var ReturnJsonArray   : TJsonArray;
   JsonVolume          : TJsonObject;
   vErro               : String;
   aColGrid            : Integer;
+  ColCancVolume       : Integer;
 begin
   inherited;
-  If TAdvStringGrid(Sender).Name = 'LstVolumesAdv' then
-     aColGrid := 6
-  Else
+  If TAdvStringGrid(Sender).Name = 'LstVolumesAdv' then Begin
+     aColGrid := 6;
+     ColCancVolume := 10;
+  End
+  Else Begin
      aColGrid := 7;
+     ColCancVolume := 11;
+  End;
   if (aRow = 0) and (aColGrid <> 7) then Begin
      TAdvStringGrid(Sender).SortSettings.Column := aCol;
      TAdvStringGrid(Sender).QSort;
@@ -1254,6 +1260,18 @@ begin
   End
   Else if (aColGrid = aCol) and (ARow>0) and (TAdvStringGrid(Sender).Cells[8, aRow]='2') and (TAdvStringGrid(Sender).Cells[8, 0]='Ação') then Begin
      //APlicar Controle de Acesso
+     if TAdvStringGrid(Sender).Ints[ColCancVolume, aRow] = 7 then Begin
+        ShowErro('Volume em Separação. Finalize antes de Cancelar', 'inválido');
+        exit;
+     End
+     Else if TAdvStringGrid(Sender).Ints[ColCancVolume, aRow] =  9 then Begin
+        ShowErro('Volume com CheckOut iniciado. Finalize antes de Cancelar', 'inválido');
+        exit;
+     End
+     Else if TAdvStringGrid(Sender).Ints[ColCancVolume, aRow] =  11 then Begin
+        ShowErro('Volume Em Re-CheckOut. Finalize antes de Cancelar', 'inválido');
+        exit;
+     End;
      If Confirmacao('Cancelar Volume.', 'Deseja cancelar o volume('+TAdvStringGrid(Sender).Cells[0, aRow]+')?', True) then begin
         if TAdvStringGrid(Sender).Cells[7, aRow] = 'Na Expedição' then
            MensagemSis('ATENÇÃO: Volume Expedido.', 'Estoque DIRECIONADO: '+
@@ -1444,6 +1462,7 @@ Begin
   LstVolumeConsulta.Alignments[ 9, 0] := taCenter;
   LstVolumeConsulta.Alignments[10, 0] := taCenter;
   LstVolumeConsulta.HideColumn(4);
+  LstVolumeConsulta.HideColumn(11);
 
   LstVolumeHistoricoConsulta.ColWidths[0]  := 100+Trunc(100*ResponsivoVideo);
   LstVolumeHistoricoConsulta.ColWidths[1]  :=  80+Trunc(80*ResponsivoVideo);
@@ -2128,7 +2147,7 @@ begin
        LstVolumesAdv.Colors[7, xVol+1] := ClRed
     Else
        LstVolumesAdv.Colors[7, xVol+1] := LstVolumesAdv.Colors[6, xVol+1];
-
+    LstVolumesAdv.Cells[10, xVol+1] := pJsonArray.Get(xVol).GetValue<String>('processoid');
 
     LstVolumesAdv.Alignments[0, xVol+1] := taRightJustify;
     LstVolumesAdv.FontStyles[0, xVol+1] := [FsBold];
@@ -2183,7 +2202,7 @@ begin
     if pJsonArrayRetorno.Get(xVol).GetValue<Integer>('cargaid') > 0 then
        LstVolumeConsulta.Cells[9, xVol+1]    := '1'
     Else LstVolumeConsulta.Cells[9, xVol+1]    := '0';
-
+    LstVolumeConsulta.Cells[11, xVol+1]    := pJsonArrayRetorno.Get(xVol).GetValue<String>('processoid');
     if pJsonArrayRetorno.Get(xVol).GetValue<Integer>('processoid') = 13 then
        LstVolumeConsulta.Colors[7, xVol+1] := ClRed
     Else LstVolumeConsulta.Colors[7, xVol+1] := LstVolumeConsulta.Colors[6, xVol+1];

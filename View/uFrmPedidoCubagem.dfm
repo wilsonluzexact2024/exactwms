@@ -10,7 +10,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 663
-    Properties.ActivePage = TabResumoAtendimento
+    Properties.ActivePage = TabPrincipal
     OnDrawTab = PgcBaseDrawTab
     ExplicitTop = 59
     ExplicitHeight = 663
@@ -67,7 +67,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Par'#226'metros para Processamento'
-      ExplicitTop = 22
       ExplicitHeight = 639
       DesignSize = (
         1157
@@ -21792,8 +21791,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       Caption = 'Excluir Pedidos'
       ImageIndex = 4
       OnShow = TabExcuirPedidoShow
-      ExplicitLeft = -1
-      ExplicitTop = 22
       DesignSize = (
         1157
         639)
@@ -23413,7 +23410,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       CustomHint = BalloonHint1
       Caption = 'ResumoAtendimento'
       ImageIndex = 5
-      ExplicitTop = 22
       object LstPedidoResumoAdv: TAdvStringGrid
         Left = 0
         Top = 174
@@ -23644,8 +23640,6 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
         SortSettings.HeaderMirrorColorTo = 16182488
         Version = '8.4.2.2'
         WordWrap = False
-        ExplicitLeft = -1
-        ExplicitTop = 176
         ColWidths = (
           74
           78

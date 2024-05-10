@@ -461,7 +461,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabResumo
+        Properties.ActivePage = TabVolumes
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 495
@@ -1270,7 +1270,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitLeft = -1
             ColWidths = (
               74
               78
@@ -1317,13 +1316,13 @@ inherited FrmRelPedidos: TFrmRelPedidos
           object LstVolumesAdv: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 675
+            Width = 761
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1
             Align = alLeft
             Anchors = [akTop, akRight, akBottom]
-            ColCount = 10
+            ColCount = 11
             DefaultColWidth = 74
             DefaultRowHeight = 25
             DrawingStyle = gdsClassic
@@ -1360,7 +1359,8 @@ inherited FrmRelPedidos: TFrmRelPedidos
               'Caixa'
               'Processo'
               'A'#231#227'o'
-              'Carga')
+              'Carga'
+              'ProcessoId')
             ControlLook.FixedGradientHoverFrom = 13619409
             ControlLook.FixedGradientHoverTo = 12502728
             ControlLook.FixedGradientHoverMirrorFrom = 12502728
@@ -1546,10 +1546,10 @@ inherited FrmRelPedidos: TFrmRelPedidos
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitHeight = 156
             ColWidths = (
               74
               78
+              74
               74
               74
               74
@@ -1784,9 +1784,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
               25)
           end
           object LstVolumeEtapas: TAdvStringGrid
-            Left = 681
+            Left = 772
             Top = 0
-            Width = 669
+            Width = 578
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1
@@ -3233,7 +3233,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
             CustomHint = BalloonHint1
             Align = alLeft
             Anchors = [akTop, akRight, akBottom]
-            ColCount = 11
+            ColCount = 12
             DefaultColWidth = 74
             DefaultRowHeight = 25
             DrawingStyle = gdsClassic
@@ -3271,7 +3271,8 @@ inherited FrmRelPedidos: TFrmRelPedidos
               'Processo'
               'A'#231#227'o'
               'Carga'
-              'Print')
+              'Print'
+              'ProcessoId')
             ControlLook.FixedGradientHoverFrom = 13619409
             ControlLook.FixedGradientHoverTo = 12502728
             ControlLook.FixedGradientHoverMirrorFrom = 12502728
@@ -3460,6 +3461,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
             ColWidths = (
               74
               78
+              74
               74
               74
               74

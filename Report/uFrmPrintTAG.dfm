@@ -30371,7 +30371,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagLocalizacao
+        Properties.ActivePage = TbTagVolume
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -30385,9 +30385,6 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Produtos'
           ImageIndex = 1
           OnShow = TabListagemShow
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object Label8: TLabel
             Left = 90
             Top = 64
@@ -32604,9 +32601,6 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Volumes'
           ImageIndex = 2
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LblEtiquetas: TLabel
             Left = 1001
             Top = 130
@@ -33716,18 +33710,12 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
         object TbTagArmazenagem: TcxTabSheet
           CustomHint = BalloonHint1
           Caption = 'Tag Armazenagem'
           ImageIndex = 4
           OnShow = TbTagArmazenagemShow
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object LblTotRegCaption: TLabel
             Left = 2
             Top = 182

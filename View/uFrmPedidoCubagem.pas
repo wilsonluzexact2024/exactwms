@@ -1930,9 +1930,11 @@ begin
             if vProdutoId <> QryEstoqueDisponivel_CaixaFracionada.FieldByName('ProdutoId').AsInteger then Begin
                vProdutoId             := FieldByName('ProdutoId').AsInteger;
                vPesoProduto           := FieldByName('PesoLiquidoKg').AsFloat;
-               if vPesoProduto <= 0 then vPesoProduto := 1;
+               if vPesoProduto <= 0 then
+                  vPesoProduto := 0.01;
                vVolumeProduto         := FieldByName('VolumeCm3').AsFloat;
-               If vVolumeProduto <= 0 then vVolumeProduto := 512;
+               If vVolumeProduto <= 0 then
+                  vVolumeProduto := 512;
                vSaldoQtdSolicitada    := QryEstoqueDisponivel_CaixaFracionada.FieldByName('QtdSolicitada').AsInteger;//*FieldByName('EmbalagemPadrao').AsInteger;
             End;
             //Verificar se Cabe na Caixa
