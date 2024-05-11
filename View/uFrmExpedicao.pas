@@ -33,6 +33,7 @@ type
     Label7: TLabel;
     LblOrdem: TLabel;
     Label8: TLabel;
+    PnlVolumeCorte: TPanel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -212,13 +213,14 @@ begin
        Exit;
     End
     Else Begin
-       EdtPedidoId.Text      := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('pedidoid');
-       EdtDocumentoData.Text := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('documentodata');
-       EdtDestino.Text       := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('codpessoaerp')+' '+
-                                JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('fantasia');
-       EdtRota.Text          := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rotaid')+' '+
-                                JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rota');
-       LblOrdem.Caption      := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('ordem');
+       EdtPedidoId.Text       := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('pedidoid');
+       EdtDocumentoData.Text  := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('pedido').GetValue<String>('documentodata');
+       EdtDestino.Text        := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('codpessoaerp')+' '+
+                                 JsonArrayRetorno.Items[0].GetValue<TJsonObject>('destino').GetValue<String>('fantasia');
+       EdtRota.Text           := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rotaid')+' '+
+                                 JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('rota');
+       LblOrdem.Caption       := JsonArrayRetorno.Items[0].GetValue<TJsonObject>('rota').GetValue<String>('ordem');
+       PnlVolumeCorte.Visible := (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <> JsonArrayRetorno.Items[0].GetValue<Integer>('demanda'));
     End;
     if Not (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid') in [8, 10, 12]) then Begin
        EdtVolumeId.Text := '';
@@ -234,8 +236,8 @@ begin
         MensagemSis('Atenção', 'O Volume('+EdtVolumeId.Text+') deve ser Reconferido!', '', '', False, True);
         Exit;
     End
-    Else If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <>
-                                                             JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
+    Else If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid')<>12) and
+            (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <> JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
        LimparExpedicao;
        MensagemSis('Atenção', 'Enviar Volume'+EdtVolumeId.Text+' para Auditoria!', '', '', False, True);
        Exit;

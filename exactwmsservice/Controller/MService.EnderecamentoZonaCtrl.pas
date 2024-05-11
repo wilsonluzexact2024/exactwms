@@ -30,8 +30,7 @@ Type
 procedure Registry;
 procedure Get(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure GetEnderecamentoZona4D(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEnderecamentoZona4D(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure GetDescricao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -215,20 +214,16 @@ begin
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  enderecamentoZonaDAO: TenderecamentoZonaDAO;
+Var EnderecamentoZonaDAO: TenderecamentoZonaDAO;
 begin
   Try
     Try
       enderecamentoZonaDAO := TenderecamentoZonaDAO.Create;
       enderecamentoZonaDAO.InsertUpdate(Req.Body<TJSONObject>);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
-    Except
-      on E: Exception do
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro Alterado com Sucesso!'))).Status(THttpStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -237,21 +232,17 @@ begin
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  ObjArray: TJSONObject;
-  enderecamentoZonaDAO: TenderecamentoZonaDAO;
+Var ObjArray: TJSONObject;
+    EnderecamentoZonaDAO: TenderecamentoZonaDAO;
 begin
   Try
     Try
       enderecamentoZonaDAO := TenderecamentoZonaDAO.Create;
       enderecamentoZonaDAO.Delete(StrToIntDef(Req.Params.Items['zonaid'], 0));
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro Alterado com Sucesso!'))).Status(THttpStatus.NoContent);
-    Except
-      on E: Exception do
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro Alterado com Sucesso!'))).Status(THttpStatus.NoContent);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -277,13 +268,10 @@ begin
   Try
     Try
       EnderecamentoZonaDAO := TenderecamentoZonaDAO.Create;
-      Res.Send<TJSONObject>(EnderecamentoZonaDAO.MontarPaginacao)
-        .Status(THttpStatus.Created);
-    Except
-      on E: Exception do
+      Res.Send<TJSONObject>(EnderecamentoZonaDAO.MontarPaginacao).Status(THttpStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally

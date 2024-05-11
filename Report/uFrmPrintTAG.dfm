@@ -92,6 +92,16 @@ inherited FrmPrintTag: TFrmPrintTag
         Align = alTop
         Caption = '> Selecione o tipo de TAG <'
         TabOrder = 1
+        ExplicitLeft = -1
+        object LblTagVolumeOrdem: TLabel
+          Left = 1072
+          Top = 9
+          Width = 125
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Ordem de Impress'#227'o'
+          Visible = False
+        end
         object BtnTagProduto: TPanel
           Left = 28
           Top = 23
@@ -30360,6 +30370,29 @@ inherited FrmPrintTag: TFrmPrintTag
             ExplicitLeft = 2
           end
         end
+        object CbTagVolumeOrdem: TComboBox
+          Left = 1072
+          Top = 28
+          Width = 182
+          Height = 22
+          CustomHint = BalloonHint1
+          Style = csOwnerDrawFixed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ItemIndex = 2
+          ParentFont = False
+          TabOrder = 6
+          TabStop = False
+          Text = 'Endere'#231'o + Rota +  Produto'
+          Visible = False
+          Items.Strings = (
+            'Pedido'
+            'Endere'#231'o + Rota + Loja'
+            'Endere'#231'o + Rota +  Produto')
+        end
       end
       object PgcTabTags: TcxPageControl
         Left = 0
@@ -30431,6 +30464,7 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Endere'#231'os'
           ImageIndex = 0
+          OnShow = TbTagLocalizacaoShow
           object Label2: TLabel
             Left = 15
             Top = 13
@@ -32601,6 +32635,7 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Volumes'
           ImageIndex = 2
+          OnShow = TbTagVolumeShow
           object LblEtiquetas: TLabel
             Left = 1001
             Top = 130
@@ -33710,6 +33745,7 @@ inherited FrmPrintTag: TFrmPrintTag
           CustomHint = BalloonHint1
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
+          OnShow = TbTagCaixaShow
         end
         object TbTagArmazenagem: TcxTabSheet
           CustomHint = BalloonHint1
@@ -39743,6 +39779,7 @@ inherited FrmPrintTag: TFrmPrintTag
       ExplicitHeight = 689
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1309
       ExplicitHeight = 689
       inherited DbgImporta: TDBGrid
@@ -39837,10 +39874,10 @@ inherited FrmPrintTag: TFrmPrintTag
     end
   end
   inherited PnlImgObjeto: TPanel
-    Left = 1079
-    Top = 22
-    ExplicitLeft = 1079
-    ExplicitTop = 22
+    Left = 1077
+    Top = 397
+    ExplicitLeft = 1077
+    ExplicitTop = 397
   end
   inherited PnlErro: TPanel
     Top = 746
@@ -39853,10 +39890,10 @@ inherited FrmPrintTag: TFrmPrintTag
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 720
-    Top = -3
-    ExplicitLeft = 720
-    ExplicitTop = -3
+    Left = 730
+    Top = 336
+    ExplicitLeft = 730
+    ExplicitTop = 336
     inherited LblLanguagePrinter: TLabel
       Color = clBtnFace
     end

@@ -236,22 +236,19 @@ var
 begin
   try
     if Self.ObjEnderecoRua.RuaId = 0 then
-      vSql := 'Insert Into EnderecamentoRuas (Descricao, Lado, Ordem, Status) Values ('
-        + QuotedStr(Self.ObjEnderecoRua.Descricao) + ', ' +
-        QuotedStr(Self.ObjEnderecoRua.Lado) + ', ' +
-        Self.ObjEnderecoRua.Ordem.ToString() + ', ' +
-        Self.ObjEnderecoRua.Status.ToString() + ')'
+       vSql := 'Insert Into EnderecamentoRuas (Descricao, Lado, Ordem, Status) Values ('+sLineBreak+
+               QuotedStr(Self.ObjEnderecoRua.Descricao) + ', ' +QuotedStr(Self.ObjEnderecoRua.Lado)+ ', '+sLineBreak+
+               Self.ObjEnderecoRua.Ordem.ToString() + ', 1)'
     Else
-      vSql := ' Update EnderecamentoRuas ' + '     Set Descricao = ' +
-        QuotedStr(Self.ObjEnderecoRua.Descricao) + '   , Lado          = ' +
-        QuotedStr(Self.ObjEnderecoRua.Lado) + '   , Ordem         = ' +
-        Self.ObjEnderecoRua.Ordem.ToString() + '   , Status = ' +
-        Self.ObjEnderecoRua.Status.ToString() + ' where RuaId = ' +
-        Self.ObjEnderecoRua.RuaId.ToString;
+       vSql := ' Update EnderecamentoRuas '+sLineBreak+
+               '    Set Descricao = '+QuotedStr(Self.ObjEnderecoRua.Descricao)+sLineBreak+
+               '  , Lado          = '+QuotedStr(Self.ObjEnderecoRua.Lado)+sLineBreak+
+               '  , Ordem         = '+Self.ObjEnderecoRua.Ordem.ToString()+sLineBreak+
+               '   , Status = '+Self.ObjEnderecoRua.Status.ToString()+sLineBreak+
+               ' where RuaId = '+Self.ObjEnderecoRua.RuaId.ToString;
     FConexao.Query.ExecSQL(vSql);
     Result := True;
-  Except
-    ON E: Exception do
+  Except On E: Exception do
     Begin
       raise Exception.Create(E.Message);
     End;
@@ -261,40 +258,23 @@ end;
 Function TEnderecoRuaDao.TrataErroFireDac(pErro: EFDDBEngineException): String;
 begin
   case pErro.Kind of
-    ekOther:
-      Result := pErro.Message; // 'Operação com o Banco de Dados';
-    ekNoDataFound:
-      Result := 'Erro! Dados não encontrados';
-    ekTooManyRows:
-      Result := 'Excesso de Linhas';
-    ekRecordLocked:
-      Result := 'Registro com acesso bloqueado. Pode está sendo usado por outro processo.';
-    ekUKViolated:
-      Result := 'Tentativa de incluir registro já existente.';
-    ekFKViolated:
-      Result := 'Cadastro primário necessário inexistente.';
-    ekObjNotExists:
-      Result := 'Objeto não encontrado';
-    ekUserPwdInvalid:
-      Result := 'Usuário e/ou Senha inválido.';
-    ekUserPwdExpired:
-      Result := 'Usuário e/ou Senha expirou!';
-    ekUserPwdWillExpire:
-      Result := 'Usuário e/ou Senha prestes a expirar';
-    ekCmdAborted:
-      Result := 'Operação cancelada.';
-    ekServerGone:
-      Result := 'Servidor de Banco de Dados inexistente.';
-    ekServerOutput:
-      Result := 'Servidor de Banco de Dados parece está fora do ar.';
-    ekArrExecMalfunc:
-      Result := 'Operação mal sucedida.';
-    ekInvalidParams:
-      Result := 'Parâmetros inválidos para esta operação.';
+    ekOther:             Result := pErro.Message; // 'Operação com o Banco de Dados';
+    ekNoDataFound:       Result := 'Erro! Dados não encontrados';
+    ekTooManyRows:       Result := 'Excesso de Linhas';
+    ekRecordLocked:      Result := 'Registro com acesso bloqueado. Pode está sendo usado por outro processo.';
+    ekUKViolated:        Result := 'Tentativa de incluir registro já existente.';
+    ekFKViolated:        Result := 'Cadastro primário necessário inexistente.';
+    ekObjNotExists:      Result := 'Objeto não encontrado';
+    ekUserPwdInvalid:    Result := 'Usuário e/ou Senha inválido.';
+    ekUserPwdExpired:    Result := 'Usuário e/ou Senha expirou!';
+    ekUserPwdWillExpire: Result := 'Usuário e/ou Senha prestes a expirar';
+    ekCmdAborted:        Result := 'Operação cancelada.';
+    ekServerGone:        Result := 'Servidor de Banco de Dados inexistente.';
+    ekServerOutput:      Result := 'Servidor de Banco de Dados parece está fora do ar.';
+    ekArrExecMalfunc:    Result := 'Operação mal sucedida.';
+    ekInvalidParams:     Result := 'Parâmetros inválidos para esta operação.';
   end;
-  Result := 'Tabela: EnderecamentoRuas - ' + StringReplace(Result,
-    '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-    '', [rfReplaceAll]);
+  Result := 'Tabela: EnderecamentoRuas - ' + StringReplace(Result, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]);
 end;
 
 end.

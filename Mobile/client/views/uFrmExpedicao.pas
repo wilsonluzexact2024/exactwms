@@ -59,6 +59,8 @@ type
     Label12: TLabel;
     LblEmbalagem: TLabel;
     Label10: TLabel;
+    RctVolumeCorte: TRectangle;
+    Label13: TLabel;
     procedure EdtCodigoKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure EdtCodigoKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -184,8 +186,8 @@ begin
        Limpar;
        Exit;
     End
-{    Else If (FrmeXactWMS.ConfigWMS.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <>
-                                                             JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
+    Else If (FrmeXactWMS.ConfigWMS.VolumeAuditoria = 1) and (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid') <> 12) and
+            (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <> JsonArrayRetorno.Items[0].GetValue<Integer>('demanda')) then Begin
        vVolumeId := EdtCodigo.Text;
        SetCampoDefault('EdtCodigo');
        ShowErro('Enviar Volume'+vVolumeId+' para Auditoria!', 'alarme');
@@ -194,18 +196,16 @@ begin
        Limpar;
        Exit;
     End
-}    Else Begin
-       EdtPedido.Text        := JsonArrayRetorno.Items[0].GetValue<String>('pedidoid')+' / '+JsonArrayRetorno.Items[0].GetValue<String>('pedidovolumeid');
-       EdtDataDocumento.Text := JsonArrayRetorno.Items[0].GetValue<String>('documentodata');
-       EdtDestino.Text       := JsonArrayRetorno.Items[0].GetValue<String>('codpessoaerp')+' '+
-                                JsonArrayRetorno.Items[0].GetValue<String>('fantasia');
-       EdtRota.Text          := JsonArrayRetorno.Items[0].GetValue<String>('rotaid')+' '+
-                                JsonArrayRetorno.Items[0].GetValue<String>('rota');
+    Else Begin
+       EdtPedido.Text         := JsonArrayRetorno.Items[0].GetValue<String>('pedidoid')+' / '+JsonArrayRetorno.Items[0].GetValue<String>('pedidovolumeid');
+       EdtDataDocumento.Text  := JsonArrayRetorno.Items[0].GetValue<String>('documentodata');
+       EdtDestino.Text        := JsonArrayRetorno.Items[0].GetValue<String>('codpessoaerp')+' '+JsonArrayRetorno.Items[0].GetValue<String>('fantasia');
+       EdtRota.Text           := JsonArrayRetorno.Items[0].GetValue<String>('rotaid')+' '+JsonArrayRetorno.Items[0].GetValue<String>('rota');
+       RctVolumeCorte.Visible := (JsonArrayRetorno.Items[0].GetValue<Integer>('qtdsuprida') <> JsonArrayRetorno.Items[0].GetValue<Integer>('demanda'));
     End;
     If Not (JsonArrayRetorno.Items[0].GetValue<Integer>('processoid') in [8, 10, 12]) then Begin
        SetCampoDefault('EdtCodigo');
-       ShowErro('Operação não permitida. Etapa Atual:'+
-                   JsonArrayRetorno.Items[0].GetValue<String>('processo'), 'apito');
+       ShowErro('Operação não permitida. Etapa Atual:'+JsonArrayRetorno.Items[0].GetValue<String>('processo'), 'apito');
     End
     Else Begin
        if (FrmeXactWMS.ConfigWMS.ExigirReconferenciaToExpedicao = 1) and

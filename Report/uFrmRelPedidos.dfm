@@ -1316,13 +1316,13 @@ inherited FrmRelPedidos: TFrmRelPedidos
           object LstVolumesAdv: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 761
+            Width = 760
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1
             Align = alLeft
             Anchors = [akTop, akRight, akBottom]
-            ColCount = 11
+            ColCount = 12
             DefaultColWidth = 74
             DefaultRowHeight = 25
             DrawingStyle = gdsClassic
@@ -1360,6 +1360,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
               'Processo'
               'A'#231#227'o'
               'Carga'
+              'Print'
               'ProcessoId')
             ControlLook.FixedGradientHoverFrom = 13619409
             ControlLook.FixedGradientHoverTo = 12502728
@@ -1549,6 +1550,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
             ColWidths = (
               74
               78
+              74
               74
               74
               74
@@ -1784,9 +1786,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
               25)
           end
           object LstVolumeEtapas: TAdvStringGrid
-            Left = 772
+            Left = 778
             Top = 0
-            Width = 578
+            Width = 572
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1

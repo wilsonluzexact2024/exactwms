@@ -191,8 +191,7 @@ begin
         .ToString(), ',', '.', [rfReplaceAll]) + ', ' +
         StringReplace(pJsonEstrutura.GetValue<double>('capacidadepadrao')
         .ToString(), ',', '.', [rfReplaceAll]) + ', ' +
-        QuotedStr(pJsonEstrutura.GetValue<String>('mascara')) + ', ' +
-        pJsonEstrutura.GetValue<Integer>('status').ToString() + ')';
+        QuotedStr(pJsonEstrutura.GetValue<String>('mascara')) + ', 1)';
     End
     Else
       vSql := 'Update Enderecamentoestruturas ' +

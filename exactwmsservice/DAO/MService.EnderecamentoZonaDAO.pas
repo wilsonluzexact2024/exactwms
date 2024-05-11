@@ -89,8 +89,7 @@ begin
 end;
 
 function TEnderecamentoZonaDao.GetDescricao(pDescricao: String): TjSonArray;
-var
-  vSql: String;
+var vSql: String;
 begin
   try
     vSql := 'select * from EnderecamentoZonas where Descricao like ' +
@@ -103,57 +102,44 @@ begin
 end;
 
 function TEnderecamentoZonaDao.GetId(pZonaId: Integer): TjSonArray;
-var
-  vSql: String;
-  JsonZona, JsonEstoqueTipo, JsonRastro: TJsonObject;
+var vSql: String;
+    JsonZona, JsonEstoqueTipo, JsonRastro: TJsonObject;
 begin
   try
-    vSql := 'select Ez.ZonaId, Ez.Descricao, Ez.EstruturaId, Ez.EstoqueTipoId, Et.Descricao EstoqueTipo, Ez.Status, '
-      + sLineBreak +
-      '       Ez.RastroId, R.Descricao Rastro, Ez.LoteReposicao, Ez.SeparacaoConsolidada, Ez.ProdutoSNGPC'
-      + sLineBreak + 'From EnderecamentoZonas EZ' + sLineBreak +
-      'Inner join EstoqueTipo ET ON Et.Id = Ez.EstoqueTipoId' + sLineBreak +
-      'Inner join RastroTipo R ON R.RastroId = Ez.RastroId';
+    vSql := 'select Ez.ZonaId, Ez.Descricao, Ez.EstruturaId, Ez.EstoqueTipoId, Et.Descricao EstoqueTipo, Ez.Status, '+sLineBreak +
+            '      Ez.RastroId, R.Descricao Rastro, Ez.LoteReposicao, Ez.SeparacaoConsolidada, Ez.Sigla, Ez.TagVolumeOrdem, Ez.ProdutoSNGPC'+sLineBreak +
+            'From EnderecamentoZonas EZ' + sLineBreak +
+            'Inner join EstoqueTipo ET ON Et.Id = Ez.EstoqueTipoId' + sLineBreak +
+            'Inner join RastroTipo R ON R.RastroId = Ez.RastroId';
     if pZonaId <> 0 then
-      vSql := vSql + sLineBreak + 'where ZonaId = ' + pZonaId.ToString;
+       vSql := vSql + sLineBreak + 'where ZonaId = ' + pZonaId.ToString;
     FConexao.Query.Open(vSql);
     if DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('EnderecamentoZonas.Sql');
+       FConexao.Query.SQL.SaveToFile('EnderecamentoZonas.Sql');
     Result := TjSonArray.Create;
     if FConexao.Query.IsEmpty then
-      Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro',
-        TuEvolutconst.QrySemDados)))
+       Result.AddElement(TJsonObject.Create(tJsonPair.Create('Erro', TuEvolutconst.QrySemDados)))
     Else
-      While Not FConexao.Query.Eof do
-      Begin
+      While Not FConexao.Query.Eof do Begin
         JsonZona := TJsonObject.Create;
-        JsonZona.AddPair('zonaid', TJsonNumber.Create(FConexao.Query.FieldByName('ZonaId')
-          .AsInteger));
+        JsonZona.AddPair('zonaid', TJsonNumber.Create(FConexao.Query.FieldByName('ZonaId').AsInteger));
         JsonZona.AddPair('descricao', FConexao.Query.FieldByName('Descricao').AsString);
-        JsonZona.AddPair('estruturaid', FConexao.Query.FieldByName('EstruturaId')
-          .AsString);
-        JsonZona.AddPair('estoquetipoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('EstoqueTipoId').AsInteger));
+        JsonZona.AddPair('estruturaid', FConexao.Query.FieldByName('EstruturaId').AsString);
+        JsonZona.AddPair('estoquetipoid', TJsonNumber.Create(FConexao.Query.FieldByName('EstoqueTipoId').AsInteger));
         JsonEstoqueTipo := TJsonObject.Create;
-        JsonEstoqueTipo.AddPair('estoquetipoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('EstoqueTipoId').AsInteger));
-        JsonEstoqueTipo.AddPair('descricao', FConexao.Query.FieldByName('EstoqueTipo')
-          .AsString);
+        JsonEstoqueTipo.AddPair('estoquetipoid', TJsonNumber.Create(FConexao.Query.FieldByName('EstoqueTipoId').AsInteger));
+        JsonEstoqueTipo.AddPair('descricao', FConexao.Query.FieldByName('EstoqueTipo').AsString);
         JsonRastro := TJsonObject.Create;
-        JsonRastro.AddPair('rastroid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('RastroId').AsInteger));
+        JsonRastro.AddPair('rastroid', TJsonNumber.Create(FConexao.Query.FieldByName('RastroId').AsInteger));
         JsonRastro.AddPair('descricao', FConexao.Query.FieldByName('Rastro').AsString);
         JsonZona.AddPair('estoquetipo', JsonEstoqueTipo);
         JsonZona.AddPair('rastro', JsonRastro);
-        JsonZona.AddPair('lotereposicao',
-          TJsonNumber.Create(FConexao.Query.FieldByName('LoteReposicao').AsString));
-        JsonZona.AddPair('separacaoconsolidada',
-          TJsonNumber.Create(FConexao.Query.FieldByName('SeparacaoConsolidada')
-          .AsString));
-        JsonZona.AddPair('produtosngpc',
-          TJsonNumber.Create(FConexao.Query.FieldByName('ProdutoSNGPC').AsString));
-        JsonZona.AddPair('status', TJsonNumber.Create(FConexao.Query.FieldByName('Status')
-          .AsInteger));
+        JsonZona.AddPair('lotereposicao', TJsonNumber.Create(FConexao.Query.FieldByName('LoteReposicao').AsString));
+        JsonZona.AddPair('separacaoconsolidada', TJsonNumber.Create(FConexao.Query.FieldByName('SeparacaoConsolidada').AsString));
+        JsonZona.AddPair('produtosngpc', TJsonNumber.Create(FConexao.Query.FieldByName('ProdutoSNGPC').AsString));
+        JsonZona.AddPair('sigla',FConexao.Query.FieldByName('sigla').AsString);
+        JsonZona.AddPair('tagvolumeordem',TJsonNumber.Create(FConexao.Query.FieldByName('TagVolumeOrdem').AsInteger));
+        JsonZona.AddPair('status', TJsonNumber.Create(FConexao.Query.FieldByName('Status').AsInteger));
         Result.AddElement(JsonZona);
         FConexao.Query.Next;
       End;
@@ -251,31 +237,28 @@ var  vSql: String;
 begin
   try
     if pJsonEnderecamentoZona.GetValue<Integer>('zonaId') = 0 then
-      vSql := 'Insert Into EnderecamentoZonas (Descricao, EstruturaId, EstoqueTipoId, RastroId, LoteReposicao, SeparacaoConsolidada, ProdutoSNGPC, Status) Values ('
-        + QuotedStr(pJsonEnderecamentoZona.GetValue<String>('descricao')) + ', '
-        + pJsonEnderecamentoZona.GetValue<Integer>('estruturaId').ToString() +
-        ', ' + pJsonEnderecamentoZona.GetValue<Integer>('estoqueTipoId')
-        .ToString() + ', ' + pJsonEnderecamentoZona.GetValue<Integer>
-        ('rastroId').ToString() + ', ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('loteReposicao').ToString() +
-        ', ' + pJsonEnderecamentoZona.GetValue<Integer>('separacaoConsolidada')
-        .ToString() + ', ' + pJsonEnderecamentoZona.GetValue<Integer>
-        ('produtoSNGPC').ToString() + ', ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('status').ToString() + ')'
+      vSql := 'Insert Into EnderecamentoZonas (Descricao, EstruturaId, '+sLineBreak+
+              'EstoqueTipoId, RastroId, LoteReposicao, SeparacaoConsolidada, ProdutoSNGPC, Sigla, TagVolumeOrdem, Status) Values ('+sLineBreak+
+              QuotedStr(pJsonEnderecamentoZona.GetValue<String>('descricao')) + ', '+sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('estruturaId').ToString()+', '+sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('estoqueTipoId').ToString()+', '+sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('rastroId').ToString()+', ' +sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('loteReposicao').ToString()+', '+sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('separacaoConsolidada').ToString()+', '+
+              pJsonEnderecamentoZona.GetValue<Integer>('produtoSNGPC').ToString()+sLineBreak+
+              pJsonEnderecamentoZona.GetValue<Integer>('tagVolumeOrdem', 0).ToString()+', 1)'
     Else
-      vSql := 'Update EnderecamentoZonas ' + '    Set  Descricao = ' +
-        QuotedStr(pJsonEnderecamentoZona.GetValue<String>('descricao')) +
-        '       , EstoqueTipoId = ' + pJsonEnderecamentoZona.GetValue<Integer>
-        ('estoqueTipoId').ToString() + '       , RastroId      = ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('rastroId').ToString() +
-        '       , LoteReposicao = ' + pJsonEnderecamentoZona.GetValue<Integer>
-        ('loteReposicao').ToString() + '       , SeparacaoConsolidada = ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('separacaoConsolidada')
-        .ToString() + '       , ProdutoSNGPC  = ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('produtoSNGPC').ToString() +
-        '       , Status   = ' + pJsonEnderecamentoZona.GetValue<Integer>
-        ('status').ToString() + 'where ZonaId = ' +
-        pJsonEnderecamentoZona.GetValue<Integer>('zonaId').ToString;
+      vSql := 'Update EnderecamentoZonas '+sLineBreak+
+              '   Set Descricao      = '+QuotedStr(pJsonEnderecamentoZona.GetValue<String>('descricao'))+sLineBreak+
+              '     , EstoqueTipoId  = '+ pJsonEnderecamentoZona.GetValue<Integer>('estoqueTipoId').ToString()+sLineBreak+
+              '     , RastroId       = '+pJsonEnderecamentoZona.GetValue<Integer>('rastroId').ToString()+sLineBreak+
+              '     , LoteReposicao  = ' + pJsonEnderecamentoZona.GetValue<Integer>('loteReposicao').ToString()+sLineBreak+
+              '     , SeparacaoConsolidada = '+pJsonEnderecamentoZona.GetValue<Integer>('separacaoConsolidada').ToString()+sLineBreak+
+              '     , ProdutoSNGPC   = '+pJsonEnderecamentoZona.GetValue<Integer>('produtoSNGPC').ToString()+sLineBreak+
+              '     , Sigla          = '+QuotedStr(pJsonEnderecamentoZona.GetValue<String>('sigla'))+sLineBreak+
+              '     , TagVolumeOrdem = '+pJsonEnderecamentoZona.GetValue<Integer>('tagVolumeOrdem', 0).ToString()+sLineBreak+
+              '     , Status         = ' + pJsonEnderecamentoZona.GetValue<Integer>('status').ToString()+sLineBreak+
+              'where ZonaId = '+pJsonEnderecamentoZona.GetValue<Integer>('zonaId').ToString;
     FConexao.Query.ExecSQL(vSql);
     Result := FConexao.Query.toJsonArray;
   Except On E: Exception do

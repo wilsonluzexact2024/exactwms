@@ -644,13 +644,13 @@ begin
   FrmPesquisaEnderecamentoRuas := TFrmPesquisaEnderecamentoRuas.Create(Application);
   try
     if (FrmPesquisaEnderecamentoRuas.ShowModal = mrOk) then  Begin
-       if (Sender=EdtRuaId) then Begin
-          EdtEstruturaIdExit(EdtRuaId);
+       if (PgcBase.ActivePage = TabPrincipal) then Begin
           EdtRuaId.Text := FrmPesquisaEnderecamentoRuas.Tag.ToString();
+          EdtEstruturaIdExit(EdtRuaId);
        End
        Else Begin
-          EdtEstruturaIdExit(EdtRuaIdCE);
           EdtRuaIdCe.Text := FrmPesquisaEnderecamentoRuas.Tag.ToString();
+          EdtEstruturaIdExit(EdtRuaIdCE);
        End;
     End;
   finally

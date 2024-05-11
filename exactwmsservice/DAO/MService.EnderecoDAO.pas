@@ -699,8 +699,7 @@ begin
         '.', [rfReplaceAll]) + ', ' +
         StringReplace(pJsonEndereco.GetValue<double>('capacidade').ToString(),
         ',', '.', [rfReplaceAll]) + ', ' +
-        QuotedStr(pJsonEndereco.GetValue<String>('curva')) + ', ' +
-        pJsonEndereco.GetValue<Integer>('status').ToString() + ')'
+        QuotedStr(pJsonEndereco.GetValue<String>('curva')) + ', 1)'
     Else
       vSql := 'Update Enderecamentos Set ' + sLineBreak +
         '     RuaId            = ' + pJsonEndereco.GetValue<TJsonObject>

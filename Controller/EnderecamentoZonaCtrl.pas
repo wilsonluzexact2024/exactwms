@@ -191,7 +191,7 @@ Begin
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
      Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJSONArray
   Else if ShowErro = 1 then
-    raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
+    raise Exception.Create('Erro: '+(DmeXactWMS.RESTResponseWMS.JSONValue as TJsonObject).GetValue<String>('Erro'));   //DmeXactWMS.RESTResponseWMS.StatusText);
 end;
 
 Function tEnderecamentoZonaCtrl.Salvar : Boolean;       //(pHistorico: THistorico)

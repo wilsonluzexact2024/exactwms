@@ -25,57 +25,57 @@ Type
     FProdutoSNGPC: Integer;
     FStatus: Integer;
     FSigla: String;
+    FTagVolumeOrdem : Integer;
     procedure SetDescricao(const Value: String);
     procedure SetZonaId(const Value: Integer);
     procedure SetStatus(const Value: Integer);
   Public
     constructor Create;
-    Class Function ClassToJson(Const objenderecamentozona
-      : Tenderecamentozona): String;
+    Class Function ClassToJson(Const objenderecamentozona : Tenderecamentozona): String;
     Class Function JsonToClass(Json: String): Tenderecamentozona;
     Class Procedure ConfigSizeField(Tabela: String; Sender: TObject);
     Procedure Limpar;
-    Property ZonaId: Integer read FZonaId write SetZonaId;
-    Property Descricao: String read FDescricao write SetDescricao;
-    Property EstruturaId: Integer Read FEstruturaId Write FEstruturaId;
-    Property EstoqueTipoId: Integer Read FEstoqueTipoId Write FEstoqueTipoId;
-    Property RastroId: Integer Read FRastroId Write FRastroId;
-    Property LoteReposicao: Integer Read FLoteReposicao Write FLoteReposicao;
-    Property SeparacaoConsolidada: Integer Read FSeparacaoConsolidada
-      Write FSeparacaoConsolidada;
-    Property ProdutoSNGPC: Integer Read FProdutoSNGPC Write FProdutoSNGPC;
-    Property Status: Integer read FStatus write SetStatus;
+    Property ZonaId: Integer          read FZonaId         write SetZonaId;
+    Property Descricao: String        read FDescricao      write SetDescricao;
+    Property EstruturaId: Integer     Read FEstruturaId    Write FEstruturaId;
+    Property EstoqueTipoId: Integer   Read FEstoqueTipoId  Write FEstoqueTipoId;
+    Property RastroId: Integer        Read FRastroId       Write FRastroId;
+    Property LoteReposicao: Integer   Read FLoteReposicao  Write FLoteReposicao;
+    Property SeparacaoConsolidada: Integer Read FSeparacaoConsolidada Write FSeparacaoConsolidada;
+    Property ProdutoSNGPC: Integer    Read FProdutoSNGPC   Write FProdutoSNGPC;
+    Property Sigla : String           Read FSigla          Write FSigla;
+    Property TagVolumeOrdem : Integer Read FTagVolumeOrdem Write FTagVolumeOrdem;
+    Property Status: Integer          read FStatus         Write SetStatus;
   End;
 
 implementation
 
 { TEnderecamentoZona }
 
-class function Tenderecamentozona.ClassToJson(Const objenderecamentozona
-  : Tenderecamentozona): String;
+class function Tenderecamentozona.ClassToJson(Const ObjEnderecamentoZona : TEnderecamentoZona): String;
 begin
   Result := tJson.ObjectToJsonString(objenderecamentozona);
 end;
 
-class procedure Tenderecamentozona.ConfigSizeField(Tabela: String;
-  Sender: TObject);
+class procedure Tenderecamentozona.ConfigSizeField(Tabela: String; Sender: TObject);
 begin
 
 end;
 
 constructor Tenderecamentozona.Create;
 begin
-  FZonaId := 0;
+  FZonaId         := 0;
   FEnderecamentoZona := 0;
-  FDescricao := '';
-  FEstruturaId := 0;
-  FEstoqueTipoId := 0;
-  FRastroId := 0;
-  FLoteReposicao := 0;
+  FDescricao      := '';
+  FEstruturaId    := 0;
+  FEstoqueTipoId  := 0;
+  FRastroId       := 0;
+  FLoteReposicao  := 0;
   FSeparacaoConsolidada := 0;
-  FProdutoSNGPC := 0;
-  FStatus := 0;
-  FSigla := '';
+  FProdutoSNGPC   := 0;
+  FStatus         := 0;
+  FTagVolumeOrdem := 0;
+  FSigla          := '';
 end;
 
 class function Tenderecamentozona.JsonToClass(Json: String): Tenderecamentozona;
@@ -85,17 +85,18 @@ end;
 
 procedure Tenderecamentozona.Limpar;
 begin
-  FZonaId := 0;
+  FZonaId         := 0;
   FEnderecamentoZona := 0;
-  FDescricao := '';
-  FEstruturaId := 0;
-  FEstoqueTipoId := 0;
-  FRastroId := 0;
-  FLoteReposicao := 0;
+  FDescricao      := '';
+  FEstruturaId    := 0;
+  FEstoqueTipoId  := 0;
+  FRastroId       := 0;
+  FLoteReposicao  := 0;
   FSeparacaoConsolidada := 0;
-  FProdutoSNGPC := 0;
-  FStatus := 0;
-  FSigla := '';
+  FProdutoSNGPC   := 0;
+  FStatus         := 0;
+  FTagVolumeOrdem := 0;
+  FSigla          := '';
 end;
 
 procedure Tenderecamentozona.SetDescricao(const Value: String);

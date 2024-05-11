@@ -162,6 +162,8 @@ type
     LblTotEtiquetasVolume: TLabel;
     LblCountPrint: TLabel;
     BtnEtqIndividual: TButton;
+    CbTagVolumeOrdem: TComboBox;
+    LblTagVolumeOrdem: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnTagProdutoClick(Sender: TObject);
@@ -217,6 +219,10 @@ type
     procedure EdtQtdEtiquetaIndividualKeyPress(Sender: TObject; var Key: Char);
     procedure BtnEtqIndividualClick(Sender: TObject);
     procedure EdtEnderecoFinKeyPress(Sender: TObject; var Key: Char);
+    procedure TbTagVolumeShow(Sender: TObject);
+    procedure TabListagemShow(Sender: TObject);
+    procedure TbTagLocalizacaoShow(Sender: TObject);
+    procedure TbTagCaixaShow(Sender: TObject);
   private
     { Private declarations }
     ObjPedidoCtrl        : TPedidoSaidaCtrl;
@@ -242,6 +248,7 @@ type
     Procedure PrintTagArmazenagem;
     procedure PrintTagArmazenagem8x10etqEpl2(pJsonArray: TJsonArray);
     Procedure ClearLstVolumes;
+    Procedure TagVolumeOrdem(pOnOff : Boolean);
     Procedure TagEndereco3x10etqEpl2;
     Procedure TagEndereco5x10etqEpl2;
     Procedure TagEndereco8x10etqEpl2;
@@ -1218,8 +1225,13 @@ begin
         LblZonaTagArmazenagem.Caption := JsonArrayZona.Items[0].GetValue<String>('descricao')
      Else if Sender = EdtZona then
         LblZona.Caption := JsonArrayZona.Items[0].GetValue<String>('descricao')
-     Else if Sender = EdtZonaIdVolume then
+     Else if Sender = EdtZonaIdVolume then Begin
         LblZonaVolume.Caption := JsonArrayZona.Items[0].GetValue<String>('descricao');
+        if JsonArrayZona.Items[0].GetValue<Integer>('tagvolumeordem', 0) > 0 Then
+           CbTagVolumeOrdem.ItemIndex := JsonArrayZona.Items[0].GetValue<Integer>('tagvolumeordem', 0)-1
+        Else
+           CbTagVolumeOrdem.ItemIndex := FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem;
+     End;
   End;
   ExitFocus(Sender);
   JsonArrayZona := Nil;
@@ -1251,7 +1263,8 @@ begin
   finally
     vlIni.Free;
   end;
-
+  CbTagVolumeOrdem.ItemIndex := FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem;
+  TagVolumeOrdem(False);
   BtnImprimirStand.Enabled := False;
   BtnImprimirStand.Grayed  := True;
   SelPedido := True;
@@ -1440,9 +1453,8 @@ Var xPedido, xVolumes, xEtiquetas, xEtiquetaPrint: Integer;
     vPrintTag   : Integer;
     vEmbalagem  : Integer;
 Begin
-  If (EdtPedidoVolumeId.Text = '') and ((FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem = 1) or
-                                        (FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem = 2))then Begin
-     PrintEtiquetaPorRua(FrmeXactWMS.ConfigWMS.ObjConfiguracao.TagVolumeOrdem);
+  If (EdtPedidoVolumeId.Text = '') and ((CbTagVolumeOrdem.ItemIndex = 1) or (CbTagVolumeOrdem.ItemIndex = 2))then Begin
+     PrintEtiquetaPorRua(CbTagVolumeOrdem.ItemIndex);
      Exit
   End;
   if EdtPedidoVolumeId.Text <> '' then
@@ -2393,6 +2405,12 @@ begin
   EdtQuantidadeEstIndividual.Value   := 0;
   EdtQuantidadeEstIndividual.Visible := RgPrinterEtqIndividual.ItemIndex = 1;
   LblEstoqueLote.Visible             := EdtQuantidadeEstIndividual.Visible;
+end;
+
+procedure TFrmPrintTag.TabListagemShow(Sender: TObject);
+begin
+  inherited;
+  TagVolumeOrdem(False);
 end;
 
 procedure TFrmPrintTag.TagEndereco3x10etqEpl2;
@@ -3595,9 +3613,16 @@ begin
   End;
 end;
 
+procedure TFrmPrintTag.TagVolumeOrdem(pOnOff: Boolean);
+begin
+  LblTagVolumeOrdem.Visible := pOnOff;
+  CbTagVolumeOrdem.Visible  := pOnOff;
+end;
+
 procedure TFrmPrintTag.TbTagArmazenagemShow(Sender: TObject);
 begin
   inherited;
+  TagVolumeOrdem(False);
   EdtPedidoId.Clear;
   LstTagArmazenagem.ColWidths[0] := 100+Trunc(100*ResponsivoVideo);
   LstTagArmazenagem.ColWidths[1] := 100+Trunc(100*ResponsivoVideo);
@@ -3624,6 +3649,18 @@ begin
   ImprimirExportar(False);
 end;
 
+procedure TFrmPrintTag.TbTagCaixaShow(Sender: TObject);
+begin
+  inherited;
+  TagVolumeOrdem(False);
+end;
+
+procedure TFrmPrintTag.TbTagLocalizacaoShow(Sender: TObject);
+begin
+  inherited;
+  TagVolumeOrdem(False);
+end;
+
 procedure TFrmPrintTag.TbTagOFF;
 begin
   TbTagProduto.TabVisible     := False;
@@ -3639,6 +3676,12 @@ begin
   PgcTabTags.Visible    := True;
   Page.TabVisible       := True;
   PgcTabTags.ActivePage := Page;
+end;
+
+procedure TFrmPrintTag.TbTagVolumeShow(Sender: TObject);
+begin
+  inherited;
+  TagVolumeOrdem(True);
 end;
 
 procedure TFrmPrintTag.ClearLstVolumes;

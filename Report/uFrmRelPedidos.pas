@@ -1242,7 +1242,7 @@ begin
   inherited;
   If TAdvStringGrid(Sender).Name = 'LstVolumesAdv' then Begin
      aColGrid := 6;
-     ColCancVolume := 10;
+     ColCancVolume := 11;
   End
   Else Begin
      aColGrid := 7;
@@ -2147,7 +2147,7 @@ begin
        LstVolumesAdv.Colors[7, xVol+1] := ClRed
     Else
        LstVolumesAdv.Colors[7, xVol+1] := LstVolumesAdv.Colors[6, xVol+1];
-    LstVolumesAdv.Cells[10, xVol+1] := pJsonArray.Get(xVol).GetValue<String>('processoid');
+    LstVolumesAdv.Cells[11, xVol+1] := pJsonArray.Get(xVol).GetValue<String>('processoid');
 
     LstVolumesAdv.Alignments[0, xVol+1] := taRightJustify;
     LstVolumesAdv.FontStyles[0, xVol+1] := [FsBold];

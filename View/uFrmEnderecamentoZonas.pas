@@ -34,6 +34,10 @@ type
     ChkLoteReposicao: TCheckBox;
     ChkSeparacaoConsolidada: TCheckBox;
     ChkProdutoSngpc: TCheckBox;
+    CbTagVolumeOrdem: TComboBox;
+    Label40: TLabel;
+    Label5: TLabel;
+    EdtSigla: TEdit;
     procedure BtnPesqEstruturaClick(Sender: TObject);
     procedure EdtEstruturaIdExit(Sender: TObject);
     procedure EdtEstruturaIdChange(Sender: TObject);
@@ -409,6 +413,9 @@ begin
   ChkLoteReposicao.Checked        := False;
   ChkSeparacaoConsolidada.Checked := False;
   ChkProdutoSngpc.Checked         := False;
+  ChkCadastro.Checked             := False;
+  EdtSigla.Text                   := '';
+  CbTagVolumeOrdem.ItemIndex      := -1;
 //  ShCadastro.Brush.Color := ClRed;
 //  ShCadastro.Pen.Color   := ClRed;
   If Assigned(ObjEnderecamentoZonaCtrl) Then ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Limpar;
@@ -463,8 +470,12 @@ begin
   if ChkProdutoSngpc.Checked then
      ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.ProdutoSNGPC := 1
   Else ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.ProdutoSNGPC := 0;
-  //If ChkCadastro.Checked Then ObjDesenhoArmazemCtrl.ObjDesenhoArmazem.Status := 1
-  //Else ObjDesenhoArmazemCtrl.ObjDesenhoArmazem.Status := 0;
+  If ChkCadastro.Checked Then
+     ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Status := 1
+  Else
+     ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Status := 0;
+  ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Sigla          := EdtSigla.Text;
+  ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.TagVolumeOrdem := CbTagVolumeOrdem.ItemIndex;
   If Not ObjEnderecamentoZonaCtrl.Salvar then Begin
      ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.ZonaId := 0;
      Result := False
@@ -487,7 +498,8 @@ begin
   ChkLoteReposicao.Checked        := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.LoteReposicao = 1;
   ChkSeparacaoConsolidada.Checked := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.SeparacaoConsolidada = 1;
   ChkProdutoSngpc.Checked         := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.ProdutoSNGPC = 1;
-  Exit;
+  EdtSigla.Text                   := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Sigla;
+  CbTagVolumeOrdem.ItemIndex      := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.TagVolumeOrdem;
   ChkCadastro.Checked        := ObjEnderecamentoZonaCtrl.ObjEnderecamentoZona.Status = 1;
   if ChkCadastro.Checked then Begin
     ShCadastro.Brush.Color := ClGreen;

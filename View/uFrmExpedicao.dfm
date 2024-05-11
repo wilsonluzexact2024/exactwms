@@ -413,6 +413,24 @@ inherited FrmExpedicao: TFrmExpedicao
           ParentFont = False
           TabOrder = 3
         end
+        object PnlVolumeCorte: TPanel
+          Left = 180
+          Top = 54
+          Width = 185
+          Height = 29
+          CustomHint = BalloonHint1
+          Caption = 'Volume C/Cortes'
+          Color = clRed
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -16
+          Font.Name = 'Segoe UI'
+          Font.Style = [fsBold]
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 4
+          Visible = False
+        end
       end
     end
     inherited TbFrameWeb: TcxTabSheet

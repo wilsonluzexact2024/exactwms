@@ -1276,14 +1276,14 @@ inherited FrmConfiguracao: TFrmConfiguracao
       end
       object GroupBox14: TGroupBox
         Left = 528
-        Top = 505
+        Top = 502
         Width = 323
-        Height = 60
+        Height = 63
         CustomHint = BalloonHint1
         Caption = ' [ Tag Volumes ] '
         TabOrder = 13
         object Label40: TLabel
-          Left = 7
+          Left = 9
           Top = 29
           Width = 125
           Height = 17
@@ -1308,7 +1308,7 @@ inherited FrmConfiguracao: TFrmConfiguracao
         end
         object CbTagVolumeOrdem: TComboBox
           Left = 136
-          Top = 28
+          Top = 26
           Width = 182
           Height = 22
           CustomHint = BalloonHint1

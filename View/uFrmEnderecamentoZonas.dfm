@@ -4,6 +4,7 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -31,6 +32,7 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
       end
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 26
       inherited ShCadastro: TShape
         Left = 140
         Top = 307
@@ -39,32 +41,32 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         ExplicitTop = 307
       end
       object Label2: TLabel [1]
-        Left = 70
-        Top = 41
+        Left = 90
+        Top = 43
         Width = 11
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Id'
       end
       object Label3: TLabel [2]
-        Left = 24
-        Top = 103
+        Left = 44
+        Top = 105
         Width = 57
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Descri'#231#227'o'
       end
       object lblEndereco: TLabel [3]
-        Left = 29
-        Top = 159
+        Left = 49
+        Top = 161
         Width = 52
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Estrutura'
       end
       object LblEstrutura: TLabel [4]
-        Left = 162
-        Top = 160
+        Left = 182
+        Top = 162
         Width = 12
         Height = 16
         CustomHint = BalloonHint1
@@ -77,31 +79,51 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         ParentFont = False
       end
       object Label4: TLabel [5]
-        Left = 234
-        Top = 159
+        Left = 334
+        Top = 161
         Width = 77
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Estoque Tipo'
       end
       object Label23: TLabel [6]
-        Left = 548
-        Top = 159
+        Left = 10
+        Top = 215
         Width = 91
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Rastreabilidade'
       end
+      object Label40: TLabel [7]
+        Left = 290
+        Top = 216
+        Width = 125
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = 'Ordem de Impress'#227'o'
+      end
+      object Label5: TLabel [8]
+        Left = 662
+        Top = 105
+        Width = 28
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = 'Sigla'
+      end
+      inherited PnlInfo: TPanel
+        TabOrder = 11
+      end
       inherited ChkCadastro: TCheckBox
-        Left = 87
-        Top = 311
+        Left = 417
+        Top = 295
+        TabOrder = 10
         Visible = False
-        ExplicitLeft = 87
-        ExplicitTop = 311
+        ExplicitLeft = 417
+        ExplicitTop = 295
       end
       object EdtZonaId: TEdit
-        Left = 87
-        Top = 38
+        Left = 107
+        Top = 40
         Width = 72
         Height = 25
         CustomHint = BalloonHint1
@@ -114,15 +136,15 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         Font.Style = []
         ParentFont = False
         ReadOnly = True
-        TabOrder = 2
+        TabOrder = 0
         OnExit = EdtZonaIdExit
         OnKeyPress = EdtZonaIdKeyPress
         OnKeyUp = EdtZonaIdKeyUp
       end
       object EdtDescricao: TEdit
-        Left = 87
-        Top = 100
-        Width = 380
+        Left = 107
+        Top = 102
+        Width = 492
         Height = 25
         CustomHint = BalloonHint1
         Font.Charset = DEFAULT_CHARSET
@@ -132,11 +154,11 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         Font.Style = []
         MaxLength = 30
         ParentFont = False
-        TabOrder = 3
+        TabOrder = 1
       end
       object EdtEstruturaId: TEdit
-        Left = 87
-        Top = 156
+        Left = 107
+        Top = 158
         Width = 46
         Height = 25
         CustomHint = BalloonHint1
@@ -147,14 +169,14 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 3
         OnChange = EdtEstruturaIdChange
         OnExit = EdtEstruturaIdExit
         OnKeyPress = EdtZonaIdKeyPress
       end
       object BtnPesqEstrutura: TBitBtn
-        Left = 133
-        Top = 157
+        Left = 153
+        Top = 159
         Width = 24
         Height = 24
         CustomHint = BalloonHint1
@@ -215,14 +237,14 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
           4948524948524948524948524948524948524948524948524948524948524948
           5249485249485249485249485249485249485249485249485249485249485249
           4852494852494852494852494852494852494852494852494852}
-        TabOrder = 5
+        TabOrder = 12
         TabStop = False
         OnClick = BtnPesqEstruturaClick
       end
       object CbEstoqueTipo: TComboBox
-        Left = 317
-        Top = 156
-        Width = 150
+        Left = 417
+        Top = 158
+        Width = 182
         Height = 22
         CustomHint = BalloonHint1
         Style = csOwnerDrawFixed
@@ -232,7 +254,7 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
-        TabOrder = 6
+        TabOrder = 4
         Items.Strings = (
           'Stage - Armazenagem'
           'Crossdocking'
@@ -242,8 +264,8 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
           'Reserva')
       end
       object CbRastroTipo: TComboBox
-        Left = 645
-        Top = 156
+        Left = 107
+        Top = 212
         Width = 146
         Height = 22
         CustomHint = BalloonHint1
@@ -254,14 +276,14 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
-        TabOrder = 7
+        TabOrder = 5
         Items.Strings = (
           'Cliente'
           'Fornecedor')
       end
       object ChkLoteReposicao: TCheckBox
-        Left = 87
-        Top = 216
+        Left = 24
+        Top = 264
         Width = 242
         Height = 17
         CustomHint = BalloonHint1
@@ -269,22 +291,58 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
         TabOrder = 8
       end
       object ChkSeparacaoConsolidada: TCheckBox
-        Left = 87
-        Top = 246
+        Left = 24
+        Top = 295
         Width = 308
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Separa'#231#227'o Consolidada(CheckOut Autom'#225'tico)'
-        TabOrder = 9
+        TabOrder = 7
       end
       object ChkProdutoSngpc: TCheckBox
-        Left = 87
-        Top = 278
+        Left = 417
+        Top = 264
         Width = 308
         Height = 17
         CustomHint = BalloonHint1
         Caption = 'Produtos SNGPC'
-        TabOrder = 10
+        TabOrder = 9
+      end
+      object CbTagVolumeOrdem: TComboBox
+        Left = 417
+        Top = 213
+        Width = 182
+        Height = 22
+        CustomHint = BalloonHint1
+        Style = csOwnerDrawFixed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 6
+        TabStop = False
+        Items.Strings = (
+          ''
+          'Pedido'
+          'Endere'#231'o + Rota + Loja'
+          'Endere'#231'o + Rota +  Produto')
+      end
+      object EdtSigla: TEdit
+        Left = 699
+        Top = 102
+        Width = 124
+        Height = 25
+        CustomHint = BalloonHint1
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        MaxLength = 30
+        ParentFont = False
+        TabOrder = 2
       end
     end
     inherited TbFrameWeb: TcxTabSheet
@@ -305,10 +363,10 @@ inherited FrmEnderecamentoZonas: TFrmEnderecamentoZonas
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 585
-    Top = 304
-    ExplicitLeft = 585
-    ExplicitTop = 304
+    Left = 720
+    Top = 362
+    ExplicitLeft = 720
+    ExplicitTop = 362
     inherited Panel7: TPanel
       inherited LblTitConfigPrinter: TLabel
         Width = 313
