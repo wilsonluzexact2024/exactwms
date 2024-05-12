@@ -578,8 +578,10 @@ begin
 end;
 
 procedure TFrmLogin.LerXmlConfig;
-Var
-  xTexto: String;
+Var xTexto: String;
+    {$IFDEF Android}
+      KeyboardService: IFMXVirtualKeyboardService;
+    {$ENDIF}
 begin
 {$IFDEF Android}
   vArqConfig := TPath.GetDocumentsPath + PathDelim + 'wmsconfig.xml';
@@ -612,10 +614,12 @@ begin
     if Teclado then
       VKAutoShowMode := TVKAutoShowMode.Always
       // (DefinedBySystem, Never, Always)
-    Else
+    Else Begin
       VKAutoShowMode := TVKAutoShowMode.Never;
-    // (DefinedBySystem, Never, Always)
-
+      {$IFDEF Android}
+         KeyboardService.HideVirtualKeyboard;
+      {$Endif}
+    End
     // if Assigned(XmlConfig) then
     // FreeAndNil(XmlConfig);
   except
@@ -789,20 +793,25 @@ end;
 
 procedure TFrmLogin.SignInBackgroundRectResize(Sender: TObject);
 begin
-
   if TRectangle(Sender).Width > 275 then
     TRectangle(Sender).Width := 275;
   if TRectangle(Sender).Height > 225 then
     TRectangle(Sender).Height := 225;
-
 end;
 
 procedure TFrmLogin.SwtKeyboardClick(Sender: TObject);
+Var {$IFDEF Android}
+      KeyboardService: IFMXVirtualKeyboardService;
+    {$ENDIF}
 begin
   if SwtKeyboard.IsChecked then
     VKAutoShowMode := TVKAutoShowMode.DefinedBySystem // Always
-  Else
+  Else Begin
     VKAutoShowMode := TVKAutoShowMode.Never;
+    {$IFDEF Android}
+       KeyboardService.hideVirtualKeyBoard;
+    {$ENDIF}
+  End;
   EdtUsuario.SetFocus;
 end;
 

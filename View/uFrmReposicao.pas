@@ -598,15 +598,18 @@ procedure TFrmReposicao.BtnIncluirClick(Sender: TObject);
 begin
   if PgcBase.ActivePage = TabReposicaoModelo then begin
      inherited;
-     TabPrincipal.TabVisible       := False;
-     TabReposicaoModelo.TabVisible := True;
-     PgcBase.ActivePage := TabReposicaoModelo;
-     EdtModeloId.Enabled  := False;
-     CbTipoReposicaoModelo.Enabled := False;
-     EdtDtModelo.Text     := DateToStr(Now());
-     EdtDtModelo.ReadOnly := True;
+     TabPrincipal.TabVisible         := False;
+     TabReposicaoModelo.TabVisible   := True;
+     PgcBase.ActivePage              := TabReposicaoModelo;
+     EdtModeloId.Enabled             := False;
+     CbTipoReposicaoModelo.Enabled   := False;
+     EdtDtModelo.Text                := DateToStr(Now());
+     EdtDtModelo.ReadOnly            := True;
      CbTipoReposicaoModelo.ItemIndex := 1;
-     EdtZonaIdModelo.SetFocus;
+     if EdtZonaIdModelo.Visible then
+        EdtZonaIdModelo.SetFocus
+     Else
+        EdtEnderecoInicialModelo.SetFocus;
      MarkCheck(True);
      BtnConferiModelo.Enabled      := True;
      LblObsModeloReposicao.Visible := True;

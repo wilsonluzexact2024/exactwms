@@ -37,18 +37,14 @@ procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure AtualizarSenha(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure acessoFuncionalidade(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure acessoFuncionalidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure AcessoTopico(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure ControleAcesso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure listaFuncionalidade(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure listaFuncionalidade(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SalvarAcesso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure LogOnOff(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure UsuarioConectado(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure GetRelUsuarioLista(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure UsuarioConectado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetRelUsuarioLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure ImportCSV(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
@@ -244,11 +240,8 @@ begin
       Retorno := LService.GetID(Req.Params.Items['Usuarioid']);
       Res.Send<TJsonArray>(Retorno).Status(THttpStatus.Created);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/usuario/:Usuarioid', Trim(Req.Params.Content.Text), Req.Body, '',
-        StringReplace(Retorno.ToString, #39, '', [rfReplaceAll]), 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
+                      Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/usuario/:Usuarioid', Trim(Req.Params.Content.Text), Req.Body, '',
+                      StringReplace(Retorno.ToString, #39, '', [rfReplaceAll]), 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname']+'_V: '+Req.Headers['versao']);
     Except
       On E: Exception do
       Begin

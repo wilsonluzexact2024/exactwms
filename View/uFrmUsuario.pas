@@ -301,8 +301,8 @@ begin
      Exit;
   End;
   ReturnJson := ObjUsuarioCtrl.FindUsuario(EdtLogin.Text, 0);
-  if (ReturnJson.Count>0) and (ReturnJson.Get(0).tryGetValue<String>('usuarioid', vErro)) then Begin
-     if ObjUsuarioCtrl.ObjUsuario.UsuarioId <> StrToIntDef(edtCodigo.Text, 0) then Begin
+  if (ReturnJson.Count>0) and (ReturnJson.Items[0].tryGetValue<String>('usuarioid', vErro)) then Begin
+     if (ObjUsuarioCtrl.ObjUsuario.UsuarioId>0) and (ObjUsuarioCtrl.ObjUsuario.UsuarioId <> StrToIntDef(edtCodigo.Text, 0)) then Begin
         ShowErro('Login já existe!');
         EdtLogin.SetFocus;
         Exit;

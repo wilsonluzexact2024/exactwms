@@ -149,6 +149,9 @@ type
     Label11: TLabel;
     LblVencimentoTransferencia: TLabel;
     ChgTabTransferencia: TChangeTabAction;
+    BtnAtualizaListaTransferencia: TSpeedButton;
+    PthAtualizaListaTransferencia: TPath;
+    LytAignTitulo: TLayout;
     procedure BtnSearchPesqClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LstPrincipalItemClick(const Sender: TObject;
@@ -745,9 +748,13 @@ begin
   FDMemReposicaoTransferencia.Close;
   ObjEstoqueCtrl := TEstoqueCtrl.Create;
   JsonArrayRetorno := ObjEstoqueCtrl.GetListaTransferencia;
-  if Not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+  if Not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
      FDMemReposicaoTransferencia.LoadFromJSON(JsonArrayRetorno, False);
      MontaListaProdutoTransferencia;
+  End
+  Else
+     ShowErro('Lista de Transferência vazia!');
+  JsonArrayRetorno := Nil;
   ObjEstoqueCtrl.Free;
 end;
 
@@ -1055,28 +1062,25 @@ begin
 //  JsonTransferecia.AddPair('hora', FdMemReposicaoTransferencia.FieldByName('hrColeta').AsString);
   JsonArrayRetorno := ObjReposicaoCtrl.ReposicaoTransferenciaPicking(JsonTransferecia);
   If JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) Then Begin
+     SetCampoDefault('EdtQtdTransferencia');
      ShowErro('Erro: '+vErro);
      Result := False;
   End
-  Else Begin
+  Else
      Result := True;
+  Try 
+    JsonArrayRetorno := Nil;
+    JsonTransferecia.Free;
+    ObjReposicaoCtrl.Free; 
+  Except 
   End;
-  JsonTransferecia.Free;
 end;
 
 procedure TFrmReposicaoTransferenciaPicking.SalvarTransferencia;
 begin
 //GSS 210324
   if ReposicaoTransferenciaPicking then Begin
-{     if StrToIntDef(EdtqtdTransferencia.Text, 0) = FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger then Begin
-       FdMemReposicaoTransferencia.Delete;
-     End
-     Else Begin
-       FdMemReposicaoTransferencia.Edit;
-       FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger := FdMemReposicaoTransferencia.FieldByName('Qtde').AsInteger - StrToIntDef(EdtQtdTransferencia.Text, 0);
-       FdMemReposicaoTransferencia.Post;
-     End;
-}     GetProdutoTransferencia;
+     GetProdutoTransferencia;
      EdtCodProdutoTransferencia.Text := '';
      LimparTransferencia;
      DelayEdSetFocus(EdtCodProdutoTransferencia);

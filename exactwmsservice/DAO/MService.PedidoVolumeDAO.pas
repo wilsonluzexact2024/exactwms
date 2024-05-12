@@ -181,8 +181,7 @@ begin
     if Fconexao.Query.Isempty then
     Begin
       Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        TuEvolutConst.QrySemDados)))
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', TuEvolutConst.QrySemDados)));
     End
     else
     Begin
@@ -205,12 +204,18 @@ end;
 function TPedidoVolumeDao.EtiquetaPorVolume(pPedidoVolumeId: Integer) : TJsonArray;
 var ObjJson: TJsonObject;
 begin
-  Result := TJsonArray.Create;
   try
     Fconexao.Query.Sql.Add(TuEvolutConst.SqlEtiquetaPorVolume);
     Fconexao.Query.ParamByName('pPedidoVolumeId').Value := pPedidoVolumeId;
     Fconexao.Query.Open;
-    while Not Fconexao.Query.Eof do
+    if FConexao.Query.IsEmpty then Begin
+       Result := TJsonArray.Create;
+       Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', TuEvolutConst.QrySemDados)));
+    End
+    Else
+       Result := FConexao.Query.ToJSONArray()
+
+{    while Not Fconexao.Query.Eof do
       With Fconexao.Query do
       Begin
         ObjJson := TJsonObject.Create;
@@ -237,14 +242,10 @@ begin
         Result.AddElement(ObjJson);
         Fconexao.Query.Next;
       End;
-  Except
-    ON E: Exception do
+}  Except On E: Exception do
     Begin
-      // If Assigned(ObjJson) then ObjJson.Free;
-      raise Exception.Create('Tabela: Mapa Separação - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: Mapa Separação - '+
+            StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

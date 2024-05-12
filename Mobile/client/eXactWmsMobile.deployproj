@@ -95,15 +95,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="C:\App\eXactWMS\Mobile\provider_paths.xml" Condition="'$(Config)'=='Release'">
-            <RemoteDir>eXactWmsMobile\res\xml\</RemoteDir>
-            <RemoteName>provider_paths.xml</RemoteName>
-            <DeployClass>AndroidFileProvider</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="images\icone\res\mipmap-hdpi72x72\GrupoX3.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>eXactWmsMobile\</RemoteDir>
             <RemoteName>GrupoX3.png</RemoteName>
@@ -271,15 +262,6 @@
             <RemoteName>success.wav</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="C:\App\eXactWMS\Mobile\styles.xml" Condition="'$(Config)'=='Release'">
-            <RemoteDir>eXactWmsMobile\res\values\</RemoteDir>
-            <RemoteName>styles.xml</RemoteName>
-            <DeployClass>AndroidSplashStyles</DeployClass>
-            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -712,15 +694,6 @@
             <RemoteName>eXactWmsMobile.classes</RemoteName>
             <DeployClass>AndroidClasses</DeployClass>
             <Operation>64</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="C:\App\eXactWMS\Mobile\splash_image_def.xml" Condition="'$(Config)'=='Release'">
-            <RemoteDir>eXactWmsMobile\res\drawable\</RemoteDir>
-            <RemoteName>splash_image_def.xml</RemoteName>
-            <DeployClass>AndroidSplashImageDef</DeployClass>
-            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>

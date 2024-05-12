@@ -132,7 +132,8 @@ begin
         FConexao.Query.Sql.Add('where U.UsuarioId = ' + pUsuarioId)
       Else
         FConexao.Query.Sql.Add('where U.Login = ' + QuotedStr(pUsuarioId) +
-          ' or U.Nome  Like ' + QuotedStr('%' + pUsuarioId + '%'));
+          ' or U.Nome  = ' + QuotedStr(pUsuarioId));
+          //' or U.Nome  Like ' + QuotedStr('%' + pUsuarioId + '%'));
     End;
     If DebugHook <> 0 Then
       FConexao.Query.Sql.SaveToFile('GetUsuario.Sql');

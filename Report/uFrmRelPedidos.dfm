@@ -9,7 +9,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PgcBase: TcxPageControl
     Width = 1367
     Height = 713
-    Properties.ActivePage = TabPrincipal
+    Properties.ActivePage = TabRelVolumes
     ExplicitWidth = 1367
     ExplicitHeight = 713
     ClientRectBottom = 713
@@ -6256,6 +6256,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   end
   inherited ImgListSimNao: TImageList
     Left = 654
+    Top = 169
     Bitmap = {
       494C010106000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020

@@ -3,6 +3,7 @@ inherited FrmReposicao: TFrmReposicao
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabReposicaoModelo
     inherited TabListagem: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -7333,6 +7334,7 @@ inherited FrmReposicao: TFrmReposicao
           Height = 17
           CustomHint = BalloonHint1
           Caption = 'Setor'
+          Visible = False
         end
         object LblZonaModelo: TLabel
           Left = 90
@@ -7347,6 +7349,7 @@ inherited FrmReposicao: TFrmReposicao
           Font.Name = 'Tahoma'
           Font.Style = []
           ParentFont = False
+          Visible = False
         end
         object EdtEnderecoInicialModelo: TEdit
           Left = 14
@@ -7561,6 +7564,7 @@ inherited FrmReposicao: TFrmReposicao
           Font.Style = []
           ParentFont = False
           TabOrder = 0
+          Visible = False
           OnExit = EdtZonaIdExit
         end
         object BtnPesqZonaModelo: TBitBtn
@@ -7646,6 +7650,7 @@ inherited FrmReposicao: TFrmReposicao
             0000000000000000000000000000000000000000000000000000}
           TabOrder = 5
           TabStop = False
+          Visible = False
           OnClick = BtnPesqZonaClick
         end
       end

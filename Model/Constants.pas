@@ -3257,8 +3257,73 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
     // '     And Pv.PedidoId in (18362)'+sLineBreak+
     // 'order by VL.Inicio';
 
-  Const
-    SqlEtiquetaPorVolume = 'SET STATISTICS IO OFF' + sLineBreak +
+Const SqlEtiquetaPorVolume = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'+sLineBreak+
+      'Drop table if exists #PedidoVolumes'+sLineBreak+
+      'Drop table if exists #TPV'+sLineBreak+
+      'Drop table if exists #PVL'+sLineBreak+
+      'Drop table if exists #VL'+sLineBreak+
+      'Drop table if exists #LEnd'+sLineBreak+
+      'Drop table if exists #Zona'+sLineBreak+
+      'Select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pe.CodPessoaERP, Pe.Razao, pe.Fantasia,'+sLineBreak+
+      '       Ro.RotaId, Ro.Descricao Rotas, Dp.Data as DtPedido, De.ProcessoId, De.Descricao ProcessoEtapa,'+sLineBreak+
+      '	   Pr.Ordem, Pv.EmbalagemId Into #PedidoVolumes'+sLineBreak+
+      'From PedidoVolumes Pv'+sLineBreak+
+      'Inner join Pedido Pd On Pd.PedidoId = Pv.PedidoId'+sLineBreak+
+      'Inner Join Pessoa Pe On Pe.PessoaId = Pd.PessoaId'+sLineBreak+
+      'Inner Join RotaPessoas Pr on Pr.PessoaId = Pe.PessoaId'+sLineBreak+
+      'Inner Join Rotas Ro On Ro.RotaId = Pr.RotaId'+sLineBreak+
+      'Inner join Rhema_Data DP On Dp.IdData = Pd.DocumentoData'+sLineBreak+
+      'Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid'+sLineBreak+
+      'Where Pv.PedidoVolumeId = @PedidoVolumeId'+sLineBreak+
+      '   And DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = Pv.uuid)'+sLineBreak+
+      ' '+sLineBreak+
+      'Select pv.PedidoVolumeId, TPv.TotalVolumes Into #TPV'+sLineBreak+
+      'From #PedidoVolumes Pv'+sLineBreak+
+      'Inner Join (Select PedidoId, COUNT(*) TotalVolumes From PedidoVolumes Group by PedidoId) TPv ON TPv.PedidoId = Pv.PedidoId'+sLineBreak+
+      ''+sLineBreak+
+      'Select Pv.PedidoVolumeId, PVL.QtdSuprida Into #PVL'+sLineBreak+
+      'From #PedidoVolumes Pv'+sLineBreak+
+      'Left Join (Select PedidoVolumeId, Sum(QtdSuprida) QtdSuprida From PedidoVolumeLotes'+sLineBreak+
+      '           Group By PedidoVolumeId ) PVL ON Pvl.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      ' '+sLineBreak+
+      'Select pv.PedidoVolumeId, VL.Itens Into #VL'+sLineBreak+
+      'From #PedidoVolumes Pv'+sLineBreak+
+      'Left Join (Select vPrd.PedidoVolumeId, Count(vPrd.ProdutoId) Itens'+sLineBreak+
+      '           From (Select PedidoVolumeId, Pl.ProdutoId'+sLineBreak+
+      '  		         From PedidoVolumeLotes VL'+sLineBreak+
+      '		         Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId'+sLineBreak+
+      '		         Inner join Produto Prd on Prd.IdProduto = Pl.ProdutoId'+sLineBreak+
+      '		         Where Vl.PedidoVolumeId = @PedidoVolumeId'+sLineBreak+
+      '                 Group By Vl.PedidoVolumeId, Pl.ProdutoId) As VPrd'+sLineBreak+
+      '           Group by vPrd.PedidoVolumeId ) VL ON Vl.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      ' '+sLineBreak+
+      'Select pv.PedidoVolumeId, LEnd.Mascara, LEnd.Inicio, LEnd.Termino Into #LEnd'+sLineBreak+
+      'From #PedidoVolumes Pv'+sLineBreak+
+      'Left Join (Select Pvl.PedidoVolumeId, Ee.Mascara, Min(TEnd.Descricao) Inicio, Max(TEnd.Descricao) Termino'+sLineBreak+
+      '           From PedidoVolumeLotes PVL'+sLineBreak+
+      '      		   Inner Join Enderecamentos TEnd ON TEnd.EnderecoId = Pvl.EnderecoId'+sLineBreak+
+      '           Inner Join EnderecamentoEstruturas EE On EE.EstruturaId = TEnd.EstruturaID'+sLineBreak+
+      '		         Group By Pvl.PedidoVolumeId, Ee.Mascara) as LEnd On LEnd.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      ''+sLineBreak+
+      'Select PedidoVolumeId, Zona  Into #Zona'+sLineBreak+
+      'From  (Select Vl.PedidoVolumeId, Pl.Zona'+sLineBreak+
+      '           , ROW_NUMBER() OVER (PARTITION BY Vl.PedidoVolumeid ORDER BY Pl.Zona) as Zu'+sLineBreak+
+      '       From #PedidoVolumes Pv'+sLineBreak+
+      '	   Inner Join PedidoVolumeLotes Vl ON Vl.PedidoVOlumeid = Pv.PedidoVolumeId'+sLineBreak+
+      '       Inner Join vProdutoLotes Pl on Pl.LoteId = vl.LoteId and Pl.ZonaId Is Not Null) as Z'+sLineBreak+
+      '       Where Zu = 1'+sLineBreak+
+      ' '+sLineBreak+
+      'Select Pv.PedidoId, Pv.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pv.CodPessoaERP, Pv.Razao, Pv.Fantasia,'+sLineBreak+
+      '       Pv.RotaId, Pv.Rotas, Pv.DtPedido, Pv.ProcessoId,Pv.ProcessoEtapa,'+sLineBreak+
+      '	      Vl.Itens, PVL.QtdSuprida, LEnd.Inicio, LEnd.Termino, LEnd.Mascara, Pv.Ordem, TotalVolumes, Pv.EmbalagemId, Z.Zona'+sLineBreak+
+      'From #PedidoVolumes Pv'+sLineBreak+
+      'Inner Join #TPV TPV On TPV.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      'Inner Join #PVL PVL On PVL.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      'Inner Join #VL Vl ON Vl.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      'Inner Join #LEnd LEnd On LEnd.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
+      'Inner Join #Zona Z ON Z.PedidoVOlumeId = Pv.PedidoVolumeId';
+
+Const SqlEtiquetaPorVolume_120524 = 'SET STATISTICS IO OFF' + sLineBreak +
       'SET STATISTICS TIME OFF' + sLineBreak +
       'Declare @PedidoVolumeId Integer = :pPedidoVolumeId' + sLineBreak +
       'Select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia, Pe.CodPessoaERP, Pe.Razao, pe.Fantasia, '+sLineBreak+
@@ -3288,7 +3353,7 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
       '     Inner Join EnderecamentoEstruturas EE On EE.EstruturaId = TEnd.EstruturaID' + sLineBreak +
       '		   Group By Pvl.PedidoVolumeId, Ee.Mascara) as LEnd On LEnd.PedidoVolumeId = Pv.PedidoVolumeId' + sLineBreak +
       'Where Pv.PedidoVolumeId = @PedidoVolumeId' + sLineBreak +
-      '   And DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)';
+      '   And DE.Horario = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = Pv.uuid)';
 
     // Indenficacao Etiqueta Volume Caixa Fechada
   Const

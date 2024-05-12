@@ -92,7 +92,6 @@ inherited FrmPrintTag: TFrmPrintTag
         Align = alTop
         Caption = '> Selecione o tipo de TAG <'
         TabOrder = 1
-        ExplicitLeft = -1
         object LblTagVolumeOrdem: TLabel
           Left = 1072
           Top = 9
@@ -10192,7 +10191,7 @@ inherited FrmPrintTag: TFrmPrintTag
         end
         object BtnTagVolume: TPanel
           Left = 332
-          Top = 23
+          Top = 25
           Width = 127
           Height = 29
           Cursor = crHandPoint
