@@ -72,8 +72,7 @@ var
 
 implementation
 
-uses
-  Schedule.expedicao;
+
 
 procedure TServerConsole.TerminateThreads;
 begin
@@ -261,15 +260,9 @@ begin
       on e: Exception do
         Writeln(e.Message);
     end;
-    with TScheduleexpedicao.Create(True) do
-    begin
-      resume;
-    end;
-
     Writeln('HttpServer online !');
     while True do
     begin
-
       try
         Readln(LResponse);
         sleep(200);
@@ -313,7 +306,6 @@ begin
 end;
 
 { TSSLHelper }
-
 procedure TSSLHelper.QuerySSLPort(APort: Word; var VUseSSL: boolean);
 begin
   VUseSSL := True;

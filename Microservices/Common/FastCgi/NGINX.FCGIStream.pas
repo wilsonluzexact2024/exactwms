@@ -123,7 +123,6 @@ procedure TFCGIStream.ValuesResult(maxConnections, maxRequests: Integer;
   multiplexing: Boolean);
 var
   nameValuePairs: TDictionary<string, TBytes>;
-
   vstream: TBytesStream;
   nameValuePair: TPair<string, TBytes>;
   name: string;
@@ -138,8 +137,10 @@ var
   var
     b: Byte;
   begin
+    var
+      Lsize:LongInt;
     if len <= 127 then
-      stream.Write(Byte(len), 1)
+      stream.Write( B,Byte(len).MaxValue)
     else
     begin
       b := Byte($80 or len div 16777216);
@@ -148,7 +149,7 @@ var
       stream.Write(b, 1);
       b := Byte(len div 256);
       stream.Write(b, 1);
-      stream.Write(Byte(len), 1);
+      stream.Write(b,Byte(len));
     end;
   end;
 

@@ -7,7 +7,6 @@ object WebModuleApi: TWebModuleApi
       OnAction = WebModuleApiWebActionPadraoAction
     end>
   BeforeDispatch = WebModuleBeforeDispatch
-  Height = 314
-  Width = 608
-  PixelsPerInch = 120
+  Height = 251
+  Width = 486
 end

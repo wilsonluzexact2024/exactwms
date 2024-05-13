@@ -1,4 +1,4 @@
-program MicroservicesExpedicao;
+program MicroservicesCargas;
 {$APPTYPE CONSOLE}
 {$R *.res}
 uses
@@ -55,19 +55,17 @@ uses
   Swager.Json.DTO in '..\Common\Swager\Swager.Json.DTO.pas',
   Swager.Json.Paths in '..\Common\Swager\Swager.Json.Paths.pas',
   Swager.ResourceBaseClass in '..\Common\Swager\Swager.ResourceBaseClass.pas',
-  Services.PedidoVolume in 'Services\Services.PedidoVolume.pas',
-  Repository.SqlScripts.PedidoVolume in 'Repository\SqlScripts\Repository.SqlScripts.PedidoVolume.pas',
-  Schedule.expedicao in 'Schedule\Schedule.expedicao.pas',
   Web.WebReq,
-  System.Classes;
+  System.Classes,
+  NGINX.WebModule in '..\Common\FastCgi\NGINX.WebModule.pas';
 
 const
   CLogoAscArt =
     '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|'+#13#10+
-    '|E| |x| |p| |e| |d| |i| |ç| |ã| |o|   |S| |e| |r| |v| |i| |c| |e|'+#13#10+
+    '|C| |a| |r| |g| |a| |s|               |S| |e| |r| |v| |i| |c| |e|'+#13#10+
     '| | | | | | | | |R|H|E|M|A|S|Y|S| |S|O|L|U|Ç|Õ|E|S| | | | | | | |'+#13#10+
     '+-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+ +-+-+-+ +-+ +-+ +-+ +-+-+-+ +-+-|';
-  CServerTitle = 'Exact Microservice Expedicao';
+  CServerTitle = 'Exact Microservice Cargas';
 begin
   try
     Writeln('----------------------------------------------------------------|');

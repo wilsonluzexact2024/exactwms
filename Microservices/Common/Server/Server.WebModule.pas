@@ -31,7 +31,6 @@ uses
   Data.DB,
   System.Generics.Collections,
 
-
   Server.Records;
 
 type
@@ -84,14 +83,15 @@ uses
   Web.WebReq, FireDAC.Comp.Client, System.Types, System.DateUtils,
   Server.Message, Server.MessageList, Server.Token,
   System.NetEncoding;
-function ParseResourceName(value:string):string;
+
+function ParseResourceName(value: string): string;
 var
- lDados: TArray<String>;
- Item: String;
-   I: Integer;
+  lDados: TArray<String>;
+  Item: String;
+  I: Integer;
 begin
   I := 0;
-  result:='';
+  result := '';
   lDados := string(value).Split(['/']);
   for Item in lDados do
   begin
@@ -110,12 +110,12 @@ procedure TWebModuleApi.WebModuleApiWebActionPadraoAction(Sender: Tobject;
 var
   lDados: TArray<String>;
   Resource: String;
-   I: Integer;
+  I: Integer;
   Redirect: Boolean;
 begin
   Redirect := False;
   I := 0;
-  Resource:=ParseResourceName(Request.PathInfo) ;
+  Resource := ParseResourceName(Request.PathInfo);
   for I := 0 to Self.Actions.Count - 1 do
   begin
     if Self.Actions.Items[I].MethodType = Request.MethodType then
@@ -163,9 +163,9 @@ begin
       else if not IsFileRequest(Request, Response) then
       begin
         if (LowerCase(Request.PathInfo) <> '/v1/authorization') and
-          (LowerCase(Request.PathInfo) <> '/v1/sendemail') and (LowerCase(Request.PathInfo) <> '/v1/getversion') and
-           (LowerCase(Request.PathInfo) <> '/v1/uploadapk')
-          then
+          (LowerCase(Request.PathInfo) <> '/v1/sendemail') and
+          (LowerCase(Request.PathInfo) <> '/v1/getversion') and
+          (LowerCase(Request.PathInfo) <> '/v1/uploadapk') then
         begin
           if not Request.GetFieldByName('x-api-mobile').Equals('device-mobile')
           then
@@ -185,7 +185,8 @@ begin
     end;
   end;
 end;
-                                                                                        procedure TWebModuleApi.WebModuleCreate(Sender: Tobject);
+
+procedure TWebModuleApi.WebModuleCreate(Sender: Tobject);
 var
   ClassFinder: TClassFinder;
 begin
@@ -305,11 +306,11 @@ begin
 {$IFDEF LINUX}
 {$IFDEF DEBUGON }
     Writeln('-----------------------------------------------------------');
-    Writeln('Executando Path -> ' + ClassName + ' metodo : ' + MethodName +' Content: '+Request.Content);
+    Writeln('Executando Path -> ' + ClassName + ' metodo : ' + MethodName +
+      ' Content: ' + Request.Content);
 {$ENDIF}
 {$ENDIF}
     try
-
 
       Body := nil;
       if Request.Content <> EmptyStr then
@@ -317,7 +318,7 @@ begin
         try
           Body := TJSONObject(TJSONObject.ParseJSONValue(Request.Content));
         except
-          on e:exception do
+          on e: Exception do
           begin
             Writeln('Request content invalido');
             raise Exception.Create('Rquest content invalido');
@@ -611,7 +612,7 @@ end;
 procedure TWebModuleApi.ValidarPermissoes(ResourceName, MetodName: string);
 
 begin
- //  todo
+  // todo
 end;
 
 function TWebModuleApi.ValidarUsuarioPadrao
