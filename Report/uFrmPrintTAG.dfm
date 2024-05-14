@@ -92,6 +92,7 @@ inherited FrmPrintTag: TFrmPrintTag
         Align = alTop
         Caption = '> Selecione o tipo de TAG <'
         TabOrder = 1
+        ExplicitLeft = -1
         object LblTagVolumeOrdem: TLabel
           Left = 1072
           Top = 9
@@ -10191,7 +10192,7 @@ inherited FrmPrintTag: TFrmPrintTag
         end
         object BtnTagVolume: TPanel
           Left = 332
-          Top = 25
+          Top = 27
           Width = 127
           Height = 29
           Cursor = crHandPoint
@@ -15236,7 +15237,7 @@ inherited FrmPrintTag: TFrmPrintTag
         end
         object BtnTagCaixa: TPanel
           Left = 670
-          Top = 23
+          Top = 25
           Width = 146
           Height = 29
           Cursor = crHandPoint
@@ -15252,7 +15253,7 @@ inherited FrmPrintTag: TFrmPrintTag
           ParentBackground = False
           ParentFont = False
           TabOrder = 3
-          OnClick = BtnTagProdutoClick
+          OnClick = BtnTagCaixaClick
           object sImage4: TsImage
             Left = 0
             Top = 0
@@ -30403,7 +30404,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagVolume
+        Properties.ActivePage = TbTagArmazenagem
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -40220,7 +40221,7 @@ inherited FrmPrintTag: TFrmPrintTag
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     Left = 581
-    Top = 449
+    Top = 451
   end
   object FDMemTagArmazenagem: TFDMemTable
     AfterClose = FdMemPesqGeralAfterClose

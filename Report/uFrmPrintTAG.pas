@@ -223,6 +223,7 @@ type
     procedure TabListagemShow(Sender: TObject);
     procedure TbTagLocalizacaoShow(Sender: TObject);
     procedure TbTagCaixaShow(Sender: TObject);
+    procedure BtnTagCaixaClick(Sender: TObject);
   private
     { Private declarations }
     ObjPedidoCtrl        : TPedidoSaidaCtrl;
@@ -746,6 +747,12 @@ begin
   finally
     FreeAndNil(FrmPesquisaEnderecamentoZonas);
   end;
+end;
+
+procedure TFrmPrintTag.BtnTagCaixaClick(Sender: TObject);
+begin
+  inherited;
+   TbTagON(TbTagCaixa);
 end;
 
 procedure TFrmPrintTag.BtnTagProdControladoClick(Sender: TObject);
@@ -1496,10 +1503,10 @@ Begin
                         (RbProcesso.ItemIndex > 0))) or (EdtPedidoVolumeId.Text<>'') then Begin
                         pPedidoId          := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid');
                         pDocumentoOriginal := jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal');
-                        pDtPedido          := DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido')));
+                        pDtPedido          := DateEUAToBR(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'));
                         pPedidoVolumeId    := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidovolumeid');
                         pSequencia         := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia');
-                        pCodPessoaERP      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp');
+                        pCodPessoaERP      := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpessoaerp');
                         prazao             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia');
                         pRotaId            := jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid');
                         protas             := jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas');
@@ -2078,7 +2085,7 @@ begin
                     TagVolumeFracionado8x10etqPpla(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                                    FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
                                                    vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal,
-                                                   pProcessoId, pRotaId, vTotalVolumes, '')
+                                                   pProcessoId, pRotaId, vTotalVolumes, FDMemEtiquetaVolumePorRua.FieldByName('Zona').AsString)
                  Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then
                     TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                                    FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
@@ -3816,6 +3823,7 @@ begin
   TbTagCaixa.TabVisible       := False;
   TbTagLocalizacao.TabVisible := False;
   PgcTabTags.Visible          := False;
+  TbTagArmazenagem.Visible    := False;
 end;
 
 procedure TFrmPrintTag.TbTagON(Page: TcxTabSheet);

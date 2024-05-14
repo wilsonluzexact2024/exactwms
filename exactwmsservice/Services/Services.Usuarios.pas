@@ -138,21 +138,16 @@ begin
     If DebugHook <> 0 Then
       FConexao.Query.Sql.SaveToFile('GetUsuario.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then
-    Begin
-      result := TjSonArray.Create;
-      result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Dados não encontrado na pesquisa!'))
+    if FConexao.Query.IsEmpty then Begin
+       result := TjSonArray.Create;
+       result.AddElement(TJsonObject.Create.AddPair('Erro', 'Dados não encontrado na pesquisa!'))
     End
     Else
-      result := FConexao.Query.toJsonArray;
-  Except
-    On E: Exception do
+       result := FConexao.Query.toJsonArray;
+  Except On E: Exception do
     Begin
-      raise Exception.Create('Processo: Usuários GetId - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: Usuários GetId - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   End;
 end;

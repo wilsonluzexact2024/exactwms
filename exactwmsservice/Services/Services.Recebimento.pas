@@ -551,10 +551,9 @@ begin
     vQryItens.Sql.Add('                                  De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
     vQryItens.Sql.Add('Where Ped.PedidoId = '+EntradaId.ToString());
     vQryItens.Open;
-    if (vQryItens.FieldByName('ProcessoId').AsInteger = 5) or (vQryItens.FieldByName('Status').AsInteger = 2) then
-    Begin
-      vQryItens.Close;
-      raise Exception.Create('Entrada já finalizada!!!');
+    if (vQryItens.FieldByName('ProcessoId').AsInteger = 5) or (vQryItens.FieldByName('Status').AsInteger = 2) then Begin
+       vQryItens.Close;
+       raise Exception.Create('Entrada já finalizada!!!');
     End;
     vQryItens.Close;
     vQryItens.Sql.Clear;
@@ -566,13 +565,12 @@ begin
     vQryItens.Open;
     vRecno := vQryItens.RecordCount;
     vQryItens.First;
-    while Not vQryItens.Eof do
-    Begin
+    while Not vQryItens.Eof do Begin
       // LoteId        := vQryItens.FieldByName('LoteId').AsInteger;
       vQryFinalizar.Close;
       vQryFinalizar.Sql.Clear;
       vQryFinalizar.Sql.Add('select LoteId, ');
-      vQryFinalizar.Sql.Add('       (Case When RastroId = 3 or SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
+      vQryFinalizar.Sql.Add('       (Case When SNGPC = 1 or ZonaSNGPC = 1 then (Select EnderecoIdStageSNGPC From Configuracao)');
       vQryFinalizar.Sql.Add('	            Else (Select EnderecoIdStage From Configuracao) End) EnderecoIdStage');
       vQryFinalizar.Sql.Add('from vProdutoLotes');
       vQryFinalizar.Sql.Add('where LoteId = :pLoteId');

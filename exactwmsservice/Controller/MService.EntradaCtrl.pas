@@ -1771,12 +1771,10 @@ begin
   End;
 end;
 
-procedure FinalizarCheckIn(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  EntradaDAO: TEntradaDAO;
-  LService: TServiceRecebimento;
-  HrInicioLog: TTime;
+procedure FinalizarCheckIn(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var EntradaDAO: TEntradaDAO;
+    LService: TServiceRecebimento;
+    HrInicioLog: TTime;
 begin
   HrInicioLog := Time;
   Try

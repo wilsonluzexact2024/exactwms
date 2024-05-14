@@ -1,9 +1,7 @@
 unit uFrmLogin;
 // http://www.theclub.com.br/Restrito/Revistas/201405/delp1405.aspx
 // Impressao de Pedidos
-
 interface
-
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
   System.Variants,
@@ -28,7 +26,6 @@ uses
   FMX.Media, Notificacao, ConfiguracaoClass, UsuarioClass, UsuarioCtrl,
   FMX.ActnList, System.Actions, FMX.TabControl, U_MsgD, System.ImageList,
   FMX.ImgList;
-
 type
   TFrmLogin = class(TForm)
     layoutBase: TLayout;
@@ -190,62 +187,48 @@ type
   public
     { Public declarations }
   end;
-
 Var
   FrmLogin: TFrmLogin;
   LoginLigado, SenhaLigado: Boolean;
   MsgD: TMsgD;
-
 implementation
-
 {$R *.fmx}
-
 uses uFrmeXactWMS, uDmClient, uRetorno, uFuncoes, uDmeXactWMS;
-
 procedure TFrmLogin.EdtPortServerKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
   SoNumeros(KeyChar);
 end;
-
 procedure TFrmLogin.EdtSenhaChangeTracking(Sender: TObject);
 begin
   if (EdtSenha.Text.Length > 0) and (SenhaLigado = false) then
   begin
     SenhaLigado := true;
-
   end
   else if EdtSenha.Text.Length = 0 then
   begin
     SenhaLigado := false;
-
   end;
 end;
-
 procedure TFrmLogin.EdtEmpresaChangeTracking(Sender: TObject);
 begin
   EdtEmpresa.Text := Capitalizar(EdtEmpresa.Text);
 end;
-
 procedure TFrmLogin.EdtUsuarioChangeTracking(Sender: TObject);
 begin
   if (EdtUsuario.Text.Length > 0) and (LoginLigado = false) then
   begin
     LoginLigado := true;
-
   end
   else if EdtUsuario.Text.Length = 0 then
   begin
     LoginLigado := false;
-
   end;
 end;
-
 procedure TFrmLogin.EdtUsuarioEnter(Sender: TObject);
 begin
   // LBlActKeyboard.Text := 'H='+Height.ToString()+'  W='+Width.ToString();
 end;
-
 procedure TFrmLogin.EdtUsuarioKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 {$IF defined(Android)}
@@ -264,12 +247,10 @@ begin
   Else if Key = vkEscape then
     EndApp;
 End;
-
 procedure TFrmLogin.EdtUsuarioTyping(Sender: TObject);
 begin
   LblUsuario.Text := '...';
 end;
-
 procedure TFrmLogin.EdtUsuarioValidate(Sender: TObject; var Text: string);
 Var
   vErro: String;
@@ -283,7 +264,6 @@ begin
     DelayedSetFocus(EdtUsuario);
     Text := '';
   End;
-
   TH := TThread.CreateAnonymousThread(
     procedure
     Var
@@ -295,7 +275,6 @@ begin
       DmClient.RESTRequest1.Resource := 'v1/usuario/{usuarioid}';
       DmClient.RESTRequest1.Params.AddUrlSegment('usuarioid', EdtUsuario.Text);
       DmClient.RESTRequest1.Method := TRESTRequestMethod.RmGet;
-
       DmClient.RESTRequest1.Execute;
       if DmClient.RESTResponse1.StatusCode in [200, 201] then
       Begin
@@ -329,7 +308,6 @@ begin
         if jArray.Items[0].GetValue<String>('hora') <> '' then
           ObjUsuarioCtrl.ObjUsuario.Perfil.Hora :=
             StrToTime(Copy(jArray.Items[0].GetValue<String>('hora'), 1, 8));
-
         if ObjUsuarioCtrl.ObjUsuario.usuarioid = 0 then
         Begin
           TThread.Synchronize(TThread.CurrentThread,
@@ -378,7 +356,6 @@ begin
   TH.OnTerminate := ThreadLoginUsuarioTerminate;
   TH.Start;
 end;
-
 procedure TFrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   If Assigned(XmlConfig) then
@@ -389,7 +366,6 @@ begin
     vNodeChild := nil;
   MsgD := Nil;
 end;
-
 procedure TFrmLogin.FormCreate(Sender: TObject);
 Var
   vArq, ArqSom: String;
@@ -401,7 +377,6 @@ begin
   Application.ProcessMessages;
   lablRes.Text := 'Screen Size : Height ' + inttostr(Height) + ' - Width ' +
     inttostr(Width);
-
   PgcPrincipal.ActiveTab := TabDetalhes;
   VSBConfig.Visible := true;
   // Tratar se o arquivo Exist
@@ -459,9 +434,7 @@ begin
             Exit; // EndApp
         end);
     End;
-
   End;
-
   Try
     {
       If (Not dmClient.ServidorAtivo(IpHost, PortHost)) Then Begin
@@ -500,13 +473,11 @@ begin
       end);
   End;
 end;
-
 procedure TFrmLogin.FormDestroy(Sender: TObject);
 begin
   // if Assigned(FrmeXactWMS) then
   // FrmeXactWMS := Nil;
 end;
-
 procedure TFrmLogin.FormResize(Sender: TObject);
 begin
   layoutBoasVindas.Visible := Height > 420;
@@ -514,17 +485,12 @@ begin
   layoutRodape.Visible := Height > 420;
   layoutTop.Visible := Height > 420;
 end;
-
 procedure TFrmLogin.FormShow(Sender: TObject);
 begin
-
   if DebugHook <> 0 then
     EdtSenha.Text := '2022'; // 'rhemasys';
-
   animwelcome.Start;
-
 end;
-
 procedure TFrmLogin.FormVirtualKeyboardHidden(Sender: TObject;
 KeyboardVisible: Boolean; const Bounds: TRect);
 begin
@@ -532,7 +498,6 @@ begin
   FNeedOffset := false;
   RestorePosition;
 end;
-
 procedure TFrmLogin.FormVirtualKeyboardShown(Sender: TObject;
 KeyboardVisible: Boolean; const Bounds: TRect);
 begin
@@ -541,7 +506,6 @@ begin
   FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
   UpdateKBBounds;
 end;
-
 procedure TFrmLogin.SbConfigClick(Sender: TObject);
 begin
   if PgcPrincipal.ActiveTab = TabDetalhes then
@@ -562,21 +526,17 @@ begin
     DelayedSetFocus(EdtUsuario);
   End;
 end;
-
 procedure TFrmLogin.Label2Click(Sender: TObject);
 var
   x: string;
 begin
-
   x := TLabel(Sender).TextSettings.Font.Family;
   ShowMessage(x)
 end;
-
 procedure TFrmLogin.LblCriarContaClick(Sender: TObject);
 begin
   MsgWhatsApp('Reenvio de senha');
 end;
-
 procedure TFrmLogin.LerXmlConfig;
 Var xTexto: String;
     {$IFDEF Android}
@@ -627,7 +587,6 @@ begin
       ShowMessage(E.Message);
   End;
 end;
-
 procedure TFrmLogin.BtnCancelClick(Sender: TObject);
 begin
   EdtEmpresa.Text := '';
@@ -637,7 +596,6 @@ begin
   SwtKeyboardCfg.IsChecked := false;
   CbLeitor.ItemIndex := -1;
 end;
-
 procedure TFrmLogin.BtnSaveClick(Sender: TObject);
 begin
   if (EdtEmpresa.Text = '') or (EdtIpServer.Text = '') or
@@ -654,7 +612,6 @@ begin
   SwtKeyboard.IsChecked := Teclado;
   SaveXML;
 end;
-
 procedure TFrmLogin.CalcContentBoundsProc(Sender: TObject;
 var ContentBounds: TRectF);
 begin
@@ -664,7 +621,6 @@ begin
       2 * ClientHeight - FKBBounds.Top);
   end;
 end;
-
 procedure TFrmLogin.BtnLogInClick(Sender: TObject);
 Var
   Arq, vErro: String;
@@ -675,7 +631,6 @@ begin
     MsgErroAlerta('Usuario ou Senha inválida!!!');
     Exit;
   End;
-
   if Not Assigned(ObjUsuarioCtrl) then
     Exit;
   if ((EdtUsuario.Text = ObjUsuarioCtrl.ObjUsuario.usuarioid.ToString()) or
@@ -715,13 +670,11 @@ begin
     End;
     JsonArrayLogOn := Nil;
     close;
-
     FrmLogin := Nil;
     Exit;
   End
   Else if Tentativas > 3 then
   Begin
-
     MsgErroAlerta('Seu acesso foi negado!!!');
     EndApp;
   End;
@@ -729,31 +682,26 @@ begin
   EdtUsuario.Text := '';
   EdtSenha.Text := '';
   Tentativas := Tentativas + 1;
-
   DelayedSetFocus(EdtUsuario);
 end;
-
 procedure TFrmLogin.BtnLogInMouseEnter(Sender: TObject);
 begin
   BtnLogIn.Fill.Color := TAlphaColorRec.Chocolate;
   BtnLogIn.Stroke.Color := TAlphaColorRec.Null;
   LblLogin.FontColor := TAlphaColorRec.White;
 end;
-
 procedure TFrmLogin.BtnLogInMouseLeave(Sender: TObject);
 begin
   BtnLogIn.Fill.Color := TAlphaColorRec.Null;
   BtnLogIn.Stroke.Color := TAlphaColorRec.Chocolate;
   LblLogin.FontColor := TAlphaColorRec.Chocolate;
 end;
-
 procedure TFrmLogin.RestorePosition;
 begin
   VSBConfig.ViewportPosition := PointF(VSBConfig.ViewportPosition.x, 0);
   layoutBase.Align := TAlignLayout.Client;
   VSBConfig.RealignContent;
 end;
-
 procedure TFrmLogin.SaveXML;
 Var
   vlXML: IXMLDocument;
@@ -790,7 +738,6 @@ begin
   // FrmeXactWMS.BaseURL          := 'http://'+IpHost+':'+PortHost;
   LblConnection.Text := 'Server: ' + IpHost + ':' + PortHost;
 end;
-
 procedure TFrmLogin.SignInBackgroundRectResize(Sender: TObject);
 begin
   if TRectangle(Sender).Width > 275 then
@@ -798,10 +745,9 @@ begin
   if TRectangle(Sender).Height > 225 then
     TRectangle(Sender).Height := 225;
 end;
-
 procedure TFrmLogin.SwtKeyboardClick(Sender: TObject);
-Var {$IFDEF Android}
-      KeyboardService: IFMXVirtualKeyboardService;
+    {$IFDEF Android}
+      Var KeyboardService: IFMXVirtualKeyboardService;
     {$ENDIF}
 begin
   if SwtKeyboard.IsChecked then
@@ -814,17 +760,14 @@ begin
   End;
   EdtUsuario.SetFocus;
 end;
-
 procedure TFrmLogin.SwtLeitorClick(Sender: TObject);
 begin
   CbLeitor.Enabled := SwtLeitor.IsChecked;
   if Not SwtLeitor.IsChecked then
     CbLeitor.ItemIndex := 0;
 end;
-
 procedure TFrmLogin.ThreadLoginUsuarioTerminate(Sender: TObject);
 begin
-
   if Sender is TThread then
   begin
     if Assigned(TThread(Sender).FatalException) then
@@ -837,7 +780,6 @@ begin
   end;
   // DelayEdSetFocus( EdtSenha );
 end;
-
 procedure TFrmLogin.UpdateKBBounds;
 var
   LFocused: TControl;
@@ -863,7 +805,6 @@ begin
     if not FNeedOffset then
     RestorePosition; }
 end;
-
 procedure TFrmLogin.ConfigSqlLite;
 Var
   vArq: String;
@@ -892,7 +833,6 @@ begin
     raise Exception.Create('Erro de conexão com o Banco de Dados Local.');
   End;
 end;
-
 procedure TFrmLogin.DelayedSetFocus(control: TControl);
 begin
   // https://stackoverflow.com/questions/36713878/delphi-fmx-set-focus-to-a-particular-control-so-the-cursor-appears
@@ -906,7 +846,6 @@ begin
         end);
     end).Start;
 end;
-
 Procedure TFrmLogin.EndApp;
 Begin
   FreeAndNil(FrmLogin);
@@ -917,7 +856,6 @@ Begin
   Application.Terminate;
 {$ENDIF}
 End;
-
 Procedure TFrmLogin.MsgErroAlerta(pMensagem: String);
 Begin
   TThread.CreateAnonymousThread(
@@ -943,5 +881,4 @@ Begin
   TLoading.Hide;
   TLoading.ToastMessage(Self, pMensagem, TAlignLayout.Top, CorToastErro);
 End;
-
 end.

@@ -3227,7 +3227,7 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
       'select Pv.PedidoId, Pd.DocumentoOriginal, Pv.PedidoVolumeId, Pv.Sequencia,' + sLineBreak +
       '       Pe.CodPessoaERP, Pe.Razao, Pe.Fantasia, Ro.RotaId, Ro.Descricao Rotas, FORMAT(Dp.Data, '+#39+'dd/MM/yyyy'+#39+') as DtPedido,' + sLineBreak +
       '	   De.ProcessoId, De.Descricao ProcessoEtapa, Vl.Itens, VL.QtdSuprida,'+ sLineBreak +
-      '	   VL.Inicio, VL.Termino, Vl.Mascara, Vl.Zona, Pr.Ordem, Coalesce(Pv.EmbalagemId, 0) EmbalagemId,' + sLineBreak +
+      '	   VL.Inicio, VL.Termino, Vl.Mascara, Z.Zona, Pr.Ordem, Coalesce(Pv.EmbalagemId, 0) EmbalagemId,' + sLineBreak +
       '	   vCxaFechada.CodProduto, vCxaFechada.Descricao, VCxaFechada.Picking, vCxaFechada.Lote, FORMAT(vCxaFechada.Vencimento, '+#39+'dd/MM/yyyy'+#39+') AS Vencimento' + sLineBreak +
       '    , TotalVolumes' + sLineBreak + 'From PedidoVolumes Pv' + sLineBreak +
       'Inner join Pedido Pd On Pd.PedidoId = Pv.PedidoId' + sLineBreak +
@@ -3237,13 +3237,19 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
       'Inner join Rhema_Data DP On Dp.IdData = Pd.DocumentoData' + sLineBreak +
       'Inner Join vDocumentoEtapas De On De.Documento = Pv.Uuid' + sLineBreak +
       'Inner Join (Select PedidoId, COUNT(*) TotalVolumes From PedidoVolumes Group by PedidoId) TPv ON TPv.PedidoId = Pd.PedidoId ' + sLineBreak +
-      'Left Join (Select Vl.PedidoVolumeId, Pl.ZonaId, COUNT(Distinct Pl.IdProduto) Itens,' + sLineBreak +
+      'Left Join (Select Vl.PedidoVolumeId, COUNT(Distinct Pl.IdProduto) Itens,' + sLineBreak +
       '                  Sum(Vl.QtdSuprida) QtdSuprida, Min(TEnd.Endereco) Inicio,'+ sLineBreak +
-      '				       Max(TEnd.Endereco) Termino, TEnd.Mascara, TEnd.Zona' + sLineBreak +
+      '				       Max(TEnd.Endereco) Termino, TEnd.Mascara' + sLineBreak +
       '           From PedidoVolumeLotes Vl' + sLineBreak +
       '	          Inner Join vEnderecamentos TEnd On TEnd.EnderecoId = Vl.EnderecoId' +sLineBreak +
       '	          Inner join vProdutoLotes Pl On Pl.LoteId = Vl.LoteId' + sLineBreak +
-      '	          Group by Vl.PedidoVolumeId, Pl.ZOnaId, TEnd.Mascara, TEnd.Zona) VL On VL.PedidoVolumeId = Pv.PedidoVolumeId' + sLineBreak +
+      '	          Group by Vl.PedidoVolumeId, TEnd.Mascara) VL On VL.PedidoVolumeId = Pv.PedidoVolumeId' + sLineBreak +
+      'Left Join (Select PedidoVolumeId, ZonaId, Zona  --Into #Zona' + sLineBreak +
+      'From  (Select Vl.PedidoVolumeId, Pl.ZonaId, Pl.Zona' + sLineBreak +
+      '            , ROW_NUMBER() OVER (PARTITION BY Vl.PedidoVolumeid ORDER BY Pl.Zona) as Zu' + sLineBreak +
+      '       From PedidoVolumeLotes Vl' + sLineBreak +
+      '       Inner Join vProdutoLotes Pl on Pl.LoteId = vl.LoteId and Pl.ZonaId Is Not Null ) as Z' + sLineBreak +
+      '       Where Zu = 1) Z On Z.PedidoVolumeId = Pv.PedidoVolumeId'+sLineBreak+
       'Left Join (Select Vl.PedidoVolumeId, Prd.CodProduto, Prd.Descricao, Prd.EnderecoDescricao Picking, Pl.DescrLote Lote, Dv.Data Vencimento' + sLineBreak +
       '           From PedidoVolumeLotes Vl' + sLineBreak +
       '		         Inner Join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId' + sLineBreak +
@@ -3253,7 +3259,7 @@ Const SqlSaidaIntegracaoRetornoPedido = 'Declare @Pedido VarChar(36) = :pPedido'
       'where ((@ProcessoId = 0 and De.ProcessoId < 13) or (@ProcessoId = 2 and De.ProcessoId = 2) or (@ProcessoId = 3 and De.ProcessoId > 2 and De.ProcessoId < 13)) ' + sLineBreak +
       '   And DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.Uuid and Status = 1)' + sLineBreak +
       '	  And (@EmbalagemId = 0 or  (@EmbalagemId = 1 and PV.EmbalagemId Is Null) or (@EmbalagemId = 2 and PV.EmbalagemId Is Not Null))' + sLineBreak +
-      '   And (@ZonaId = 0 or @ZonaId = Vl.ZonaId)';
+      '   And (@ZonaId = 0 or @ZonaId = Z.ZonaId)';
     // '     And Pv.PedidoId in (18362)'+sLineBreak+
     // 'order by VL.Inicio';
 
