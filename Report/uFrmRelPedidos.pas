@@ -1261,7 +1261,7 @@ begin
      aColGrid := 7;
      ColCancVolume := 11;
   End;
-  if (aRow = 0) and (aColGrid <> 7) then Begin
+  if (aRow = 0) and ( ACol <> aColGrid ) then Begin
      TAdvStringGrid(Sender).SortSettings.Column := aCol;
      TAdvStringGrid(Sender).QSort;
      Exit;

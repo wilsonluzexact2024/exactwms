@@ -81,11 +81,12 @@ begin
        {$IfDef Android}
           RequestReport.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
           RequestReport.Params.AddHeader('versao', VersaoAPK); //IMEI;   //Substituído estacao por terminal em 18/03/2021
-       {$else}
+          RequestReport.Params.AddHeader('appname', 'eXactWMSMobileAPK');
+    {$else}
           RequestReport.Params.AddHeader('terminal', NomeDoComputador);
           RequestReport.Params.AddHeader('versao', Versao('eXactWmsMobile.exe')); //IMEI;   //Substituído estacao por terminal em 18/03/2021
+          RequestReport.Params.AddHeader('appname', 'eXactWMSMobileWin');
        {$Endif}
-       RequestReport.Params.AddHeader('appname', 'eXactWMSMobile');
     End
     Else Begin
       RESTRequestWMS.Timeout := 30000;
@@ -99,10 +100,12 @@ begin
          RESTRequestWMS.Params.AddHeader('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
       {$IfDef Android}
          RESTRequestWMS.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
-         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobile(APK) '+VersaoAPK);
+         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobileAPK'
+         RESTRequestWMS.Params.AddHeader('versao', VersaoAPK);
       {$else}
          RESTRequestWMS.Params.AddHeader('terminal', NomeDoComputador);
-         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobile '+Versao('eXactWmsMobile.exe'));
+         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobileWin');
+         RESTRequestWMS.Params.AddHeader('versao', Versao('eXactWmsMobile.exe'));
       {$Endif}
     End;
   Except ON E: Exception do

@@ -299,67 +299,55 @@ begin
       QtdDevolvida := vQryItens.FieldByName('QtdDevolvida').AsInteger;
       QtdSegregada := vQryItens.FieldByName('QtdSegregada').AsInteger;
       // Salvar no banco
-      vSql := 'Declare @EntradaId Integer = ' + EntradaId.ToString() +
-        sLineBreak + 'Declare @LoteId Integer = ' + LoteId.ToString + sLineBreak
-        + 'Declare @QtdXml     Integer = ' + QtdXml.ToString() + sLineBreak +
-        'Declare @QtdCheckIn Integer = ' + QtdCheckIn.ToString() + sLineBreak +
-        'Declare @QtdDevolvida Integer = ' + QtdDevolvida.ToString() +
-        sLineBreak + 'Declare @QtdSegregada Integer = ' +
-        QtdSegregada.ToString() + sLineBreak +
-        'Declare @EnderecoIdStage Integer = ' + vEnderecoIdStage.ToString();
+      vSql := 'Declare @EntradaId Integer       = '+EntradaId.ToString()+sLineBreak +
+              'Declare @LoteId Integer          = '+LoteId.ToString + sLineBreak+
+              'Declare @QtdXml     Integer      = '+QtdXml.ToString() + sLineBreak +
+              'Declare @QtdCheckIn Integer      = '+QtdCheckIn.ToString() + sLineBreak +
+              'Declare @QtdDevolvida Integer    = '+QtdDevolvida.ToString()+sLineBreak +
+              'Declare @QtdSegregada Integer    = '+QtdSegregada.ToString() + sLineBreak +
+              'Declare @EnderecoIdStage Integer = '+vEnderecoIdStage.ToString();
+      vSql := vSql+
+              'If Exists (Select LoteId From Estoque Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage) Begin'+sLineBreak +
+              '   Update Estoque Set Qtde = Qtde + @QtdCheckIn Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'+sLineBreak +
+              'End' + sLineBreak +
+              'Else Begin' + sLineBreak +
+              '   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) '+sLineBreak +
+              '          Values (@LoteId, @EnderecoIdStage, 1, @QtdCheckIn, '+sLineBreak +
+              '                (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '+sLineBreak +
+              '                        (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
+              'End;';
       vSql := vSql +
-        'If Exists (Select LoteId From Estoque Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage) Begin'
-        + sLineBreak +
-        '   Update Estoque Set Qtde = Qtde + @QtdCheckIn Where EstoqueTipoId = 1 and LoteId = @LoteId and EnderecoId = @EnderecoIdStage'
-        + sLineBreak + '   End' + sLineBreak + 'Else Begin' + sLineBreak +
-        '   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) '
-        + sLineBreak +
-        '                 Values (@LoteId, @EnderecoIdStage, 1, @QtdCheckIn, ' +
-        sLineBreak +
-        '                        (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)), '
-        + sLineBreak +
-        '                        (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'
-        + sLineBreak + 'End;';
-      vSql := vSql + 'If @QtdSegregada > 0 Begin' + sLineBreak +
-        '	If Exists (Select LoteId From Estoque Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)) Begin'
-        + sLineBreak +
-        '	   Update Estoque Set Qtde = Qtde + @QtdSegregada Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'
-        + sLineBreak + '	   End' + sLineBreak + '	Else Begin' + sLineBreak +
-        '	   Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada,'
-        + sLineBreak +
-        '							(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'
-        + sLineBreak +
-        '							(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'
-        + sLineBreak + '	End;' + sLineBreak + 'End;';
-      // try Clipboard.AsText := vSql; Except End;
+              'If @QtdSegregada > 0 Begin' + sLineBreak +
+              '	  If Exists (Select LoteId From Estoque Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)) Begin'+sLineBreak +
+              '	     Update Estoque Set Qtde = Qtde + @QtdSegregada '+
+              '      Where EstoqueTipoId = 3 and LoteId = @LoteId and EnderecoId = (Select EnderecoSegregadoId From Configuracao)'+sLineBreak +
+              '	  End' + sLineBreak +
+              '   Else Begin' + sLineBreak +
+              '      Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao ) Values (@LoteId, (Select EnderecoSegregadoId From Configuracao), 3, @QtdSegregada,'+sLineBreak +
+              '						    	(Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),'+sLineBreak +
+              '						    	(select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))) )'+sLineBreak +
+              '   End;' + sLineBreak +
+              'End;';
       vQry.SQL.Add(vSql);
       if DebugHook <> 0 then
-        vQry.SQL.SaveToFile('FinalizarCheckIn_AtEstoque' + LoteId.ToString
-          + '.Sql');
+         vQry.SQL.SaveToFile('FinalizarCheckIn_AtEstoque'+LoteId.ToString+ '.Sql');
       vQry.ExecSQL;
-      AtualizarKardex(vQryKardex, 3, LoteId, vEnderecoIdStage, 1, 1, QtdCheckIn,
-        1, jsonEntradaItem.GetValue<Integer>('usuarioid', 0),
-        'Recebimento Pedido: ' + EntradaId.ToString(),
-        'Stage - Área de Armazenagem(Espera)',
-        jsonEntradaItem.GetValue<String>('nomeestacao', ''), vEstoqueInicial);
+      AtualizarKardex(vQryKardex, 3, LoteId, vEnderecoIdStage, 1, 1, QtdCheckIn, 1, jsonEntradaItem.GetValue<Integer>('usuarioid', 0),
+                     'Recebimento Pedido: ' + EntradaId.ToString(), 'Stage - Área de Armazenagem(Espera)', jsonEntradaItem.GetValue<String>('nomeestacao', ''), vEstoqueInicial);
       vQryItens.Next;
     End;
     vQry.Close;
     vQry.SQL.Clear;
-    vQry.SQL.Add('Update Pedido Set Status = 2 where pedidoid = ' +
-      EntradaId.ToString());
+    vQry.SQL.Add('Update Pedido Set Status = 2 where pedidoid = '+EntradaId.ToString());
     vQry.ExecSQL;
     Result := True;
     vQry.connection.Commit;
     vQry.Close;
     vQryItens.Close;
     vQryKardex.Close;
-
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
       vQry.connection.Rollback;
-
       Result := False;
       // tJsonObject.Create(TJSONPair.Create('Erro', E.Message));
       raise Exception.Create('Erro: ' + E.Message);

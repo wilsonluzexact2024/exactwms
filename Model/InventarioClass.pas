@@ -21,7 +21,11 @@ type
     fusuarioidcancelamento: Integer;
     fdatacancelamento: TDateTime;
     fusuarioidfechamento: Integer;
-    fdatafechamento: TDateTime;
+    fdatafechamento : TDateTime;
+    fhorafechamento : TTime;
+    FUsuarioIdCreate : Integer;
+    FUsuarioCreate   : String;
+    FUsuarioFechamento : String;
     fmotivo: String;
     ftipoajuste: Integer;
     fstatus: Integer;
@@ -37,23 +41,21 @@ type
     Class Procedure ConfigSizeField(Tabela: String; Sender: TObject);
     Procedure Limpar;
     // property CRUD             : TCRUD    Read FCrud            Write FCRUD;
-    Property inventarioid: Integer Read finventarioid Write finventarioid;
-    Property datacriacao: TDateTime Read fdatacriacao Write fdatacriacao;
-    Property usuarioidcriacao: Integer Read fusuarioidcriacao
-      Write fusuarioidcriacao;
-    Property dataliberacao: TDateTime Read fdataliberacao Write fdataliberacao;
-    Property usuarioidliberacao: Integer Read fusuarioidliberacao
-      Write fusuarioidliberacao;
+    Property inventarioid: Integer     Read finventarioid Write finventarioid;
+    Property datacriacao  : TDateTime  Read fdatacriacao Write fdatacriacao;
+    Property dataliberacao: TDateTime  Read fdataliberacao Write fdataliberacao;
+    Property usuarioidcriacao: Integer Read fusuarioidcriacao Write fusuarioidcriacao;
+    Property UsuarioIdCreate : integer Read FUsuarioIdCreate  Write FUsuarioIdCreate;
+    Property UsuarioCreate   : String  Read FUsuarioCreate    Write FUsuarioCreate;
+    Property usuarioidliberacao: Integer Read fusuarioidliberacao Write fusuarioidliberacao;
     Property processoid: Integer Read fprocessoid Write fprocessoid;
     Property inventariotipo: Integer Read finventariotipo Write finventariotipo;
-    Property usuarioidcancelamento: Integer Read fusuarioidcancelamento
-      Write fusuarioidcancelamento;
-    Property datacancelamento: TDateTime Read fdatacancelamento
-      Write fdatacancelamento;
-    Property usuarioidfechamento: Integer Read fusuarioidfechamento
-      Write fusuarioidfechamento;
-    Property datafechamento: TDateTime Read fdatafechamento
-      Write fdatafechamento;
+    Property usuarioidcancelamento: Integer Read fusuarioidcancelamento Write fusuarioidcancelamento;
+    Property datacancelamento: TDateTime Read fdatacancelamento Write fdatacancelamento;
+    Property usuarioidfechamento: Integer Read fusuarioidfechamento Write fusuarioidfechamento;
+    Property usuariofechamento  : String  Read fusuariofechamento   write fusuariofechamento;
+    Property datafechamento: TDateTime Read fdatafechamento Write fdatafechamento;
+    Property horafechamento: TTime     Read Fhorafechamento Write fhorafechamento;
     Property motivo: String Read fmotivo Write fmotivo;
     Property tipoajuste: Integer Read ftipoajuste Write ftipoajuste;
     Property status: Integer Read fstatus Write fstatus;
@@ -112,6 +114,8 @@ begin
   finventarioid := 0;
   fdatacriacao := 0;
   fusuarioidcriacao := 0;
+  fusuarioidcreate  := 0;
+  fusuariocreate    := '';
   fdataliberacao := 0;
   fusuarioidliberacao := 0;
   fprocessoid := 0;
@@ -119,7 +123,9 @@ begin
   fusuarioidcancelamento := 0;
   fdatacancelamento := 0;
   fusuarioidfechamento := 0;
+  fusuariofechamento   := '';
   fdatafechamento := 0;
+  fhorafechamento := 0;
   fmotivo := '';
   ftipoajuste := 0;
   fstatus := 0;

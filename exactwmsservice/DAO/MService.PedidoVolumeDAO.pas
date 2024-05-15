@@ -421,168 +421,90 @@ Var
 begin
   try
     pNewConnection := False;
-    if pConneXactWMS = Nil then
-    Begin
-      pConneXactWMS := Fconexao.DB;
-      pNewConnection := True;
+    if pConneXactWMS = Nil then Begin
+       pConneXactWMS := Fconexao.DB;
+       pNewConnection := True;
     End;
-    VQry := Fconexao.GetQuery;
-    VQry.connection := pConneXactWMS;
+    vQry := Fconexao.GetQuery;
+    vQry.connection := pConneXactWMS;
     If pNewConnection Then
-    Begin
-      VQry.connection.StartTransaction;
-    End;
+       vQry.connection.StartTransaction;
     vQryAtualiza := Fconexao.GetQuery;
     vQryAtualiza.connection := pConneXactWMS;
     Result := TJsonArray.Create();
-    VQry.Sql.Add
-      ('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
-    VQry.Sql.Add('From PedidoVolumeLotes VL');
-    VQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
-    VQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
-    VQry.Sql.Add
-      ('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
+    vQry.Sql.Add('select Prd.IdProduto ProdutoId, Prd.CodProduto, Vl.LoteId, Vl.EnderecoId, Vl.Quantidade, Vl.QtdSuprida');
+    vQry.Sql.Add('From PedidoVolumeLotes VL');
+    vQry.Sql.Add('Inner Join ProdutoLotes PL On Pl.LoteId = Vl.LoteId');
+    vQry.Sql.Add('Inner Join Produto Prd on Prd.IdProduto = Pl.ProdutoId');
+    vQry.Sql.Add('Where Prd.CodProduto = :pCodProduto and Vl.PedidoVolumeId = :pPedidoVolumeId');
     // Baixa de Estoque deve ocorrer pela reserva
     vQryAtualiza.Sql.Add('Update Estoque');
     vQryAtualiza.Sql.Add('  Set Qtde = Qtde - E.QtdSuprida + :pQtdeRes');
     vQryAtualiza.Sql.Add('From');
     vQryAtualiza.Sql.Add('  (Select LoteId, EnderecoId, QtdSuprida');
     vQryAtualiza.Sql.Add('   From PedidoVolumeLotes');
-    vQryAtualiza.Sql.Add
-      ('   Where LoteId = :pLoteIdRes and PedidoVolumeId = :pPedidoVolumeIdRes ) E');
-    vQryAtualiza.Sql.Add
-      ('Where 1 = 2 and Estoque.LoteId = :pLoteIdEst and Estoque.EnderecoId = E.EnderecoId and  Estoque.EstoqueTipoId = 6');
+    vQryAtualiza.Sql.Add('   Where LoteId = :pLoteIdRes and PedidoVolumeId = :pPedidoVolumeIdRes ) E');
+    vQryAtualiza.Sql.Add('Where 1 = 2 and Estoque.LoteId = :pLoteIdEst and Estoque.EnderecoId = E.EnderecoId and  Estoque.EstoqueTipoId = 6');
 
     vQryAtualiza.Sql.Add('Update PedidoVolumeLotes ');
-    vQryAtualiza.Sql.Add('   Set QtdSuprida  = :pQtdSuprida');
-    vQryAtualiza.Sql.Add
-      ('      , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
-    vQryAtualiza.Sql.Add
-      ('      , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
-    vQryAtualiza.Sql.Add('      , UsuarioId  = :pUsuarioid');
-    vQryAtualiza.Sql.Add('      , Terminal   = :pTerminal');
-    vQryAtualiza.Sql.Add
-      ('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
+    vQryAtualiza.Sql.Add('   Set QtdSuprida = :pQtdSuprida');
+    vQryAtualiza.Sql.Add('     , DtInclusao = (Select IdData From Rhema_Data where Data = :pDtSeparacao)');
+    vQryAtualiza.Sql.Add('     , HrInclusao = (Select IdHora From Rhema_Hora where Hora = Substring(:pHrSeparacao, 1, 5))');
+    vQryAtualiza.Sql.Add('     , UsuarioId  = :pUsuarioid');
+    vQryAtualiza.Sql.Add('     , Terminal   = :pTerminal');
+    vQryAtualiza.Sql.Add('Where LoteId = :pLoteId and PedidoVolumeId = :pPedidoVolumeId');
 
-    vQryAtualiza.Sql.Add
-      ('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
-    vQryAtualiza.Sql.Add
-      ('                           	data,	hora,	usuarioid,	estacao) Values ');
-    vQryAtualiza.Sql.Add
-      ('                           (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
-    vQryAtualiza.Sql.Add
-      ('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
+    vQryAtualiza.Sql.Add('Insert Into PedidoOperacao (pedidovolumeid, loteid, enderecoid, quantidade,	qtdsuprida,	processoetapaid,');
+    vQryAtualiza.Sql.Add('                           	data,	hora,	usuarioid,	estacao) Values ');
+    vQryAtualiza.Sql.Add('                            (:poperpedidovolumeid, :poperloteid, :poperenderecoid, :poperquantidade,	:poperqtdsuprida,	');
+    vQryAtualiza.Sql.Add('                           	(Select Processoid from ProcessoEtapas where Descricao = :poperprocessoetapa), :poperdata,	:poperhora,	:poperusuarioid,	:poperestacao)');
     Try
       for xProd := 0 to Pred(pJsonArray.Count) do
       Begin
-        if pJsonArray.Items[xProd].TryGetValue('enderecoid', vErro) then
-        Begin
-          vQryAtualiza.Sql.Add('update PedidoVolumeSeparacao Set EnderecoId = '
-            + pJsonArray.Items[xProd].GetValue<Integer>('enderecoid').ToString);
-          vQryAtualiza.Sql.Add('Where PedidoVOlumeId = ' + pJsonArray.Items
-            [xProd].GetValue<Integer>('pedidovolumeid').ToString);
+        if pJsonArray.Items[xProd].TryGetValue('enderecoid', vErro) then Begin
+           vQryAtualiza.Sql.Add('update PedidoVolumeSeparacao Set EnderecoId = '+pJsonArray.Items[xProd].GetValue<Integer>('enderecoid').ToString);
+           vQryAtualiza.Sql.Add('Where PedidoVOlumeId = ' + pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid').ToString);
         End;
-        VQry.Close();
-        VQry.ParamByName('pCodProduto').Value := pJsonArray.Items[xProd]
-          .GetValue<Integer>('codproduto');
-        VQry.ParamByName('pPedidoVolumeId').Value := pJsonArray.Items[xProd]
-          .GetValue<Integer>('pedidovolumeid');
-        /// vQry.SQL.SaveToFile('GetVolumeLote.Sql');
-        VQry.Open;
-        vQtdConferida := pJsonArray.Items[xProd].GetValue<Integer>
-          ('qtdsuprida');
-        // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');  //Quantidade Suprida
-        While (Not VQry.Eof) do
-        Begin // and (vQtdConferida>0)
+        vQry.Close();
+        vQry.ParamByName('pCodProduto').Value := pJsonArray.Items[xProd].GetValue<Integer>('codproduto');
+        vQry.ParamByName('pPedidoVolumeId').Value := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
+        vQry.Open;
+        vQtdConferida := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
+        While (Not vQry.Eof) do Begin // and (vQtdConferida>0)
           vQryAtualiza.Close;
-          vQryAtualiza.ParamByName('pLoteIdRes').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('pPedidoVolumeIdRes').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('pLoteIdEst').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-
-          vQryAtualiza.ParamByName('pPedidoVolumeId').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('pLoteid').Value := pJsonArray.Items[xProd]
-            .GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('pUsuarioId').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pDtSeparacao').Value :=
-            FormatdateTime('YYYY-MM-DD',
-            StrToDate(pJsonArray.Items[xProd].GetValue<String>('data')));
-          // pJsonArray.Items[xProd].GetValue<String>('data'); //
-          vQryAtualiza.ParamByName('pHrSeparacao').Value :=
-            pJsonArray.Items[xProd].GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('pTerminal').Value := pJsonArray.Items[xProd]
-            .GetValue<String>('terminal');
-
-          // if vQtdConferida >= vQry.FieldByName('Quantidade').AsInteger then Begin
-          // vQryAtualiza.ParamByName('pQtdeRes').Value    := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida'); //vQry.FieldByName('Quantidade').AsInteger;
-          // vQryAtualiza.ParamByName('pQtdSuprida').Value := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida'); //vQry.FieldByName('Quantidade').AsInteger;
-          // vQtdConferida := vQtdConferida - vQry.FieldByName('Quantidade').AsInteger;
-          // vQryAtualiza.ParamByName('poperquantidade').value     := vQry.FieldByName('Quantidade').AsInteger;
-          //
-          // End
-          // Else Begin;
-          vQryAtualiza.ParamByName('pQtdeRes').Value := pJsonArray.Items[xProd]
-            .GetValue<Integer>('demanda'); // vQtdConferida;
-          vQryAtualiza.ParamByName('pQtdSuprida').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
-          // vQtdConferida;
-
+          vQryAtualiza.ParamByName('pLoteIdRes').Value          := pJsonArray.Items[xProd].GetValue<Integer>('loteid');
+          vQryAtualiza.ParamByName('pPedidoVolumeIdRes').Value  := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
+          vQryAtualiza.ParamByName('pLoteIdEst').Value          := pJsonArray.Items[xProd].GetValue<Integer>('loteid');
+          vQryAtualiza.ParamByName('pPedidoVolumeId').Value     := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
+          vQryAtualiza.ParamByName('pLoteid').Value             := pJsonArray.Items[xProd].GetValue<Integer>('loteid');
+          vQryAtualiza.ParamByName('pUsuarioId').Value          := pJsonArray.Items[xProd].GetValue<Integer>('usuarioid');
+          vQryAtualiza.ParamByName('pDtSeparacao').Value        := FormatdateTime('YYYY-MM-DD', StrToDate(pJsonArray.Items[xProd].GetValue<String>('data')));
+          vQryAtualiza.ParamByName('pHrSeparacao').Value        := pJsonArray.Items[xProd].GetValue<String>('horariotermino');
+          vQryAtualiza.ParamByName('pTerminal').Value           := pJsonArray.Items[xProd].GetValue<String>('terminal');
+          vQryAtualiza.ParamByName('pQtdeRes').Value            := pJsonArray.Items[xProd].GetValue<Integer>('demanda'); // vQtdConferida;
+          vQryAtualiza.ParamByName('pQtdSuprida').Value         := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
+          vQryAtualiza.ParamByName('poperquantidade').Value     := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
+          vQryAtualiza.ParamByName('poperqtdsuprida').Value     := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
           vQtdConferida := 0;
-          // End;
-          // Gravar acompanhamento da operacao para análise de resultados
-          vQryAtualiza.ParamByName('poperPedidoVolumeId').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
-          vQryAtualiza.ParamByName('poperLoteid').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('loteid');
-          // vQry.FieldByName('LoteId').AsInteger;
-          vQryAtualiza.ParamByName('poperEnderecoid').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('enderecoid');
-          // vQry.FieldByName('EnderecoId').AsInteger;
-          vQryAtualiza.ParamByName('poperquantidade').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('demanda');
-          // vQry.FieldByName('Quantidade').AsInteger;
-          vQryAtualiza.ParamByName('poperqtdsuprida').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
-          // pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
-          vQryAtualiza.ParamByName('poperUsuarioId').Value :=
-            pJsonArray.Items[xProd].GetValue<Integer>('usuarioid');
-          vQryAtualiza.ParamByName('pOperData').Value :=
-            FormatdateTime('YYYY-MM-DD',
-            StrToDate(pJsonArray.Items[xProd].GetValue<String>('data')));
-          // pJsonArray.Items[xProd].GetValue<String>('data'); //
-          vQryAtualiza.ParamByName('pOperHora').Value := pJsonArray.Items[xProd]
-            .GetValue<String>('horariotermino');
-          vQryAtualiza.ParamByName('poperestacao').Value :=
-            pJsonArray.Items[xProd].GetValue<String>('terminal');
-          vQryAtualiza.ParamByName('poperprocessoetapa').Value :=
-            pJsonArray.Items[xProd].GetValue<String>('processoetapa');
-
+          vQryAtualiza.ParamByName('poperPedidoVolumeId').Value := pJsonArray.Items[xProd].GetValue<Integer>('pedidovolumeid');
+          vQryAtualiza.ParamByName('poperLoteid').Value         := pJsonArray.Items[xProd].GetValue<Integer>('loteid');
+          vQryAtualiza.ParamByName('poperEnderecoid').Value     := pJsonArray.Items[xProd].GetValue<Integer>('enderecoid');
+          vQryAtualiza.ParamByName('poperquantidade').Value     := pJsonArray.Items[xProd].GetValue<Integer>('demanda');
+          vQryAtualiza.ParamByName('poperqtdsuprida').Value     := pJsonArray.Items[xProd].GetValue<Integer>('qtdsuprida');
+          vQryAtualiza.ParamByName('poperUsuarioId').Value      := pJsonArray.Items[xProd].GetValue<Integer>('usuarioid');
+          vQryAtualiza.ParamByName('pOperData').Value           := FormatdateTime('YYYY-MM-DD', StrToDate(pJsonArray.Items[xProd].GetValue<String>('data')));
+          vQryAtualiza.ParamByName('pOperHora').Value           := pJsonArray.Items[xProd].GetValue<String>('horariotermino');
+          vQryAtualiza.ParamByName('poperestacao').Value        := pJsonArray.Items[xProd].GetValue<String>('terminal');
+          vQryAtualiza.ParamByName('poperprocessoetapa').Value  := pJsonArray.Items[xProd].GetValue<String>('processoetapa');
           If DebugHook <> 0 then
-            vQryAtualiza.Sql.SaveToFile('AtualizacaoReservar.Sql');
+             vQryAtualiza.Sql.SaveToFile('AtualizacaoReserva.Sql');
           vQryAtualiza.ExecSQL;
-          VQry.Next
-          { If (vQtdConferida = 0 and (Not vQry.Eof)) then Begin
-            while Not vQry.Eof do
-            vQry.Next;
-            End;
-          } End;
+          vQry.Next
+        End;
       End;
       if pNewConnection then
-        VQry.connection.commit;
-      VQry.Close;
+         vQry.connection.commit;
+      vQry.Close;
       vQryAtualiza.Close;
     Except
       ON E: Exception do

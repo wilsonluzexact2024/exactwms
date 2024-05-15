@@ -130,6 +130,9 @@ type
       Shift: TShiftState);
     procedure Ac_OkExecute(Sender: TObject);
     procedure actCancelarVolumeExecute(Sender: TObject);
+    procedure RctF5Click(Sender: TObject);
+    procedure RctF8Click(Sender: TObject);
+    procedure LblF5Click(Sender: TObject);
   private
     { Private declarations }
     StartSeparacao         : Boolean;
@@ -428,6 +431,12 @@ begin
   DelayEdSetFocus(EdtProduto);
 end;
 
+procedure TFrmCheckOut.LblF5Click(Sender: TObject);
+begin
+  inherited;
+  Limpar;
+end;
+
 procedure TFrmCheckOut.Limpar;
 begin
   inherited;
@@ -579,8 +588,21 @@ begin
 
 end;
 
+procedure TFrmCheckOut.RctF5Click(Sender: TObject);
+begin
+//  inherited;
+  Limpar;
+end;
+
+procedure TFrmCheckOut.RctF8Click(Sender: TObject);
+begin
+  inherited;
+  ResetVolume;
+end;
+
 procedure TFrmCheckOut.ResetVolume;
 begin
+  Exit;
   If (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Separação - Resetar Volume')) then Begin
      SetCampoDefault('EdtVolumeId');
      ShowErro('Usuário não autorizado!', 'alarme');

@@ -696,27 +696,18 @@ begin
       JsonArrayRetorno := LService.VolumeLoteSubstituicao
         (Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 201, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+        ' Registros.', 201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except on E: Exception do
       Begin
         Tutil.Gravalog('[VolumeLoteSubstituicao] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
-        Res.Send<TJsonArray>(JsonArrayErro)
-          .Status(THTTPStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text),
-          Req.Body, '', StringReplace(JsonArrayErro.ToString, #39, '',
-          [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/lotesubstituicao', Trim(Req.Params.Content.Text), Req.Body, '', StringReplace(JsonArrayErro.ToString, #39, '',
+                        [rfReplaceAll]), 500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally
@@ -2107,7 +2098,7 @@ begin
         JsonArrayRetorno := LService.RegistrarDocumentoEtapaSemBaixaEstoque(Req.Body<TJSONObject>);
         Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/pedidovolume/registrardocumentoetapacombaixaestoque', Trim(Req.Params.Content.Text), Req.Body, '',
+                        '/v1/pedidovolume/registrardocumentoetapasembaixaestoque', Trim(Req.Params.Content.Text), Req.Body, '',
                         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200, ((Time - HrInicioLog) / 1000),
                         Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
         Erro := False;
@@ -2125,7 +2116,7 @@ begin
             Tutil.SalvarLog(Req.MethodType,
               StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'],
               ClientIP(Req), THorse.Port,
-              '/v1/pedidovolume/registrardocumentoetapacombaixaestoque',
+              '/v1/pedidovolume/registrardocumentoetapasembaixaestoque',
               Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
               ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
               Req.Headers['versao']);

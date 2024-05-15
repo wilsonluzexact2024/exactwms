@@ -388,6 +388,7 @@ begin
   TableName := TWKUtil.GetTableName(Obj);
   if Condicao <> '' then
     ExecQuery(Mensagem, Format(SQL, [TableName, Condicao]), Params)
+
   else
   begin
     SetFieldsAndParams(teDelete, Obj, FieldsName, WhereCondition, Params);

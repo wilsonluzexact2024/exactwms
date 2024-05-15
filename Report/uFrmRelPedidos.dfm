@@ -3218,6 +3218,8 @@ inherited FrmRelPedidos: TFrmRelPedidos
         Properties.ActivePage = TabVolumeResumo
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
+        ExplicitLeft = 3
+        ExplicitTop = 208
         ClientRectBottom = 483
         ClientRectRight = 1367
         ClientRectTop = 24

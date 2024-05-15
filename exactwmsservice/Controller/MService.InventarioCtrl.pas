@@ -67,26 +67,27 @@ uses MService.InventarioDAO, uFuncoes, Services.Inventario;
 
 procedure Registry;
 begin
-  THorse.Group.Prefix('v1').Get('/inventario', Get)
+  THorse.Group.Prefix('v1')
+     .Get('/inventario', Get)
     .Get('/inventario/:inventarioid', GetId)
     .Get('/inventario/itens/:inventarioid', GetItens)
     .Get('/inventario/loteinventariado', GetLoteInventariado)
     .Post('/inventario', Insert)
-    .Post('/inventario/zerarendereco/:inventarioid/:enderecoid/:produtoid',
-    ZerarEndereco).Post('/inventario/savecontagem', SaveContagem)
-    .Put('/inventario/:inventarioid', Update).Delete('/inventario/cancelar',
-    Cancelar).Delete('/inventario/:inventarioid', Delete)
-    .Get('/inventario/pendente', Pendente).Get('/inventario/contagem/:item',
-    Contagem).Post('/inventario/fechar', InventarioFechar)
+    .Post('/inventario/zerarendereco/:inventarioid/:enderecoid/:produtoid', ZerarEndereco)
+    .Post('/inventario/savecontagem', SaveContagem)
+    .Put('/inventario/:inventarioid', Update)
+    .Delete('/inventario/cancelar', Cancelar)
+    .Delete('/inventario/:inventarioid', Delete)
+    .Get('/inventario/pendente', Pendente)
+    .Get('/inventario/contagem/:item', Contagem)
+    .Post('/inventario/fechar', InventarioFechar)
     .Post('/inventario/apuracao/endereco', ApuracaoInventarioEndereco)
     .Post('/inventario/apuracao/produto', ApuracaoInventarioProduto)
-    .Put('/inventario/limparcontagem/:inventarioid/:enderecoid/:produtoid',
-    LimparContagem).Get('/inventario/integracao/consulta',
-    GetInventarioConsultaIntegracao).Put('/inventario/integracao/:inventarioid',
-    PutInventarioIntegracao).Put('/inventario/integracaolote/:inventarioid',
-    PutInventarioIntegracaoLote).Get('/inventario/dshcontageminventario',
-    GetDSHAcompanhamentoContagem)
-
+    .Put('/inventario/limparcontagem/:inventarioid/:enderecoid/:produtoid', LimparContagem)
+    .Get('/inventario/integracao/consulta', GetInventarioConsultaIntegracao)
+    .Put('/inventario/integracao/:inventarioid', PutInventarioIntegracao)
+    .Put('/inventario/integracaolote/:inventarioid', PutInventarioIntegracaoLote)
+    .Get('/inventario/dshcontageminventario', GetDSHAcompanhamentoContagem)
 end;
 
 Procedure ApuracaoInventarioEndereco(Req: THorseRequest; Res: THorseResponse;
@@ -185,14 +186,11 @@ begin
       InventarioDAO := TInventarioDao.Create;
       JsonArrayRetorno := InventarioDAO.GetInventario(Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/inventario',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 200,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/inventario',
+                      Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
+                      200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       JsonArrayRetorno := Nil;
-    Except
-      on E: Exception do
+    Except on E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
@@ -214,12 +212,9 @@ begin
 end;
 
 procedure GetId(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  InventarioDAO: TInventarioDao;
+var InventarioDAO: TInventarioDao;
 begin
-  Res.Send<tJsonObject>(tJsonObject.Create.AddPair('Erro',
-    'Chame a rota inventario/get e com parâmetros.'))
-    .Status(THttpStatus.Created);
+  Res.Send<tJsonObject>(tJsonObject.Create.AddPair('Erro', 'Chame a rota inventario/get com parâmetros.')).Status(THttpStatus.Created);
 end;
 
 Procedure GetInventarioConsultaIntegracao(Req: THorseRequest;

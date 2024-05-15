@@ -681,7 +681,7 @@ begin
                End
                Else Begin
                   Pedido_CancelarCubagem(LstPedidosAdv.Ints[0, xPedido], 0);
-                  ShowErro('Erro: Pedido('+LstPedidosAdv.Cells[0, xPedido]+'), '+vErro+';]. Processando Caixas Fechadas!', 'alarme');
+                 // ShowErro('Erro: Pedido('+LstPedidosAdv.Cells[0, xPedido]+'), '+vErro+';]. Processando Caixas Fechadas!', 'alarme');
                End;
             End;
           Except On E: Exception do Begin
@@ -1322,7 +1322,9 @@ begin
          JsonEstoqueCubagem := Nil;
          Result := True;
        End;
-    End;
+    End
+    Else
+       ShowErro('Erro: '+vErro, 'alerta');
     ObjPedidoCtrl.Free;
     ReturnJsonArray := Nil;
   Except On E: Exception do Begin

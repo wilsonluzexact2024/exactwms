@@ -2792,6 +2792,13 @@ begin
      Label26.Caption := 'Motivo da Devolução'
   Else Label26.Caption := 'Motivo da Segregação';
   CbLotesDevSeg.ItemIndex := -1;
+  if RbDevolucao.Checked then Begin
+
+  End
+  Else
+  Begin
+
+  End;
 end;
 
 procedure TFrmEntrada.ReturnEntradalote;

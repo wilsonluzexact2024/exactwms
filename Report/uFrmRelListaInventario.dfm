@@ -3,6 +3,7 @@ inherited FrmRelListaInventario: TFrmRelListaInventario
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabPrincipal
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -51,15 +52,17 @@ inherited FrmRelListaInventario: TFrmRelListaInventario
         Top = 154
         Height = 370
         TabStop = False
-        ColCount = 8
+        ColCount = 10
         TabOrder = 5
         ColumnHeaders.Strings = (
           'Id'
           'Tipo'
           'Motivo'
           'Dt.Cria'#231#227'o'
+          'Criado Por'
           'Ajuste'
           'processo'
+          'Dt.Processo'
           'Usu'#225'rio'
           'Terminal')
         ExplicitTop = 154
@@ -67,6 +70,8 @@ inherited FrmRelListaInventario: TFrmRelListaInventario
         ColWidths = (
           74
           118
+          74
+          74
           74
           74
           74

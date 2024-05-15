@@ -1030,10 +1030,12 @@ begin
          RESTClient1.Params.AddHeader('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
       {$IfDef Android}
          RESTClient1.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
-         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobile(Apk) '+VersaoAPK);
+         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobileApk'); //+VersaoAPK);
+         RESTClient1.Params.AddHeader('versao', VersaoAPK);
       {$else}
          RESTClient1.Params.AddHeader('terminal', NomeDoComputador);
-         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobile '+Versao('eXactWmsMobile.exe'));
+         RESTClient1.Params.AddHeader('appname', 'eXactWMSMobileWin'); //+Versao('eXactWmsMobile.exe'));
+         RESTClient1.Params.AddHeader('versao', Versao('eXactWmsMobile.exe'));
       {$Endif}
       DmClient.RESTResponseDataSetAdapter1.Response.DisposeOf;
     Except On E: Exception do
@@ -1044,8 +1046,7 @@ begin
 end;
 
 class function TdmClient.ServidorAtivo(pHost, pPort : String) : Boolean;
-var
-  VCon : TIdTCPClient;
+var VCon : TIdTCPClient;
 begin
   vCon :=  TIdTCPClient.create;
   try

@@ -578,39 +578,25 @@ begin
       While Not FConexao.Query.Eof do
       Begin
         jsonEstoqueDisponivel := TJsonObject.Create();
-        jsonEstoqueDisponivel.AddPair('produtoid',
-          TJsonNumber.Create(FieldByName('produtoid').Asinteger));
-        jsonEstoqueDisponivel.AddPair('embprim',
-          TJsonNumber.Create(FieldByName('embprim').Asinteger));
-        jsonEstoqueDisponivel.AddPair('embsec',
-          TJsonNumber.Create(FieldByName('embsec').Asinteger));
-        jsonEstoqueDisponivel.AddPair('messaidaminima',
-          TJsonNumber.Create(FieldByName('messaidaminima').Asinteger));
-        jsonEstoqueDisponivel.AddPair('loteid',
-          TJsonNumber.Create(FieldByName('loteid').Asinteger));
-        jsonEstoqueDisponivel.AddPair('vencimento', FieldByName('Vencimento')
-          .AsString);
-        jsonEstoqueDisponivel.AddPair('enderecoid',
-          TJsonNumber.Create(FieldByName('enderecoid').Asinteger));
-        jsonEstoqueDisponivel.AddPair('qtdpedido',
-          TJsonNumber.Create(FieldByName('qtdpedido').Asinteger));
-        jsonEstoqueDisponivel.AddPair('embalagempadrao',
-          TJsonNumber.Create(FieldByName('EmbalagemPadrao').Asinteger));
-        jsonEstoqueDisponivel.AddPair('qtde',
-          TJsonNumber.Create(FieldByName('qtde').Asinteger));
+        jsonEstoqueDisponivel.AddPair('produtoid', TJsonNumber.Create(FieldByName('produtoid').Asinteger));
+        jsonEstoqueDisponivel.AddPair('embprim', TJsonNumber.Create(FieldByName('embprim').Asinteger));
+        jsonEstoqueDisponivel.AddPair('embsec', TJsonNumber.Create(FieldByName('embsec').Asinteger));
+        jsonEstoqueDisponivel.AddPair('messaidaminima', TJsonNumber.Create(FieldByName('messaidaminima').Asinteger));
+        jsonEstoqueDisponivel.AddPair('loteid', TJsonNumber.Create(FieldByName('loteid').Asinteger));
+        jsonEstoqueDisponivel.AddPair('vencimento', FieldByName('Vencimento').AsString);
+        jsonEstoqueDisponivel.AddPair('enderecoid', TJsonNumber.Create(FieldByName('enderecoid').Asinteger));
+        jsonEstoqueDisponivel.AddPair('qtdpedido', TJsonNumber.Create(FieldByName('qtdpedido').Asinteger));
+        jsonEstoqueDisponivel.AddPair('embalagempadrao', TJsonNumber.Create(FieldByName('EmbalagemPadrao').Asinteger));
+        jsonEstoqueDisponivel.AddPair('qtde', TJsonNumber.Create(FieldByName('qtde').Asinteger));
         jsonEstoqueDisponivel.AddPair('bloqueado', TJsonNumber.Create(0));
-        jsonEstoqueDisponivel.AddPair('dtentrada', FieldByName('dtentrada')
-          .AsString);
-        jsonEstoqueDisponivel.AddPair('hrentrada', FieldByName('hrentrada')
-          .AsString);
-        jsonEstoqueDisponivel.AddPair('estoquetipoid',
-          TJsonNumber.Create(FieldByName('EstoqueTipoId').Asinteger));
+        jsonEstoqueDisponivel.AddPair('dtentrada', FieldByName('dtentrada').AsString);
+        jsonEstoqueDisponivel.AddPair('hrentrada', FieldByName('hrentrada').AsString);
+        jsonEstoqueDisponivel.AddPair('estoquetipoid', TJsonNumber.Create(FieldByName('EstoqueTipoId').Asinteger));
         Result.AddElement(jsonEstoqueDisponivel);
         Next;
       End;
     // ProdutoId	EmbPrim	EmbSec	MesSaidaMinima	LoteId	Vencimento	EnderecoId	Endereco	Estrutura	Qtde	DtEntrada	HrEntrada	EstoqueTipoId	TipoEstoque	Producao	Distribuicao	CxaFechada
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       raise Exception.Create(E.Message);
     End;

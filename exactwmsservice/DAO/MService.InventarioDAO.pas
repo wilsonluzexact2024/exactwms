@@ -734,106 +734,80 @@ begin
   End;
 end;
 
-function TInventarioDao.GetInventario(Const AParams
-  : TDictionary<string, string>): TJsonArray;
-var
-  vParamOk: Integer;
-  vProcessoId: Integer;
+function TInventarioDao.GetInventario(Const AParams : TDictionary<string, string>): TJsonArray;
+var vParamOk: Integer;
+    vProcessoId: Integer;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetInventario);
     vParamOk := 0;
-    if AParams.ContainsKey('inventarioid') then
-    begin
-      FConexao.Query.SQL.Add('and InventarioId = :pInventarioId');
-      FConexao.Query.ParamByName('pInventarioId').Value :=
-        AParams.Items['inventarioid'];
-      Inc(vParamOk);
+    if AParams.ContainsKey('inventarioid') then begin
+       FConexao.Query.SQL.Add('and InventarioId = :pInventarioId');
+       FConexao.Query.ParamByName('pInventarioId').Value := AParams.Items['inventarioid'];
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('datacriacao') then
-    begin
-      FConexao.Query.SQL.Add('and Dc.Data >= :pDataCriacao');
-      FConexao.Query.ParamByName('pDataCriacao').Value :=
-        AParams.Items['datacriacao'];
-      Inc(vParamOk);
+    if AParams.ContainsKey('datacriacao') then begin
+       FConexao.Query.SQL.Add('and Dc.Data >= :pDataCriacao');
+       FConexao.Query.ParamByName('pDataCriacao').Value := AParams.Items['datacriacao'];
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('datacriacaofinal') then
-    begin
-      FConexao.Query.SQL.Add('and Dc.Data <= :pDataCriacaoFinal');
-      FConexao.Query.ParamByName('pDataCriacaoFinal').Value :=
-        AParams.Items['datacriacaofinal'];
-      Inc(vParamOk);
+    if AParams.ContainsKey('datacriacaofinal') then begin
+       FConexao.Query.SQL.Add('and Dc.Data <= :pDataCriacaoFinal');
+       FConexao.Query.ParamByName('pDataCriacaoFinal').Value := AParams.Items['datacriacaofinal'];
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('datafinalizacao') then
-    begin
-      FConexao.Query.SQL.Add('and datafinalizacao = :pDataFinalizacao');
-      FConexao.Query.ParamByName('pDataFinalizacao').Value :=
-        AParams.Items['datafinalizacao'];
-      Inc(vParamOk);
+    if AParams.ContainsKey('datafinalizacao') then begin
+       FConexao.Query.SQL.Add('and datafinalizacao = :pDataFinalizacao');
+       FConexao.Query.ParamByName('pDataFinalizacao').Value := AParams.Items['datafinalizacao'];
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('datacancelamento') then
-    begin
-      FConexao.Query.SQL.Add('and DataCancelamento = :pDataCancelamento');
-      FConexao.Query.ParamByName('pDataCancelamento').Value :=
-        AParams.Items['datacancelamento'];
-      Inc(vParamOk);
+    if AParams.ContainsKey('datacancelamento') then begin
+       FConexao.Query.SQL.Add('and DataCancelamento = :pDataCancelamento');
+       FConexao.Query.ParamByName('pDataCancelamento').Value := AParams.Items['datacancelamento'];
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('processoid') then
-    begin
-      vProcessoId := AParams.Items['processoid'].ToInteger();
-      FConexao.Query.SQL.Add('and De.ProcessoId = :pProcessoId');
-      FConexao.Query.ParamByName('pProcessoId').Value :=
-        AParams.Items['processoid'].ToInteger();
-      Inc(vParamOk);
+    if AParams.ContainsKey('processoid') then begin
+       vProcessoId := AParams.Items['processoid'].ToInteger();
+       FConexao.Query.SQL.Add('and De.ProcessoId = :pProcessoId');
+       FConexao.Query.ParamByName('pProcessoId').Value := AParams.Items['processoid'].ToInteger();
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('tipo') then
-    begin
+    if AParams.ContainsKey('tipo') then begin
       FConexao.Query.SQL.Add('and InventarioTipo = :pTipo');
-      FConexao.Query.ParamByName('pTipo').Value := AParams.Items['tipo']
-        .ToInteger();
+      FConexao.Query.ParamByName('pTipo').Value := AParams.Items['tipo'].ToInteger();
       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('pendente') then
-    begin
-      if AParams.Items['pendente'].ToInteger() = 1 then
-        FConexao.Query.SQL.Add('and (De.ProcessoId in (23, 25))');
-      Inc(vParamOk);
+    if AParams.ContainsKey('pendente') then begin
+       if AParams.Items['pendente'].ToInteger() = 1 then
+          FConexao.Query.SQL.Add('and (De.ProcessoId in (23, 25))');
+       Inc(vParamOk);
     end;
-    if AParams.ContainsKey('produtoid') then
-    begin
-      FConexao.Query.SQL.Add('And Exists (Select ProdutoId');
-      FConexao.Query.SQL.Add('            From InventarioInicial');
-      FConexao.Query.SQL.Add
-        ('            where InventarioId = I.InventarioID And ProdutoId = :pProdutoId)');
-      FConexao.Query.ParamByName('pProdutoId').Value :=
-        AParams.Items['produtoid'].ToInteger();
-      Inc(vParamOk);
+    if AParams.ContainsKey('produtoid') then begin
+       FConexao.Query.SQL.Add('And Exists (Select ProdutoId');
+       FConexao.Query.SQL.Add('            From InventarioInicial');
+       FConexao.Query.SQL.Add('            where InventarioId = I.InventarioID And ProdutoId = :pProdutoId)');
+       FConexao.Query.ParamByName('pProdutoId').Value := AParams.Items['produtoid'].ToInteger();
+       Inc(vParamOk);
     end;
     if vParamOk <> AParams.Count then
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Parâmetros incorretos na requisição!'))
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Parâmetros incorretos na requisição!'))
     Else
     begin
       // FConexao.Query.SQL.Add('order by InventarioId');
       FConexao.Query.SQL.Add('Order by InventarioId');
       If DebugHook <> 0 Then
-        FConexao.Query.SQL.SaveToFile('Inventario.Sql');
+         FConexao.Query.SQL.SaveToFile('Inventario.Sql');
       FConexao.Query.Open();
-      if FConexao.Query.IsEmpty then
-      Begin
-        Result := TJsonArray.Create();
-        Result.AddElement(TJsonObject.Create.AddPair('Erro',
-          TuEvolutConst.QrySemDados))
+      if FConexao.Query.IsEmpty then Begin
+         Result := TJsonArray.Create();
+         Result.AddElement(TJsonObject.Create.AddPair('Erro', TuEvolutConst.QrySemDados))
       End
       Else
-        Result := FConexao.Query.ToJSONArray;
+         Result := FConexao.Query.ToJSONArray;
     end;
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
-      raise Exception.Create(StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create(StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   End;
 end;

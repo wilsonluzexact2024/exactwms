@@ -403,47 +403,29 @@ begin
         ('correcao').Count) do
       Begin
         FConexao.Query.SQL.Clear;
-        FConexao.Query.SQL.Add('Declare @LoteId Integer = ' +
-          '(Select LoteId From ProdutoLotes where ProdutoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('produtoid').ToString +
-          '        And DescrLote = ' + #39 +
+        FConexao.Query.SQL.Add('Declare @LoteId Integer = '+'(Select LoteId From ProdutoLotes where ProdutoId = '+
+          pJsonObjectLotes.GetValue<Integer>('produtoid').ToString +          '        And DescrLote = ' + #39 +
           pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote]
           .GetValue<String>('lote') + #39 + ')');
         FConexao.Query.SQL.Add('If Not Exists (Select LoteId From Estoque ');
-        FConexao.Query.SQL.Add('Where LoteId = @LoteId and EstoqueTipoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString);
-        FConexao.Query.SQL.Add('  And EnderecoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString + ')');
-        FConexao.Query.SQL.Add('   Insert Into Estoque Values (@LoteId, ' +
-          pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString + ', ' +
-          pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString + ', ' +
-          pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote]
-          .GetValue<Integer>('qtde').ToString + ', ' +
-          TuEvolutConst.SqlDataAtual + ', ' + TuEvolutConst.SqlHoraAtual + ', '
-          + pJsonObjectLotes.GetValue<Integer>('usuarioid').ToString + ', ' +
-          'Null, Null, Null)');
+        FConexao.Query.SQL.Add('Where LoteId = @LoteId and EstoqueTipoId = '+pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString);
+        FConexao.Query.SQL.Add('  And EnderecoId = '+pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString + ')');
+        FConexao.Query.SQL.Add('   Insert Into Estoque Values (@LoteId, '+pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString + ', ' +
+          pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString  + ', ' +pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote].GetValue<Integer>('qtde').ToString + ', ' +
+          TuEvolutConst.SqlDataAtual + ', ' + TuEvolutConst.SqlHoraAtual+ ', '+pJsonObjectLotes.GetValue<Integer>('usuarioid').ToString+', '+'Null, Null, Null)');
         FConexao.Query.SQL.Add('Else Begin');
         FConexao.Query.SQL.Add('  Update Estoque Set');
-        FConexao.Query.SQL.Add('     Qtde = Qtde +' +
-          pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote]
-          .GetValue<Integer>('qtde').ToString);
-        FConexao.Query.SQL.Add('  where LoteId = @LoteId and EstoqueTipoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString);
-        FConexao.Query.SQL.Add('  And EnderecoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString);
+        FConexao.Query.SQL.Add('     Qtde        = Qtde +'+pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote].GetValue<Integer>('qtde').ToString);
+        FConexao.Query.SQL.Add('  where LoteId   = @LoteId and EstoqueTipoId = '+pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString);
+        FConexao.Query.SQL.Add('    And EnderecoId = '+pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString);
         FConexao.Query.SQL.Add('End');
-        FConexao.Query.SQL.Add('update Estoque Set Qtde = Qtde - ' +
-          pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote]
-          .GetValue<Integer>('qtde').ToString);
-        FConexao.Query.SQL.Add('Where LoteId = ' +
-          pJsonObjectLotes.GetValue<Integer>('loteid').ToString +
-          ' and EstoqueTipoId = ' + pJsonObjectLotes.GetValue<Integer>
-          ('estoquetipoid').ToString);
-        FConexao.Query.SQL.Add('  And EnderecoId = ' +
-          pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString);
+        FConexao.Query.SQL.Add('update Estoque Set Qtde = Qtde - ' +pJsonObjectLotes.GetValue<TjSonArray>('correcao').Items[xLote].GetValue<Integer>('qtde').ToString);
+        FConexao.Query.SQL.Add('Where LoteId        = ' +pJsonObjectLotes.GetValue<Integer>('loteid').ToString);
+        FConexao.Query.SQL.Add('  and EstoqueTipoId = ' + pJsonObjectLotes.GetValue<Integer>('estoquetipoid').ToString);
+        FConexao.Query.SQL.Add('  And EnderecoId    = ' +pJsonObjectLotes.GetValue<Integer>('enderecoid').ToString);
         FConexao.Query.SQL.Add('');
         if DebugHook <> 0 then
-          FConexao.Query.SQL.SaveToFile('CorrecaoLotesEstoque.Sql');
+           FConexao.Query.SQL.SaveToFile('CorrecaoLotesEstoque.Sql');
         FConexao.Query.ExecSQL;
       End;
     End;

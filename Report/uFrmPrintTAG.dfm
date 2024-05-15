@@ -94,7 +94,7 @@ inherited FrmPrintTag: TFrmPrintTag
         TabOrder = 1
         ExplicitLeft = -1
         object LblTagVolumeOrdem: TLabel
-          Left = 1072
+          Left = 980
           Top = 9
           Width = 125
           Height = 17
@@ -103,14 +103,15 @@ inherited FrmPrintTag: TFrmPrintTag
           Visible = False
         end
         object BtnTagProduto: TPanel
-          Left = 28
-          Top = 23
-          Width = 127
+          Left = 20
+          Top = 25
+          Width = 116
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = 'Produto'
+          Caption = 'Produto   '
           Color = 7847994
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -5147,14 +5148,15 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object BtnTagLocalizacao: TPanel
-          Left = 169
-          Top = 23
-          Width = 143
+          Left = 157
+          Top = 25
+          Width = 132
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = 'Localiza'#231#227'o'
+          Caption = 'Localiza'#231#227'o   '
           Color = clRed
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -10191,14 +10193,15 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object BtnTagVolume: TPanel
-          Left = 332
+          Left = 316
           Top = 27
-          Width = 127
+          Width = 107
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = 'Volume'
+          Caption = 'Volume   '
           Color = 16744576
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -15236,14 +15239,16 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object BtnTagCaixa: TPanel
-          Left = 670
+          AlignWithMargins = True
+          Left = 638
           Top = 25
-          Width = 146
+          Width = 127
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = 'Caixa/Baget'
+          Caption = 'Caixa/Baget  '
           Color = 4227327
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -20281,12 +20286,13 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object BtnTagProdControlado: TPanel
-          Left = 840
+          Left = 792
           Top = 23
-          Width = 203
+          Width = 174
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
           Caption = 'Produto Controlado'
           Color = 20123
@@ -25326,14 +25332,15 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object BtnTagArmazenagem: TPanel
-          Left = 480
-          Top = 23
-          Width = 165
+          Left = 454
+          Top = 25
+          Width = 151
           Height = 29
           Cursor = crHandPoint
           CustomHint = BalloonHint1
+          Alignment = taRightJustify
           BevelOuter = bvNone
-          Caption = 'Armazenagem'
+          Caption = 'Armazenagem  '
           Color = 7190198
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
@@ -30371,8 +30378,8 @@ inherited FrmPrintTag: TFrmPrintTag
           end
         end
         object CbTagVolumeOrdem: TComboBox
-          Left = 1072
-          Top = 28
+          Left = 980
+          Top = 30
           Width = 182
           Height = 22
           CustomHint = BalloonHint1
@@ -30404,7 +30411,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagArmazenagem
+        Properties.ActivePage = TbTagVolume
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9

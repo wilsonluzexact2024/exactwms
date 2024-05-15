@@ -8,7 +8,7 @@ inherited FrmInventario: TFrmInventario
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 723
-    Properties.ActivePage = TabListagem
+    Properties.ActivePage = TabPrincipal
     ExplicitTop = 59
     ExplicitHeight = 723
     ClientRectBottom = 723
@@ -54,11 +54,11 @@ inherited FrmInventario: TFrmInventario
     inherited TabPrincipal: TcxTabSheet
       ExplicitHeight = 699
       inherited ShCadastro: TShape
-        Left = 601
-        Top = 177
+        Left = 653
+        Top = 171
         Visible = False
-        ExplicitLeft = 601
-        ExplicitTop = 177
+        ExplicitLeft = 653
+        ExplicitTop = 171
       end
       object Label2: TLabel [1]
         Left = 62
@@ -69,7 +69,7 @@ inherited FrmInventario: TFrmInventario
         Caption = 'ID'
       end
       object Label3: TLabel [2]
-        Left = 276
+        Left = 294
         Top = 82
         Width = 75
         Height = 17
@@ -122,18 +122,35 @@ inherited FrmInventario: TFrmInventario
         CustomHint = BalloonHint1
         Caption = 'Ajuste'
       end
+      object LblDtFinalizacao: TLabel [8]
+        Left = 290
+        Top = 173
+        Width = 79
+        Height = 17
+        CustomHint = BalloonHint1
+        Alignment = taRightJustify
+        Caption = 'Dt.Finaliza'#231#227'o'
+      end
+      object LblHoraFechamento: TLabel [9]
+        Left = 475
+        Top = 173
+        Width = 9
+        Height = 17
+        CustomHint = BalloonHint1
+        Caption = '...'
+      end
       inherited PnlInfo: TPanel
         Top = 513
         TabOrder = 6
         ExplicitTop = 513
       end
       inherited ChkCadastro: TCheckBox
-        Left = 540
-        Top = 180
+        Left = 596
+        Top = 174
         TabOrder = 7
         Visible = False
-        ExplicitLeft = 540
-        ExplicitTop = 180
+        ExplicitLeft = 596
+        ExplicitTop = 174
       end
       object EdtInventarioId: TEdit
         Left = 80
@@ -154,7 +171,7 @@ inherited FrmInventario: TFrmInventario
         OnKeyUp = EdtInventarioIdKeyUp
       end
       object EdtDataCriacao: TJvDateEdit
-        Left = 357
+        Left = 375
         Top = 79
         Width = 95
         Height = 25
@@ -784,6 +801,7 @@ inherited FrmInventario: TFrmInventario
               BevelOuter = bvNone
               ParentBackground = False
               TabOrder = 1
+              ExplicitTop = 2
               object BtnSelDelete: TBitBtn
                 Left = 12
                 Top = 155
@@ -1416,6 +1434,8 @@ inherited FrmInventario: TFrmInventario
               BevelOuter = bvNone
               ParentBackground = False
               TabOrder = 3
+              ExplicitLeft = 0
+              ExplicitTop = 0
               object Label5: TLabel
                 Left = 7
                 Top = 6
@@ -2826,9 +2846,9 @@ inherited FrmInventario: TFrmInventario
         end
       end
       object RbInventarioTipo: TRadioGroup
-        Left = 276
+        Left = 294
         Top = 9
-        Width = 401
+        Width = 386
         Height = 51
         CustomHint = BalloonHint1
         Caption = '[ Tipo de Contagem ]'
@@ -2854,6 +2874,23 @@ inherited FrmInventario: TFrmInventario
         Items.Strings = (
           '0 - Definitivo'
           '2 - Tempor'#225'rio')
+      end
+      object EdtDtFinalizacao: TJvDateEdit
+        Left = 375
+        Top = 170
+        Width = 95
+        Height = 25
+        CustomHint = BalloonHint1
+        TabStop = False
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        ShowNullDate = False
+        TabOrder = 10
+        OnKeyUp = EdtInventarioIdKeyUp
       end
     end
     inherited TbFrameWeb: TcxTabSheet
@@ -15176,6 +15213,10 @@ inherited FrmInventario: TFrmInventario
       inherited BtnSalvar: TsImage
         Left = 257
         ExplicitLeft = 257
+      end
+      inherited BtnEditar: TsImage
+        Left = 123
+        ExplicitLeft = 123
       end
       inherited BtnExportarStand: TsImage
         Grayed = False

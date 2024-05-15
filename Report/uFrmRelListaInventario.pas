@@ -204,14 +204,17 @@ begin
   LstReport.ColWidths[0] :=  80;
   LstReport.ColWidths[1] := 100;
   LstReport.ColWidths[2] := 200;
-  LstReport.ColWidths[3] :=  70;
-  LstReport.ColWidths[4] := 100;
-  LstReport.ColWidths[5] := 170;
-  LstReport.ColWidths[6] := 280; //Dt.Processo
-  LstReport.ColWidths[7] := 120;
+  LstReport.ColWidths[3] := 120;
+  LstReport.ColWidths[4] := 280; //Criado Por
+  LstReport.ColWidths[5] := 100;
+  LstReport.ColWidths[6] := 170;
+  LstReport.ColWidths[7] := 120; //Dt.Processo
+  LstReport.ColWidths[8] := 280; //usuario
+  LstReport.ColWidths[9] := 180;
   LstReport.Alignments[0, 0] := taRightJustify;
   LstReport.FontStyles[0, 0] := [FsBold];
   LstReport.Alignments[3, 0] := taCenter;
+  LstReport.Alignments[7, 0] := taCenter;
 end;
 
 procedure TFrmRelListaInventario.Imprimir;
@@ -247,15 +250,17 @@ begin
     LstReport.Cells[0, xRecno] := FdMemPesqGeral.FieldByName('inventarioid').AsString;
     LstReport.Cells[1, xRecno] := FdMemPesqGeral.FieldByName('tipo').AsString;
     LstReport.Cells[2, xRecno] := FdMemPesqGeral.FieldByName('Motivo').AsString;
-    LstReport.Cells[3, xRecno] := DateEUAtoBr(FdMemPesqGeral.FieldByName('DataCriacao').AsString);
-    LstReport.Cells[4, xRecno] := FdMemPesqGeral.FieldByName('Ajuste').AsString;
-    LstReport.Cells[5, xRecno] := FdMemPesqGeral.FieldByName('Processo').AsString;
-    LstReport.Cells[6, xRecno] := FormatFloat('#####0', FdMemPesqGeral.FieldByName('Usuarioid').AsInteger)+' '+
-                                      FdMemPesqGeral.FieldByName('Usuario').AsString;
-    LstReport.Cells[7, xRecno] := FdMemPesqGeral.FieldByName('Terminal').AsString;
+    LstReport.Cells[3, xRecno] := DateEUAtoBr(FdMemPesqGeral.FieldByName('DataCriacao').AsString)+' '+Copy(FdMemPesqGeral.FieldByName('hora').AsString, 1, 8);
+    LstReport.Cells[4, xRecno] := FdMemPesqGeral.FieldByName('usuariocreate').AsString;
+    LstReport.Cells[5, xRecno] := FdMemPesqGeral.FieldByName('Ajuste').AsString;
+    LstReport.Cells[6, xRecno] := FdMemPesqGeral.FieldByName('Processo').AsString;
+    LstReport.Cells[7, xRecno] := DateEUAtoBr(FdMemPesqGeral.FieldByName('DataFechamento').AsString)+' '+Copy(FdMemPesqGeral.FieldByName('horafechamento').AsString, 1, 8);
+    LstReport.Cells[8, xRecno] := FdMemPesqGeral.FieldByName('usuariofechamento').AsString;
+    LstReport.Cells[9, xRecno] := FdMemPesqGeral.FieldByName('Terminal').AsString;
     LstReport.Alignments[0, xRecno] := taRightJustify;
     LstReport.FontStyles[0, xRecno] := [FsBold];
     LstReport.Alignments[3, xRecno] := taCenter;
+    LstReport.Alignments[7, xRecno] := taCenter;
     FdMemPesqGeral.Next;
     Inc(xRecno);
   End;
@@ -294,8 +299,8 @@ begin
   Else
      pPendente := 0;
   ObjInventarioCtrl   := TInventarioCtrl.Create;
-  JsonArrayInventario := ObjInventarioCtrl.getInventario(0, pDataCriacao, 0, 0,
-  StrToIntDef(EdtProcessoId.Text, 0), pTipoInventario, pPendente, vProdutoId, 0, pDataCriacaoFinal);
+  JsonArrayInventario := ObjInventarioCtrl.getInventario(0, pDataCriacao, 0, 0, StrToIntDef(EdtProcessoId.Text, 0),
+                         pTipoInventario, pPendente, vProdutoId, 0, pDataCriacaoFinal);
   if JsonArrayInventario.Items[0].TryGetValue('Erro', vErro) then Begin
      ShowErro(vErro);
      JsonArrayInventario := Nil;

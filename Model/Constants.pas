@@ -4955,27 +4955,21 @@ Const SqlRelColetaPulmao = 'Declare @DataIni DateTime = :pDataIni' + sLineBreak 
     // https://rockcontent.com/br/blog/inventario/
   Const
     SqlGetInventario =
-      'Select I.InventarioId, I.InventarioTipo, I.Motivo, Dc.Data DataCricao, I.DataLiberacao, I.TipoAjuste, I.Uuid, '
-      + sLineBreak +
-      '       (Select Data From vDocumentoEtapas Where Documento = I.Uuid and ProcessoId = '
-      + sLineBreak +
-      '       (Select ProcessoId From ProcessoEtapas where Descricao = ' + #39 +
-      'Inventario - Gerado' + #39 + ') and Status = 1) DataCriacao,' +
-      sLineBreak + '        (Case When InventarioTipo = 1 then ' + #39 +
-      'Por Endere�o' + #39 + sLineBreak +
-      '         When inventarioTipo = 2 then ' + #39 + 'Priorit�rio' + #39 +
-      sLineBreak + '         When InventarioTipo = 3 then ' + #39 + 'Ciclico' +
-      #39 + ' End) Tipo, ' + sLineBreak +
-      '       De.ProcessoId, De.Descricao Processo, De.Data, De.Hora, De.Horario, De.UsuarioId, U.Nome USuario, De.Terminal'
-      + sLineBreak + '       , (Case When TipoAjuste=0 then ' + #39 +
-      'Definitivo' + #39 + ' Else ' + #39 + 'Tempor�rio' + #39 + ' End) Ajuste'
-      + sLineBreak + 'From Inventarios I' + sLineBreak +
+      'Select I.InventarioId, I.InventarioTipo, I.Motivo, I.DataLiberacao, I.TipoAjuste, I.Uuid, '+sLineBreak +
+      '       Dc.Data DataCriacao, (Case When InventarioTipo = 1 then ' + #39+'Por Endereço' + #39 + sLineBreak +
+      '                                  When inventarioTipo = 2 then ' + #39 + 'Prioritário' + #39+sLineBreak +
+      '                                  When InventarioTipo = 3 then ' + #39 + 'Ciclico'+#39 + ' End) Tipo, ' + sLineBreak +
+      '       De.ProcessoId, De.Descricao Processo, De.Data, De.Hora, De.Horario, De.UsuarioId, U.Nome USuario, De.Terminal'+sLineBreak +
+      '       , (Case When TipoAjuste=0 then ' + #39+'Definitivo' + #39 + ' Else ' + #39 + 'Temporário' + #39 + ' End) Ajuste'+sLineBreak+
+      '       , De.Data datafechamento, De.Hora HoraFechamento'+sLineBreak+
+      '	      , Uc.UsuarioId UsuarioIdCreate, Uc.Nome UsuarioCreate'+sLineBreak+
+	     '       , U.UsuarioId UsuarioIdFechamento, U.Nome UsuarioFechamento'+sLineBreak+
+      'From Inventarios I' + sLineBreak +
       'Left Join vDocumentoEtapas DE On De.Documento = I.uuid' + sLineBreak +
-      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'
-      + sLineBreak + 'Left Join Usuarios U ON U.Usuarioid = De.UsuarioId' +
-      sLineBreak +
-      'Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = I.uuid and Status = 1) '
-      + sLineBreak + ''; // 'Order by InventarioId';
+      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'+sLineBreak +
+      'Left Join Usuarios U  ON U.Usuarioid = De.UsuarioId' +sLineBreak +
+      'Left Join Usuarios Uc ON Uc.Usuarioid = Dc.UsuarioId'+sLineBreak+
+      'Where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = I.uuid and Status = 1) '+sLineBreak + ''; // 'Order by InventarioId';
 
   Const
     SqlGetInventarioPendente =

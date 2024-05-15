@@ -1431,25 +1431,17 @@ begin
       FConexao.Query.Sql.Add('     Set Qtde = Qtde + @Quantidade');
       FConexao.Query.Sql.Add('        , DtAlteracao  = '+tuEvolutConst.SqlDataAtual);
       FConexao.Query.Sql.Add('        , HrAlteracao  = '+tuEvolutConst.SqlhoraAtual);
-
       FConexao.Query.Sql.Add('  Where LoteId = (Select LoteId From ProdutoLotes where LoteId = (Select LoteId From ProdutoLotes Where ProdutoId = @ProdutoId and DescrLote = '+#39 + '202109' + #39 + ')) and');
-      FConexao.Query.Sql.Add
-        ('  EnderecoId = (Select EnderecoId From Enderecamentos where Descricao = @Endereco) and EstoqueTipoId = 4');
+      FConexao.Query.Sql.Add('  EnderecoId = (Select EnderecoId From Enderecamentos where Descricao = @Endereco) and EstoqueTipoId = 4');
       FConexao.Query.Sql.Add('End');
-      FConexao.Query.ParamByName('pCodProduto').Value := pJsonArray.Items[xProd]
-        .GetValue<Integer>('codproduto');
-      FConexao.Query.ParamByName('pEndereco').Value := pJsonArray.Items[xProd]
-        .GetValue<String>('endereco');
-      FConexao.Query.ParamByName('pQuantidade').Value := pJsonArray.Items[xProd]
-        .GetValue<Integer>('quantidade');
+      FConexao.Query.ParamByName('pCodProduto').Value := pJsonArray.Items[xProd].GetValue<Integer>('codproduto');
+      FConexao.Query.ParamByName('pEndereco').Value := pJsonArray.Items[xProd].GetValue<String>('endereco');
+      FConexao.Query.ParamByName('pQuantidade').Value := pJsonArray.Items[xProd].GetValue<Integer>('quantidade');
       If DebugHook <> 0 then
-        FConexao.Query.Sql.SaveToFile('ImportEstoque.Sql');
+         FConexao.Query.Sql.SaveToFile('ImportEstoque.Sql');
       FConexao.Query.ExecSQL;
-      Result.AddElement(TJsonObject.Create.AddPair('Ok',
-        'Cadastro de produto ' + pJsonArray.Items[xProd].GetValue<Integer>
-        ('codproduto').ToString + ' realizado com sucesso!'));
-    Except
-      ON E: Exception do
+      Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Cadastro de produto '+pJsonArray.Items[xProd].GetValue<Integer>('codproduto').ToString + ' realizado com sucesso!'));
+    Except ON E: Exception do
       Begin
         Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
       End;

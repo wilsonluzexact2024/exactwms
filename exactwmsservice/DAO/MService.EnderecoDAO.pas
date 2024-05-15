@@ -853,9 +853,9 @@ begin
       FConexao.Query.Sql.Add('  Set EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('pickingnovo')) + ')');
       FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('picking')) + ')');
       //Volumes Pendentes
-      FConexao.Query.Sql.Add('update Estoque');
-      FConexao.Query.Sql.Add('  Set EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('pickingnovo')) + ')');
-      FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('picking')) + ')');
+//      FConexao.Query.Sql.Add('update Estoque');
+//      FConexao.Query.Sql.Add('  Set EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('pickingnovo')) + ')');
+//      FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('picking')) + ')');
 
       FConexao.Query.Sql.Add('update ReposicaoEstoqueTransferencia');
       FConexao.Query.Sql.Add('  Set EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(pJsonManutencao.GetValue<String>('pickingnovo')) + ')');
@@ -865,17 +865,13 @@ begin
          FConexao.Query.Sql.SaveToFile('EnderecoManutencao_TransfPicking.Sql');
       FConexao.Query.ExecSQL;
     End;
-    Result := TJsonObject.Create.AddPair('Ok',
-      'Manutenção realizado com sucesso!');
+    Result := TJsonObject.Create.AddPair('Ok', 'Manutenção realizado com sucesso!');
     Fconexao.Query.Connection.Commit;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       Fconexao.Query.Connection.Rollback;
-      Result := TJsonObject.Create.AddPair('Erro', 'Tabela: Enderecamento - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      Result := TJsonObject.Create.AddPair('Erro', 'Tabela: Enderecamento - '+StringReplace(E.Message,
+                '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

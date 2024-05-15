@@ -226,6 +226,9 @@ type
     Label10: TLabel;
     LblInventarioId_Contagem: TLabel;
     Button1: TButton;
+    LblDtFinalizacao: TLabel;
+    EdtDtFinalizacao: TJvDateEdit;
+    LblHoraFechamento: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EdtEstruturaIdChange(Sender: TObject);
@@ -314,6 +317,7 @@ type
     Procedure DefineInventarioTipo;
     Procedure AtivarPnlProduto(OnOff : Boolean);
     Procedure DefineField;
+    Procedure ShowFinalizacao(OnOff : Boolean);
   Protected
     Function DeleteReg : Boolean; OverRide;
     Procedure GetListaLstCadastro; OverRide;
@@ -422,6 +426,7 @@ begin
   RbInventarioTipo.Enabled := False;
   BtnExportarStand.Grayed  := True;
   BtnExportarStand.Enabled := False;
+  ShowFinalizacao(False);
 end;
 
 procedure TFrmInventario.BtnExportarStandClick(Sender: TObject);
@@ -468,6 +473,7 @@ begin
   EdtDataLiberacao.SetFocus;
   BtnExportarStand.Grayed  := True;
   BtnExportarStand.Enabled := False;
+  ShowFinalizacao(False);
 end;
 
 procedure TFrmInventario.BtnInconsistenciaClick(Sender: TObject);
@@ -1092,6 +1098,9 @@ begin
         //JsonArrayInventario.Free;
      End;
      ObjInventarioCtrl.ObjInventario := ObjInventarioCtrl.ObjInventario.JsonToClass((JsonArrayInventario.Items[0] as TJsonObject).ToString);
+     ObjInventarioCtrl.ObjInventario.datacriacao    := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datacriacao')));
+     ObjInventarioCtrl.ObjInventario.DataFechamento := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datafechamento')));
+     ObjInventarioCtrl.ObjInventario.horaFechamento := StrToTime(Copy((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('horafechamento'), 1, 8));
      if ObjInventarioCtrl.ObjInventario.InventarioId > 0 then
         ShowDados;
   End;
@@ -1291,6 +1300,7 @@ begin
   TabTipoProduto.TabVisible    := False;
   RbInventarioTipo.ItemIndex := -1;
   OpenDlgArqTerceirizada.InitialDir := ExtractFilePath(Application.ExeName);
+  ShowFinalizacao(False);
 end;
 
 procedure TFrmInventario.FormDestroy(Sender: TObject);
@@ -2488,12 +2498,19 @@ begin
   if ObjInventarioCtrl.ObjInventario.DataLiberacao = 0 Then
      EdtDataLiberacao.Clear
   Else EdtDataLiberacao.Text := DateToStr(ObjInventarioCtrl.ObjInventario.DataLiberacao);
+  EdtDtFinalizacao.Text     := DateToStr(ObjInventarioCtrl.ObjInventario.datafechamento);
+  LblHoraFechamento.Caption := TimeToStr(ObjInventarioCtrl.ObjInventario.horafechamento);
   LblProcesso.Caption := ObjInventarioCtrl.ObjInventario.ProcessoId.ToString+' ';
   ObjProcesso := TProcessoCtrl.Create;
   JsonArrayProcesso := ObjProcesso.GetProcesso(ObjInventarioCtrl.ObjInventario.ProcessoId.ToString(), 0);
   if Not JsonArrayProcesso.Items[0].TryGetValue('Erro', vErro) then Begin
      LblProcesso.Caption := LblProcesso.Caption + ' '+JsonArrayProcesso.Items[0].GetValue<String>('descricao');
      ChkCadastro.Checked := JsonArrayProcesso.Items[0].GetValue<Integer>('status') = 1;
+     ShowFinalizacao(ObjInventarioCtrl.ObjInventario.ProcessoId in [24, 26]);
+     if ObjInventarioCtrl.ObjInventario.ProcessoId  = 26 then
+        LblDtFinalizacao.Caption := 'Dt.Finalizado'
+     Else
+        LblDtFinalizacao.Caption := 'Dt.Cancelado';
   End;
   //JsonArrayProcesso.Free;
   ObjProcesso.Free;
@@ -2553,6 +2570,13 @@ begin
   LblProcesso_Apuracao.Caption     := LblProcesso.Caption;
   EdtDtInventario_Apuracao.Text    := EdtDataCriacao.Text;
   GetApuracao;
+end;
+
+procedure TFrmInventario.ShowFinalizacao(OnOff: Boolean);
+begin
+  LblDtFinalizacao.Visible  := OnOff;
+  EdtDtFinalizacao.Visible  := OnOff;
+  LblHoraFechamento.Visible := OnOff;
 end;
 
 procedure TFrmInventario.ShowLoteContado;

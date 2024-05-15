@@ -1982,130 +1982,111 @@ begin
     vQryLoteSubstituicao.connection.StartTransaction;
     vQryLoteSubstituicao.Close;
     vQryLoteSubstituicao.Sql.Clear;
+    if DebugHook <> 0 then Begin
+       vQryLoteSubstituicao.Sql.Add('--pPedidoVolumeId = '+pJsonObjectLotes.GetValue<String>('pedidovolumeid'));
+       vQryLoteSubstituicao.Sql.Add('--pProdutoId      = '+pJsonObjectLotes.GetValue<String>('produtoid'));
+    End;
     vQryLoteSubstituicao.Sql.Add('UPdate Est');
     vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde - Vl.Quantidade');
     vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
-    vQryLoteSubstituicao.Sql.Add
-      ('Where Vl.PedidoVolumeId = :pPedidoVolumeID And Pl.ProdutoId = :pProdutoId');
-    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.Sql.Add('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add('Where Vl.PedidoVolumeId = :pPedidoVolumeID And Pl.ProdutoId = :pProdutoId');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value := pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value      := pJsonObjectLotes.GetValue<Integer>('produtoid');
+    if DebugHook <> 0 then
+       vQryLoteSubstituicao.SQL.SaveToFile('VlmLoteSubstituicao_LoteSubstituicao01.Sql');
     vQryLoteSubstituicao.ExecSQL;
 
     vQryLoteSubstituicao.Close;
     vQryLoteSubstituicao.Sql.Clear;
+    if DebugHook <> 0 then Begin
+       vQryLoteSubstituicao.Sql.Add('--pPedidoVolumeId = '+pJsonObjectLotes.GetValue<String>('pedidovolumeid'));
+       vQryLoteSubstituicao.Sql.Add('--pProdutoId       ='+pJsonObjectLotes.GetValue<String>('produtoid'));
+    End;
     vQryLoteSubstituicao.Sql.Add('Delete Vl');
     vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-    vQryLoteSubstituicao.Sql.Add
-      ('Where Vl.PedidoVolumeId = :pPedidoVolumeId And');
+    vQryLoteSubstituicao.Sql.Add('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add('Where Vl.PedidoVolumeId = :pPedidoVolumeId And');
     vQryLoteSubstituicao.Sql.Add('      Pl.ProdutoId = :pProdutoId');
-    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value := pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value      := pJsonObjectLotes.GetValue<Integer>('produtoid');
+    if DebugHook <> 0 then
+       vQryLoteSubstituicao.SQL.SaveToFile('VlmLoteSubstituicao_LoteSubstituicao02.Sql');
     vQryLoteSubstituicao.ExecSQL;
     JsonArrayLotes := pJsonObjectLotes.GetValue<TJsonArray>('lotes');
-    for xLotes := 0 to Pred(JsonArrayLotes.Count) do
-    Begin
+    for xLotes := 0 to Pred(JsonArrayLotes.Count) do    Begin
       vQryLoteSubstituicao.Close;
       vQryLoteSubstituicao.Sql.Clear;
-      vQryLoteSubstituicao.Sql.Add
-        ('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
+      vQryLoteSubstituicao.Sql.Add('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
       vQryLoteSubstituicao.Sql.Add('Declare @LoteId Integer = :pLoteId');
-      vQryLoteSubstituicao.Sql.Add
-        ('Declare @EnderecoId Integer = :pEnderecoId');
-      vQryLoteSubstituicao.Sql.Add
-        ('Declare @quantidade Integer  = :pQuantidade');
-      vQryLoteSubstituicao.Sql.Add
-        ('Declare @EmbalagemPadrao Integer = :pEmbalagemPadrao');
+      vQryLoteSubstituicao.Sql.Add('Declare @EnderecoId Integer = :pEnderecoId');
+      vQryLoteSubstituicao.Sql.Add('Declare @quantidade Integer  = :pQuantidade');
+      vQryLoteSubstituicao.Sql.Add('Declare @EmbalagemPadrao Integer = :pEmbalagemPadrao');
       vQryLoteSubstituicao.Sql.Add('Declare @UsuarioId Integer = :pUsuarioId');
-      vQryLoteSubstituicao.Sql.Add
-        ('Declare @terminal Varchar(50) = :pTerminal');
-      vQryLoteSubstituicao.Sql.Add
-        ('Insert Into PedidoVolumeLotes (PedidoVolumeId, LoteId,');
-      vQryLoteSubstituicao.Sql.Add
-        ('       EnderecoId, EstoqueTipoId, Quantidade, EmbalagemPadrao,');
-      vQryLoteSubstituicao.Sql.Add
-        ('       QtdSuprida, DtInclusao, HrInclusao, Terminal, UsuarioId) Values (');
-      vQryLoteSubstituicao.Sql.Add
-        ('  @PedidoVolumeId, @LoteId, @EnderecoId, 4,');
-      vQryLoteSubstituicao.Sql.Add
-        ('  @Quantidade, @EmbalagemPadrao, @quantidade,');
-      vQryLoteSubstituicao.Sql.Add
-        ('  (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      vQryLoteSubstituicao.Sql.Add
-        ('  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
-      vQryLoteSubstituicao.Sql.Add('  @Terminal, @usuarioId)');
-      vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-        JsonArrayLotes.Items[xLotes].GetValue<Integer>('pedidovolumeid');
-      vQryLoteSubstituicao.ParamByName('pLoteId').Value := JsonArrayLotes.Items
-        [xLotes].GetValue<Integer>('loteid');
-      vQryLoteSubstituicao.ParamByName('pEnderecoId').Value :=
-        JsonArrayLotes.Items[xLotes].GetValue<Integer>('enderecoid');
-      vQryLoteSubstituicao.ParamByName('pQuantidade').Value :=
-        JsonArrayLotes.Items[xLotes].GetValue<Integer>('quantidade');
-      vQryLoteSubstituicao.ParamByName('pEmbalagemPadrao').Value :=
-        JsonArrayLotes.Items[xLotes].GetValue<Integer>('embalagempadrao');
-      vQryLoteSubstituicao.ParamByName('pUsuarioId').Value :=
-        pJsonObjectLotes.GetValue<Integer>('usuarioid');
-      vQryLoteSubstituicao.ParamByName('pTerminal').Value :=
-        pJsonObjectLotes.GetValue<String>('terminal');
-      if DebugHook <> 0 then
-        vQryLoteSubstituicao.Sql.SaveToFile('PutSubstituirLote.Sql');
+      vQryLoteSubstituicao.Sql.Add('Declare @terminal Varchar(50) = :pTerminal');
+      vQryLoteSubstituicao.Sql.Add('Insert Into PedidoVolumeLotes (PedidoVolumeId, LoteId,');
+      vQryLoteSubstituicao.Sql.Add('       EnderecoId, EstoqueTipoId, Quantidade, EmbalagemPadrao,');
+      vQryLoteSubstituicao.Sql.Add('       QtdSuprida, DtInclusao, HrInclusao, Terminal, UsuarioId) Values (');
+      vQryLoteSubstituicao.Sql.Add('       @PedidoVolumeId, @LoteId, @EnderecoId, 4,');
+      vQryLoteSubstituicao.Sql.Add('       @Quantidade, @EmbalagemPadrao, @quantidade,');
+      vQryLoteSubstituicao.Sql.Add('       (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      vQryLoteSubstituicao.Sql.Add('       (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
+      vQryLoteSubstituicao.Sql.Add('       @Terminal, @usuarioId)');
+      vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value  := JsonArrayLotes.Items[xLotes].GetValue<Integer>('pedidovolumeid');
+      vQryLoteSubstituicao.ParamByName('pLoteId').Value          := JsonArrayLotes.Items[xLotes].GetValue<Integer>('loteid');
+      vQryLoteSubstituicao.ParamByName('pEnderecoId').Value      := JsonArrayLotes.Items[xLotes].GetValue<Integer>('enderecoid');
+      vQryLoteSubstituicao.ParamByName('pQuantidade').Value      := JsonArrayLotes.Items[xLotes].GetValue<Integer>('quantidade');
+      vQryLoteSubstituicao.ParamByName('pEmbalagemPadrao').Value := JsonArrayLotes.Items[xLotes].GetValue<Integer>('embalagempadrao');
+      vQryLoteSubstituicao.ParamByName('pUsuarioId').Value       := pJsonObjectLotes.GetValue<Integer>('usuarioid');
+      vQryLoteSubstituicao.ParamByName('pTerminal').Value        := pJsonObjectLotes.GetValue<String>('terminal');
+      if DebugHook <> 0 then Begin
+         vQryLoteSubstituicao.Sql.Add('--pPedidoVolumeId = '+JsonArrayLotes.Items[xLotes].GetValue<String>('pedidovolumeid'));
+         vQryLoteSubstituicao.Sql.Add('--pLoteId         = '+JsonArrayLotes.Items[xLotes].GetValue<String>('loteid'));
+         vQryLoteSubstituicao.Sql.Add('--pEnderecoId = '+JsonArrayLotes.Items[xLotes].GetValue<String>('enderecoid'));
+         vQryLoteSubstituicao.Sql.Add('--pQuantidade = '+JsonArrayLotes.Items[xLotes].GetValue<String>('quantidade'));
+         vQryLoteSubstituicao.Sql.Add('--pEmbalagemPadrao = '+JsonArrayLotes.Items[xLotes].GetValue<String>('embalagempadrao'));
+         vQryLoteSubstituicao.Sql.Add('--pUsuarioId = '+pJsonObjectLotes.GetValue<String>('usuarioid'));
+         vQryLoteSubstituicao.Sql.Add('--pTerminal = '+pJsonObjectLotes.GetValue<String>('terminal'));
+         vQryLoteSubstituicao.Sql.SaveToFile('PutSubstituirLote_L'+JsonArrayLotes.Items[xLotes].GetValue<String>('loteid')+
+                                                              '_E'+JsonArrayLotes.Items[xLotes].GetValue<String>('enderecoid')+'.Sql');
+      End;
       vQryLoteSubstituicao.ExecSQL;
     End;
     vQryLoteSubstituicao.Close;
     vQryLoteSubstituicao.Sql.Clear;
-    vQryLoteSubstituicao.Sql.Add
-      ('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
+    vQryLoteSubstituicao.Sql.Add('Declare @PedidoVolumeId Integer = :pPedidoVolumeId');
     vQryLoteSubstituicao.Sql.Add('Declare @ProdutoId Integer = :pProdutoId');
     vQryLoteSubstituicao.Sql.Add('UPdate Est');
     vQryLoteSubstituicao.Sql.Add('  Set Qtde = Qtde + Vl.Quantidade');
     vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
-    vQryLoteSubstituicao.Sql.Add
-      ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId');
+    vQryLoteSubstituicao.Sql.Add('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add('Inner join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId');
     vQryLoteSubstituicao.Sql.Add('');
-    vQryLoteSubstituicao.Sql.Add
-      ('Insert Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc)');
-    vQryLoteSubstituicao.Sql.Add
-      ('Select Vl.LoteId, Vl.EnderecoId, 6, Vl.Quantidade, Vl.DtInclusao, Vl.HrInclusao, Vl.UsuarioId');
+    vQryLoteSubstituicao.Sql.Add('Insert Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, HrInclusao, UsuarioIdInc)');
+    vQryLoteSubstituicao.Sql.Add('       Select Vl.LoteId, Vl.EnderecoId, 6, Vl.Quantidade, Vl.DtInclusao, Vl.HrInclusao, Vl.UsuarioId');
     vQryLoteSubstituicao.Sql.Add('From PedidoVolumeLotes Vl');
-    vQryLoteSubstituicao.Sql.Add
-      ('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
-    vQryLoteSubstituicao.Sql.Add
-      ('Left join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
-    vQryLoteSubstituicao.Sql.Add
-      ('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId and Est.LoteId Is Null');
-    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
-    vQryLoteSubstituicao.ParamByName('pProdutoId').Value :=
-      pJsonObjectLotes.GetValue<Integer>('produtoid');
+    vQryLoteSubstituicao.Sql.Add('Inner join ProdutoLotes Pl On Pl.LoteId = Vl.LoteId');
+    vQryLoteSubstituicao.Sql.Add('Left join Estoque Est On Est.LoteId = Vl.LoteId and Est.EnderecoId = Vl.EnderecoId and Est.EstoqueTipoId = 6');
+    vQryLoteSubstituicao.Sql.Add('Where Vl.PedidoVolumeId = @PedidoVolumeId And Pl.ProdutoId = @ProdutoId and Est.LoteId Is Null');
+    vQryLoteSubstituicao.ParamByName('pPedidoVolumeId').Value := pJsonObjectLotes.GetValue<Integer>('pedidovolumeid');
+    vQryLoteSubstituicao.ParamByName('pProdutoId').Value      := pJsonObjectLotes.GetValue<Integer>('produtoid');
+    if DebugHook <> 0 then Begin
+       vQryLoteSubstituicao.Sql.Add('--pPedidoVolumeId = '+pJsonObjectLotes.GetValue<String>('pedidovolumeid'));
+       vQryLoteSubstituicao.Sql.Add('--pProdutoId      = '+pJsonObjectLotes.GetValue<String>('produtoid'));
+       vQryLoteSubstituicao.SQL.SaveToFile('VlmLoteSubstituicao_LoteSubstituicao03.Sql');
+    End;
     vQryLoteSubstituicao.ExecSQL;
     vQryLoteSubstituicao.connection.Commit;
     Result := TJsonArray.Create;
-    Result.AddElement(TJsonObject.Create.AddPair('Ok',
-      'Substituicao com sucesso!'));
-  Except
-    ON E: Exception do
+    Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Substituicao com sucesso!'));
+  Except ON E: Exception do
     Begin
       vQryLoteSubstituicao.connection.Rollback;
       vQryLoteSubstituicao.Close;
-
-      raise Exception.Create('Processo: Volumes Lotes Substitui��o - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: Volumes Lotes Substituição - ' +
+            StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 

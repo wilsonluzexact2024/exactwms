@@ -3923,10 +3923,8 @@ begin
         Req.Headers['terminal'], ClientIP(Req), THorse.Port,
         '/v1/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '',
         'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+        ((Time - HrInicioLog) / 1000), 'Integracao');
+    Except on E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create.AddPair('status', '500')
@@ -3937,8 +3935,7 @@ begin
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
           0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
           '/v1/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '',
-          E.Message, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          E.Message, 500, ((Time - HrInicioLog) / 1000), 'Integracao');
       End;
     End;
   Finally
@@ -4000,30 +3997,21 @@ begin
     HrInicioLog := Time;
     LService := TServicePedidoSaida.Create;
     Try
-      JsonArrayReq := TJSONObject.ParseJSONValue
-        (TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSonArray;
+      JsonArrayReq := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Req.Body), 0) as TJSonArray;
       JsonArrayRetorno := LService.AtualizarNFPedidoV2(JsonArrayReq);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v2/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+        '/v2/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
+        ((Time - HrInicioLog) / 1000), 'Integracao');
+    Except on E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create.AddPair('status', '500')
-          .AddPair('pedido', TJsonNumber.Create(0)).AddPair('nfe', '')
-          .AddPair('mensagem', E.Message));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v2/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '',
-          E.Message, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+                        .AddPair('pedido', TJsonNumber.Create(0)).AddPair('nfe', '')
+                        .AddPair('mensagem', E.Message));
+        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
+                 Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                 '/v2/pedido/nfeerp', Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500, ((Time - HrInicioLog) / 1000), 'Integracao');
       End;
     End;
   Finally
