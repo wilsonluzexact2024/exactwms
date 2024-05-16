@@ -100,7 +100,7 @@ begin
          RESTRequestWMS.Params.AddHeader('usuarioid', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
       {$IfDef Android}
          RESTRequestWMS.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
-         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobileAPK'
+         RESTRequestWMS.Params.AddHeader('appname', 'eXactWMSMobileAPK');
          RESTRequestWMS.Params.AddHeader('versao', VersaoAPK);
       {$else}
          RESTRequestWMS.Params.AddHeader('terminal', NomeDoComputador);

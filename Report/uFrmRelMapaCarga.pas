@@ -815,8 +815,8 @@ Begin
        FDMemAnaliseConsolidada.Open;
     frxPDFExport1.Title    := 'Análise Consolidada para Cargas';
     frxPDFExport1.FileName := 'AnaliseConsolidadaCargas.Pdf';
-    frxPDFExport1.ShowDialog := False;
-    frxPDFExport1.ShowProgress := False;
+    frxPDFExport1.ShowDialog      := False;
+    frxPDFExport1.ShowProgress    := False;
     frxPDFExport1.OverwritePrompt := False;
     frxAnaliseConsolidada.PrepareReport();
     frxAnaliseConsolidada.PrintOptions.ShowDialog := False;

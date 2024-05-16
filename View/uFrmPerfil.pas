@@ -369,6 +369,7 @@ begin
      ObjPerfilCtrl.SalvarAcesso(JsonAcesso);
      JsonAcesso.DisposeOf;
      ObjPerfilCtrl.ObjPerfil.PerfilId := 0;
+
   End
   Else
      Result := False;

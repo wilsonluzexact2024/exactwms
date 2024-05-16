@@ -579,7 +579,7 @@ end;
 
 procedure TFrmeXactWMS.ActInventarioExecute(Sender: TObject);
 begin
-  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Inventário') then
+  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('INVENTARIO / AJUSTE') then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   if (Assigned(FrmInventario) = False) then
     begin

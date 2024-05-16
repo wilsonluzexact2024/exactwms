@@ -55,6 +55,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Pedidos - Sa'#237'das'
+      ExplicitTop = 0
       ExplicitWidth = 1367
       ExplicitHeight = 689
       inherited PnlInfo: TPanel
@@ -472,6 +473,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           Caption = 'Pedidos'
           ImageIndex = 0
           OnShow = TabPedidosShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LstPedidosAdv: TAdvStringGrid
             Left = 0
             Top = 0
@@ -1040,6 +1044,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'Resumo Atendimento'
           ImageIndex = 2
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LstPedidoResumoAdv: TAdvStringGrid
             Left = 0
             Top = 0
@@ -1313,6 +1320,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'Volumes'
           ImageIndex = 1
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LstVolumesAdv: TAdvStringGrid
             Left = 0
             Top = 0
@@ -3218,8 +3228,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
         Properties.ActivePage = TabVolumeResumo
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
-        ExplicitLeft = 3
-        ExplicitTop = 208
         ClientRectBottom = 483
         ClientRectRight = 1367
         ClientRectTop = 24
@@ -3964,6 +3972,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'An'#225'lise por Setor'
           ImageIndex = 2
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Panel1: TPanel
             Left = 306
             Top = 12
@@ -4365,6 +4376,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'An'#225'lise por Rua'
           ImageIndex = 1
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GbEstrutura: TGroupBox
             Left = 3
             Top = 3
@@ -4797,6 +4811,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'An'#225'lise por Rota'
           ImageIndex = 3
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object PnlVolumeTotalPorRota: TPanel
             Left = 308
             Top = 14
@@ -5198,6 +5215,9 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'An'#225'lise por Destinat'#225'rio'
           ImageIndex = 4
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object PnlVolumeTotalPorLoja: TPanel
             Left = 310
             Top = 16
