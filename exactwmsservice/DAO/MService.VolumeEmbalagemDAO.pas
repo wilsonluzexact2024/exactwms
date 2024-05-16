@@ -68,44 +68,35 @@ begin
   inherited;
 end;
 
-function TVolumeEmbalagemDao.GetId(pVolumeEmbalagemId_Descricao: String)
-  : TjSonArray;
-var
-  vSql: String;
+function TVolumeEmbalagemDao.GetId(pVolumeEmbalagemId_Descricao: String) : TjSonArray;
+var vSql: String;
 begin
   Result := TjSonArray.Create;
   try
     vSql := TuEvolutConst.SqlVolumeEmbalagem;
     FConexao.Query.SQL.Add(vSql);
-    if pVolumeEmbalagemId_Descricao = '0' then
-    Begin
-      FConexao.Query.ParamByName('pEmbalagemId').Value := 0;
-      FConexao.Query.ParamByName('pDescricao').Value := '';
+    if pVolumeEmbalagemId_Descricao = '0' then Begin
+       FConexao.Query.ParamByName('pEmbalagemId').Value := 0;
+       FConexao.Query.ParamByName('pDescricao').Value := '%%';
     End
-    Else If StrToIntDef(pVolumeEmbalagemId_Descricao, 0) > 0 then
-    Begin
-      FConexao.Query.ParamByName('pEmbalagemId').Value :=
-        StrToIntDef(pVolumeEmbalagemId_Descricao, 0);
-      FConexao.Query.ParamByName('pDescricao').Value := '';
+    Else If StrToIntDef(pVolumeEmbalagemId_Descricao, 0) > 0 then Begin
+      FConexao.Query.ParamByName('pEmbalagemId').Value := StrToIntDef(pVolumeEmbalagemId_Descricao, 0);
+      FConexao.Query.ParamByName('pDescricao').Value   := '';
     End
     Else
     Begin
       FConexao.Query.ParamByName('pEmbalagemId').Value := 0;
-      FConexao.Query.ParamByName('pDescricao').Value :=
-        '%' + pVolumeEmbalagemId_Descricao + '%';
+      FConexao.Query.ParamByName('pDescricao').Value   := '%' + pVolumeEmbalagemId_Descricao + '%';
     End;
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
-      Result.AddElement(tJsonObject.Create(tJsonPair.Create('Erro',
-        'Não há dados para gerar consulta.')));
+       Result.AddElement(tJsonObject.Create(tJsonPair.Create('Erro', 'Não há dados para gerar consulta.')));
     Result := FConexao.Query.ToJSONArray();
     ObjVolumeEmbalagemDAO := Nil;
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
       ObjVolumeEmbalagemDAO := Nil;
-      Result.AddElement(tJsonObject.Create(tJsonPair.Create('Erro',
-        E.Message)));
+      Result.AddElement(tJsonObject.Create(tJsonPair.Create('Erro', E.Message)));
     End;
   end;
 end;

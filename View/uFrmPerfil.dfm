@@ -3,7 +3,11 @@ inherited FrmPerfil: TFrmPerfil
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 5
         ColumnHeaders.Strings = (
@@ -184,7 +188,7 @@ inherited FrmPerfil: TFrmPerfil
         Caption = ' [ Controle de Acesso ] '
         TabOrder = 5
         object Bevel1: TBevel
-          Left = 378
+          Left = 419
           Top = 41
           Width = 74
           Height = 317
@@ -223,7 +227,7 @@ inherited FrmPerfil: TFrmPerfil
         object LstTopicoAcesso: TAdvStringGrid
           Left = 2
           Top = 41
-          Width = 376
+          Width = 417
           Height = 317
           Cursor = crDefault
           CustomHint = BalloonHint1
@@ -385,7 +389,7 @@ inherited FrmPerfil: TFrmPerfil
             25)
         end
         object LstFuncionalidadeAcesso: TAdvStringGrid
-          Left = 452
+          Left = 493
           Top = 41
           Width = 427
           Height = 317
@@ -540,6 +544,7 @@ inherited FrmPerfil: TFrmPerfil
           SortSettings.HeaderMirrorColorTo = 16182488
           Version = '8.4.2.2'
           WordWrap = False
+          ExplicitLeft = 452
           ColWidths = (
             74
             118
@@ -549,6 +554,16 @@ inherited FrmPerfil: TFrmPerfil
             25)
         end
       end
+    end
+    inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
+    end
+    inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
     end
   end
   inherited PnlErro: TPanel

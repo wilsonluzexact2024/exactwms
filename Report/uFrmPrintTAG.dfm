@@ -92,7 +92,6 @@ inherited FrmPrintTag: TFrmPrintTag
         Align = alTop
         Caption = '> Selecione o tipo de TAG <'
         TabOrder = 1
-        ExplicitLeft = -1
         object LblTagVolumeOrdem: TLabel
           Left = 980
           Top = 9
@@ -30411,7 +30410,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagVolume
+        Properties.ActivePage = TbTagLocalizacao
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -30489,7 +30488,7 @@ inherited FrmPrintTag: TFrmPrintTag
             Caption = 'Composi'#231#227'o da TAG'
           end
           object Label5: TLabel
-            Left = 485
+            Left = 487
             Top = 13
             Width = 49
             Height = 17
@@ -30629,11 +30628,11 @@ inherited FrmPrintTag: TFrmPrintTag
             Font.Height = -13
             Font.Name = 'Segoe UI'
             Font.Style = []
-            ItemIndex = 1
+            ItemIndex = 2
             ParentFont = False
             TabOrder = 2
             TabStop = False
-            Text = '3 x 10'
+            Text = '5 x 10'
             Items.Strings = (
               '2 x 10'
               '3 x 10'
@@ -33753,6 +33752,315 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
           OnShow = TbTagCaixaShow
+          ExplicitTop = 26
+          object Label26: TLabel
+            Left = 20
+            Top = 110
+            Width = 117
+            Height = 17
+            CustomHint = BalloonHint1
+            Caption = 'Total de Registro(s):'
+          end
+          object LblTotalCaixa: TLabel
+            Left = 143
+            Top = 110
+            Width = 54
+            Height = 17
+            CustomHint = BalloonHint1
+            Alignment = taRightJustify
+            AutoSize = False
+            Caption = '0'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object Label31: TLabel
+            Left = 469
+            Top = 47
+            Width = 49
+            Height = 17
+            CustomHint = BalloonHint1
+            Caption = 'Formato'
+          end
+          object GroupBox9: TGroupBox
+            Left = 22
+            Top = 28
+            Width = 401
+            Height = 73
+            CustomHint = BalloonHint1
+            Caption = ' [ Identificador ] '
+            TabOrder = 0
+            object Label20: TLabel
+              Left = 7
+              Top = 19
+              Width = 32
+              Height = 17
+              CustomHint = BalloonHint1
+              Caption = 'Inicial'
+            end
+            object Label28: TLabel
+              Left = 227
+              Top = 19
+              Width = 26
+              Height = 17
+              CustomHint = BalloonHint1
+              Caption = 'Final'
+            end
+            object EdtCaixaInicial: TEdit
+              Left = 7
+              Top = 42
+              Width = 122
+              Height = 24
+              CustomHint = BalloonHint1
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              OnChange = EdtCaixaInicialChange
+            end
+            object EdtCaixaFinal: TEdit
+              Left = 227
+              Top = 42
+              Width = 122
+              Height = 24
+              CustomHint = BalloonHint1
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+              OnChange = EdtCaixaInicialChange
+            end
+          end
+          object LstCaixaEmbalagem: TAdvStringGrid
+            Left = 0
+            Top = 128
+            Width = 1309
+            Height = 469
+            Cursor = crDefault
+            CustomHint = BalloonHint1
+            TabStop = False
+            Align = alBottom
+            Anchors = [akLeft, akTop, akRight, akBottom]
+            ColCount = 10
+            DefaultColWidth = 74
+            DefaultRowHeight = 25
+            DrawingStyle = gdsClassic
+            RowCount = 25
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+            ScrollBars = ssBoth
+            TabOrder = 1
+            HoverRowCells = [hcNormal, hcSelected]
+            OnClickCell = LstEnderecoAdvClickCell
+            OnDblClickCell = LstCadastroDblClickCell
+            HintColor = 5080903
+            ActiveCellShow = True
+            ActiveCellFont.Charset = DEFAULT_CHARSET
+            ActiveCellFont.Color = clWindowText
+            ActiveCellFont.Height = -11
+            ActiveCellFont.Name = 'MS Sans Serif'
+            ActiveCellFont.Style = []
+            ActiveCellColor = 5080903
+            Bands.Active = True
+            Bands.PrimaryColor = 16117735
+            CellNode.ShowTree = False
+            ColumnHeaders.Strings = (
+              'Identificador'
+              'Tipo'
+              'Altura'
+              'Largura'
+              'Comprimento'
+              'Volume'
+              'Tara'
+              'Dispon'#237'vel'
+              'Ativo'
+              'A'#231#227'o')
+            ControlLook.FixedGradientHoverFrom = 13619409
+            ControlLook.FixedGradientHoverTo = 12502728
+            ControlLook.FixedGradientHoverMirrorFrom = 12502728
+            ControlLook.FixedGradientHoverMirrorTo = 11254975
+            ControlLook.FixedGradientDownFrom = 8816520
+            ControlLook.FixedGradientDownTo = 7568510
+            ControlLook.FixedGradientDownMirrorFrom = 7568510
+            ControlLook.FixedGradientDownMirrorTo = 6452086
+            ControlLook.FixedGradientDownBorder = 14007466
+            ControlLook.ControlStyle = csClassic
+            ControlLook.DropDownHeader.Font.Charset = DEFAULT_CHARSET
+            ControlLook.DropDownHeader.Font.Color = clWindowText
+            ControlLook.DropDownHeader.Font.Height = -11
+            ControlLook.DropDownHeader.Font.Name = 'Tahoma'
+            ControlLook.DropDownHeader.Font.Style = []
+            ControlLook.DropDownHeader.Visible = True
+            ControlLook.DropDownHeader.Buttons = <>
+            ControlLook.DropDownFooter.Font.Charset = DEFAULT_CHARSET
+            ControlLook.DropDownFooter.Font.Color = clWindowText
+            ControlLook.DropDownFooter.Font.Height = -11
+            ControlLook.DropDownFooter.Font.Name = 'Tahoma'
+            ControlLook.DropDownFooter.Font.Style = []
+            ControlLook.DropDownFooter.Visible = True
+            ControlLook.DropDownFooter.Buttons = <>
+            Filter = <>
+            FilterDropDown.Font.Charset = DEFAULT_CHARSET
+            FilterDropDown.Font.Color = clWindowText
+            FilterDropDown.Font.Height = -11
+            FilterDropDown.Font.Name = 'Tahoma'
+            FilterDropDown.Font.Style = []
+            FilterDropDown.TextChecked = 'Checked'
+            FilterDropDown.TextUnChecked = 'Unchecked'
+            FilterDropDownClear = '(All)'
+            FilterEdit.TypeNames.Strings = (
+              'Starts with'
+              'Ends with'
+              'Contains'
+              'Not contains'
+              'Equal'
+              'Not equal'
+              'Larger than'
+              'Smaller than'
+              'Clear')
+            FixedColWidth = 74
+            FixedRowHeight = 25
+            FixedFont.Charset = DEFAULT_CHARSET
+            FixedFont.Color = clBlack
+            FixedFont.Height = -11
+            FixedFont.Name = 'MS Sans Serif'
+            FixedFont.Style = []
+            FloatFormat = '%.2f'
+            GridImages = ImgListSimNao
+            HoverButtons.Buttons = <>
+            HoverButtons.Position = hbLeftFromColumnLeft
+            HTMLSettings.ImageFolder = 'images'
+            HTMLSettings.ImageBaseName = 'img'
+            Look = glListView
+            Lookup = True
+            MouseActions.DirectEdit = True
+            Multilinecells = True
+            Navigation.AdvanceOnEnter = True
+            Navigation.AdvanceInsert = True
+            PrintSettings.DateFormat = 'dd/mm/yyyy'
+            PrintSettings.Font.Charset = DEFAULT_CHARSET
+            PrintSettings.Font.Color = clWindowText
+            PrintSettings.Font.Height = -11
+            PrintSettings.Font.Name = 'MS Sans Serif'
+            PrintSettings.Font.Style = []
+            PrintSettings.FixedFont.Charset = DEFAULT_CHARSET
+            PrintSettings.FixedFont.Color = clWindowText
+            PrintSettings.FixedFont.Height = -11
+            PrintSettings.FixedFont.Name = 'Tahoma'
+            PrintSettings.FixedFont.Style = []
+            PrintSettings.HeaderFont.Charset = DEFAULT_CHARSET
+            PrintSettings.HeaderFont.Color = clWindowText
+            PrintSettings.HeaderFont.Height = -11
+            PrintSettings.HeaderFont.Name = 'MS Sans Serif'
+            PrintSettings.HeaderFont.Style = []
+            PrintSettings.FooterFont.Charset = DEFAULT_CHARSET
+            PrintSettings.FooterFont.Color = clWindowText
+            PrintSettings.FooterFont.Height = -11
+            PrintSettings.FooterFont.Name = 'MS Sans Serif'
+            PrintSettings.FooterFont.Style = []
+            PrintSettings.Borders = pbNoborder
+            PrintSettings.Centered = False
+            PrintSettings.PageNumSep = '/'
+            ScrollWidth = 16
+            SearchFooter.Color = clBtnFace
+            SearchFooter.FindNextCaption = 'Find &next'
+            SearchFooter.FindPrevCaption = 'Find &previous'
+            SearchFooter.Font.Charset = DEFAULT_CHARSET
+            SearchFooter.Font.Color = clWindowText
+            SearchFooter.Font.Height = -11
+            SearchFooter.Font.Name = 'Tahoma'
+            SearchFooter.Font.Style = []
+            SearchFooter.HighLightCaption = 'Highlight'
+            SearchFooter.HintClose = 'Close'
+            SearchFooter.HintFindNext = 'Find next occurence'
+            SearchFooter.HintFindPrev = 'Find previous occurence'
+            SearchFooter.HintHighlight = 'Highlight occurences'
+            SearchFooter.MatchCaseCaption = 'Match case'
+            SearchFooter.ResultFormat = '(%d of %d)'
+            SelectionColor = clHighlight
+            SelectionTextColor = clHighlightText
+            SortSettings.DefaultFormat = ssAutomatic
+            SortSettings.HeaderColorTo = 16579058
+            SortSettings.HeaderMirrorColor = 16380385
+            SortSettings.HeaderMirrorColorTo = 16182488
+            Version = '8.4.2.2'
+            WordWrap = False
+            ExplicitTop = 130
+            ColWidths = (
+              74
+              118
+              74
+              74
+              74
+              74
+              74
+              74
+              74
+              74)
+            RowHeights = (
+              24
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25
+              25)
+          end
+          object CbFormatoEtqCaixaVolume: TComboBox
+            Left = 469
+            Top = 70
+            Width = 145
+            Height = 25
+            CustomHint = BalloonHint1
+            Style = csDropDownList
+            Color = clWhite
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = []
+            ItemIndex = 2
+            ParentFont = False
+            TabOrder = 2
+            TabStop = False
+            Text = '5 x 10'
+            Items.Strings = (
+              '2 x 10'
+              '3 x 10'
+              '5 x 10'
+              '8 x 10')
+          end
         end
         object TbTagArmazenagem: TcxTabSheet
           CustomHint = BalloonHint1
@@ -39517,7 +39825,7 @@ inherited FrmPrintTag: TFrmPrintTag
               TabOrder = 0
               object Label30: TLabel
                 Left = 9
-                Top = 23
+                Top = 25
                 Width = 43
                 Height = 17
                 CustomHint = BalloonHint1
@@ -40430,5 +40738,16 @@ inherited FrmPrintTag: TFrmPrintTag
     DataSet = FDMemEtiquetaVolumePorRua
     Left = 711
     Top = 446
+  end
+  object FdMemCaixaEmbalagem: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 299
+    Top = 369
   end
 end

@@ -139,27 +139,27 @@ begin
   inherited;
   ObjPerfilCtrl := TPerfilCtrl.Create;
   With LstCadastro do Begin
-    ColWidths[0] := 80;
-    ColWidths[1] := 250;
-    ColWidths[2] := 40;
-    ColWidths[3] := 80;
-    ColWidths[4] := 80;
+    ColWidths[0] :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[1] := 250+Trunc(80*ResponsivoVideo);;
+    ColWidths[2] :=  40+Trunc(80*ResponsivoVideo);;
+    ColWidths[3] :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[4] :=  80+Trunc(80*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[2, 0] := taCenter;
   End;
   With LstTopicoAcesso do Begin
-    ColWidths[0] :=  60;
-    ColWidths[1] := 250;
-    ColWidths[2] :=  45;
+    ColWidths[0] :=  60+Trunc(80*ResponsivoVideo);;
+    ColWidths[1] := 250+Trunc(80*ResponsivoVideo);;
+    ColWidths[2] :=  45+Trunc(80*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[2, 0] := taCenter;
   End;
   With LstFuncionalidadeAcesso do Begin
-    ColWidths[0] :=  60;
-    ColWidths[1] := 300;
-    ColWidths[2] :=  45;
+    ColWidths[0] :=  60+Trunc(80*ResponsivoVideo);;
+    ColWidths[1] := 380+Trunc(80*ResponsivoVideo);;
+    ColWidths[2] :=  45+Trunc(80*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[2, 0] := taCenter;

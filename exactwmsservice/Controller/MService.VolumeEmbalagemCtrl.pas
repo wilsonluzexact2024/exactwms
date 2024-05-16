@@ -83,8 +83,7 @@ begin
   Try
     try
       VolumeEmbalagemDAO := TVolumeEmbalagemDao.Create;
-      Res.Send<TJSonArray>(VolumeEmbalagemDAO.GetID(Req.Params.Items
-        ['volumeembalagemid'])).Status(THTTPStatus.Created);
+      Res.Send<TJSonArray>(VolumeEmbalagemDAO.GetID(Req.Params.Items['volumeembalagemid'])).Status(THTTPStatus.Created);
     Except
       on E: Exception do
       Begin

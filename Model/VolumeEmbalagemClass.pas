@@ -43,8 +43,7 @@ type
     Destructor Destroy; OverRide;
     Function Salvar: Boolean; // (const ObjVolumeEmbalagem: TVolumeEmbalagem)
     Class Function ExportaExcel: Boolean;
-    Class Function ClassToJson(Const ObjVolumeEmbalagem
-      : TVolumeEmbalagem): String;
+    Class Function ClassToJson(Const ObjVolumeEmbalagem : TVolumeEmbalagem): String;
     Class Function JsonToClass(Json: String): TVolumeEmbalagem;
     Class Procedure ConfigSizeField(Tabela: String; Sender: TObject);
     Procedure Limpar;

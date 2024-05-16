@@ -119,21 +119,17 @@ begin
 end;
 
 procedure GetLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  CaixaEmbalagemDao: TCaixaEmbalagemDao;
-  AQueryParam: TDictionary<String, String>;
-  pSituacao: String;
-  pCaixaEmbalagemId, pSequenciaIni, pSequenciaFin, pVolumeEmbalagemId,
-    pStatus: Integer;
-  JsonArrayErro: TJSonArray;
+Var CaixaEmbalagemDao: TCaixaEmbalagemDao;
+    AQueryParam: TDictionary<String, String>;
+    pSituacao: String;
+    pCaixaEmbalagemId, pSequenciaIni, pSequenciaFin, pVolumeEmbalagemId, pStatus: Integer;
+    JsonArrayErro: TJSonArray;
 Begin
   Try
     Try
       AQueryParam := Req.Query.Dictionary;
       If AQueryParam.Count <= 0 then
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          'Defina os par�metros para pesquisar os endere�os.')))
-          .Status(THttpStatus.Created);
+         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', 'Defina os parâmetros para pesquisar os endere�os.'))).Status(THttpStatus.Created);
       pCaixaEmbalagemId := 0;
       pSequenciaIni := 0;
       pSequenciaFin := 0;
@@ -141,24 +137,23 @@ Begin
       pSituacao := 'A';
       pStatus := 99;
       if AQueryParam.ContainsKey('caixaembalagemid') then
-        pCaixaEmbalagemId := AQueryParam.Items['caixaembalagemid'].ToInteger;
+         pCaixaEmbalagemId := AQueryParam.Items['caixaembalagemid'].ToInteger;
       if AQueryParam.ContainsKey('sequenciaini') then
-        pSequenciaIni := AQueryParam.Items['sequenciaini'].ToInteger;
+         pSequenciaIni := AQueryParam.Items['sequenciaini'].ToInteger;
       if AQueryParam.ContainsKey('sequenciafin') then
-        pSequenciaFin := AQueryParam.Items['sequenciafin'].ToInteger;
+         pSequenciaFin := AQueryParam.Items['sequenciafin'].ToInteger;
       if AQueryParam.ContainsKey('volumeembalagemid') then
-        pVolumeEmbalagemId := AQueryParam.Items['volumeembalagemid'].ToInteger;
+         pVolumeEmbalagemId := AQueryParam.Items['volumeembalagemid'].ToInteger;
       if AQueryParam.ContainsKey('situacao') then
         // A-All Todos  U-Em Uso  L-Liberada  D-Destinario   T-Tr�nsito
-        pSituacao := AQueryParam.Items['situacao'];
+         pSituacao := AQueryParam.Items['situacao'];
       if AQueryParam.ContainsKey('operacao') then //Verificar qual a correta Situacao ou operacao
         // A-All Todos  U-Em Uso  L-Liberada  D-Destinario   T-Tr�nsito
-        pSituacao := AQueryParam.Items['situacao'];
+         pSituacao := AQueryParam.Items['situacao'];
       If AQueryParam.ContainsKey('status') then // 1-Ativo  2-Desativada  >3 Todos
-        pStatus := AQueryParam.Items['status'].ToInteger;
-        CaixaEmbalagemDao := TCaixaEmbalagemDao.Create;
-        Res.Send<TJSonArray>(CaixaEmbalagemDao.GetLista(pCaixaEmbalagemId,
-          pSequenciaIni, pSequenciaFin, pVolumeEmbalagemId, pSituacao, pStatus)).Status(THTTPStatus.Ok);
+         pStatus := AQueryParam.Items['status'].ToInteger;
+      CaixaEmbalagemDao := TCaixaEmbalagemDao.Create;
+      Res.Send<TJSonArray>(CaixaEmbalagemDao.GetLista(pCaixaEmbalagemId, pSequenciaIni, pSequenciaFin, pVolumeEmbalagemId, pSituacao, pStatus)).Status(THTTPStatus.Ok);
     Except
       on E: Exception do
       Begin

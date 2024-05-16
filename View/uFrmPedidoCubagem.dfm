@@ -67,6 +67,8 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Par'#226'metros para Processamento'
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 639
       DesignSize = (
         1157
@@ -21791,6 +21793,9 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       Caption = 'Excluir Pedidos'
       ImageIndex = 4
       OnShow = TabExcuirPedidoShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         1157
         639)
@@ -23410,6 +23415,9 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
       CustomHint = BalloonHint1
       Caption = 'ResumoAtendimento'
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LstPedidoResumoAdv: TAdvStringGrid
         Left = 0
         Top = 174
@@ -23900,19 +23908,10 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
     Top = 350
     ExplicitLeft = 1064
     ExplicitTop = 350
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited PnlErro: TPanel [6]
     Top = 696
     ExplicitTop = 696
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
   end
   inherited BalloonHint1: TBalloonHint
     Left = 891

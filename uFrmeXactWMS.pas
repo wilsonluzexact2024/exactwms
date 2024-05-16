@@ -1367,7 +1367,7 @@ end;
 
 procedure TFrmeXactWMS.ActDashExpedicaoExecute(Sender: TObject);
 begin
-  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Dashboard-Expedição') then
+  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Dashboard - Expedição') then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   if (Assigned(FrmRelDesempenhoExpedicao) = False) then
      FrmRelDesempenhoExpedicao := TFrmRelDesempenhoExpedicao.Create(Application);
@@ -1385,7 +1385,7 @@ end;
 
 procedure TFrmeXactWMS.ActDashSeparacaoExecute(Sender: TObject);
 begin
-  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Dashboard-Separação') then
+  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Dashboard - Separação') then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   if (Assigned(FrmRelResumoSeparacao) = False) then
      FrmRelResumoSeparacao := TFrmRelResumoSeparacao.Create(Application);
@@ -1403,7 +1403,7 @@ end;
 
 procedure TFrmeXactWMS.ActDevolucaoExecute(Sender: TObject);
 begin
-  //if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Devolucao') then
+  //if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Devolução') then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   if (Assigned(FrmDevolucao) = False) then
      FrmDevolucao := TFrmDevolucao.Create(Application);

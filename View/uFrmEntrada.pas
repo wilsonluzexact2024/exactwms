@@ -3122,7 +3122,7 @@ function TFrmEntrada.SalvarReg: Boolean;
 Var ObjEntradaCtrl   : TEntradaCtrl;
 begin
   Result := False;
-  if (ExistDevolutionSegregation) and (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Recebimentos - Salvar Itens com Devolução/Segregado')) then
+  if (ExistDevolutionSegregation) and (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Recebimento - Finalizar com Devolução e Segregado')) then
      raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
   FdMemEntrada.FieldByName('EntradaId').AsInteger      := StrToInt(EdtEntradaId.Text);
   FdMemEntrada.FieldByName('OperacaoTipoId').AsInteger := CbOperacaoTipo.ItemIndex;

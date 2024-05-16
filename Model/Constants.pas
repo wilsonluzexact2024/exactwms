@@ -1357,47 +1357,31 @@ Const SqlPedidoPrintTag = 'Declare @PedidoId Integer = :pPedidoId'+sLineBreak+
       'Declare @VolumeEmbalagemid Integer = :pVolumeEmbalagemId' + sLineBreak +
       'Declare @Situacao Varchar(1)       = :pSituacao' + sLineBreak +
       'Declare @Status Integer            = :pStatus' + sLineBreak +
-      'Select (Select Ce.caixaembalagemid,  Ce.numsequencia, coalesce(Ce.observacao, '
-      + #39 + #39 + ') observacao, Ce.status, ' + sLineBreak +
-      '        Coalesce(Ce.disponivel, 0) disponivel, (Case When Ce.Disponivel = 1 Then '
-      + #39 + 'Dispon�vel' + #39 + ' Else ' + #39 + 'Em Uso' + #39 +
-      ' End) situacao,' + sLineBreak +
-      '       VolumeEmbalagem.embalagemid, VolumeEmbalagem.descricao, VolumeEmbalagem.identificacao, VolumeEmbalagem.tipo,'
-      + sLineBreak + '       (Case When Tipo = ' + #39 + 'R' + #39 + ' then ' +
-      #39 + 'Retorn�vel' + #39 + sLineBreak + '             When Tipo = ' + #39
-      + 'P' + #39 + ' then ' + #39 + 'Pr�pria' + #39 + sLineBreak +
-      '             When Tipo = ' + #39 + 'C' + #39 + ' then ' + #39 + 'Pacote'
-      + #39 + sLineBreak + '             WHen Tipo = ' + #39 + 'U' + #39 +
-      ' then ' + #39 + 'Reutiliz�vel' + #39 + sLineBreak +
-      '        End) as tipodescricao, Cast(VolumeEmbalagem.altura as Decimal(15,2)) as altura,'
-      + sLineBreak +
-      '	    Cast(VolumeEmbalagem.Largura as Decimal(15,2)) as largura,' +
-      sLineBreak +
-      '		Cast(VolumeEmbalagem.Comprimento as Decimal(15,2)) as comprimento,' +
-      sLineBreak +
-      '	    Cast((VolumeEmbalagem.Altura*VolumeEmbalagem.Largura*VolumeEmbalagem.Comprimento) as Decimal(15,3)) as volume, VolumeEmbalagem.aproveitamento,'
-      + sLineBreak +
-      '	   cast(Cast((VolumeEmbalagem.Altura*VolumeEmbalagem.Largura*VolumeEmbalagem.Comprimento)*VolumeEmbalagem.Aproveitamento as Decimal(15,3))/100 as Decimal(15,3)) volcm3,'
-      + sLineBreak +
-      '    Cast(VolumeEmbalagem.Capacidade as Decimal(15,3)) as capacidade, Cast(Tara as Decimal(15,3)) tara, qtdlacres, codbarras, Cast(PrecoCusto as Decimal(15,2)) precocusto'
-      + sLineBreak + 'From CaixaEmbalagem CE' + sLineBreak +
-      'Inner Join VolumeEmbalagem On VolumeEmbalagem.EmbalagemId = CE.EmbalagemId'
-      + sLineBreak +
-      'Where (@CaixaEmbalagemId = 0 or @CaixaEmbalagemId = CE.CaixaEmbalagemID) and '
-      + sLineBreak +
-      '      (@SequenciaIni = 0 or Ce.NumSequencia >= @SequenciaIni) and ' +
-      sLineBreak +
-      '      (@SequenciaFin = 0 or Ce.NumSequencia <= @SequenciaFin) and ' +
-      sLineBreak +
-      '      (@VolumeEmbalagemId = 0 or @VolumeEmbalagemId = Ce.EmbalagemId) and '
-      + sLineBreak +
-    // '      (@Situacao = '+#39+'A'+#39+' or
+      'Select (Select Ce.caixaembalagemid,  Ce.numsequencia, coalesce(Ce.observacao, '+#39+#39+') observacao, Ce.status, ' + sLineBreak +
+      '        Coalesce(Ce.disponivel, 0) disponivel, (Case When Ce.Disponivel = 1 Then '+#39+'Disponível'+#39+sLineBreak+
+      '                                                     Else '+#39+'Em Uso'+#39+' End) situacao,'+sLineBreak +
+      '       VolumeEmbalagem.embalagemid, VolumeEmbalagem.descricao, VolumeEmbalagem.identificacao, VolumeEmbalagem.tipo,'+sLineBreak +
+      '       (Case When Tipo = ' + #39 + 'R' + #39 + ' then ' +#39 + 'Retornável' + #39 + sLineBreak +
+      '             When Tipo = ' + #39 + 'P' + #39 + ' then ' + #39 + 'Própria' + #39 + sLineBreak +
+      '             When Tipo = ' + #39 + 'C' + #39 + ' then ' + #39 + 'Pacote'+#39 + sLineBreak +
+      '             WHen Tipo = ' + #39 + 'U' + #39 + ' then ' + #39 + 'Reutilizável' + #39 + sLineBreak +
+      '        End) as tipodescricao, Cast(VolumeEmbalagem.altura as Decimal(15,2)) as altura,'+ sLineBreak +
+      '	      Cast(VolumeEmbalagem.Largura as Decimal(15,2)) as largura,'+sLineBreak +
+      '		     Cast(VolumeEmbalagem.Comprimento as Decimal(15,2)) as comprimento,'+sLineBreak +
+      '	      Cast((VolumeEmbalagem.Altura*VolumeEmbalagem.Largura*VolumeEmbalagem.Comprimento) as Decimal(15,3)) as volume, VolumeEmbalagem.aproveitamento,'+sLineBreak +
+      '	      cast(Cast((VolumeEmbalagem.Altura*VolumeEmbalagem.Largura*VolumeEmbalagem.Comprimento)*'+sLineBreak+
+      '            VolumeEmbalagem.Aproveitamento as Decimal(15,3))/100 as Decimal(15,3)) volcm3,'+sLineBreak +
+      '       Cast(VolumeEmbalagem.Capacidade as Decimal(15,3)) as capacidade, Cast(Tara as Decimal(15,3)) tara, '+sLineBreak+
+      '       qtdlacres, codbarras, Cast(PrecoCusto as Decimal(15,2)) precocusto'+sLineBreak +
+      'From CaixaEmbalagem CE' + sLineBreak +
+      'Inner Join VolumeEmbalagem On VolumeEmbalagem.EmbalagemId = CE.EmbalagemId'+sLineBreak+
+      'Where (@CaixaEmbalagemId = 0 or @CaixaEmbalagemId = CE.CaixaEmbalagemID) and '+sLineBreak +
+      '      (@SequenciaIni = 0 or Ce.NumSequencia >= @SequenciaIni) and '+sLineBreak +
+      '      (@SequenciaFin = 0 or Ce.NumSequencia <= @SequenciaFin) and '+sLineBreak +
+      '      (@VolumeEmbalagemId = 0 or @VolumeEmbalagemId = Ce.EmbalagemId) and '+sLineBreak +
       '      (@Status>1 or @Status = Ce.Status) For Json Auto) as JsonRetorno';
-    // --, root('caixaembalagem') , INCLUDE_NULL_VALUES
 
-    // Volume Tipo
-  Const
-    SqlVolumeEmbalagem = 'Declare @EmbalagemId Integer = :pEmbalagemId' +sLineBreak +
+Const SqlVolumeEmbalagem = 'Declare @EmbalagemId Integer = :pEmbalagemId' +sLineBreak +
                          'Declare @Descricao VarChar(30) = :pDescricao' + sLineBreak +
                          'Select *, (Case When Tipo = '+#39+'R'+#39+' then '+#39+'Retornável'+#39+sLineBreak+
                          '                When Tipo = '+#39+'P'+#39+' then '+#39+'Própria'+#39+sLineBreak+

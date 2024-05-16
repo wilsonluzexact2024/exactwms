@@ -164,6 +164,17 @@ type
     BtnEtqIndividual: TButton;
     CbTagVolumeOrdem: TComboBox;
     LblTagVolumeOrdem: TLabel;
+    GroupBox9: TGroupBox;
+    Label20: TLabel;
+    Label28: TLabel;
+    EdtCaixaInicial: TEdit;
+    EdtCaixaFinal: TEdit;
+    LstCaixaEmbalagem: TAdvStringGrid;
+    Label26: TLabel;
+    LblTotalCaixa: TLabel;
+    FdMemCaixaEmbalagem: TFDMemTable;
+    Label31: TLabel;
+    CbFormatoEtqCaixaVolume: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnTagProdutoClick(Sender: TObject);
@@ -224,6 +235,7 @@ type
     procedure TbTagLocalizacaoShow(Sender: TObject);
     procedure TbTagCaixaShow(Sender: TObject);
     procedure BtnTagCaixaClick(Sender: TObject);
+    procedure EdtCaixaInicialChange(Sender: TObject);
   private
     { Private declarations }
     ObjPedidoCtrl        : TPedidoSaidaCtrl;
@@ -245,6 +257,8 @@ type
     Procedure PrintEtiquetaPorRua(TagVolumeOrdem : Integer);
     Procedure LimparLstAdvReport;
     Procedure PesqDados_EtqArmazenamgem;
+    Procedure PesqDados_CaixaEmbalagem;
+    Procedure MontaListaCaixaEmbalagem;
     Procedure MontaListaEtqArmazenagem;
     Procedure PrintTagArmazenagem;
     procedure PrintTagArmazenagem8x10etqEpl2(pJsonArray: TJsonArray);
@@ -257,6 +271,7 @@ type
 
     Procedure TagEndereco3x10etqPpla;
     Procedure TagEndereco5x10etqPpla;
+    Procedure PrintTagCaixaEmbalagemEtqPpla;
   public
     { Public declarations }
     Procedure Imprimir; OverRide;
@@ -287,7 +302,8 @@ uses EnderecamentoZonaClass, EnderecamentoZonaCtrl, EnderecoEstruturaClass, Ende
      EnderecoClass, EnderecoCtrl, uFuncoes, TypInfo, uFrmeXactWMS, PessoaCtrl, ACBrETQClass,
      RotaCtrl, uFrmRelTagProduto, EnderecamentoRuaCtrl, EnderecamentoRuaClass,
      Views.Pequisa.Endereco, Views.Pequisa.EnderecamentoZonas, Views.Pequisa.EnderecamentoRuas, ProdutoCtrl,
-     Views.Pequisa.Produtos, EntradaCtrl, EstoqueCtrl, Views.Pequisa.Rotas;
+     Views.Pequisa.Produtos, EntradaCtrl, EstoqueCtrl, Views.Pequisa.Rotas,
+  EmbalagemCaixaCtrl;
 
 Procedure TFrmPrintTag.PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
 Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
@@ -392,6 +408,81 @@ Begin
   End;
 End;
 
+
+procedure TFrmPrintTag.PrintTagCaixaEmbalagemEtqPpla;
+Var xEtq  : Integer;
+    vErro : Boolean;
+    JsonProduto : TJsonObject;
+    vProduto : String;
+begin
+  inherited;
+  vErro := True; //Forçar inicialização da impressão
+  Try
+//    ConfigACBrETQ;
+    With ACBrETQConfig do Begin
+      DPI         := TACBrETQDPI(1);
+      Temperatura := vTemperatura;
+      Ativar;
+      For xEtq := 1 to Pred(LstCaixaEmbalagem.RowCount) do begin
+        if LstCaixaEmbalagem.Cells[9, xEtq] = '1' then Begin
+           Repeat
+             Try
+               if CbFormatoEtqCaixaVolume.ItemIndex = 0 then Begin
+                  ImprimirTexto(orNormal, 3,           2, 1,  9, 15, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
+                  ImprimirTexto(orNormal, 4,           4, 3,  11, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirTexto(orNormal, 2,           1, 1,  14, 6, 'eXactWMS®', 0, False);
+               End
+               Else if CbFormatoEtqCaixaVolume.ItemIndex = 1 then Begin
+                  ImprimirTexto(orNormal, 4, 2, 6,  3, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 3, 55, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 5, becNAO);
+                  ImprimirTexto(orNormal, 2, 1, 1,  8, 55, 'eXactWMS®', 0, False);
+               End
+               Else if CbFormatoEtqCaixaVolume.ItemIndex = 2 then Begin
+                  vProduto :=  LstCaixaEmbalagem.Cells[0, xEtq];
+                  ImprimirTexto(orNormal, 2,           2, 1, 50, 15, FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa, 0, False);
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 25, 35, LstCaixaEmbalagem.Cells[0, xEtq], 15, becNAO);
+                  ImprimirTexto(orNormal, 2,           2, 2, 18, 45, LstCaixaEmbalagem.Cells[0, xEtq], 0, False);
+                  ImprimirTexto(orNormal, 2,           1, 1,  3, 60, 'eXactWMS®', 0, False);
+               End
+               Else if CbFormatoEtqCaixaVolume.ItemIndex = 3 then Begin
+                  //ImprimirTexto(orNormal, 3,    2,  1, 3, 2, ' Rua  Prédio Nível    Apto', 0, False);
+                  //ImprimirTexto(orNormal, 4,           4, 3,  5, 2, LstEnderecoAdv.Cells[1, xEtq], 0, False);
+
+                  ImprimirTexto(orNormal, 2, 2, 1, 45, 3, ' Rua   Prédio   Nível   Apto');
+                  ImprimirTexto(orNormal, 3, 4, 4, 28, 3, LstEnderecoAdv.Cells[1, xEtq]);
+
+                  ImprimirBarras(orNormal, barCODE128, 3, 3, 10, 26, StringReplace(LstEnderecoAdv.Cells[1, xEtq], '.', '', [rfReplaceAll]), 15, becNAO);
+                  if (CbComposicao.ItemIndex = 2) and (LstEnderecoAdv.Cells[10, xEtq].ToInteger()>0) then Begin
+                     JsonProduto := TProdutoCtrl.GetEan(LstEnderecoAdv.Cells[10, xEtq]);
+                     vProduto := LstEnderecoAdv.Cells[10, xEtq]+' '+JsonProduto.GetValue<String>('descricao');
+                     ImprimirTexto(orNormal, 2,           2, 1,  19, 2, Copy(vProduto,  1, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  20, 2, Copy(vProduto, 31, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  21, 2, Copy(vProduto, 61, 30), 0, False); //Colocar o nome do produto
+                     ImprimirTexto(orNormal, 2,           2, 1,  22, 2, Copy(vProduto, 91, 30), 0, False); //Colocar o nome do produto
+                     JsonProduto := Nil;
+                  End;
+                  ImprimirTexto(orNormal, 2,           1, 1, 8, 46, 'eXactWMS®', 0, False);
+               End;
+               FinalizarEtiqueta;
+               Imprimir(SpCopias.Value, 0);
+               Sleep(vTimeEtiqueta);
+               vErro := False;
+             Except On E: Exception do Begin
+               vErro := True;
+               ShowErro('Erro: Problema de comunicação com impressora...');
+               End;
+             End;
+           Until vErro = False;
+        End;
+      End;
+      if ChkEtqBcoEndereco.Checked then
+         Imprimir(SpCopias.Value, 0);
+      Desativar;
+    end;
+  Except On E: Exception do
+    ShowErro('Erro: Impressão das etiquetas. Caixa/Baget!'+sLineBreak+E.Message);
+  End;
+end;
 
 procedure TFrmPrintTag.BtnEtqIndividualClick(Sender: TObject);
 Var xPed, Lin, EtqPrint : Integer;
@@ -526,6 +617,14 @@ begin
        raise Exception.Create('Acesso não autorizado!')
     Else
       PrintTagArmazenagem;
+  End
+  Else if PgcTabTags.ActivePage = TbTagCaixa then Begin
+    If (Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Relatórios - Impressão Tag Caixa/Baget')) then
+       raise Exception.Create('Acesso não autorizado!')
+    Else Begin
+      If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then
+         PrintTagCaixaEmbalagemEtqPpla;
+    End;
   End
   Else If PgcTabTags.ActivePage = TbTagLocalizacao then Begin
      if LstEnderecoAdv.RowCount <= 1 then Begin
@@ -667,6 +766,10 @@ begin
      PesqDados_EtqArmazenamgem;
      Exit;
   End
+  Else if PgcTabTags.ActivePage = TbTagCaixa then Begin
+     PesqDados_CaixaEmbalagem;
+     Exit;
+  End
   Else if PgcTabTags.ActivePage = TbTagLocalizacao then Begin
      LblTotalEtiq.Caption := '0';
      BtnImprimirStand.Enabled := False;
@@ -795,6 +898,12 @@ begin
     RbIndividual.Checked             := True;
     RgPrinterEtqIndividual.ItemIndex := 0;
   End;
+end;
+
+procedure TFrmPrintTag.EdtCaixaInicialChange(Sender: TObject);
+begin
+  inherited;
+  LstCaixaEmbalagem.RowCount := 1;
 end;
 
 procedure TFrmPrintTag.EdtCodProdutoEtqIndividualChange(Sender: TObject);
@@ -1330,6 +1439,27 @@ begin
   LstVolumesFilterAdv.Alignments[0, 0] := taRightJustify;
   LstVolumesFilterAdv.FontStyles[0, 0] := [FsBold];
   LstVolumesFilterAdv.Alignments[1, 0] := taRightJustify;
+
+  LstCaixaEmbalagem.ColWidths[0] := 100;
+  LstCaixaEmbalagem.ColWidths[1] := 230;
+  LstCaixaEmbalagem.ColWidths[2] :=  90;
+  LstCaixaEmbalagem.ColWidths[3] :=  90;
+  LstCaixaEmbalagem.ColWidths[4] :=  90;
+  LstCaixaEmbalagem.ColWidths[5] :=  90;
+  LstCaixaEmbalagem.ColWidths[6] :=  80;
+  LstCaixaEmbalagem.ColWidths[7] :=  80;
+  LstCaixaEmbalagem.ColWidths[8] :=  60;
+  LstCaixaEmbalagem.ColWidths[9] :=  40;
+  LstCaixaEmbalagem.Alignments[0, 0] := taRightJustify;
+  LstCaixaEmbalagem.FontStyles[0, 0] := [FsBold];
+  LstCaixaEmbalagem.Alignments[2, 0] := taRightJustify;
+  LstCaixaEmbalagem.Alignments[3, 0] := taRightJustify;
+  LstCaixaEmbalagem.Alignments[4, 0] := taRightJustify;
+  LstCaixaEmbalagem.Alignments[5, 0] := taRightJustify;
+  LstCaixaEmbalagem.Alignments[6, 0] := taRightJustify;
+  LstCaixaEmbalagem.Alignments[7, 0] := taCenter;
+  LstCaixaEmbalagem.Alignments[8, 0] := taCenter;
+  LstCaixaEmbalagem.Alignments[9, 0] := taCenter;
   vSelectLoteTag := False;
   ConfigACBrETQ;
 end;
@@ -1733,6 +1863,46 @@ begin
   end;
 end;
 
+procedure TFrmPrintTag.MontaListaCaixaEmbalagem;
+Var xPed, xRetorno : Integer;
+begin
+  inherited;
+  LstCaixaEmbalagem.RowCount  := FdMemCaixaEmbalagem.RecordCount+1;
+  LstCaixaEmbalagem.FixedRows := 1;
+  LblTotalCaixa.Caption       := FormatFloat('####0', LstCaixaEmbalagem.RowCount-1);
+  xRetorno := 1;
+//  for xPed := 1 to Pred(pJsonArray.Count) do
+//    LstTagArmazenagem.AddDataImage( 8, xPed, 0, TCellHAlign.haCenter, TCellVAlign.vaTop);
+  While Not FdMemCaixaEmbalagem.Eof do Begin
+    LstCaixaEmbalagem.Cells[0, xRetorno] := FdMemCaixaEmbalagem.FieldByName('numsequencia').AsString;
+//    LstCaixaEmbalagem.Cells[1, xRetorno] := FdMemCaixaEmbalagem.FieldByName('DocumentoNr').AsString;
+//    LstCaixaEmbalagem.Cells[2, xRetorno] := FdMemCaixaEmbalagem.FieldByName('Data').AsString;
+//    LstCaixaEmbalagem.Cells[3, xRetorno] := FdMemCaixaEmbalagem.FieldByName('CodPessoaERP').AsString;
+//    LstCaixaEmbalagem.Cells[4, xRetorno] := FdMemCaixaEmbalagem.FieldByName('Razao').AsString;
+//    LstCaixaEmbalagem.Cells[5, xRetorno] := FdMemCaixaEmbalagem.FieldByName('Fantasia').AsString;
+//    LstCaixaEmbalagem.Cells[6, xRetorno] := FdMemCaixaEmbalagem.FieldByName('QtdItens').AsString;
+    LstCaixaEmbalagem.Cells[7, xRetorno] := FdMemCaixaEmbalagem.FieldByName('disponivel').AsString;
+    LstCaixaEmbalagem.Cells[8, xRetorno] := FdMemCaixaEmbalagem.FieldByName('status').AsString;
+    LstCaixaEmbalagem.Cells[9, xRetorno] := '1';
+    LstCaixaEmbalagem.AddDataImage(7, xRetorno, 1, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstCaixaEmbalagem.AddDataImage(8, xRetorno, 1, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstCaixaEmbalagem.AddDataImage(9, xRetorno, 1, TCellHAlign.haCenter, TCellVAlign.vaTop);
+    LstCaixaEmbalagem.Alignments[0, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.FontStyles[0, xRetorno] := [FsBold];
+    LstCaixaEmbalagem.Alignments[2, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.Alignments[3, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.Alignments[4, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.Alignments[5, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.Alignments[6, xRetorno] := taRightJustify;
+    LstCaixaEmbalagem.Alignments[7, xRetorno] := taCenter;
+    LstCaixaEmbalagem.Alignments[8, xRetorno] := taCenter;
+    LstCaixaEmbalagem.Alignments[9, xRetorno] := taCenter;
+    FdMemCaixaEmbalagem.Next;
+    Inc(xRetorno);
+  End;
+  ImprimirExportar(True);
+end;
+
 procedure TFrmPrintTag.MontaListaEtqArmazenagem;
 Var xPed, xRetorno : Integer;
 begin
@@ -1878,6 +2048,35 @@ begin
   jsonArrayPedidos := Nil;
 end;
 }
+procedure TFrmPrintTag.PesqDados_CaixaEmbalagem;
+Var ObjCaixaEmbalagemCtrl : TCaixaEmbalagemCtrl;
+    JsonArrayRetorno      : TJsonArray;
+    vErro : String;
+begin
+  if (StrToIntDef(EdtCaixaInicial.Text, 0)<=0) and (StrToIntDef(EdtCaixaFinal.Text, 0)<=0) then Begin
+     ShowErro('Informe os dados(Identificador Inicial e/ou Final para pesquisa!');
+     Exit;
+  End;
+  ObjCaixaEmbalagemCtrl := TCaixaEmbalagemCtrl.Create;
+  JsonArrayRetorno := ObjCaixaEmbalagemCtrl.GetCaixaEmbalagemJson(0, StrToIntDef(EdtCaixaInicial.Text, 0),
+                      StrToIntDef(EdtCaixaFinal.Text, 0), 0, 'A', 99, 0);
+  if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then  Begin
+     EdtCaixaInicial.Clear;
+     EdtCaixaFinal.Clear;
+     ShowErro('Não foram encontradas as caixas nessa Faixa: '+EdtCaixaInicial.Text+' a '+EdtCaixaFinal.Text+'.');
+  End
+  Else Begin
+     if FdMemCaixaEmbalagem.Active then
+        FdMemCaixaEmbalagem.EmptyDataSet;
+     FdMemCaixaEmbalagem.Close;
+     FdMemCaixaEmbalagem.LoadFromJSON(JsonArrayRetorno, False);
+     FdMemCaixaEmbalagem.Open;
+     MontaListaCaixaEmbalagem;
+  End;
+  JsonArrayRetorno := Nil;
+  ObjCaixaEmbalagemCtrl.Free;
+end;
+
 procedure TFrmPrintTag.PesqDados_EtqArmazenamgem;
 Var ObjEntradaCtrl   : TEntradaCtrl;
     JsonArrayRetorno : TJsonArray;
@@ -3807,6 +4006,7 @@ end;
 procedure TFrmPrintTag.TbTagCaixaShow(Sender: TObject);
 begin
   inherited;
+  CbFormatoEtqCaixaVolume.ItemIndex := 2;
   TagVolumeOrdem(False);
 end;
 
@@ -3823,7 +4023,7 @@ begin
   TbTagCaixa.TabVisible       := False;
   TbTagLocalizacao.TabVisible := False;
   PgcTabTags.Visible          := False;
-  TbTagArmazenagem.Visible    := False;
+  TbTagArmazenagem.TabVisible    := False;
 end;
 
 procedure TFrmPrintTag.TbTagON(Page: TcxTabSheet);
