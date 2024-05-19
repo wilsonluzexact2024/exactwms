@@ -2595,24 +2595,17 @@ begin
     HrInicioLog := Time;
     Try
       PedidoSaidaDAO := TPedidoSaidaDAO.Create;
-      JsonArrayRetorno := PedidoSaidaDAO.GetConsultaReposicao
-        (Req.Query.Dictionary);
+      JsonArrayRetorno := PedidoSaidaDAO.GetConsultaReposicao(Req.Query.Dictionary);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/reposicao/consulta', Trim(Req.Params.Content.Text), Req.Body, '',
-          JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
-          Req.Headers['appname'] + '_V: ' + Req.Headers['versao'])
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/v1/reposicao/consulta', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString, 500, ((Time - HrInicioLog) / 1000),
+                         Req.Headers['appname'] + '_V: ' + Req.Headers['versao'])
       Else
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/reposicao/consulta', Trim(Req.Params.Content.Text), Req.Body, '',
-          'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
-    Except
-      on E: Exception do
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/reposicao/consulta', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
+                        201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except on E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
         JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',

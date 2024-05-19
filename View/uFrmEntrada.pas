@@ -250,7 +250,7 @@ type
     LstAgrupamentoNotas: TAdvStringGrid;
     FDMemAgupamentoLista: TFDMemTable;
     FDMemAgrupamentoNotas: TFDMemTable;
-    Image2: TImage;
+    ImgVisualizarQtdxMml: TImage;
     FDMemProdutoSemPickingCodProduto: TIntegerField;
     FDMemProdutoSemPickingDescricao: TStringField;
     FDMemProdutoSemPickingunidadesecundariasigla: TStringField;
@@ -411,7 +411,7 @@ type
       ACol: Integer);
     procedure LstAgrupamentoNotasClickCell(Sender: TObject; ARow,
       ACol: Integer);
-    procedure Image2Click(Sender: TObject);
+    procedure ImgVisualizarQtdxMmlClick(Sender: TObject);
     procedure BtnExportarStandClick(Sender: TObject);
     procedure EdtCodFornecedorGroupKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -532,7 +532,8 @@ begin
   End;
 
   inherited;
-  if (aCol = 7+xColVisible) and (FdMemEntrada.FieldByName('Status').AsInteger <= 2) and ((AdvSGItensEntrada.Cells[8, ARow].ToInteger()+AdvSGItensEntrada.Cells[9, ARow].ToInteger()+
+  if (aCol = 7+xColVisible) and (FdMemEntrada.FieldByName('Status').AsInteger <= 2) and ((AdvSGItensEntrada.Cells[8, ARow].ToInteger()+
+     AdvSGItensEntrada.Cells[9, ARow].ToInteger()+
                       AdvSGItensEntrada.Cells[10, ARow].ToInteger())>0) and (Application.MessageBox(pWideChar('Produto: '+
      AdvSGItensEntrada.Cells[1, ARow]+' - '+AdvSGItensEntrada.Cells[2, ARow]+'?'), 'Reiniciar CheckIn do Item',
      MB_ICONQUESTION + MB_YESNO) = mrYes) then Begin
@@ -1781,37 +1782,47 @@ begin
   //FEntradaItens := TEntradaItensCtrl.Create;
   //ObjProdutoCtrl          := TProdutoCtrl.Create;
   With LstCadastro do Begin
-    ColWidths[0]  :=  90;
-    ColWidths[1]  := 130;
-    ColWidths[2]  :=  90;
-    ColWidths[3]  := 250;
-    ColWidths[4]  := 100;
-    ColWidths[5]  :=  80;
-    ColWidths[6]  :=  90;
-    ColWidths[7]  :=  80;
-    ColWidths[8]  :=  65;
-    ColWidths[9]  := 120;
-    ColWidths[10] :=  50;
+    ColWidths[0]  :=  90+Trunc(70*ResponsivoVideo);;
+    ColWidths[1]  := 100+Trunc(100*ResponsivoVideo);;
+    ColWidths[2]  :=  70+Trunc(70*ResponsivoVideo);;
+    ColWidths[3]  := 250+Trunc(250*ResponsivoVideo);;
+    ColWidths[4]  := 85+Trunc(85*ResponsivoVideo);;
+    ColWidths[5]  :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[6]  :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[7]  :=  65+Trunc(65*ResponsivoVideo);;
+    ColWidths[8]  :=  65+Trunc(65*ResponsivoVideo);;
+    ColWidths[9]  := 120+Trunc(120*ResponsivoVideo);;
+    ColWidths[10] :=  70+Trunc(70*ResponsivoVideo);;
+    ColWidths[11] :=  60+Trunc(60*ResponsivoVideo);;
+    ColWidths[12] :=  60+Trunc(60*ResponsivoVideo);;
   End;
   LstCadastro.Alignments[ 0, 0] := taRightJustify;
   LstCadastro.FontStyles[ 0, 0] := [FsBold];
+  LstCadastro.Alignments[ 2, 0] := taRightJustify;
+  LstCadastro.Alignments[ 5, 0] := taCenter;
+  LstCadastro.Alignments[ 6, 0] := taCenter;
+  LstCadastro.Alignments[ 7, 0] := taCenter;
+  LstCadastro.Alignments[ 8, 0] := taRightJustify;
   LstCadastro.Alignments[10, 0] := taRightJustify;
+  LstCadastro.Alignments[11, 0] := taRightJustify;
+  LstCadastro.Alignments[12, 0] := taRightJustify;
+  LstCadastro.HideColumn(1);
 
   With AdvSGItensEntrada do Begin
-    ColWidths[0]  :=  40;
-    ColWidths[1]  :=  65;
-    ColWidths[2]  := 200;
-    ColWidths[3]  :=  90;
-    ColWidths[4]  := 120;
-    ColWidths[5]  :=  70;
-    ColWidths[6]  :=  75;
-    ColWidths[7]  :=  50;
-    ColWidths[8]  :=  50;
-    ColWidths[9]  :=  70;
-    ColWidths[10]  := 60;
-    ColWidths[11] :=  60;
-    ColWidths[12] :=  40;
-    ColWidths[13] :=  50;
+    ColWidths[0]  :=  40+Trunc(40*ResponsivoVideo);;
+    ColWidths[1]  :=  65+Trunc(65*ResponsivoVideo);;
+    ColWidths[2]  := 200+Trunc(200*ResponsivoVideo);;
+    ColWidths[3]  :=  90+Trunc(90*ResponsivoVideo);;
+    ColWidths[4]  := 120+Trunc(120*ResponsivoVideo);;
+    ColWidths[5]  :=  70+Trunc(70*ResponsivoVideo);;
+    ColWidths[6]  :=  75+Trunc(75*ResponsivoVideo);;
+    ColWidths[7]  :=  50+Trunc(50*ResponsivoVideo);;
+    ColWidths[8]  :=  50+Trunc(50*ResponsivoVideo);;
+    ColWidths[9]  :=  70+Trunc(70*ResponsivoVideo);;
+    ColWidths[10] :=  60+Trunc(60*ResponsivoVideo);;
+    ColWidths[11] :=  60+Trunc(70*ResponsivoVideo);;
+    ColWidths[12] :=  40+Trunc(40*ResponsivoVideo);;
+    ColWidths[13] :=  50+Trunc(50*ResponsivoVideo);;
     Alignments[0,  0] := taRightJustify;
     FontStyles[0,  0] := [FsBold];
     Alignments[6,  0] := taCenter;
@@ -1822,62 +1833,52 @@ begin
     Alignments[12, 0] := taCenter;
     Alignments[13, 0] := taCenter;
   End;
-  LstAgrupamentoLista.ColWidths[0] :=  60;
-  LstAgrupamentoLista.ColWidths[1] :=  70;
-  LstAgrupamentoLista.ColWidths[2] := 200;
-  LstAgrupamentoLista.ColWidths[3] := 100;
-  LstAgrupamentoLista.ColWidths[4] :=  80;
-  LstAgrupamentoLista.ColWidths[5] :=  45;
+  LstAgrupamentoLista.ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);;
+  LstAgrupamentoLista.ColWidths[1] :=  70+Trunc(70*ResponsivoVideo);;
+  LstAgrupamentoLista.ColWidths[2] := 200+Trunc(70*ResponsivoVideo);;
+  LstAgrupamentoLista.ColWidths[3] := 100+Trunc(200*ResponsivoVideo);;
+  LstAgrupamentoLista.ColWidths[4] :=  80+Trunc(80*ResponsivoVideo);;
+  LstAgrupamentoLista.ColWidths[5] :=  45+Trunc(45*ResponsivoVideo);;
   //LstAgrupamentoLista.HideColumn(5);
   //LstAgrupamentoLista.HideColumn(6);
   LstAgrupamentoLista.Alignments[0, 0] := taRightJustify;
   LstAgrupamentoLista.FontStyles[0, 0] := [FsBold];
   LstAgrupamentoLista.Alignments[4, 0] := taCenter;
 
-  LstAgrupamentoNotas.ColWidths[0] :=  70;
-  LstAgrupamentoNotas.ColWidths[1] :=  70;
-  LstAgrupamentoNotas.ColWidths[2] := 100;
-  LstAgrupamentoNotas.ColWidths[3] :=  80;
-  LstAgrupamentoNotas.ColWidths[4] :=  40;
+  LstAgrupamentoNotas.ColWidths[0] :=  70+Trunc(70*ResponsivoVideo);;
+  LstAgrupamentoNotas.ColWidths[1] :=  70+Trunc(70*ResponsivoVideo);;
+  LstAgrupamentoNotas.ColWidths[2] := 100+Trunc(100*ResponsivoVideo);;
+  LstAgrupamentoNotas.ColWidths[3] :=  80+Trunc(80*ResponsivoVideo);;
+  LstAgrupamentoNotas.ColWidths[4] :=  40+Trunc(40*ResponsivoVideo);;
   LstAgrupamentoNotas.Alignments[0, 0] := taRightJustify;
   LstAgrupamentoNotas.FontStyles[0, 0] := [FsBold];
   LstAgrupamentoNotas.Alignments[3, 0] := taCenter;
   LstAgrupamentoNotas.Alignments[4, 0] := taCenter;
-//
-//Hide a qtde no XML quando usuário não tiver previlégio
-//  If AdvSGItensEntrada.IsHiddenColumn(6) then
-//     AdvSGItensEntrada.UnHideColumn(6)
-//  Else
+
   AdvSGItensEntrada.HideColumn(4);
   AdvSGItensEntrada.HideColumn(5);
   AdvSGItensEntrada.HideColumn(6);
-  if Not (FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Perfil.PerfilId = 1) then
+
+  if Not (FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Visualizar Quantidade Recebida(XML) - Recebimentos')) then
      AdvSGItensEntrada.HideColumn(7);
   AdvSGItensEntrada.HideColumn(11);
 
-  LstNotasGroup.ColWidths[0] := 120;
-  LstNotasGroup.ColWidths[1] := 250;
-  LstNotasGroup.ColWidths[2] := 100;
-  LstNotasGroup.ColWidths[3] :=  80;
-  LstNotasGroup.ColWidths[4] :=  40;
+  LstNotasGroup.ColWidths[0] := 120+Trunc(120*ResponsivoVideo);;
+  LstNotasGroup.ColWidths[1] := 250+Trunc(250*ResponsivoVideo);;
+  LstNotasGroup.ColWidths[2] := 100+Trunc(100*ResponsivoVideo);;
+  LstNotasGroup.ColWidths[3] :=  80+Trunc(80*ResponsivoVideo);;
+  LstNotasGroup.ColWidths[4] :=  40+Trunc(40*ResponsivoVideo);;
   LstNotasGroup.Alignments[0, 0] := taRightJustify;
   LstNotasGroup.FontStyles[0, 0] := [FsBold];
   LstNotasGroup.Alignments[3, 0] := taCenter;
   LstNotasGroup.Alignments[4, 0] := taCenter;
-
-  LstCadastro.RowCount := 1;
-//  GetListaEntrada(0);  //Processo Lento
-{    LstCadastro.SortSettings.Column := 2;
-    LstCadastro.QSort;
-    AdvGridLookupBar1.Column := 2;
-}
   //Buscar Dados Complementares
   ObjOperacaoTipoCtrl := TOperacaoTipoCtrl.Create;
   LstOperacaoTipo     := ObjOperacaoTipoCtrl.GetOperacaoTipo;
   CbOperacaoTipo.Items.Clear;
   for xItens := 0 to LstOperacaoTipo.Count-1 do
     CbOperacaoTipo.Items.Add(LstOperacaoTipo[xItens].Descricao);
-  ObjOperacaoTipoCtrl.DisposeOf;
+  FreeAndNil(ObjOperacaoTipoCtrl);
   PnlCheckIn.Align := AlClient;
   vRespAltLoteId   := 0;
   AutorizarAltLote := TAutorizarAltLote(FrmeXactWMS.ConfigWMS.ObjConfiguracao.AutorizarAltLote); //TagProdutoEntrada);
@@ -1915,8 +1916,8 @@ Var xLista           : Integer;
     ObjEntradaCtrl   : TEntradaCtrl;
 begin
   try
-    Result := False;
     LstCadastro.RowCount := 1;
+    Result := False;
     ObjEntradaCtrl       := TEntradaCtrl.Create;
     JsonArrayEntrada     := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento, pRazao,
                              pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0, pCodProduto);
@@ -1926,8 +1927,9 @@ begin
        ObjEntradaCtrl.Free;
        Exit;
     End;
+    LstCadastro.RowCount  := JsonArrayEntrada.Count+1;
+    LstCadastro.Fixedrows := 1;
     Result := True;
-    LstCadastro.RowCount := JsonArrayEntrada.Count+1;
     For xLista := 0 To Pred(JsonArrayEntrada.Count) do begin
       LstCadastro.Cells[0, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<Integer>('pedidoid').ToString();
       LstCadastro.Cells[1, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<String>('operacaotipo');
@@ -1938,26 +1940,28 @@ begin
       LstCadastro.Cells[6, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<String>('dtinclusao');// GetValueInjSon(jSonObj, 'dtinclusao');
       LstCadastro.Cells[7, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<String>('hrinclusao');// GetValueInjSon(jSonObj, 'hrinclusao');
       LstCadastro.Cells[8, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<Integer>('armazemid').ToString();
-      if JsonArrayEntrada.Items[xLista].GetValue<Integer>('status') = 0 then //0-Recebido 2-CheckIn Finalizado 3-Cancelada
-         LstCadastro.Cells[9, xLista+1] := 'Recebido'
-      Else if JsonArrayEntrada.Items[xLista].GetValue<Integer>('status') = 1 then
-         LstCadastro.Cells[9, xLista+1] := 'Em CheckIn'
-      Else if JsonArrayEntrada.Items[xLista].GetValue<Integer>('status') in [2, 4] then
-         LstCadastro.Cells[9, xLista+1] := 'Finalizado'
-      Else if JsonArrayEntrada.Items[xLista].GetValue<Integer>('status') = 3 then
-         LstCadastro.Cells[9, xLista+1] := 'Cancelado';
+      LstCadastro.Cells[9, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<String>('processo'); //'Recebido'
       if JsonArrayEntrada.Items[xLista].GetValue<Integer>('agrupamentoid') <> 0 then
          LstCadastro.Cells[10, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<Integer>('agrupamentoid').ToString()
       Else LstCadastro.Cells[10, xLista+1] := '';
+      LstCadastro.Cells[11, xLista+1] := JsonArrayEntrada.Items[xLista].GetValue<String>('qtdxml'); //'Recebido'
+      if JsonArrayEntrada.Items[xLista].GetValue<Integer>('qtdcheckin') > 0 then Begin
+         LstCadastro.Cells[12, xLista+1] := FormatFloat('##0.00', (JsonArrayEntrada.Items[xLista].GetValue<Integer>('qtdcheckin')/
+                                                                   JsonArrayEntrada.Items[xLista].GetValue<Integer>('qtdxml')*100))+'%';
+      End
+      Else
+         LstCadastro.Cells[12, xLista+1] := '';
       LstCadastro.Alignments[0, xLista+1] := taRightJustify;
+      LstCadastro.FontStyles[0, xLista+1] := [FsBold];
       LstCadastro.Alignments[2, xLista+1] := taRightJustify;
       LstCadastro.Alignments[5, xLista+1] := taCenter;
       LstCadastro.Alignments[6, xLista+1] := taCenter;
       LstCadastro.Alignments[7, xLista+1] := taCenter;
       LstCadastro.Alignments[8, xLista+1] := taRightJustify;
-      LstCadastro.FontStyles[0, xLista+1] := [FsBold];
+      LstCadastro.Alignments[10, xLista+1] := taRightJustify;
+      LstCadastro.Alignments[11, xLista+1] := taRightJustify;
+      LstCadastro.Alignments[12, xLista+1] := taRightJustify;
     end;
-    LstCadastro.FixedRows := 1;
     MontarPaginacao(ObjEntradaCtrl.MontarPaginacao);
     JsonArrayEntrada := Nil;
     ObjEntradaCtrl.Free;
@@ -2729,7 +2733,6 @@ Begin
      End;
      AdvSGItensEntrada.Alignments[0, xLista+1] := taRightJustify;
      AdvSGItensEntrada.FontStyles[0, xLista+1] := [FsBold];
-     LstCadastro.FontStyles[0, xLista+1] := [FsBold];
      AdvSGItensEntrada.Alignments[ 1, xLista+1] := taRightJustify;
      AdvSGItensEntrada.Alignments[ 5, xLista+1] := taCenter;
      AdvSGItensEntrada.Alignments[ 6, xLista+1] := taCenter;
@@ -2960,7 +2963,6 @@ begin
     End;
     AdvSGItensEntrada.Alignments[0, xLista+1] := taRightJustify;
     AdvSGItensEntrada.FontStyles[0, xLista+1] := [FsBold];
-    LstCadastro.FontStyles[0, xLista+1] := [FsBold];
     AdvSGItensEntrada.Alignments[ 1, xLista+1] := taRightJustify;
     AdvSGItensEntrada.Alignments[ 6, xLista+1] := taCenter;
     AdvSGItensEntrada.Alignments[ 7, xLista+1] := taCenter;
@@ -3841,11 +3843,11 @@ begin
   End;
 end;
 
-procedure TFrmEntrada.Image2Click(Sender: TObject);
+procedure TFrmEntrada.ImgVisualizarQtdxMmlClick(Sender: TObject);
 begin
   inherited;
   FrmeXactWMS.NewLogIn;
-  if Not (FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Perfil.PerfilId = 1) then
+  if Not (FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Visualizar Quantidade Recebida(XML) - Recebimentos')) then
      AdvSGItensEntrada.HideColumn(7)
   else AdvSGItensEntrada.UnHideColumn(7);
   GetListaEntradaItens;

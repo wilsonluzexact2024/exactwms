@@ -299,12 +299,6 @@ begin
      DmeXactWMS.RESTRequestWMS.Resource := DmeXactWMS.RESTRequestWMS.Resource+vComplemento+'pendente='+pPendente.Tostring();
      vComplemento := '&';
   End;
-  DmeXactWMS.RestRequestWMS.Params.AddHeader('usuario', FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.UsuarioId.ToString);
-  {$IfDef Android}
-     DmeXactWMS.RestRequestWMS.Params.AddHeader('terminal', IMEI); //IMEI;   //Substituído estacao por terminal em 18/03/2021
-  {$else}
-     DmeXactWMS.RestRequestWMS.Params.AddHeader('terminal', NomeDoComputador);
-  {$Endif}
   DmeXactWMS.RESTRequestWMS.Method   := RmGet;
   DmeXactWMS.RESTRequestWMS.Execute;
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then

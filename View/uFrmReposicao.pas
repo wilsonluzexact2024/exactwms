@@ -354,6 +354,7 @@ type
     Label52: TLabel;
     EdtPercDownMaxPicking: TJvCalcEdit;
     ChkNegativo: TCheckBox;
+    Label53: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure BtnPesquisarStandClick(Sender: TObject);
@@ -1501,31 +1502,40 @@ end;
 procedure TFrmReposicao.FormCreate(Sender: TObject);
 begin
   inherited;
-  LstCadastro.ColWidths[ 0] :=  70;
-  LstCadastro.ColWidths[ 1] := 110;
-  LstCadastro.ColWidths[ 2] := 110;
-  LstCadastro.ColWidths[ 3] := 120;
-  LstCadastro.ColWidths[ 4] := 100;
-  LstCadastro.ColWidths[ 5] := 100;
-  LstCadastro.ColWidths[ 6] := 120;
-  LstCadastro.ColWidths[ 7] := 100;
-  LstCadastro.ColWidths[ 8] :=  80;
-  LstCadastro.ColWidths[ 9] := 120;
-  LstCadastro.ColWidths[ 10] := 40;
+  LstCadastro.ColWidths[ 0] :=  70+Trunc(70*ResponsivoVideo);
+  LstCadastro.ColWidths[ 1] :=  80+Trunc(80*ResponsivoVideo);
+  LstCadastro.ColWidths[ 2] :=  70+Trunc(70*ResponsivoVideo);
+  LstCadastro.ColWidths[ 3] := 120+Trunc(120*ResponsivoVideo);
+  LstCadastro.ColWidths[ 4] :=  70+Trunc(70*ResponsivoVideo);
+  LstCadastro.ColWidths[ 5] :=  70+Trunc(70*ResponsivoVideo);
+  LstCadastro.ColWidths[ 6] := 120+Trunc(120*ResponsivoVideo);
+  LstCadastro.ColWidths[ 7] := 100+Trunc(100*ResponsivoVideo);;
+  LstCadastro.ColWidths[ 8] :=  80+Trunc(80*ResponsivoVideo);
+  LstCadastro.ColWidths[ 9] := 140+Trunc(140*ResponsivoVideo);
+  LstCadastro.ColWidths[ 10] := 80+Trunc(80*ResponsivoVideo);
+  LstCadastro.ColWidths[ 11] := 60+Trunc(60*ResponsivoVideo);
+  LstCadastro.ColWidths[ 12] := 60+Trunc(60*ResponsivoVideo);
+  LstCadastro.ColWidths[ 13] := 60+Trunc(60*ResponsivoVideo);
+  LstCadastro.ColWidths[ 14] := 40+Trunc(40*ResponsivoVideo);
   LstCadastro.Alignments[ 0, 0] := taRightJustify;
   LstCadastro.FontStyles[ 0, 0] := [FsBold];
   LstCadastro.Alignments[ 1, 0] := taCenter;
   LstCadastro.Alignments[ 4, 0] := taCenter;
   LstCadastro.Alignments[ 5, 0] := taCenter;
   LstCadastro.Alignments[ 8, 0] := taCenter;
-  LstCadastro.Alignments[10, 0] := taCenter;
+  LstCadastro.Alignments[10, 0] := taRightJustify;
+  LstCadastro.Alignments[11, 0] := taRightJustify;
+  LstCadastro.Alignments[12, 0] := taRightJustify;
+  LstCadastro.Alignments[13, 0] := taRightJustify;
+  LstCadastro.Alignments[14, 0] := taCenter;
+  LstCadastro.HideColumn(7);
 
-  LstReposicaoItens.ColWidths[0]  := 85;
-  LstReposicaoItens.ColWidths[1]  := 250;
-  LstReposicaoItens.ColWidths[2]  := 90;
-  LstReposicaoItens.ColWidths[3]  := 150;
-  LstReposicaoItens.ColWidths[4]  := 65;
-  LstReposicaoItens.ColWidths[5]  := 90;
+  LstReposicaoItens.ColWidths[0]  := 85+Trunc(85*ResponsivoVideo);;
+  LstReposicaoItens.ColWidths[1]  := 250+Trunc(250*ResponsivoVideo);
+  LstReposicaoItens.ColWidths[2]  := 90+Trunc(90*ResponsivoVideo);
+  LstReposicaoItens.ColWidths[3]  := 150+Trunc(150*ResponsivoVideo);
+  LstReposicaoItens.ColWidths[4]  := 65+Trunc(65*ResponsivoVideo);
+  LstReposicaoItens.ColWidths[5]  := 90+Trunc(90*ResponsivoVideo);
   LstReposicaoItens.Alignments[0, 0] := taRightJustify;
   LstReposicaoItens.FontStyles[0, 0] := [FsBold];
   LstReposicaoItens.Alignments[2, 0] := taCenter;
@@ -1533,12 +1543,12 @@ begin
   LstReposicaoItens.Alignments[5, 0] := taRightJustify;
   LstReposicaoItens.RowCount         := 1;
 
-  LstReposicaoEnderecoColeta.ColWidths[0] :=  90;
-  LstReposicaoEnderecoColeta.ColWidths[1] :=  80;
-  LstReposicaoEnderecoColeta.ColWidths[2] := 120;
-  LstReposicaoEnderecoColeta.ColWidths[3] := 80;
-  LstReposicaoEnderecoColeta.ColWidths[4] := 80;
-  LstReposicaoEnderecoColeta.ColWidths[5] := 90;
+  LstReposicaoEnderecoColeta.ColWidths[0] :=  90+Trunc(90*ResponsivoVideo);
+  LstReposicaoEnderecoColeta.ColWidths[1] :=  80+Trunc(80*ResponsivoVideo);
+  LstReposicaoEnderecoColeta.ColWidths[2] := 120+Trunc(120*ResponsivoVideo);
+  LstReposicaoEnderecoColeta.ColWidths[3] := 80+Trunc(80*ResponsivoVideo);
+  LstReposicaoEnderecoColeta.ColWidths[4] := 80+Trunc(80*ResponsivoVideo);
+  LstReposicaoEnderecoColeta.ColWidths[5] := 90+Trunc(90*ResponsivoVideo);
   LstReposicaoEnderecoColeta.Alignments[0, 0] := taCenter;
   LstReposicaoEnderecoColeta.FontStyles[0, 0] := [FsBold];
   LstReposicaoEnderecoColeta.Alignments[1, 0] := taRightJustify;
@@ -1546,17 +1556,17 @@ begin
   LstReposicaoEnderecoColeta.Alignments[5, 0] := taRightJustify;
   LstReposicaoEnderecoColeta.RowCount := 1;
 
-  LstRegistroColeta.ColWidths[0]  :=  85;
-  LstRegistroColeta.ColWidths[1]  := 250;
-  LstRegistroColeta.ColWidths[2]  :=  90;
-  LstRegistroColeta.ColWidths[3]  :=  90;
-  LstRegistroColeta.ColWidths[4]  := 120;
-  LstRegistroColeta.ColWidths[5]  :=  90;
-  LstRegistroColeta.ColWidths[6]  := 120;
-  LstRegistroColeta.ColWidths[7]  :=  80;
-  LstRegistroColeta.ColWidths[8]  :=  60;
-  LstRegistroColeta.ColWidths[9]  :=  70;
-  LstRegistroColeta.ColWidths[10] :=  80;
+  LstRegistroColeta.ColWidths[0]  :=  85+Trunc(85*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[1]  := 250+Trunc(250*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[2]  :=  90+Trunc(90*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[3]  :=  90+Trunc(90*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[4]  := 120+Trunc(120*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[5]  :=  90+Trunc(90*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[6]  := 120+Trunc(120*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[7]  :=  80+Trunc(80*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[8]  :=  60+Trunc(60*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[9]  :=  70+Trunc(70*ResponsivoVideo);
+  LstRegistroColeta.ColWidths[10] :=  80+Trunc(80*ResponsivoVideo);
 
   LstRegistroColeta.Alignments[ 0, 0] := taRightJustify;
   LstRegistroColeta.FontStyles[ 0, 0] := [FsBold];
@@ -1685,12 +1695,16 @@ begin
         JsonArrayRetorno : TJsonArray;
     begin
       ObjReposicaoCtrl := TPedidoSaidaCtrl.Create;
-      JsonArrayRetorno := ObjReposicaoCtrl.GetConsultaReposicao(pDataInicial, pDataFinal, pReposicaoId, 27, 99);
+      JsonArrayRetorno := ObjReposicaoCtrl.GetConsultaReposicao(pDataInicial, pDataFinal, pReposicaoId, 0, 1);
       if JsonArrayRetorno.Get(0).tryGetValue<String>('Erro', vErro) then Begin
          LstCadastro.ClearRect(0, 1, LstCadastro.ColCount-1, LstCadastro.RowCount-1);
          LstCadastro.RowCount := 1;
       End
       Else Begin
+        If FdMemPesqGeral.Active then
+           FdMemPesqGeral.EmptyDataSet;
+        FdMemPesqGeral.Close;
+        FdMemPesqGeral.LoadFromJson(JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header'), False);
         MontaLstCadastro(JsonArrayRetorno);
         vResultado := True;
       end;
@@ -1901,6 +1915,8 @@ begin
   TabReposicaoColeta.TabVisible := False;
   TabReposicaoModelo.TabVisible := True;
   FDMemEnderecoModelo.Close;
+  BtnExportarStand.Grayed  := True;
+  BtnExportarStand.Enabled := False;
 end;
 
 Procedure TFrmReposicao.LimparGrids;
@@ -1965,8 +1981,8 @@ Var ObjReposicaoCtrl : TPedidoSaidaCtrl;
     vErro : String;
 begin
   inherited;
-  if (ACol = 10) and (ARow>0) and (TAdvStringGrid(Sender).Cells[10, aRow]='2') then Begin
-     If Confirmacao('Cancelamento de Reposição.', 'Deseja cancelar a Reposição('+TAdvStringGrid(Sender).Cells[0, aRow]+')?', True) then begin
+  if (ACol = 13) and (ARow>0) and (TAdvStringGrid(Sender).Cells[14, aRow]='2') then Begin
+     If Confirmacao('Cancelamento.', 'Deseja cancelar a Reposição('+TAdvStringGrid(Sender).Cells[0, aRow]+')?', True) then begin
         ObjReposicaoCtrl := TPedidoSaidaCtrl.Create;
         pJsonCancelar    := TJsonObject.Create;
         pJsonCancelar.AddPair('reposicaoid', TJsonNumber.Create(StrToInt(TAdvStringGrid(Sender).Cells[0, aRow])));
@@ -2081,8 +2097,9 @@ begin
   LstCadastro.FixedRows := 1;
   for xRetorno := 1 to JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Count do Begin
     if vPermitirCancelar then
-       LstCadastro.AddDataImage(10, xRetorno, 2, TCellHAlign.haCenter, TCellVAlign.vaTop)
-    Else LstCadastro.AddDataImage(10, xRetorno, 3, TCellHAlign.haCenter, TCellVAlign.vaTop);
+       LstCadastro.AddDataImage(14, xRetorno, 2, TCellHAlign.haCenter, TCellVAlign.vaTop)
+    Else
+       LstCadastro.AddDataImage(14, xRetorno, 3, TCellHAlign.haCenter, TCellVAlign.vaTop);
   End;
   for xRetorno := 0 to Pred(JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Count) do Begin
     LstCadastro.Cells[0, xRetorno+1]      := JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('reposicaoid').ToString();
@@ -2102,16 +2119,33 @@ begin
        (JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<string>('datareposicao') <> '') then
        LstCadastro.Cells[8, xRetorno+1] := JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<string>('datareposicao');
     LstCadastro.Cells[ 9, xRetorno+1] := JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<String>('processo');
+    LstCadastro.Cells[10, xRetorno+1] := JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('demanda').Tostring();
+    LstCadastro.Cells[11, xRetorno+1] := FormatFloat('##0.00', (JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('coleta') /
+                                                                JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('demanda'))*100)+'%';
+    LstCadastro.Cells[12, xRetorno+1] := JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('totalendereco').Tostring();
+    if JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('totalenderecocoleta') > 0 then Begin
+       LstCadastro.Cells[13, xRetorno+1] := FormatFloat('##0.00', (JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('totalenderecocoleta') /
+                                                                   JsonArrayRetorno.Items[0].GetValue<TJsonArray>('header').Items[xRetorno].GetValue<Integer>('totalendereco'))*100)+'%';
+    End
+    Else
+       LstCadastro.Cells[13, xRetorno+1] := '';
     if vPermitirCancelar then
-       LstCadastro.Cells[10, xRetorno+1] := '2'
-    Else LstCadastro.Cells[10, xRetorno+1] := '2';
+       LstCadastro.Cells[14, xRetorno+1] := '2'
+    Else LstCadastro.Cells[14, xRetorno+1] := '3';
     LstCadastro.Alignments[0,  xRetorno+1] := taRightJustify;
     LstCadastro.FontStyles[0,  xRetorno+1] := [FsBold];
     LstCadastro.Alignments[1,  xRetorno+1] := taCenter;
     LstCadastro.Alignments[4,  xRetorno+1] := taCenter;
     LstCadastro.Alignments[5,  xRetorno+1] := taCenter;
     LstCadastro.Alignments[8,  xRetorno+1] := taCenter;
+    LstCadastro.Alignments[10, xRetorno+1] := taRightJustify;
+    LstCadastro.Alignments[11, xRetorno+1] := taRightJustify;
+    LstCadastro.Alignments[12, xRetorno+1] := taRightJustify;
+    LstCadastro.Alignments[13, xRetorno+1] := taRightJustify;
+    LstCadastro.Alignments[14, xRetorno+1] := taCenter;
   End;
+  BtnExportarStand.Grayed  := False;
+  BtnExportarStand.Enabled := True;
 end;
 
 procedure TFrmReposicao.MontarListaReposicao;

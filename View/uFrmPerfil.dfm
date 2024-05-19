@@ -187,15 +187,9 @@ inherited FrmPerfil: TFrmPerfil
         Anchors = [akLeft, akTop, akRight, akBottom]
         Caption = ' [ Controle de Acesso ] '
         TabOrder = 5
-        object Bevel1: TBevel
-          Left = 419
-          Top = 41
-          Width = 74
-          Height = 317
-          CustomHint = BalloonHint1
-          Align = alLeft
-          ExplicitLeft = 387
-        end
+        DesignSize = (
+          1157
+          360)
         object Panel2: TPanel
           Left = 2
           Top = 19
@@ -204,30 +198,42 @@ inherited FrmPerfil: TFrmPerfil
           CustomHint = BalloonHint1
           Align = alTop
           BevelOuter = bvNone
-          Color = 4803922
+          Color = 16117735
           ParentBackground = False
           TabOrder = 0
           object Label7: TLabel
-            Left = 96
+            Left = 156
             Top = 2
-            Width = 45
+            Width = 47
             Height = 17
             CustomHint = BalloonHint1
             Caption = 'T'#243'picos'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            ParentFont = False
           end
           object Label8: TLabel
-            Left = 526
+            Left = 644
             Top = 2
-            Width = 93
+            Width = 100
             Height = 17
             CustomHint = BalloonHint1
             Caption = 'Funcionalidades'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            ParentFont = False
           end
         end
         object LstTopicoAcesso: TAdvStringGrid
           Left = 2
           Top = 41
-          Width = 417
+          Width = 447
           Height = 317
           Cursor = crDefault
           CustomHint = BalloonHint1
@@ -389,13 +395,13 @@ inherited FrmPerfil: TFrmPerfil
             25)
         end
         object LstFuncionalidadeAcesso: TAdvStringGrid
-          Left = 493
+          Left = 474
           Top = 41
-          Width = 427
+          Width = 597
           Height = 317
           Cursor = crDefault
           CustomHint = BalloonHint1
-          Align = alLeft
+          Anchors = [akLeft, akTop, akBottom]
           ColCount = 3
           DefaultColWidth = 74
           DefaultRowHeight = 25
@@ -544,7 +550,6 @@ inherited FrmPerfil: TFrmPerfil
           SortSettings.HeaderMirrorColorTo = 16182488
           Version = '8.4.2.2'
           WordWrap = False
-          ExplicitLeft = 452
           ColWidths = (
             74
             118
@@ -573,10 +578,23 @@ inherited FrmPerfil: TFrmPerfil
     end
   end
   inherited PnlConfigPrinter: TPanel
+    Top = 84
+    ExplicitTop = 84
     inherited Panel7: TPanel
       inherited LblTitConfigPrinter: TLabel
         Width = 313
       end
     end
+  end
+  object FdMemFuncionalidadesAcesso: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 289
+    Top = 197
   end
 end

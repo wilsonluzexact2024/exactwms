@@ -3,16 +3,12 @@ inherited FrmReposicao: TFrmReposicao
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Properties.ActivePage = TabReposicaoModelo
     inherited TabListagem: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
-        ColCount = 11
+        ColCount = 15
         ColumnHeaders.Strings = (
           'Id'
-          'Dt.Ressuprimento'
+          'Dt.Ressupr.'
           'Tipo'
           'Zona'#9
           'End.Inicial'
@@ -21,6 +17,10 @@ inherited FrmReposicao: TFrmReposicao
           'Terminal'
           'Dt.Reposi'#231#227'o'
           'Processo'
+          'Demanda(Un)'
+          '%Coleta'
+          'T.End.'
+          'E.C.(%)'
           'A'#231#227'o')
         ColWidths = (
           74
@@ -33,9 +33,35 @@ inherited FrmReposicao: TFrmReposicao
           74
           74
           74
+          74
+          74
+          74
+          74
           74)
       end
       inherited PnlPesquisaCadastro: TPanel
+        inherited LblRegTit: TLabel
+          Top = 6
+          ExplicitTop = 6
+        end
+        inherited LblTotReg: TLabel
+          Top = 6
+          ExplicitTop = 6
+        end
+        object Label53: TLabel [5]
+          Left = 837
+          Top = 28
+          Width = 242
+          Height = 10
+          CustomHint = BalloonHint1
+          Caption = 'T.Ende<>Total Endere'#231'os para Coleta   E.C.<=>Endere'#231'os Coletado'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -8
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+        end
         inherited CbCampoPesq: TComboBox
           Items.Strings = (
             'Id'
@@ -1499,20 +1525,23 @@ inherited FrmReposicao: TFrmReposicao
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1157
-      ExplicitHeight = 524
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabReposicaoColeta: TcxTabSheet
       CustomHint = BalloonHint1
       Caption = 'Registro de Coleta Manual'
       ImageIndex = 4
       OnShow = TabReposicaoColetaShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PnlRegistroColeta: TPanel
         Left = 0
         Top = 232
@@ -8140,8 +8169,8 @@ inherited FrmReposicao: TFrmReposicao
         object LblTitModelo: TLabel
           Left = 0
           Top = 0
-          Width = 1157
-          Height = 22
+          Width = 329
+          Height = 25
           CustomHint = BalloonHint1
           Align = alClient
           Alignment = taCenter
@@ -8154,8 +8183,6 @@ inherited FrmReposicao: TFrmReposicao
           Font.Style = [fsBold]
           ParentColor = False
           ParentFont = False
-          ExplicitWidth = 329
-          ExplicitHeight = 25
         end
       end
       object BtnConferiModelo: TBitBtn
@@ -18555,22 +18582,11 @@ inherited FrmReposicao: TFrmReposicao
     ExplicitLeft = 1106
     ExplicitTop = -16
   end
-  inherited PnlErro: TPanel
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
-  end
   inherited PnlConfigPrinter: TPanel
     Left = 952
     Top = 260
     ExplicitLeft = 952
     ExplicitTop = 260
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited DsPesqGeral: TDataSource
     Left = 921
@@ -18578,7 +18594,7 @@ inherited FrmReposicao: TFrmReposicao
   end
   inherited FdMemPesqGeral: TFDMemTable
     Left = 847
-    Top = 109
+    Top = 111
   end
   inherited TmImportacaoCSV: TTimer
     Left = 237

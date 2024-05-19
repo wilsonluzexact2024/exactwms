@@ -88,6 +88,7 @@ type
   private
     { Private declarations }
     ObjUsuarioCtrl : TUsuarioCtrl;
+    SelectFuncionalidades : Integer;
     Senha_Update : Boolean;
     Function GetListaUsuario(pUsuarioId : Integer = 0; pLogin : String = ''; pNome : String = '') : Boolean;
     Procedure GetControleAcesso;
@@ -96,6 +97,7 @@ type
     Procedure SelectFuncionalidade(pTopicoId, pSelectOnOff, pUpdate : Integer);
     Procedure MarkTopico(pTopicoId : Integer);
     Procedure DefineField;
+    Procedure AtualizaAcessoTopico;
   Protected
     Function DeleteReg : Boolean; OverRide;
     Procedure GetListaLstCadastro; OverRide;
@@ -146,6 +148,33 @@ begin
     ShpConectado.Pen.Color   := ClRed;
     ShpConectado.Brush.Color := ClRed;
   End;
+end;
+
+procedure TFrmUsuario.AtualizaAcessoTopico;
+Var xFuncionalidade : Integer;
+    xTopicoAcesso   : Boolean;
+begin
+  FdMemPesqGeral.Filter   := 'TopicoId = '+LstTopicoAcesso.Cells[0, LstTopicoAcesso.Row]+' and Acesso = 1';
+  FdMemPesqGeral.Filtered := True;
+  if FdMemPesqGeral.IsEmpty then
+     LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '0'
+  Else
+     LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '1';
+  FdMemPesqGeral.Filter   := '';
+  FdMemPesqGeral.Filtered := False;
+  Exit;
+
+
+  xTopicoAcesso := False;
+  for xFuncionalidade := 1 to Pred(LstFuncionalidadeAcesso.RowCount) do  Begin
+    if LstFuncionalidadeAcesso.Cells[2, xFuncionalidade] = '1' then Begin
+       xTopicoAcesso := True;
+       Break;
+    End;
+  End;
+  if xTopicoAcesso then
+     LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '1'
+  Else LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '0';
 end;
 
 procedure TFrmUsuario.BtnEditarClick(Sender: TObject);
@@ -272,6 +301,8 @@ begin
 end;
 
 procedure TFrmUsuario.edtCodigoExit(Sender: TObject);
+Var JsonArrayRetorno : TJsonArray;
+    vErro : String;
 begin
   inherited;
   if (Sender=EdtCodigo) and (EdtCodigo.Text<>'') and (Not EdtCodigo.ReadOnly) and (StrToIntDef(EdtCodigo.Text,0)<>ObjUsuarioCtrl.ObjUsuario.UsuarioId) then Begin
@@ -279,8 +310,15 @@ begin
      if StrToIntDef(EdtCodigo.Text,0) <= 0 then
         raise Exception.Create('Id inválido para pesquisa!');
      Limpar;
-     ObjUsuarioCtrl.FindUsuario(EdtCodigo.Text, -1);
-     ShowDados;
+     JsonArrayRetorno := ObjUsuarioCtrl.FindUsuario(EdtCodigo.Text, -1);
+     if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
+        EdtCodigo.Clear;
+        EdtCodigo.SetFocus;
+        ShowErro('Erro: '+vErro);
+     End
+     Else
+        ShowDados;
+     JsonArrayRetorno := Nil;
   End;
   ExitFocus(Sender);
 end;
@@ -379,16 +417,16 @@ begin
   inherited;
   ObjUsuarioCtrl := TUsuarioCtrl.Create;
   With LstCadastro do Begin
-    ColWidths[0] :=  80;
-    ColWidths[1] := 100;
-    ColWidths[2] := 250;
-    ColWidths[3] := 120;
-    ColWidths[4] :=  70;
-    ColWidths[5] := 300;
-    ColWidths[6] :=  80;
-    ColWidths[7] :=  80;
-    ColWidths[8] :=  45;
-    ColWidths[9] :=  60;
+    ColWidths[0] :=  80+Trunc(60*ResponsivoVideo);;
+    ColWidths[1] := 100+Trunc(100*ResponsivoVideo);;
+    ColWidths[2] := 250+Trunc(250*ResponsivoVideo);;
+    ColWidths[3] := 120+Trunc(120*ResponsivoVideo);;
+    ColWidths[4] :=  70+Trunc(70*ResponsivoVideo);;
+    ColWidths[5] := 300+Trunc(300*ResponsivoVideo);;
+    ColWidths[6] :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[7] :=  80+Trunc(80*ResponsivoVideo);;
+    ColWidths[8] :=  45+Trunc(45*ResponsivoVideo);;
+    ColWidths[9] :=  60+Trunc(60*ResponsivoVideo);;
     FontStyles[0, 0] := [FsBold];
     Alignments[0, 0] := taRightJustify;
     Alignments[4, 0] := taRightJustify;
@@ -398,26 +436,26 @@ begin
     Alignments[9, 0] := taCenter;
   End;
   //GetListaUsuario('0');
-  LstTopicoAcesso.ColWidths[0] := 70;
-  LstTopicoAcesso.ColWidths[1] := 230;
-  LstTopicoAcesso.ColWidths[2] := 50;
+  LstTopicoAcesso.ColWidths[0] :=  70+Trunc(70*ResponsivoVideo);;
+  LstTopicoAcesso.ColWidths[1] := 230+Trunc(230*ResponsivoVideo);;
+  LstTopicoAcesso.ColWidths[2] :=  50+Trunc(50*ResponsivoVideo);;
   LstTopicoAcesso.FontStyles[0, 0] := [FsBold];
   LstTopicoAcesso.Alignments[0, 0] := taRightJustify;
   LstTopicoAcesso.Alignments[2, 0] := taCenter;
-  LstFuncionalidadeAcesso.ColWidths[0] := 60;
-  LstFuncionalidadeAcesso.ColWidths[1] := 300;
-  LstFuncionalidadeAcesso.ColWidths[2] := 50;
+  LstFuncionalidadeAcesso.ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);;
+  LstFuncionalidadeAcesso.ColWidths[1] := 300+Trunc(300*ResponsivoVideo);;
+  LstFuncionalidadeAcesso.ColWidths[2] :=  50+Trunc(50*ResponsivoVideo);;
   LstFuncionalidadeAcesso.FontStyles[0, 0] := [FsBold];
   LstFuncionalidadeAcesso.Alignments[0, 0] := taRightJustify;
   LstFuncionalidadeAcesso.Alignments[2, 0] := taCenter;
 
-  LstUsuarioConectado.ColWidths[0] :=  70;
-  LstUsuarioConectado.ColWidths[1] :=  70;
-  LstUsuarioConectado.ColWidths[2] := 280;
-  LstUsuarioConectado.ColWidths[3] :=  80;
-  LstUsuarioConectado.ColWidths[4] :=  70;
-  LstUsuarioConectado.ColWidths[5] := 150;
-  LstUsuarioConectado.ColWidths[6] :=  80;
+  LstUsuarioConectado.ColWidths[0] :=  70+Trunc(70*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[1] :=  70+Trunc(70*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[2] := 280+Trunc(280*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[3] :=  80+Trunc(80*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[4] :=  70+Trunc(70*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[5] := 150+Trunc(150*ResponsivoVideo);;
+  LstUsuarioConectado.ColWidths[6] :=  80+Trunc(80*ResponsivoVideo);;
   LstUsuarioConectado.Alignments[0, 0] := taRightJustify;
   LstUsuarioConectado.FontStyles[0, 0] := [FsBold];
   LstUsuarioConectado.Alignments[1, 0] := taRightJustify;
@@ -427,7 +465,7 @@ end;
 
 procedure TFrmUsuario.FormDestroy(Sender: TObject);
 begin
-  ObjUsuarioCtrl.DisposeOf;
+  FreeAndNil(ObjUsuarioCtrl);
   inherited;
 end;
 
@@ -444,7 +482,7 @@ begin
   if JsonArrayTopicos.Items[0].tryGetValue<String>('Erro', vErro) then
      LstTopicoAcesso.RowCount := 1
   Else begin
-     LstTopicoAcesso.RowCount  := JsonArrayTopicos.Count+1;
+{     LstTopicoAcesso.RowCount  := JsonArrayTopicos.Count+1;
      LstTopicoAcesso.FixedRows := 1;
      for xImg := 1 to LstTopicoAcesso.RowCount - 1 do
      begin
@@ -458,7 +496,7 @@ begin
        LstTopicoAcesso.Alignments[0, xTopico+1] := taRightJustify;
        LstTopicoAcesso.Alignments[2, xTopico+1] := taCenter;
      End;
-  End;
+}  End;
   If FdMemPesqGeral.Active then
        FdMemPesqGeral.EmptyDataSet;
   FdMemPesqGeral.Close;
@@ -471,9 +509,9 @@ begin
      SelectFuncionalidade(JsonArrayTopicos.Items[0].GetValue<Integer>('topicoid'),
                           JsonArrayTopicos.Items[0].GetValue<Integer>('acesso'), 0);
   End;
-  //JsonArrayTopicos.DisposeOf;
-  //JsonArrayFuncionalidades.DisposeOf;
-  //JsonRetorno.DisposeOf;
+  JsonArrayTopicos         := Nil;
+  JsonArrayFuncionalidades := Nil;
+  JsonRetorno              := Nil;
 end;
 
 procedure TFrmUsuario.GetListaLstCadastro;
@@ -689,13 +727,14 @@ begin
      End
      Else Begin
        LstFuncionalidadeAcesso.Cells[2, ARow] := '1';
-       MarkTopico(FdMemPesqGeral.FieldByName('TopicoId').AsInteger);
+       //MarkTopico(FdMemPesqGeral.FieldByName('TopicoId').AsInteger);
        if FdMemPesqGeral.Locate('FuncionalidadeId', LstFuncionalidadeAcesso.Cells[0, ARow].ToInteger, [loPartialKey]) then Begin
           FdMemPesqGeral.Edit;
           FdMemPesqGeral.FieldByName('Acesso').AsInteger := 1;
           FdmemPesqGeral.Post;
        End;
      End;
+     AtualizaAcessoTopico;
   End;
 end;
 

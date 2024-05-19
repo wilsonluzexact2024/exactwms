@@ -129,17 +129,14 @@ begin
 End;
 
 Procedure ControleAcesso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  UsuarioDAO: TUsuarioDao;
-  ErroJsonArray: TJsonArray;
+Var UsuarioDAO: TUsuarioDao;
+    ErroJsonArray: TJsonArray;
 begin
   Try
     Try
       UsuarioDAO := TUsuarioDao.Create;
-      Res.Send<tJsonObject>(UsuarioDAO.ControleAcesso
-        (StrToIntDef(Req.Params.Items['usuarioid'], 0))).Status(THTTPStatus.Ok);
-    Except
-      On E: Exception do
+      Res.Send<tJsonObject>(UsuarioDAO.ControleAcesso(StrToIntDef(Req.Params.Items['usuarioid'], 0))).Status(THTTPStatus.Ok);
+    Except On E: Exception do
       Begin
         Res.Status(500).Send<TJsonObject>(tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
       End;

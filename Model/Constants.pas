@@ -57,28 +57,26 @@ Const SqlGetUsuarioListaFuncionalidade = 'select UF.* From Funcionalidades F' +
       + sLineBreak + 'Inner Join usuarios U on U.usuarioid = UF.UsuarioId' +
       sLineBreak + 'where U.UsuarioId = :pUsuarioId';
 
-  Const
-    SqlGetControleAcessoModulo =
-      'select T.TopicoId, T.Descricao, T.Status, (Case When UT.TopicoId Is Not Null Then 1 Else 0 End) as Acesso'
-      + sLineBreak + 'from Topicos T' + sLineBreak +
-      'Left Join UsuarioTopicos UT ON UT.TopicoId = T.TopicoId and UT.Usuarioid = :pUsuarioId';
+Const SqlGetControleAcessoModulo =
+      'select T.TopicoId, T.Descricao, T.Status, (Case When UT.TopicoId Is Not Null Then 1 Else 0 End) as Acesso'+sLineBreak +
+      'from Topicos T' + sLineBreak +
+      'Left Join UsuarioTopicos UT ON UT.TopicoId = T.TopicoId and UT.Usuarioid =  :pUsuarioId'+sLineBreak+
+      '--Where UT.Usuarioid = :pUsuarioId';
 
-  Const
-    SqlGetPerfilControleAcessoTopico =
-      'select T.TopicoId, T.Descricao, T.Status, (Case When PT.PerfilId Is Not Null Then 1 Else 0 End) as Acesso'
-      + sLineBreak + 'from Topicos T' + sLineBreak +
+Const SqlGetPerfilControleAcessoTopico =
+      'select T.TopicoId, T.Descricao, T.Status, (Case When PT.PerfilId Is Not Null Then 1 Else 0 End) as Acesso'+sLineBreak +
+      'from Topicos T' + sLineBreak +
       'Left Join PerfilTopicos PT ON PT.TopicoId = T.TopicoId and PT.Perfilid = :pPerfilId';
 
 Const
     SqlGetControleAcessoFuncionalidade =
       'Declare @Usuarioid Integer = :pUsuarioId' + sLineBreak +
-      'select T.TopicoId, F.FuncionalidadeId, F.Descricao, F.Status, (Case When UF.FuncionalidadeId Is Not Null Then 1 Else 0 End) as Acesso'
-      + sLineBreak + 'from Funcionalidades F' + sLineBreak +
-      'Inner Join TopicoFuncionalidades TF ON TF.FuncionalidadeId = F.Funcionalidadeid'
-      + sLineBreak + 'Inner join Topicos T ON T.TopicoId = TF.TopicoId' +
-      sLineBreak +
-      'Left Join UsuarioFuncionalidades UF ON UF.FuncionalidadeId = F.FuncionalidadeId and UF.Usuarioid = @usuarioid'
-      + sLineBreak + 'Order by T.TopicoId, F.Descricao';
+      'select T.TopicoId, F.FuncionalidadeId, F.Descricao, F.Status, (Case When UF.FuncionalidadeId Is Not Null Then 1 Else 0 End) as Acesso'+sLineBreak +
+      'from Funcionalidades F' + sLineBreak +
+      'Inner Join TopicoFuncionalidades TF ON TF.FuncionalidadeId = F.Funcionalidadeid'+sLineBreak +
+      'Inner join Topicos T ON T.TopicoId = TF.TopicoId'+sLineBreak +
+      'Left Join UsuarioFuncionalidades UF ON UF.FuncionalidadeId = F.FuncionalidadeId and UF.Usuarioid = @usuarioid'+sLineBreak +
+      'Order by T.TopicoId, F.Descricao';
 
   Const
     SqlSalvarPerfilAcessoTopico = 'Declare @PerfilId Integer = :pPerfilId' +
@@ -5612,37 +5610,43 @@ Const SqlGerarVolumeExtra = 'Declare @PedidoVolumeId Integer = :pPedidoVolumeId'
       '		      EnderecoId = @EnderecoId And' + sLineBreak +
       '        EstoqueTipoId = @EstoqueTipoId' + sLineBreak + 'End;';
 
-  Const
-    SqlGetConsultaReposicaoBasico = 'SET STATISTICS IO OFF' + sLineBreak +
-      'SET STATISTICS TIME OFF' + sLineBreak +
+Const SqlGetConsultaReposicaoBasico =
       'Declare @DataInicial DateTime = :pDataInicial' + sLineBreak +
       'Declare @DataFinal DateTime   = :pDataFinal' + sLineBreak +
       'Declare @ReposicaoId Integer  = :pReposicaoId' + sLineBreak +
       'Declare @ProcessoId Integer   = :pProcessoid' + sLineBreak +
       'Declare @Pendente Integer     = :pPendente' + sLineBreak +
-      'Select Rep.*, (Case When ReposicaoTipo = 1 then ' + #39 + 'Demanda' + #39
-      + sLineBreak + '                    When ReposicaoTipo = 2 then ' + #39 +
-      'Capacidade' + #39 + sLineBreak + '					When ReposicaoTipo = 3 then '
-      + #39 + 'Automat�ca' + #39 + sLineBreak +
-      '					When ReposicaoTipo = 4 then ' + #39 + 'Corretiva' + #39 +
-      ' End) Tipo, URep.Nome UsuarioReposicao, Pe.Descricao Processo, Zn.Descricao Zona'
-      + sLineBreak +
-      '     , CONVERT(VARCHAR(10), CAST(rep.DtReposicao  AS DATE), 103) DataReposicao  '
-      + sLineBreak + 'from Reposicao Rep' + sLineBreak +
-      'Inner Join Usuarios URep On uRep.UsuarioId = Rep.UsuarioId' + sLineBreak
-      + 'Inner Join ProcessoEtapas Pe On Pe.ProcessoId = Rep.ProcessoId' +
-      sLineBreak + 'Left Join EnderecamentoZonas Zn On Zn.Zonaid = Rep.ZonaId' +
-      sLineBreak + 'Where (@Datainicial = 0 or Rep.DtReposicao>=@DataInicial)' +
-      sLineBreak + '  And (@DataFinal = 0 or Rep.DtReposicao<=@DataFinal)' +
-      sLineBreak + '  And (@ReposicaoId = 0 or Rep.ReposicaoId = @ReposicaoId)'
-      + sLineBreak + '  And (@ProcessoId = 0 or Rep.ProcessoId = @ProcessoId)' +
-      sLineBreak + '  And (@Pendente <> 1 or Rep.ProcessoId in (27,28))' +
-      sLineBreak + '  And (Rep.ProcessoId <> 31)' + sLineBreak +
-      'Order by Rep.DtReposicao';
+      'Drop table if exists #Reposicao'+sLineBreak+
+      'Drop table if exists #Coleta'+sLineBreak+
+      'Select Rep.*, (Case When ReposicaoTipo = 1 then ' + #39 + 'Demanda' + #39+sLineBreak +
+      '                    When ReposicaoTipo = 2 then ' + #39 + 'Capacidade' + #39 + sLineBreak +
+      '					When ReposicaoTipo = 3 then ' + #39 + 'Automat�ca' + #39 + sLineBreak +
+      '					When ReposicaoTipo = 4 then ' + #39 + 'Corretiva' + #39 + ' End) Tipo, '+ sLineBreak +
+      '     CONVERT(VARCHAR(10), CAST(rep.DtReposicao  AS DATE), 103) DataReposicao Into #Reposicao' + sLineBreak +
+      'from Reposicao Rep'+sLineBreak+
+      'Where (@Datainicial = 0 or Rep.DtReposicao>=@DataInicial)'+sLineBreak+
+      '  And (@DataFinal = 0 or Rep.DtReposicao<=@DataFinal)'+sLineBreak+
+      '  And (@ReposicaoId = 0 or Rep.ReposicaoId = @ReposicaoId)'+sLineBreak+
+      '  And (@ProcessoId = 0 or Rep.ProcessoId = @ProcessoId)'+sLineBreak+
+      '  And (@Pendente <> 1 or Rep.ProcessoId in (27,28))'+sLineBreak+
+      '  And (Rep.ProcessoId <> 31)'+sLineBreak+
+      'Select Rep.ReposicaoId, Sum(RC.Qtde) Demanda, '+sLineBreak+
+      '       Sum(Case When Rc.usuarioId is Null then 0 Else RC.Qtde End) Coleta,'+sLineBreak+
+      '       Count(EnderecoId) TotalEndereco, Sum(Case When Rc.usuarioId is Null then 0 Else 1 End) TotalEnderecoColeta Into #Coleta'+sLineBreak+
+      'From #Reposicao Rep'+sLineBreak+
+      'Inner join ReposicaoEnderecoColeta RC On Rc.ReposicaoId = Rep.ReposicaoId'+sLineBreak+
+      'Group by Rep.ReposicaoId'+sLineBreak+
+      'Select Repo.*, URep.Nome UsuarioReposicao, Pe.Descricao Processo, Zn.Descricao '+sLineBreak+
+      '       Zona, Rc.Demanda, IsNull(Rc.Coleta, 0) Coleta, Rc.TotalEndereco, '+sLineBreak+
+      '       IsNull(Rc.TotalEnderecoColeta , 0) TotalEnderecoColeta'+sLineBreak+
+      'From #Reposicao Repo'+sLineBreak+
+      'Inner join #Coleta Rc On Rc.ReposicaoId = Repo.ReposicaoId'+sLineBreak+
+      'Inner Join Usuarios URep On uRep.UsuarioId = Repo.UsuarioId'+sLineBreak+
+      'Inner Join ProcessoEtapas Pe On Pe.ProcessoId = Repo.ProcessoId'+sLineBreak+
+      'Left Join EnderecamentoZonas Zn On Zn.Zonaid = Repo.ZonaId'+sLineBreak+
+      'Order by Repo.DtReposicao';
 
-  Const
-    SqlGetConsultaReposicao = 'SET STATISTICS IO OFF' + sLineBreak +
-      'SET STATISTICS TIME OFF' + sLineBreak +
+Const SqlGetConsultaReposicao =
       'Declare @DataInicial DateTime = :pDataInicial' + sLineBreak +
       'Declare @DataFinal DateTime   = :pDataFinal' + sLineBreak +
       'Declare @ReposicaoId Integer = :pReposicaoId' + sLineBreak +

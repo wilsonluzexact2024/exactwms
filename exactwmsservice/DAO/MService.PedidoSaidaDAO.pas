@@ -1450,8 +1450,7 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetConsultaReposicao(Const AParams
-  : TDictionary<string, string>): TjSonArray;
+function TPedidoSaidaDao.GetConsultaReposicao(Const AParams : TDictionary<string, string>): TjSonArray;
 var vQryBasico, vQry: TFDQuery;
     vErroBody : TJsonArray;
 begin
@@ -1460,112 +1459,79 @@ begin
     vQry := FConexao.GetQuery;
     vQryBasico.SQL.Add(TuEvolutConst.SqlGetConsultaReposicaoBasico);
     vQry.SQL.Add(TuEvolutConst.SqlGetConsultaReposicao);
-    if AParams.ContainsKey('datainicial') then
-    Begin
-      vQryBasico.ParamByName('pdatainicial').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']));
-      vQry.ParamByName('pdatainicial').Value := FormatDateTime('YYYY-MM-DD',
-        StrToDate(AParams.Items['datainicial']));
+    if AParams.ContainsKey('datainicial') then Begin
+       vQryBasico.ParamByName('pdatainicial').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']));
+       vQry.ParamByName('pdatainicial').Value       := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datainicial']));
     End
-    Else
-    Begin
-      vQryBasico.ParamByName('pdatainicial').Value := 0;
-      vQry.ParamByName('pdatainicial').Value := 0;
+    Else Begin
+       vQryBasico.ParamByName('pdatainicial').Value := 0;
+       vQry.ParamByName('pdatainicial').Value       := 0;
     End;
-    if AParams.ContainsKey('datafinal') then
-    Begin
-      vQryBasico.ParamByName('pdatafinal').Value :=
-        FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']));
-      vQry.ParamByName('pdatafinal').Value := FormatDateTime('YYYY-MM-DD',
-        StrToDate(AParams.Items['datafinal']));
+    if AParams.ContainsKey('datafinal') then Begin
+       vQryBasico.ParamByName('pdatafinal').Value := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']));
+       vQry.ParamByName('pdatafinal').Value       := FormatDateTime('YYYY-MM-DD', StrToDate(AParams.Items['datafinal']));
     End
-    Else
-    Begin
-      vQryBasico.ParamByName('pdatafinal').Value := 0;
-      vQry.ParamByName('pdatafinal').Value := 0;
+    Else Begin
+       vQryBasico.ParamByName('pdatafinal').Value := 0;
+       vQry.ParamByName('pdatafinal').Value       := 0;
     End;
-    if AParams.ContainsKey('reposicaoid') then
-    Begin
-      vQryBasico.ParamByName('pReposicaoId').Value :=
-        AParams.Items['reposicaoid'].ToInteger();
-      vQry.ParamByName('pReposicaoId').Value := AParams.Items['reposicaoid']
-        .ToInteger();
+    if AParams.ContainsKey('reposicaoid') then Begin
+       vQryBasico.ParamByName('pReposicaoId').Value := AParams.Items['reposicaoid'].ToInteger();
+       vQry.ParamByName('pReposicaoId').Value       := AParams.Items['reposicaoid'].ToInteger();
     End
-    Else
-    Begin
-      vQryBasico.ParamByName('pReposicaoId').Value := 0;
-      vQry.ParamByName('pReposicaoId').Value := 0;
+    Else Begin
+       vQryBasico.ParamByName('pReposicaoId').Value := 0;
+       vQry.ParamByName('pReposicaoId').Value       := 0;
     End;
-    if AParams.ContainsKey('processoid') then
-    Begin
-      vQryBasico.ParamByName('pProcessoId').Value := AParams.Items['processoid']
-        .ToInteger();
-      vQry.ParamByName('pProcessoId').Value := AParams.Items['processoid']
-        .ToInteger();
+    if AParams.ContainsKey('processoid') then Begin
+       vQryBasico.ParamByName('pProcessoId').Value := AParams.Items['processoid'].ToInteger();
+       vQry.ParamByName('pProcessoId').Value := AParams.Items['processoid'].ToInteger();
     End
-    Else
-    Begin
-      vQryBasico.ParamByName('pProcessoId').Value := 0;
-      vQry.ParamByName('pProcessoId').Value := 0;
+    Else Begin
+       vQryBasico.ParamByName('pProcessoId').Value := 0;
+       vQry.ParamByName('pProcessoId').Value       := 0;
     End;
-    if AParams.ContainsKey('pendente') then
-    Begin
-      vQryBasico.ParamByName('pPendente').Value := AParams.Items['pendente']
-        .ToInteger();
-      vQry.ParamByName('pPendente').Value := AParams.Items['pendente']
-        .ToInteger();
+    if AParams.ContainsKey('pendente') then Begin
+       vQryBasico.ParamByName('pPendente').Value := AParams.Items['pendente'].ToInteger();
+       vQry.ParamByName('pPendente').Value := AParams.Items['pendente'].ToInteger();
     End
-    Else
-    Begin
-      vQryBasico.ParamByName('pPendente').Value := 99;
-      vQry.ParamByName('pPendente').Value := 99;
+    Else Begin
+       vQryBasico.ParamByName('pPendente').Value := 99;
+       vQry.ParamByName('pPendente').Value       := 99;
     End;
     if DebugHook <> 0 then
-      vQryBasico.SQL.SaveToFile('ReposicaoConsultaBasico.Sql');
+       vQryBasico.SQL.SaveToFile('ReposicaoConsultaBasico.Sql');
     vQryBasico.Open();
-    if vQryBasico.IsEmpty then
-    Begin
-      Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Sem Dados para a consulta.'));
+    if vQryBasico.IsEmpty then Begin
+       Result := TjSonArray.Create;
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Sem Dados para a consulta.'));
     End
-    Else
-    Begin
-      if DebugHook <> 0 then
-        vQry.SQL.SaveToFile('ReposicaoConsulta.Sql');
-      vQry.Open();
-      if vQry.IsEmpty then
-      Begin
-        Result := TjSonArray.Create;
-        vErroBody := TJsonArray.Create;
-        vErroBody.AddElement(TJsonObject.Create.AddPair('Erro', 'Reposição sem itens para coleta.'));
-        Result.AddElement(TJsonObject.Create.AddPair('header', vQryBasico.ToJSONArray())
-        .AddPair('body', vErroBody ));
+    Else Begin
+       if DebugHook <> 0 then
+          vQry.SQL.SaveToFile('ReposicaoConsulta.Sql');
+       vQry.Open();
+       if vQry.IsEmpty then Begin
+          Result := TjSonArray.Create;
+          vErroBody := TJsonArray.Create;
+          vErroBody.AddElement(TJsonObject.Create.AddPair('Erro', 'Reposição sem itens para coleta.'));
+          Result.AddElement(TJsonObject.Create.AddPair('header', vQryBasico.ToJSONArray())
+                                              .AddPair('body', vErroBody ));
       End
-      Else
-      Begin
-        Result := TjSonArray.Create;
-        Result.AddElement(TJsonObject.Create.AddPair('header',
-          vQryBasico.ToJSONArray()).AddPair('body', vQry.ToJSONArray()));
+      Else Begin
+         Result := TjSonArray.Create;
+         Result.AddElement(TJsonObject.Create.AddPair('header', vQryBasico.ToJSONArray()).AddPair('body', vQry.ToJSONArray()));
       End;
     End;
     vQryBasico.Close;
-
     vQry.Close;
-
-  Except
-    ON E: Exception do
+  Except On E: Exception do
     Begin
       vQryBasico.Close;
-
       vQry.Close;
-
       Result := Nil;
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]))));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro', StringReplace(E.Message,
+                        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]))));
     End;
   end;
 end;

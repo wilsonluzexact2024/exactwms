@@ -19,6 +19,7 @@ Type
     Function ControleAcessoTopicos : TJsonObject;
     Function ControleAcessoFuncionalidades(pListaTopicos : String) : TJsonObject;
     Function SalvarAcesso(pJsonObject : TJsonObject) : Boolean;
+    Function AtualizarPermissao(pPerfilId : Integer) : TJsonArray;
     Property ObjPerfil : TPerfil Read FPerfil Write FPerfil;
   end;
 
@@ -27,6 +28,22 @@ implementation
 { TLaboratorioDao }
 
 uses UDmeXactWMS;
+
+function TPerfilDao.AtualizarPermissao(pPerfilId : Integer): TJsonArray;
+begin
+  Try
+    DmeXactWMS.ResetRest;
+    DmeXactWMS.RESTRequestWMS.Resource := 'v1/perfil/atualizar/{perfilid}';
+    DmeXactWMS.RESTRequestWMS.Params.AddUrlSegment('perfilid', pPerfilId.Tostring());
+    DmeXactWMS.RESTRequestWMS.Method := rmPUT;
+    DmeXactWMS.RESTRequestWMS.Execute;
+    Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJsonArray
+  Except On E: Exception do Begin
+    Result := TJsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+    End;
+  End;
+end;
 
 function TPerfilDao.ControleAcessoFuncionalidades(pListaTopicos : String): TJsonObject;
 begin

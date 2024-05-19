@@ -25,6 +25,7 @@ Type
     Function ControleAcessoTopicos : TJsonObject;
     Function ControleAcessoFuncionalidades(pListaTopicos : String) : TJsonObject;
     Function Salvar : tjsonObject;  //(pHistorico: THistorico)
+    Function AtualizarPermissao : TJsonArray;
     Function SalvarAcesso(pJsonObject : TJsonObject) : Boolean;
     Function DelPerfil : Boolean;
     Property ObjPerfil : TPerfil Read FObjPerfil Write FObjPerfil;
@@ -46,6 +47,15 @@ Begin
   Result := True;
 End;
 
+function TPerfilCtrl.AtualizarPermissao: TJsonArray;
+Var ObjPerfilDAO : TPerfilDAO;
+begin
+   ObjPerfilDAO := TPerfilDAO.Create;
+  ObjPerfilDAO.ObjPerfil := Self.ObjPerfil;
+  Result := ObjPerfilDAO.AtualizarPermissao(ObjPerfil.PerfilId);
+  ObjPerfilDAO.Free;
+end;
+
 function TPerfilCtrl.ControleAcessoFuncionalidades(
   pListaTopicos: String): TJsonObject;
 Var ObjPerfilDAO : TPerfilDAO;
@@ -53,7 +63,7 @@ begin
   ObjPerfilDAO := TPerfilDAO.Create;
   ObjPerfilDAO.ObjPerfil := Self.ObjPerfil;
   Result := ObjPerfilDAO.ControleAcessoFuncionalidades(pListaTopicos);
-  ObjPerfilDAO.DisposeOf;
+  ObjPerfilDAO.Free;
 end;
 
 function TPerfilCtrl.ControleAcessoTopicos: TJsonObject;
@@ -62,7 +72,7 @@ begin
   ObjPerfilDAO := TPerfilDAO.Create;
   ObjPerfilDAO.ObjPerfil := Self.ObjPerfil;
   Result := ObjPerfilDAO.ControleAcessoTopicos;
-  ObjPerfilDAO.DisposeOf;
+  ObjPerfilDAO.Free;
 end;
 
 constructor TPerfilCtrl.Create;
@@ -79,7 +89,7 @@ begin
   if Result then
      Self.ObjPerfil.PerfilId := 0;
   ObjPerfilDAO := Nil;
-  ObjPerfilDAO.DisposeOf;
+  ObjPerfilDAO.Free;
 end;
 
 destructor TPerfilCtrl.Destroy;
@@ -113,10 +123,8 @@ begin
   End
   Else Raise Exception.Create('Perfil de usuário(s) não encontrado!');
   TmpPerfil    := Nil;
-  ObjPerfilDAO := Nil;
-  ObjPerfilDAO.DisposeOf;
   ReturnJson   := Nil;
-  ReturnJson.DisposeOf;
+  ObjPerfilDAO.Free;
 End;
 
 Function tPerfilCtrl.Salvar : tjsonObject;       //(pHistorico: THistorico)
@@ -141,7 +149,7 @@ Begin
   ObjPerfilDAO := TPerfilDAO.Create;
   ObjPerfilDAO.ObjPerfil := ObjPerfil;
   Result := ObjPerfilDAO.SalvarAcesso(pJsonObject);
-  ObjPerfilDAO.DisposeOf;
+  ObjPerfilDAO.Free;
 end;
 
 End.

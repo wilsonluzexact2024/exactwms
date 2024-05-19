@@ -14,53 +14,64 @@ uses
   exactwmsservice.lib.connection,
   exactwmsservice.dao.base;
 
-Const
-  SqlEntrada = 'Declare @PedidoId Integer        = :pPedidoId' + sLineBreak +
-    'Declare @CodPessoaERP Integer    = :pCodPessoaERP' + sLineBreak +
-    'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' + sLineBreak +
-    'Declare @Razao VarChar(100)      = :pRazao' + sLineBreak +
-    'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
-    'Declare @Pendente Integer        = :pPendente' + sLineBreak +
-    'Declare @AgrupamentoId Integer   = :pAgrupamentoId' + sLineBreak +
-    'Declare @CodBarra Varchar(25)    = :pCodProduto'+sLineBreak+
-    'Declare @CodProduto Integer      = Coalesce((Select CodProduto From PRoduto Prd '+sLineBreak+
-    '                                Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Prd.IdProduto'+sLineBreak+
-				'					Where Cast(CodProduto as varchar(25)) = @CodBarra or Pc.CodBarras = @CodBarra), 0)'+sLineBreak+
-    'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal' + sLineBreak +
-    'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid,'
-    + sLineBreak +
-    '       P.CodPessoaERP, P.Razao, Ped.DocumentoNr, FORMAT(Rd.Data, ' + #39 +
-    'dd/MM/yyyy' + #39 + ') ' + sLineBreak +
-    '       as DocumentoData, Ped.RegistroERP, FORMAT(RE.Data, ' + #39 +
-    'dd/MM/yyyy' + #39 + ') as DtInclusao, ' + sLineBreak +
-    '       CONVERT(VARCHAR, RH.hora ,8) as HrInclusao, ArmazemId, Ped.Status, De.ProcessoId, De.Descricao as Processo,'
-    + sLineBreak + '       Coalesce(Pa.AgrupamentoId, 0) AgrupamentoId' +
-    sLineBreak + 'From pedido Ped ' + sLineBreak +
-    'Inner Join OperacaoTipo Op ON OP.OperacaoTipoId = Ped.OperacaoTipoId ' +
-    sLineBreak + 'Inner Join Pessoa P ON p.PessoaId     = Ped.PessoaId ' +
-    sLineBreak + 'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData ' +
-    sLineBreak + 'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao ' +
-    sLineBreak + 'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao ' +
-    sLineBreak + 'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid and' + sLineBreak +
-    '                                              De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) '+SlineBreak+
-    ''+sLineBreak+
-    'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ped.PedidoId' + sLineBreak +
-    'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi' + sLineBreak +
-    sLineBreak + '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId' + sLineBreak +
-		  sLineBreak + '           Where Pl.CodProduto = @CodProduto' + sLineBreak +
-		  sLineBreak + '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'+slinebreak+
-    'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and '+ sLineBreak +
-    '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and ' + sLineBreak +
-    '      (@DocumentoNr = ' + #39 + #39 +' or Ped.DocumentoNr = @DocumentoNr) and ' + sLineBreak +
-    '      (@Razao = '+ #39 + #39 + ' or P.Razao Like @Razao) and ' + sLineBreak +
-    '      (@RegistroERP = ' + #39 + #39 + ' or Ped.RegistroERP = @RegistroERP)' + sLineBreak +
-    sLineBreak + '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)' +
-    sLineBreak + '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))' + sLineBreak +
-    '      And (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+ sLineBreak +
-    '      And De.ProcessoId <> 31' + sLineBreak +
-    '      And (@CodProduto='+#39+'0'+#39+' or (@CodProduto=0 or @CodProduto = Pl.CodProduto))'+sLinebreak+
-    'Order by Ped.PedidoId';
-  // Retiraro o 5, ver se não gera impacto no retorno da integração
+Const SqlEntrada = 'Declare @PedidoId Integer        = :pPedidoId' + sLineBreak +
+      'Declare @CodPessoaERP Integer    = :pCodPessoaERP' + sLineBreak +
+      'Declare @DocumentoNr VarChar(20) = :pDocumentoNr' + sLineBreak +
+      'Declare @Razao VarChar(100)      = :pRazao' + sLineBreak +
+      'Declare @RegistroERP VarChar(36) = :pRegistroERP' + sLineBreak +
+      'Declare @Pendente Integer        = :pPendente' + sLineBreak +
+      'Declare @AgrupamentoId Integer   = :pAgrupamentoId' + sLineBreak +
+      'Declare @CodBarra Varchar(25)    = :pCodProduto'+sLineBreak+
+      'Declare @CodProduto Integer      = Coalesce((Select CodProduto From PRoduto Prd '+sLineBreak+
+      '                                             Inner join ProdutoCodBarras Pc On Pc.ProdutoId = Prd.IdProduto'+sLineBreak+
+		  		'					                                         Where Cast(CodProduto as varchar(25)) = @CodBarra or Pc.CodBarras = @CodBarra), 0)'+sLineBreak+
+      'Declare @DtNotaFiscal DateTime   = :pDtNotaFiscal'+sLineBreak+
+     'Drop table if exists #Entrada'+sLineBreak+
+     'Drop table if exists #Agrupamento'+sLineBreak+
+     'Drop table if exists #CheckIn'+sLineBreak+
+     'select Ped.PedidoId, Op.OperacaoTipoId, Op.Descricao as OperacaoTipo, P.Pessoaid,'+sLineBreak+
+     '       P.CodPessoaERP, P.Razao, Ped.DocumentoNr, FORMAT(Rd.Data, '+#39+'dd/MM/yyyy'+#39+')'+sLineBreak+
+     '       as DocumentoData, Ped.RegistroERP, FORMAT(RE.Data, '+#39+'dd/MM/yyyy'+#39+') as DtInclusao,'+sLineBreak+
+     '       CONVERT(VARCHAR, RH.hora ,8) as HrInclusao, ArmazemId, Ped.Status, De.ProcessoId, '+sLineBreak+
+     '       De.Descricao as Processo Into #Entrada'+sLineBreak+
+     'From pedido Ped'+sLineBreak+
+     'Inner Join OperacaoTipo Op ON OP.OperacaoTipoId = Ped.OperacaoTipoId'+sLineBreak+
+     'Inner Join Pessoa P ON p.PessoaId     = Ped.PessoaId'+sLineBreak+
+     'Inner Join Rhema_Data RD On Rd.IdData = Ped.DocumentoData'+sLineBreak+
+     'Inner Join Rhema_Data RE On Re.IdData = Ped.DtInclusao'+sLineBreak+
+     'Inner Join Rhema_Hora RH On Rh.IdHora = Ped.Hrinclusao'+sLineBreak+
+     'Left Join (Select PedidoId, Pl.CodProduto from PedidoItens Pi'+sLineBreak+
+     '           Left join vProdutoLotes Pl On Pl.LoteId = Pi.LoteId'+sLineBreak+
+     '           Where Pl.CodProduto = @CodProduto'+sLineBreak+
+     '           Group by PedidoId, Pl.CodProduto) Pl On PL.PedidoId = Ped.PedidoId'+sLineBreak+
+     'Left join vDocumentoEtapas DE On De.Documento = Ped.Uuid and'+sLineBreak+
+     '                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas'+sLineBreak+
+     '                                                  Where Documento = De.Documento )'+sLineBreak+
+     'Where (@PedidoId = 0 or Ped.PedidoId = @PedidoId) and Ped.OperacaoTipoId = 3 and'+sLineBreak+
+     '      (@CodPessoaERP = 0 or P.CodPessoaERP = @CodPessoaERP) and'+sLineBreak+
+     '      (@DocumentoNr = '+#39+#39+' or Ped.DocumentoNr = @DocumentoNr) and'+sLineBreak+
+     '      (@Razao = '+#39+#39+' or P.Razao Like @Razao) and'+sLineBreak+
+     '      (@RegistroERP = '+#39+#39+' or Ped.RegistroERP = @RegistroERP)'+sLineBreak+
+     '      And (@DtNotaFiscal = 0 or Rd.Data = @DtNotaFiscal)'+sLineBreak+
+     '      And (@Pendente = 0 or (De.ProcessoId in (1,4)))'+sLineBreak+
+     '      And De.ProcessoId <> 31'+sLineBreak+
+     '      And (@CodProduto = 0 or (@CodProduto=0 or @CodProduto = Pl.CodProduto))'+sLineBreak+
+     'Select Ent.PedidoId, Pa.AgrupamentoId Into #Agrupamento'+sLineBreak+
+     'from  #Entrada Ent'+sLineBreak+
+     'Left Join PedidoAgrupamentoNotas PA on Pa.Pedidoid = Ent.PedidoId'+sLineBreak+
+     //Pegar CheckIn
+     'Select Ent.PedidoId, Sum(Pi.QtdXml) QtdXml, sum(IsNull(Pi.QtdCheckin, 0)+'+sLineBreak+
+     '                         IsNull(Pi.QtdDevolvida, 0)+IsNull(Pi.QtdSegregada, 0)) QtdCheckIn Into #CheckIn'+sLineBreak+
+     'from  #Entrada Ent'+sLineBreak+
+     'Left Join PedidoItens Pi on Pi.PedidoId = Ent.PedidoId'+sLineBreak+
+     'Group By Ent.PedidoId'+sLineBreak+
+     'Select Ent.*, Coalesce(Pa.AgrupamentoId, 0) AgrupamentoId, Chk.QtdXml , Chk.QtdCheckIn'+sLineBreak+
+     'From #Entrada Ent'+sLineBreak+
+     'Left join #Agrupamento PA On Pa.PedidoId = Ent.PedidoId'+sLinebreak+
+     'Left Join #CheckIn Chk On Chk.PedidoId = Ent.Pedidoid'+slineBreak+
+     'Where (@AgrupamentoId = 0 or Pa.AgrupamentoId = @AgrupamentoId or '+sLineBreak+
+     '       (@AgrupamentoId=-1 and PA.agrupamentoid Is Null))'+sLineBreak+
+     'Order by Ent.PedidoId';
 
 Const
   SqlEntradaItens =

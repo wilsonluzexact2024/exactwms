@@ -1155,76 +1155,68 @@ begin
   End;
 End;
 
-procedure PesquisarService(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-var
-  PedidoEntradaDAO: TEntradaDAO;
-  AQueryParam: TDictionary<String, String>;
-  vDocumentoNr, vRazao, vRegistroERP: String;
-  vPedidoId, vCodPessoaERP, vPendente, vAgrupamentoId: Integer;
-  vDtNotaFiscal: TDateTime;
-  vCodProduto : String;
-  vBasico: Boolean;
-  LService: TServiceRecebimento;
-  JsonArrayRetorno: TJSonArray;
+procedure PesquisarService(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var PedidoEntradaDAO: TEntradaDAO;
+    AQueryParam: TDictionary<String, String>;
+    vDocumentoNr, vRazao, vRegistroERP: String;
+    vPedidoId, vCodPessoaERP, vPendente, vAgrupamentoId: Integer;
+    vDtNotaFiscal: TDateTime;
+    vCodProduto : String;
+    vBasico: Boolean;
+    LService: TServiceRecebimento;
+    JsonArrayRetorno: TJSonArray;
 begin
   Try
     Try
       // Processos - Etapas dos Pedidos
-      LService := TServiceRecebimento.Create;
-      vPedidoId := 0;
-      vCodPessoaERP := 0;
-      vDocumentoNr := '';
-      vRazao := '';
-      vRegistroERP := '';
-      vPendente := 0;
+      LService       := TServiceRecebimento.Create;
+      vPedidoId      := 0;
+      vCodPessoaERP  := 0;
+      vDocumentoNr   := '';
+      vRazao         := '';
+      vRegistroERP   := '';
+      vPendente      := 0;
       vAgrupamentoId := 0;
-      vCodProduto := '0';
-      vBasico := False;
-      vDtNotaFiscal := 0;
+      vCodProduto    := '0';
+      vBasico        := False;
+      vDtNotaFiscal  := 0;
       AQueryParam := Req.Query.Dictionary;
       If AQueryParam.Count <= 0 then
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          'Defina os parâmetros para cubagem!'))).Status(THttpStatus.Created)
+         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', 'Defina os parâmetros para cubagem!'))).Status(THttpStatus.Created)
       Else
       Begin
         if AQueryParam.ContainsKey('PedidoId') then
-          vPedidoId := StrToIntDef(AQueryParam.Items['PedidoId'], 0);
+           vPedidoId := StrToIntDef(AQueryParam.Items['PedidoId'], 0);
         if AQueryParam.ContainsKey('codpessoaerp') then
-          vCodPessoaERP := StrToIntDef(AQueryParam.Items['codpessoaerp'], 0);
+           vCodPessoaERP := StrToIntDef(AQueryParam.Items['codpessoaerp'], 0);
         if AQueryParam.ContainsKey('DocumentoNr') then
-          vDocumentoNr := AQueryParam.Items['DocumentoNr'];
+           vDocumentoNr := AQueryParam.Items['DocumentoNr'];
         if AQueryParam.ContainsKey('Razao') then
-          vRazao := AQueryParam.Items['Razao'];
+           vRazao := AQueryParam.Items['Razao'];
         if AQueryParam.ContainsKey('RegistroERP') then
-          vRegistroERP := AQueryParam.Items['RegistroERP'];
+           vRegistroERP := AQueryParam.Items['RegistroERP'];
         if AQueryParam.ContainsKey('dtnotafiscal') then
-          vDtNotaFiscal := StrToDate(AQueryParam.Items['dtnotafiscal']);
+           vDtNotaFiscal := StrToDate(AQueryParam.Items['dtnotafiscal']);
         if AQueryParam.ContainsKey('codproduto') then
-          vCodProduto := AQueryParam.Items['codproduto'];
+           vCodProduto := AQueryParam.Items['codproduto'];
         if AQueryParam.ContainsKey('pendente') then
-          vPendente := StrToIntDef(AQueryParam.Items['pendente'], 0);
+           vPendente := StrToIntDef(AQueryParam.Items['pendente'], 0);
         if AQueryParam.ContainsKey('agrupamentoid') then
-          vAgrupamentoId := StrToIntDef(AQueryParam.Items['agrupamentoid'], 0);
+           vAgrupamentoId := StrToIntDef(AQueryParam.Items['agrupamentoid'], 0);
         if AQueryParam.ContainsKey('basico') then
-          if AQueryParam.Items['basico'] = '1' then
-            vBasico := True
-          Else
-            vBasico := False;
-        JsonArrayRetorno := TJSonArray.Create;
-        JsonArrayRetorno := LService.Pesquisar(vPedidoId, vCodPessoaERP,
-          vDocumentoNr, vRazao, vRegistroERP, vDtNotaFiscal, vPendente,
-          vAgrupamentoId, vCodProduto, vBasico, 0);
+           if AQueryParam.Items['basico'] = '1' then
+              vBasico := True
+            Else
+              vBasico := False;
+        JsonArrayRetorno := LService.Pesquisar(vPedidoId, vCodPessoaERP, vDocumentoNr, vRazao,
+                            vRegistroERP, vDtNotaFiscal, vPendente, vAgrupamentoId, vCodProduto, vBasico, 0);
         Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       End;
-    Except
-      on E: Exception do
+    Except on E: Exception do
       Begin
-        // JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.ExpectationFailed);
+        JsonArrayRetorno := TJsonArray.Create;
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally

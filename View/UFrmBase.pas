@@ -1208,6 +1208,7 @@ begin
   if (BtnSalvar.Grayed) then
      OperacaoCrud := poSearch;
   SetReadOnly;
+  TabListagem.TabVisible := Not BtnSalvar.Enabled;
 end;
 
 procedure TFrmBase.EdtConteudoPesqExit(Sender: TObject);

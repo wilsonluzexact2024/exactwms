@@ -36,11 +36,10 @@ procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Estrutura(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Procedure ControleAcessoFuncionalidades(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Procedure ControleAcessoTopicos(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure ControleAcessoFuncionalidades(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure ControleAcessoTopicos(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure SalvarAcesso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure AtualizarPermissao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 
 implementation
 
@@ -61,26 +60,38 @@ begin
     .Get('/perfil/controleacessotopicos/:perfilid', ControleAcessoTopicos)
     .Post('/perfil', Insert)
     .Put('/perfil/:perfilid', Update)
+    .Put('/perfil/atualizar/:perfilid', AtualizarPermissao)
     .Put('/perfil/salvaracesso/:perfilid', SalvarAcesso)
     .Delete('/perfil/:perfilid', Delete)
 end;
 
-Procedure ControleAcessoFuncionalidades(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  PerfilDAO: TPerfilDao;
+Procedure AtualizarPermissao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var PerfilDAO: TPerfilDao;
 begin
   Try
     Try
       PerfilDAO := TPerfilDao.Create;
-      Res.Send<TJSONObject>(PerfilDAO.ControleAcessoFuncionalidades
-        (StrToIntDef(Req.Params.Items['perfilid'], 0),
-        Req.Params.Items['listatopicos']));
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(PerfilDAO.AtualizarPermissao(StrToIntDef(Req.Params.Items['perfilid'], 0)));
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THTTPStatus.ExpectationFailed);
+      End;
+    End;
+  Finally
+    FreeAndNil(PerfilDAO);
+  End;
+End;
+Procedure ControleAcessoFuncionalidades(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var PerfilDAO: TPerfilDao;
+begin
+  Try
+    Try
+      PerfilDAO := TPerfilDao.Create;
+      Res.Send<TJSONObject>(PerfilDAO.ControleAcessoFuncionalidades(StrToIntDef(Req.Params.Items['perfilid'], 0),
+                            Req.Params.Items['listatopicos']));
+    Except On E: Exception do
+      Begin
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -96,13 +107,11 @@ begin
   Try
     Try
       PerfilDAO := TPerfilDao.Create;
-      Res.Send<TJSONObject>(PerfilDAO.ControleAcessoTopicos
-        (StrToIntDef(Req.Params.Items['perfilid'], 0))).Status(THTTPStatus.OK);
-    Except
-      on E: Exception do
+      Res.Send<TJSONObject>(PerfilDAO.ControleAcessoTopicos(StrToIntDef(Req.Params.Items['perfilid'], 0))).Status(THTTPStatus.OK);
+    Except on E: Exception do
       Begin
         Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+            E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally
@@ -293,8 +302,7 @@ begin
   Try
     Try
       PerfilDAO := TPerfilDao.Create;
-      PerfilDAO.SalvarAcesso(StrToIntDef(Req.Params.Items['perfilid'], 0),
-        Req.Body<TJSONObject>);
+      PerfilDAO.SalvarAcesso(StrToIntDef(Req.Params.Items['perfilid'], 0), Req.Body<TJSONObject>);
       Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
         'Controle de Acesso Rgistrado com Sucesso!'))).Status(THTTPStatus.Ok);
     Except

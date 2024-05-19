@@ -239,7 +239,7 @@ function TEntradaCtrl.GetEntradaBasica(pEntradaId, pPessoaId: Integer;
 Var vErro       : String;
 begin
   Result := Self.FEntrada.GetEntradaBasica(pEntradaId, pPessoaId, pDocumentoNr, pRazao, pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0, pCodProduto);
-  If (Result.Get(0).tryGetValue<String>('Erro', vErro)) then
+  If (Result.Items[0].tryGetValue<String>('Erro', vErro)) then
      If (pShowErro= 1) then
         Raise Exception.Create('Erro: '+vErro)
 end;

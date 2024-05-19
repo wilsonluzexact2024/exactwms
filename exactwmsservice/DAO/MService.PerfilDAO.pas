@@ -28,8 +28,8 @@ type
     Function ControleAcessoFuncionalidades(pPerfilId: Integer;
       pListaTopicos: String): TJsonObject;
     Function ControleAcessoTopicos(pPerfilId: Integer): TJsonObject;
-    Function SalvarAcesso(pPerfilId: Integer; pJsonObject: TJsonObject)
-      : TjSonArray;
+    Function SalvarAcesso(pPerfilId: Integer; pJsonObject: TJsonObject) : TjSonArray;
+    Function AtualizarPermissao(pPerfilId : Integer) : TJsonArray;
     Property ObjPerfil: TPerfil Read FPerfil Write FPerfil;
   end;
 
@@ -39,27 +39,61 @@ uses uSistemaControl, Constants;
 
 { TClienteDao }
 
-function TPerfilDao.ControleAcessoFuncionalidades(pPerfilId: Integer;
-  pListaTopicos: String): TJsonObject;
-var
-  JsonArrayFuncionalidades: TjSonArray;
+function TPerfilDao.AtualizarPermissao(pPerfilId: Integer): TJsonArray;
+begin
+  Result := TJsonArray.Create;
+  Try
+    FConexao.Query.Close;
+    FConexao.Query.SQL.Clear;
+    FConexao.Query.SQL.Add('Delete UF');
+    FConexao.Query.SQL.Add('From UsuarioFuncionalidades UF');
+    FConexao.Query.SQL.Add('inner join Usuarios U On U.usuarioId = Uf.UsuarioId');
+    FConexao.Query.SQL.Add('Where U.perfilId = '+pPerfilId.ToString());
+
+    FConexao.Query.SQL.Add('Insert Into UsuarioFuncionalidades');
+    FConexao.Query.SQL.Add('select U.UsuarioId, Pf.FuncionalidadeId, 1');
+    FConexao.Query.SQL.Add('from usuarios U');
+    FConexao.Query.SQL.Add('Inner Join PerfilFuncionalidades PF On Pf.PerfilId = U.PerfilId');
+    FConexao.Query.SQL.Add('where U.perfilId = '+pPerfilId.ToString());
+    FConexao.Query.SQL.Add('Order by U.UsuarioId, Pf.FuncionalidadeId');
+
+    FConexao.Query.SQL.Add('Delete UT');
+    FConexao.Query.SQL.Add('From UsuarioTopicos UT');
+    FConexao.Query.SQL.Add('Inner join Usuarios U On U.UsuarioId = UT.UsuarioId');
+    FConexao.Query.SQL.Add('where U.perfilId = '+pPerfilId.ToString());
+    FConexao.Query.SQL.Add('Insert Into UsuarioTopicos');
+    FConexao.Query.SQL.Add('select UF.Usuarioid, TF.TopicoId, 1');
+    FConexao.Query.SQL.Add('from Usuarios U');
+    FConexao.Query.SQL.Add('Inner Join UsuarioFuncionalidades UF On Uf.UsuarioId = U.UsuarioId');
+    FConexao.Query.SQL.Add('Left join Funcionalidades F On F.Funcionalidadeid = UF.FuncionalidadeId ');
+    FConexao.Query.SQL.Add('Left join TopicoFuncionalidades TF On TF.FuncionalidadeId = F.Funcionalidadeid');
+    FConexao.Query.SQL.Add('where U.PerfilId = '+pPerfilId.ToString());
+    FConexao.Query.SQL.Add('Group by UF.UsuarioId, TF.TopicoId');
+    FConexao.Query.SQL.Add('Order by UF.UsuarioId, TF.TopicoId');
+    if DebugHook <> 0 then
+       FConexao.Query.SQL.SaveToFile('PerfilAtualizarAcesso.Sql');
+    FConexao.Query.ExecSQL;
+    Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Atualizado com sucesso!'));
+  Except On E: Exception do Begin
+    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+    End
+  End;
+end;
+
+function TPerfilDao.ControleAcessoFuncionalidades(pPerfilId: Integer; pListaTopicos: String): TJsonObject;
+var JsonArrayFuncionalidades: TjSonArray;
 Begin
   Result := TJsonObject.Create;
   try
     JsonArrayFuncionalidades := TjSonArray.Create;
     FConexao.Query.Close;
     FConexao.Query.SQL.Clear;
-    FConexao.Query.SQL.Add
-      ('select Tf.TopicoId, F.Funcionalidadeid, F.Descricao, F.Status, (Case When PF.FuncionalidadeId Is Not Null Then 1 Else 0 End) as Acesso');
+    FConexao.Query.SQL.Add('select Tf.TopicoId, F.Funcionalidadeid, F.Descricao, F.Status, (Case When PF.FuncionalidadeId Is Not Null Then 1 Else 0 End) as Acesso');
     FConexao.Query.SQL.Add('from Funcionalidades F');
-    FConexao.Query.SQL.Add
-      ('INNER Join TopicoFuncionalidades TF On TF.FuncionalidadeId = F.FuncionalidadeId --and TF.TopicoId In ('
-      + pListaTopicos + ')');
-    FConexao.Query.SQL.Add
-      ('Left Join PerfilFuncionalidades PF ON PF.FuncionalidadeId = TF.Funcionalidadeid and PF.PerfilId = '
-      + pPerfilId.ToString());
-    If pListaTopicos <> '' then
-      FConexao.Query.SQL.Add('Where TF.TopicoId In (' + pListaTopicos + ')');
+    FConexao.Query.SQL.Add('INNER Join TopicoFuncionalidades TF On TF.FuncionalidadeId = F.FuncionalidadeId --and TF.TopicoId In ('+pListaTopicos + ')');
+    FConexao.Query.SQL.Add('Left Join PerfilFuncionalidades PF ON PF.FuncionalidadeId = TF.Funcionalidadeid and PF.PerfilId = '+pPerfilId.ToString());
+    If (pListaTopicos <> '') and ( pListaTopicos <> '*') then
+       FConexao.Query.SQL.Add('Where TF.TopicoId In (' + pListaTopicos + ')');
     FConexao.Query.SQL.Add('Order by Tf.TopicoId, F.Descricao');
     If DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('ControleAcessoFuncionalidades.Sql');

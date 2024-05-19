@@ -140,8 +140,7 @@ Begin
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
     Begin
-      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Não há Tópicos cadastrado no sistema!'));
+      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro', 'Não há Tópicos cadastrado no sistema!'));
       Result.AddPair('topicos', JsonArrayModulos);
     End
     Else
@@ -155,19 +154,15 @@ Begin
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
     Begin
-      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Não há Funcionalidades cadastrado no sistema!'));
+      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro', 'Não há Funcionalidades cadastrado no sistema!'));
       Result.AddPair('funcionalidades', JsonArrayModulos);
     End
     Else
       Result.AddPair('funcionalidades', FConexao.Query.toJsonArray);
-  Except
-    on E: Exception do
+  Except on E: Exception do
     Begin
-      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro',
-        E.Message));
-      JsonArrayFuncionalidades.AddElement(TJsonObject.Create.AddPair('Erro',
-        E.Message));
+      JsonArrayModulos.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+      JsonArrayFuncionalidades.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
       Result.AddPair('topicos', JsonArrayModulos);
       Result.AddPair('funcionalidades', JsonArrayFuncionalidades);
     End;

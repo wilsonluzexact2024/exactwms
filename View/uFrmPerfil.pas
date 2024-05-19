@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UFrmBase, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, dxBarBuiltInMenu, AdvUtil,
+  cxLookAndFeels, cxLookAndFeelPainters, dxBarBuiltInMenu, AdvUtil, DataSet.Serialize,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, Generics.Collections,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   System.ImageList, Vcl.ImgList, AsgLinks, AsgMemo, AdvGrid, Data.DB,
@@ -22,12 +22,12 @@ type
     edtDescricao: TLabeledEdit;
     btnPesquisar: TBitBtn;
     GbControleAcesso: TGroupBox;
-    Bevel1: TBevel;
     Panel2: TPanel;
     Label7: TLabel;
     Label8: TLabel;
     LstTopicoAcesso: TAdvStringGrid;
     LstFuncionalidadeAcesso: TAdvStringGrid;
+    FdMemFuncionalidadesAcesso: TFDMemTable;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EdtPerfilIdKeyPress(Sender: TObject; var Key: Char);
     procedure EdtPerfilIdExit(Sender: TObject);
@@ -46,6 +46,9 @@ type
     function GetListaPerfil(pPerfil : String = ''): Boolean;
     Procedure GetControleAcessoTopicos;
     Procedure GetControleAcesoFuncionalidades(pListaTopicos : String);
+    Procedure AtualizaAcessoTopico;
+    Procedure MontaListaFuncionalidadesAcesso;
+    Procedure FuncionalidadeAcessoAddDel(pFuncionalidadeId, pAcesso : Integer);
   Protected
     Procedure ShowDados; override;  public
     Procedure PesquisarClickInLstCadastro(aCol, aRow : Integer); OverRide;
@@ -66,6 +69,22 @@ implementation
 {$R *.dfm}
 
 uses uFuncoes;
+
+procedure TFrmPerfil.AtualizaAcessoTopico;
+Var xFuncionalidade : Integer;
+    xTopicoAcesso   : Boolean;
+begin
+  xTopicoAcesso := False;
+  for xFuncionalidade := 1 to Pred(LstFuncionalidadeAcesso.RowCount) do  Begin
+    if LstFuncionalidadeAcesso.Cells[2, xFuncionalidade] = '1' then Begin
+       xTopicoAcesso := True;
+       Break;
+    End;
+  End;
+  if xTopicoAcesso then
+     LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '1'
+  Else LstTopicoAcesso.Cells[2, LstTopicoAcesso.Row] := '0';
+end;
 
 procedure TFrmPerfil.BtnEditarClick(Sender: TObject);
 begin
@@ -140,8 +159,8 @@ begin
   ObjPerfilCtrl := TPerfilCtrl.Create;
   With LstCadastro do Begin
     ColWidths[0] :=  80+Trunc(80*ResponsivoVideo);;
-    ColWidths[1] := 250+Trunc(80*ResponsivoVideo);;
-    ColWidths[2] :=  40+Trunc(80*ResponsivoVideo);;
+    ColWidths[1] := 350+Trunc(350*ResponsivoVideo);;
+    ColWidths[2] :=  40+Trunc(40*ResponsivoVideo);;
     ColWidths[3] :=  80+Trunc(80*ResponsivoVideo);;
     ColWidths[4] :=  80+Trunc(80*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
@@ -149,17 +168,17 @@ begin
     Alignments[2, 0] := taCenter;
   End;
   With LstTopicoAcesso do Begin
-    ColWidths[0] :=  60+Trunc(80*ResponsivoVideo);;
-    ColWidths[1] := 250+Trunc(80*ResponsivoVideo);;
-    ColWidths[2] :=  45+Trunc(80*ResponsivoVideo);;
+    ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);;
+    ColWidths[1] := 320+Trunc(320*ResponsivoVideo);;
+    ColWidths[2] :=  45+Trunc(45*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[2, 0] := taCenter;
   End;
   With LstFuncionalidadeAcesso do Begin
-    ColWidths[0] :=  60+Trunc(80*ResponsivoVideo);;
-    ColWidths[1] := 380+Trunc(80*ResponsivoVideo);;
-    ColWidths[2] :=  45+Trunc(80*ResponsivoVideo);;
+    ColWidths[0] :=  60+Trunc(60*ResponsivoVideo);;
+    ColWidths[1] := 470+Trunc(470*ResponsivoVideo);;
+    ColWidths[2] :=  45+Trunc(45*ResponsivoVideo);;
     Alignments[0, 0] := taRightJustify;
     FontStyles[0, 0] := [FsBold];
     Alignments[2, 0] := taCenter;
@@ -167,32 +186,35 @@ begin
   //GetListaPerfil;
 end;
 
+procedure TFrmPerfil.FuncionalidadeAcessoAddDel(pFuncionalidadeId,
+  pAcesso: Integer);
+begin
+  If FdMemFuncionalidadesAcesso.Locate('FuncionalidadeId', pFuncionalidadeId, []) then Begin
+     FdMemFuncionalidadesAcesso.Edit;
+     FdMemFuncionalidadesAcesso.FieldByname('Acesso').Value := pAcesso;
+     FdMemFuncionalidadesAcesso.Post;
+  End;
+end;
+
 procedure TFrmPerfil.GetControleAcesoFuncionalidades(pListaTopicos: String);
 Var JsonRetorno              : TJsonObject;
     JsonArrayFuncionalidades : TJsonArray;
     vErro : String;
-    xFuncionalidade, xImg : Integer;
 begin
-  JsonRetorno := ObjPerfilCtrl.ControleAcessoFuncionalidades(pListaTopicos);
+  JsonRetorno := ObjPerfilCtrl.ControleAcessoFuncionalidades('*');
   if JsonRetorno.TryGetValue<String>('Erro', vErro) then Begin
      LstFuncionalidadeAcesso.RowCount := 1;
+     JsonRetorno := Nil;
      Exit;
   End;
   JsonArrayFuncionalidades := JsonRetorno.GetValue<TJsonArray>('funcionalidades');
-  LstFuncionalidadeAcesso.RowCount  := JsonArrayFuncionalidades.Count+1;
-  LstFuncionalidadeAcesso.FixedRows := 1;
-  for xImg := 1 to LstFuncionalidadeAcesso.RowCount - 1 do
-  begin
-    LstFuncionalidadeAcesso.AddDataImage(2, xImg, 0, haCenter, vaTop);
-  end;
-  for xFuncionalidade := 0 to Pred(JsonArrayFuncionalidades.Count) do Begin
-    LstFuncionalidadeAcesso.Cells[0, xFuncionalidade+1] := JsonArrayFuncionalidades.Items[xFuncionalidade].GetValue<Integer>('funcionalidadeid').ToString();
-    LstFuncionalidadeAcesso.Cells[1, xFuncionalidade+1] := JsonArrayFuncionalidades.Items[xFuncionalidade].GetValue<String>('descricao');
-    LstFuncionalidadeAcesso.Cells[2, xFuncionalidade+1] := JsonArrayFuncionalidades.Items[xFuncionalidade].GetValue<Integer>('acesso').ToString();
-    LstFuncionalidadeAcesso.FontStyles[0, xFuncionalidade+1] := [FsBold];
-    LstFuncionalidadeAcesso.Alignments[0, xFuncionalidade+1] := taRightJustify;
-    LstFuncionalidadeAcesso.Alignments[2, xFuncionalidade+1] := taCenter;
-  End;
+  If FdMemFuncionalidadesAcesso.Active then
+   FdMemFuncionalidadesAcesso.EmptyDataSet;
+  FdMemFuncionalidadesAcesso.Close;
+  FdMemFuncionalidadesAcesso.LoadFromJSON(JsonArrayFuncionalidades, False);
+  JsonRetorno := Nil;
+  JsonArrayFuncionalidades := Nil;
+  MontaListaFuncionalidadesAcesso;
 end;
 
 procedure TFrmPerfil.GetControleAcessoTopicos;
@@ -221,6 +243,8 @@ begin
     LstTopicoAcesso.Alignments[0, xTopico+1] := taRightJustify;
     LstTopicoAcesso.Alignments[2, xTopico+1] := taCenter;
   End;
+  if LstTopicoAcesso.RowCount>1 then
+     LstTopicoAcesso.Row := 1;
 end;
 
 procedure TFrmPerfil.GetListaLstCadastro;
@@ -279,10 +303,15 @@ begin
   inherited;
   if LstFuncionalidadeAcesso.RowCount <= 1 then Exit;
   if (aCol = 2) And (ARow > 0) and (BtnSalvar.Enabled) then Begin
-     If LstFuncionalidadeAcesso.Cells[2, ARow] = '1' then
-        LstFuncionalidadeAcesso.Cells[2, ARow] := '0'
-     Else
-       LstFuncionalidadeAcesso.Cells[2, ARow] := '1';
+     If LstFuncionalidadeAcesso.Cells[2, ARow] = '1' then Begin
+        LstFuncionalidadeAcesso.Cells[2, ARow] := '0';
+        FuncionalidadeAcessoAddDel(LstFuncionalidadeAcesso.Ints[0, ARow], 0);
+     End
+     Else Begin
+        LstFuncionalidadeAcesso.Cells[2, ARow] := '1';
+        FuncionalidadeAcessoAddDel(LstFuncionalidadeAcesso.Ints[0, ARow], 1);
+     End;
+     AtualizaAcessoTopico;
   End;
 end;
 
@@ -303,12 +332,32 @@ begin
        if LstTopicoAcesso.Cells[2, xTopicos] = '1' then
           vListaTopicos := vListaTopicos+IfThen(vListaTopicos<>'',', ','') + LstTopicoAcesso.Cells[0, xTopicos];
      if vListaTopicos = '' then vListaTopicos := '0';
-     //GetControleAcesoFuncionalidades(vListaTopicos);
-     if (ARow > 0) then
-        GetControleAcesoFuncionalidades(LstTopicoAcesso.Cells[0, aRow] );
-  End
-  else If (ARow > 0) then
-    GetControleAcesoFuncionalidades(LstTopicoAcesso.Cells[0, aRow] );
+  End;
+  MontaListaFuncionalidadesAcesso;
+end;
+
+procedure TFrmPerfil.MontaListaFuncionalidadesAcesso;
+Var xFuncionalidade, xImg : Integer;
+begin
+  FdMemFuncionalidadesAcesso.Filter   := 'TopicoId = '+LstTopicoAcesso.Cells[0, LstTopicoAcesso.Row];
+  FdMemFuncionalidadesAcesso.Filtered := True;
+  LstFuncionalidadeAcesso.RowCount  := FdMemFuncionalidadesAcesso.RecordCount+1;
+  if Not FdMemFuncionalidadesAcesso.IsEmpty then Begin
+     LstFuncionalidadeAcesso.FixedRows := 1;
+     for xImg := 1 to FdMemFuncionalidadesAcesso.RecordCount do
+       LstFuncionalidadeAcesso.AddDataImage(2, xImg, 0, haCenter, vaTop);
+     for xFuncionalidade := 1 to FdMemFuncionalidadesAcesso.RecordCount do Begin
+       LstFuncionalidadeAcesso.Cells[0, xFuncionalidade] := FdMemFuncionalidadesAcesso.FieldbyName('funcionalidadeid').AsString;
+       LstFuncionalidadeAcesso.Cells[1, xFuncionalidade] := FdMemFuncionalidadesAcesso.FieldbyName('descricao').AsString;
+       LstFuncionalidadeAcesso.Cells[2, xFuncionalidade] := FdMemFuncionalidadesAcesso.FieldbyName('acesso').AsString;
+       LstFuncionalidadeAcesso.FontStyles[0, xFuncionalidade] := [FsBold];
+       LstFuncionalidadeAcesso.Alignments[0, xFuncionalidade] := taRightJustify;
+       LstFuncionalidadeAcesso.Alignments[2, xFuncionalidade] := taCenter;
+       FdMemFuncionalidadesAcesso.Next;
+     End;
+  End;
+  FdMemFuncionalidadesAcesso.Filter   := '';
+  FdMemFuncionalidadesAcesso.Filtered := False;
 end;
 
 procedure TFrmPerfil.PesquisarClickInLstCadastro(aCol, aRow: Integer);
@@ -342,7 +391,12 @@ Var vErro : String;
     xTopicos, xFuncionalidades : Integer;
     JsonArrayTopicos, JsonArrayFuncionalidades : TJsonArray;
     JsonTopicos, JsonFuncionalidades, JsonAcesso : TJsonObject;
+    vOperacaoPerfil : String;
 begin
+  If ObjPerfilCtrl.ObjPerfil.PerfilId = 0 then
+     vOperacaoPerfil := 'Novo Perfil'
+  Else
+     vOperacaoPerfil := 'Alteração de Perfil';
   ObjPerfilCtrl.ObjPerfil.PerfilId  := StrToIntDef(EdtPerfilId.Text, 0);
   ObjPerfilCtrl.ObjPerfil.Descricao := EdtDescricao.Text;
   If ChkCadastro.Checked Then ObjPerfilCtrl.ObjPerfil.Status := 1 Else ObjPerfilCtrl.ObjPerfil.Status := 0;
@@ -357,19 +411,24 @@ begin
     JsonArrayTopicos.AddElement(JsonTopicos);
   End;
   JsonAcesso.AddPair('topicos', JsonArrayTopicos);
-  for xFuncionalidades := 1 to Pred(LstFuncionalidadeAcesso.RowCount) do Begin
+  FdMemFuncionalidadesAcesso.First;
+  While Not FdMemFuncionalidadesAcesso.Eof do Begin  //for xFuncionalidades := 1 to Pred(LstFuncionalidadeAcesso.RowCount) do Begin
     JsonFuncionalidades := TJsonObject.Create;
-    JsonFuncionalidades.AddPair('funcionalidadeid', TJsonNumber.Create(LstFuncionalidadeAcesso.Cells[0, xFuncionalidades].ToInteger()));
-    JsonFuncionalidades.AddPair('acesso',   TJsonNumber.Create(LstFuncionalidadeAcesso.Cells[2, xFuncionalidades].ToInteger()));
+    JsonFuncionalidades.AddPair('funcionalidadeid', TJsonNumber.Create(FdMemFuncionalidadesAcesso.FieldByName('FuncionalidadeId').AsInteger));
+    JsonFuncionalidades.AddPair('acesso',   TJsonNumber.Create(FdMemFuncionalidadesAcesso.FieldByName('Acesso').AsInteger));
     JsonArrayFuncionalidades.AddElement(JsonFuncionalidades);
+    FdMemFuncionalidadesAcesso.Next;
   End;
   JsonAcesso.AddPair('funcionalidades', JsonArrayFuncionalidades);
   If Not ObjPerfilCtrl.Salvar.TryGetValue('Erro', verro) then Begin
      Result := True;
      ObjPerfilCtrl.SalvarAcesso(JsonAcesso);
+     if vOperacaoPerfil <> 'Novo Perfil' then Begin
+        if Confirmacao(vOperacaoPerfil, 'Deseja alterar usuários deste perfil?', True) then
+           ObjPerfilCtrl.AtualizarPermissao;
+     End;
      JsonAcesso.DisposeOf;
      ObjPerfilCtrl.ObjPerfil.PerfilId := 0;
-
   End
   Else
      Result := False;
@@ -390,6 +449,7 @@ begin
        vListaTopicos := vListaTopicos+IfThen(vListaTopicos<>'',', ','') + LstTopicoAcesso.Cells[0, xTopicos];
   if vListaTopicos = '' then vListaTopicos := '0';
   GetControleAcesoFuncionalidades(vListaTopicos);
+  LstTopicoAcesso.Row := 1;
 end;
 
 end.
