@@ -837,11 +837,10 @@ begin
 End;
 
 procedure Cancelar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-var
-  LService: TServicePedidoVolume;
-  JsonArrayErro: TJsonArray;
-  JsonArrayRetorno: TJsonArray;
-  HrInicioLog: Ttime;
+var LService: TServicePedidoVolume;
+    JsonArrayErro: TJsonArray;
+    JsonArrayRetorno: TJsonArray;
+    HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;
@@ -850,28 +849,20 @@ begin
     Try
       JsonArrayRetorno := LService.Cancelar(Nil, Req.Body<TJSONObject>);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/pedidovolume/cancelar/:pedidovolumeid',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Reg.Cancelado(s).',
-        201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      on E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedidovolume/cancelar/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
+                      'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Reg.Cancelado(s).',
+                      201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+    Except on E: Exception do
       Begin
         Tutil.Gravalog('[Cancelar] ' + E.Message);
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THTTPStatus.BadRequest);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/pedidovolume/cancelar/:pedidovolumeid',
-          Trim(Req.Params.Content.Text), Req.Body, '',
-          StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedidovolume/cancelar/:pedidovolumeid', Trim(Req.Params.Content.Text), Req.Body, '',
+                        StringReplace(JsonArrayErro.ToString, #39, '', [rfReplaceAll]),
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     End;
   Finally

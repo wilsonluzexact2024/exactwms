@@ -351,6 +351,12 @@ Const SqlPedido =
       'Declare @PedidoPendente Integer = :pPedidoPendente' + sLineBreak +
       'Declare @CargaId Integer = :pCargaId' + sLineBreak +
       'Declare @NotaFiscalERP Varchar(50) = :pNotaFiscalERP' + sLineBreak +
+      'Drop table if exists #Ped'+sLineBreak+
+      'Drop table if exists #SPICK'+sLineBreak+
+      'Drop table if exists #Carga'+sLineBreak+
+      'Drop table if exists #PedVol'+sLineBreak+
+      'Drop table if exists #VL'+sLineBreak+
+      'Drop table if exists #PP'+sLineBreak+
       'select Ped.PedidoId, Ped.OperacaoTipoId, Op.Descricao as OperacaoTipo, Op.Descricao Operacao, Ped.Pessoaid,'+sLineBreak+
       '                     Pes.CodPessoaERP, Pes.Razao, Pes.Fantasia, ped.DocumentoOriginal, Ped.DocumentoNr,'+sLineBreak+
       '					 FORMAT(Rd.Data, '+#39+'dd/MM/yyyy'+#39+') as DocumentoData, Ped.RegistroERP, FORMAT(De.Data, '+#39+'dd/MM/yyyy'+#39+') DtProcesso,'+sLineBreak+

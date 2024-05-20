@@ -544,9 +544,7 @@ begin
 end;
 
 procedure TFrmRelPedidos.CancelarPedido(pPedidoId : Integer);
-Var //ObjPedidoSaidaCtrl : TPedidoSaidaCtrl;
-    JsonPedidoCancelar : TJsonObject;
-
+Var JsonPedidoCancelar : TJsonObject;
     ObjPedidoVolumeCtrl : TPedidoVolumeCtrl;
     JsonArrayCancelar   : TJsonArray;
     vErro : String;
@@ -563,9 +561,12 @@ begin
        If JsonArrayCancelar.Items[0].TryGetValue('Erro', vErro) then
           ShowErro('Erro: '+vErro)
        Else Begin
-          LstPedidosAdv.Cells[24, LstPedidosAdv.Row] := '3';
+//          LstPedidosAdv.Cells[24, LstPedidosAdv.Row] := '3';
+          LstPedidosAdv.AddDataImage(25, LstPedidosAdv.Row, 3, TCellHAlign.haCenter, TCellVAlign.vaTop);
+          LstPedidosAdv.Cells[25, LstPedidosAdv.Row] := '3';
           LstPedidosAdv.Cells[ 5, LstPedidosAdv.Row] := 'Cancelado';
-          LstPedidosAdv.Colors[5, LstPedidosAdv.Row] := ClRed
+          LstPedidosAdv.Colors[5, LstPedidosAdv.Row] := ClRed;
+          Player('toast');
        End;
      Except
      End;

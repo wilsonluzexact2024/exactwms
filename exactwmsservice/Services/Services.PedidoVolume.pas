@@ -222,20 +222,18 @@ begin
   end;
 end;
 
-function TServicePedidoVolume.Cancelar(pConexao: TFdConnection;
-  pJsonObject: TJsonObject): TJsonArray;
-var
-  vQry, vQryCheckPedido: TFdQuery;
-  vTransacao: Boolean;
-  vProcesso: String;
+function TServicePedidoVolume.Cancelar(pConexao: TFdConnection; pJsonObject: TJsonObject): TJsonArray;
+var vQry, vQryCheckPedido: TFdQuery;
+    vTransacao: Boolean;
+    vProcesso: String;
 begin
   try
     vQry := FConexao.GetQuery;
     vQryCheckPedido := FConexao.GetQuery;
     if pConexao = Nil then
-      vQry.connection := FConexao.DB
+       vQry.connection := FConexao.DB
     Else
-      vQry.connection := pConexao;
+       vQry.connection := pConexao;
     vQryCheckPedido.connection := vQry.connection;
     if pJsonObject.GetValue<Integer>('pedidoId') > 0 then Begin
        vQryCheckPedido.Sql.Add('Select De.ProcessoId, Descricao Processo From Pedido Ped');
@@ -246,12 +244,11 @@ begin
        if vQryCheckPedido.FieldByName('ProcessoId').AsInteger >= 13 then Begin
           vProcesso := vQryCheckPedido.FieldByName('Processo').AsString;
           vQryCheckPedido.Close;
-          raise Exception.Create('Cancelamento n�o permitido. Processo Atual: ' + vProcesso);
+          raise Exception.Create('Cancelamento não permitido. Processo Atual: ' + vProcesso);
        End;
     End;
     vTransacao := False;
-    If Not vQry.connection.InTransaction then
-    Begin
+    If Not vQry.connection.InTransaction then Begin
       vQry.connection.StartTransaction;
       vQry.connection.TxOptions.Isolation := xiReadCommitted;
       vTransacao := True;
@@ -263,53 +260,50 @@ begin
       vQry.Sql.Add('Declare @PedidoVolumeId Integer = ' + pJsonObject.GetValue<Integer>('pedidoVolumeId').ToString());
       vQry.Sql.Add('Declare @UsuarioId Integer = ' + pJsonObject.GetValue<Integer>('usuarioid').ToString());
       vQry.Sql.Add('Declare @Terminal VarChar(50) = ' + QuotedStr(pJsonObject.GetValue<String>('terminal')));
-      vQry.Sql.Add('--Volumes não expedido');
-      vQry.Sql.Add('Update Est Set LoteId = Vl.LoteId, Qtde = Qtde - Vl.QtdSuprida');
-      vQry.Sql.Add('	From Estoque Est');
-      vQry.Sql.Add('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
-      vQry.Sql.Add('             from PedidoVolumeLotes Vl');
-      vQry.Sql.Add('             Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      vQry.Sql.Add('			         	Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid and');
-      vQry.Sql.Add('                                              De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
-      vQry.Sql.Add('             Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      vQry.Sql.Add('                   (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      vQry.Sql.Add('					              DE.ProcessoId < 13 or Pv.Expedido = 0');
-      vQry.Sql.Add('             Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId and Vl.EnderecoId=Est.EnderecoId');
-      vQry.Sql.Add('	Where Est.EstoqueTipoId = 6');
-      vQry.Sql.Add('--Volume Expedido');
+      vQry.Sql.Add('Drop table if exists #VolumeNaoExpedido');
+      vQry.Sql.Add('Drop table if exists #VolumeExpedido');
+      vQry.Sql.Add('--Reserva de Volumes não Expedido');
+      vQry.Sql.Add('Select LoteId, EnderecoId, SUM(Vl.Quantidade) Quantidade Into #VolumeNaoExpedido');
+      vQry.Sql.Add('from PedidoVolumeLotes Vl');
+      vQry.Sql.Add('Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
+      vQry.Sql.Add('Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid and');
+      vQry.Sql.Add('                                 De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento )');
+      vQry.Sql.Add('Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
+      vQry.Sql.Add('      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
+      vQry.Sql.Add('      DE.ProcessoId < 13  or (De.Processoid >= 13 and (select ExpedicaoOffLine From Configuracao)=1 and DE.ProcessoId Not In (15, 31) and Pv.Expedido = 0)');
+      vQry.Sql.Add('Group by LoteId, EnderecoId');
+      vQry.Sql.Add('--Retirando do estoque Volumes Não expedido');
+      vQry.Sql.Add('Update Est Set Qtde = Qtde - Vl.Quantidade');
+      vQry.Sql.Add('From Estoque Est');
+      vQry.Sql.Add('Inner Join #VolumeNaoExpedido Vl On Vl.LoteId = Est.LoteId and Vl.EnderecoId=Est.EnderecoId And Est.EstoqueTipoId = 6');
+      vQry.Sql.Add('--Reserva de Volumes Já Expedido e Baixado Estoque');
+      vQry.Sql.Add('Select LoteId, SUM(Vl.QtdSuprida) QtdSuprida Into #VolumeExpedido');
+      vQry.Sql.Add('from PedidoVolumeLotes Vl');
+      vQry.Sql.Add('Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
+      vQry.Sql.Add('Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid and');
+      vQry.Sql.Add('                           De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento )');
+      vQry.Sql.Add('Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
+      vQry.Sql.Add('      (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And DE.ProcessoId Not In (15, 31) And');
+      vQry.Sql.Add('      DE.ProcessoId >= 13 and (Pv.Expedido = 1 or  (select ExpedicaoOffLine From Configuracao)=0)');
+      vQry.Sql.Add('Group by LoteId');
+      vQry.Sql.Add('--Volume Expedido e Já existente no Estoque');
       vQry.Sql.Add('Update Est Set Qtde = Qtde + Vl.QtdSuprida');
-      vQry.Sql.Add('	From Estoque Est');
-      vQry.Sql.Add('	Inner Join (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
-      vQry.Sql.Add('             from PedidoVolumeLotes Vl');
-      vQry.Sql.Add('             Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      vQry.Sql.Add('				         Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid and ');
-      vQry.Sql.Add('                                              De.ProcessoId = (Select MAX(ProcessoId) From vDocumentoEtapas Where Documento = De.Documento ) ');
-      vQry.Sql.Add('             Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      vQry.Sql.Add('                   (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      vQry.Sql.Add('					              DE.ProcessoId >= 13 and DE.ProcessoId <> 15 And Pv.Expedido = 0');
-      vQry.Sql.Add('             Group by LoteId, EnderecoId) Vl On Vl.LoteId = Est.LoteId');
-      vQry.Sql.Add('	Where est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
-      vQry.Sql.Add('Insert Into Estoque select Vl.LoteId, (Select EnderecoidVolumeExpedidoCancelado From Configuracao), 1, SUM(QtdSuprida),');
-      vQry.Sql.Add('							   (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      vQry.Sql.Add('							   (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
-      vQry.Sql.Add('							   Null, Null, Null, Null');
-      vQry.Sql.Add('    from (Select LoteId, EnderecoId, SUM(Vl.QtdSuprida) QtdSuprida');
-      vQry.Sql.Add('          from PedidoVolumeLotes Vl');
-      vQry.Sql.Add('          Inner Join PedidoVolumes Pv On Pv.PedidoVolumeId = Vl.PedidoVolumeId');
-      vQry.Sql.Add('				      Left Join vDocumentoEtapas DE On De.Documento = Pv.uuid');
-      vQry.Sql.Add('          Where (@PedidoId = 0 or @PedidoId = Pv.PedidoId) And');
-      vQry.Sql.Add('                (@PedidoVolumeId=0 or Pv.PedidoVolumeId = @PedidoVolumeId) And');
-      vQry.Sql.Add('				        	   DE.ProcessoId >= 13 and DE.ProcessoId <> 15 and Pv.Expedido = 0');
-      vQry.Sql.Add('                Group by LoteId, EnderecoId) Vl');
-      vQry.Sql.Add('	Left Join Estoque Est On Est.LoteId = Vl.Loteid And Est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao)');
-      vQry.Sql.Add('	where Est.LoteId Is Null');
-      vQry.Sql.Add('	Group by Vl.LoteId, Vl.EnderecoId');
+      vQry.Sql.Add('From #VolumeExpedido Vl');
+      vQry.Sql.Add('Inner Join Estoque Est On Est.LoteId = VL.LoteId and Est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao) And Est.EstoqueTipoId=1');
+      vQry.Sql.Add('Insert Into Estoque (LoteId, EnderecoId, EstoqueTipoId, Qtde, DtInclusao, Hrinclusao)');
+      vQry.Sql.Add('Select Vl.Loteid, (Select EnderecoidVolumeExpedidoCancelado From Configuracao), 1, Vl.QtdSuprida,');
+      vQry.Sql.Add('       (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+      vQry.Sql.Add('	   (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5)))');
+      vQry.Sql.Add('From #VolumeExpedido Vl');
+      vQry.Sql.Add('Left Join Estoque Est On Est.LoteId = VL.LoteId and Est.EnderecoId = (Select EnderecoidVolumeExpedidoCancelado From Configuracao) And Est.EstoqueTipoId=1');
+      vQry.Sql.Add('where Est.EnderecoId is Null');
+
       vQry.Sql.Add('--Registrar Cancelamento');
       vQry.Sql.Add('Insert Into DocumentoEtapas');
       vQry.Sql.Add('   Select Uuid, 15, (Case When @UsuarioId=0 Then Null Else @UsuarioId End),');
       vQry.Sql.Add('          (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-      vQry.Sql.Add('		  (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
-      vQry.Sql.Add('		  GetDate(), @Terminal, 1');
+      vQry.Sql.Add('		        (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))),');
+      vQry.Sql.Add('		        GetDate(), @Terminal, 1');
       vQry.Sql.Add('   From PedidoVolumes');
       vQry.Sql.Add('   where (@PedidoId = 0 or @PedidoId = PedidoId) and');
       vQry.Sql.Add('         (@PedidoVolumeId = 0 or @PedidoVolumeId = PedidoVolumeId)');

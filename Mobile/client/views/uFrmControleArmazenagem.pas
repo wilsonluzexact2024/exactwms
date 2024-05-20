@@ -718,7 +718,7 @@ begin
      Exit;
   End
   Else Begin
-     ObjEnderecoCtrl.ObjEndereco  := ObjEnderecoCtrl.ObjEndereco.JsonToClass(JsonArrayEndereco.Items[0].ToString());
+     ObjEnderecoCtrl.ObjEndereco            := ObjEnderecoCtrl.ObjEndereco.JsonToClass(JsonArrayEndereco.Items[0].ToString());
      ObjEnderecoCtrl.ObjEndereco.ProdutoId  := JsonArrayEndereco.Items[0].GetValue<TJsonObject>('produto').getValue<Integer>('produtoid');
      ObjEnderecoCtrl.ObjEndereco.CodProduto := JsonArrayEndereco.Items[0].GetValue<TJsonObject>('produto').getValue<Integer>('codproduto');
   End;
@@ -730,7 +730,7 @@ begin
        JsonArrayEndereco := Nil;
        Exit;
     End;
-    vZonaOrigem := EnderecamentoZona.ZonaId;
+    vZonaOrigem            := EnderecamentoZona.ZonaId;
     LblEnderecoOrigem.Text := EnderecoMask(Descricao, EnderecoEstrutura.Mascara, True)+
                               '   Rua: ' + EnderecoRua.Descricao + ' Lado: ' + EnderecoRua.Lado;
     vZonaOrigem := ObjEnderecoCtrl.ObjEndereco.EnderecamentoZona.ZonaId;
