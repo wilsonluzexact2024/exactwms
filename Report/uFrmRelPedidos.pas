@@ -518,7 +518,6 @@ begin
         FdMemPesqGeral.Close;
         MontaListaPedido(JsonArrayRetorno);
         FdMemPesqGeral.LoadFromJson(JsonArrayRetorno, False);
-        BtnImprimirStand.Grayed := False;
       End;
       JsonArrayRetorno := Nil;
       ObjPedidoCtrl.Free;
@@ -719,8 +718,10 @@ begin
   LstVolumeProdutosAdv.RowCount := 1;
   LstVolumeEtapas.RowCount      := 1;
   LblProduto.Caption            := '';
-  BtnImprimirStand.Grayed := True;
-  BtnExportarStand.Grayed := True;
+  BtnImprimirStand.Grayed  := True;
+  BtnExportarStand.Grayed  := True;
+  BtnImprimirStand.Enabled := False;
+  BtnExportarStand.Enabled := False;
 end;
 
 procedure TFrmRelPedidos.EdtPedidoIdKeyPress(Sender: TObject; var Key: Char);
@@ -757,9 +758,14 @@ begin
      TEdit(Sender).SetFocus;
   end
   Else Begin
-     if Sender = EdtProcessoId then
-        LblProcesso.Caption := JsonArrayRetorno.Items[0].GetValue<String>('descricao')
-     Else LblProcessoVolume.Caption := JsonArrayRetorno.Items[0].GetValue<String>('descricao');
+     if Sender = EdtProcessoId then Begin
+        LblProcesso.Caption := JsonArrayRetorno.Items[0].GetValue<String>('descricao');
+        ChkPedidoPendente.Checked := False;
+     End
+     Else Begin
+        LblProcessoVolume.Caption := JsonArrayRetorno.Items[0].GetValue<String>('descricao');
+        ChkVolumePendente.Checked := False;
+     End;
   End;
   JsonArrayRetorno := Nil;
   ObjProcessoCtrl  := Nil;
@@ -1960,6 +1966,9 @@ begin
     LstPedidosAdv.AddDataImage( 7, xPed, 0, TCellHAlign.haCenter, TCellVAlign.vaTop);
     LstPedidosAdv.AddDataImage(25, xPed, 2, TCellHAlign.haCenter, TCellVAlign.vaTop);
   End;
+  //BtnImprimirStand.Grayed := False;
+  BtnExportarStand.Grayed  := False;
+  BtnExportarStand.Enabled := True;
   LblRegistro.Caption := FormatFloat('#0', pJsonArray.Count);
   xItens   := 0;
   xDemanda := 0;
@@ -2106,7 +2115,9 @@ begin
        Else Begin
           LstPedidoResumoAdv.Colors[7, xProd+1] := LstPedidoResumoAdv.Colors[4, xProd+1];
           if pJsonArray.Get(xProd).GetValue<Integer>('qtdsuprida') > pJsonArray.Get(xProd).GetValue<Integer>('demanda') then
-             LstPedidoResumoAdv.FontColors[7, xProd+1] := clRed;
+             LstPedidoResumoAdv.FontColors[7, xProd+1] := clRed
+          Else
+             LstPedidoResumoAdv.FontColors[7, xProd+1] := LstPedidoResumoAdv.FontColors[6, xProd+1];
        End;
     End
     Else

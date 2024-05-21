@@ -148,9 +148,11 @@ type
     { Public declarations }
   private
     { Private declarations }
+    pTipoResumo : Integer; //0 = Data 1 - Zona
     Procedure MontaListaEvolucao;
     Procedure MontaDSHDetalhes;
     Procedure ThreadValidarPesquisarDados(Sender: TObject);
+    Procedure ColumnHeader(pTipo : integer);
   Protected
     Procedure PesquisarDados; OverRide;
     Procedure Limpar;  OverRide;
@@ -217,6 +219,44 @@ begin
      GroupBox2.Enabled := True;
      GroupBox2.Visible := False;
   End;
+end;
+
+procedure TFrmRelEvolucaoRessuprimentos.ColumnHeader(pTipo : integer);
+begin
+  LstReport.ColCount := 10;
+  case pTipo of
+    0: Begin
+       LstReport.Cells[0, 0] := 'Data';
+       LstReport.ColWidths[0]  := 100;
+       LstReport.Alignments[0, 0]  := taCenter;
+       LstReport.FontStyles[0, 0]  := [FsBold];
+    End;
+    1: Begin
+       LstReport.Cells[0, 0] := 'Zona/Setor';
+       LstReport.ColWidths[0]  := 240;
+       LstReport.Alignments[0, 0]  := taLeftJustify;
+       LstReport.FontStyles[0, 0]  := [FsBold];
+    End;
+  end;
+  LstReport.ColWidths[1]  :=  80;
+  LstReport.ColWidths[2]  :=  80;
+  LstReport.ColWidths[3]  :=  80;
+  LstReport.ColWidths[4]  :=  80;
+  LstReport.ColWidths[5]  :=  80;
+  LstReport.ColWidths[6]  :=  80;
+  LstReport.ColWidths[7]  :=  80;
+  LstReport.ColWidths[8]  :=  80;
+  LstReport.ColWidths[9]  :=  80;
+  LstReport.Alignments[1, 0]  := taRightJustify;
+  LstReport.Alignments[2, 0]  := taRightJustify;
+  LstReport.Alignments[3, 0]  := taRightJustify;
+  LstReport.Alignments[4, 0]  := taRightJustify;
+  LstReport.Alignments[5, 0]  := taRightJustify;
+  LstReport.Alignments[6, 0]  := taRightJustify;
+  LstReport.Alignments[7, 0]  := taRightJustify;
+  LstReport.Alignments[8, 0]  := taRightJustify;
+  LstReport.Alignments[9, 0]  := taRightJustify;
+
 end;
 
 procedure TFrmRelEvolucaoRessuprimentos.EdtInicioChange(Sender: TObject);
@@ -339,27 +379,8 @@ end;
 procedure TFrmRelEvolucaoRessuprimentos.FormCreate(Sender: TObject);
 begin
   inherited;
-  LstReport.ColWidths[0]  := 100;
-  LstReport.ColWidths[1]  :=  80;
-  LstReport.ColWidths[2]  :=  80;
-  LstReport.ColWidths[3]  :=  80;
-  LstReport.ColWidths[4]  :=  80;
-  LstReport.ColWidths[5]  :=  80;
-  LstReport.ColWidths[6]  :=  80;
-  LstReport.ColWidths[7]  :=  80;
-  LstReport.ColWidths[8]  :=  80;
-  LstReport.ColWidths[9]  :=  80;
-  LstReport.Alignments[0, 0]  := taRightJustify;
-  LstReport.FontStyles[0, 0]  := [FsBold];
-  LstReport.Alignments[1, 0]  := taRightJustify;
-  LstReport.Alignments[2, 0]  := taRightJustify;
-  LstReport.Alignments[3, 0]  := taRightJustify;
-  LstReport.Alignments[4, 0]  := taRightJustify;
-  LstReport.Alignments[5, 0]  := taRightJustify;
-  LstReport.Alignments[6, 0]  := taRightJustify;
-  LstReport.Alignments[7, 0]  := taRightJustify;
-  LstReport.Alignments[8, 0]  := taRightJustify;
-  LstReport.Alignments[9, 0]  := taRightJustify;
+  pTipoResumo := 0;
+  ColumnHeader(pTipoResumo);
   LblRegistro.caption      := '0';
   LblRecebido.Caption      := '0';
   LblCubagem.Caption       := '0';
@@ -711,7 +732,10 @@ begin
   vCortes    := 0;
   while Not FdMemPesqGeral.Eof do Begin
     //LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.Recno.ToString;
-    LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Data').AsString;
+    if pTipoResumo = 0 then
+       LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Data').AsString
+    Else
+       LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Zona').AsString;
     LstReport.Cells[1, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Demanda').AsString;
     LstReport.Cells[2, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Recebido').AsString;
     LstReport.Cells[3, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Cubagem').AsString;
@@ -843,7 +867,10 @@ begin
        End;
     End
     Else if CbTipoAnalise.ItemIndex = 2 then Begin
-       JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnid(aParams);
+      if pTipoResumo = 0 then
+         JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnid(aParams)
+      Else
+         JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnidZona(aParams);
        if Not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
           FdMemPesqGeral.LoadFromJson(JsonArrayRetorno, False);
           JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnidEmbalagem(aParams, 'Unid');

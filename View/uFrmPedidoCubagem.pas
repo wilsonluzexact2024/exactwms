@@ -1272,7 +1272,7 @@ begin
   ObjPedidoCtrl := TPedidoSaidaCtrl.Create;
   Try
     ReturnJsonArray := ObjPedidoCtrl.PedidoCubagem(LstPedidosAdv.Cells[0, pIndiceLstPedido].ToInteger());
-    if Not ReturnJsonArray.Items[0].TryGetValue('Erro', vErro) then Begin
+    if (Not ReturnJsonArray.Items[0].TryGetValue('Erro', vErro)) and (Not ReturnJsonArray.Items[0].TryGetValue('MSG', vErro)) then Begin
 //       ShowErro('Erro no processamento de Caixa Fechada: Pedido: '+LstPedidosAdv.Cells[0, pIndiceLstPedido]+' -  '+vErro)
 //    Else Begin
        vLote      := 0;
@@ -1323,8 +1323,10 @@ begin
          Result := True;
        End;
     End
-    Else
-       ShowErro('Erro: '+vErro, 'alerta');
+    Else Begin
+       If (ReturnJsonArray.Items[0].TryGetValue('Erro', vErro)) then
+          ShowErro('Erro: '+vErro, 'alerta')
+    End;
     ObjPedidoCtrl.Free;
     ReturnJsonArray := Nil;
   Except On E: Exception do Begin

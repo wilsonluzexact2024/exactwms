@@ -356,7 +356,7 @@ begin
   try
     Result := TJsonArray.Create;
     vQry := FConexao.GetQuery;
-    vQry.Sql.Add(TuEvolutConst.SqlEtiquetaVolumePorRua);
+    vQry.Sql.Add(TuEvolutConst.SqlEtiquetaVolumePorRua1);
     vCompl := '';
     vListaPedido := '';
     if pJsonObject.GetValue<TJsonArray>('pedido').Count > 0 then
@@ -368,13 +368,16 @@ begin
     End;
     if pJsonObject.Count > 0 then
       vQry.Sql.Add(vListaPedido + ' )');
+    vQry.Sql.Add(TuEvolutConst.SqlEtiquetaVolumePorRua2);
+    if DebugHook <> 0 then
+       vQry.SQL.SaveToFile('EtqPorRuaTeste.Sql');
     vQry.ParamByName('pProcessoId').Value := pJsonObject.GetValue<Integer>('processoid');
     vQry.ParamByName('pEmbalagemId').Value := pJsonObject.GetValue<Integer>('embalagemid');
     vQry.ParamByName('pZonaId').Value := pJsonObject.GetValue<Integer>('zonaid');
     if pJsonObject.GetValue<Integer>('tagvolumeordem', 1) = 1 then
-       vQry.Sql.Add('order by VL.Inicio, Ro.RotaId, Pe.CodPessoaERP')
+       vQry.Sql.Add('order by Inicio, RotaId, CodPessoaERP')
     Else
-       vQry.Sql.Add('order by VL.Inicio, Ro.RotaId, vCxaFechada.CodProduto');
+       vQry.Sql.Add('order by Inicio, RotaId, CodProduto');
     if DebugHook <> 0 then
        vQry.Sql.SaveToFile('EtiquetaPorRua.Sql');
     vQry.Open;

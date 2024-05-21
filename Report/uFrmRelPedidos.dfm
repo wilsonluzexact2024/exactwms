@@ -9,7 +9,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PgcBase: TcxPageControl
     Width = 1367
     Height = 713
-    Properties.ActivePage = TabPrincipal
+    Properties.ActivePage = TabRelVolumes
     ExplicitWidth = 1367
     ExplicitHeight = 713
     ClientRectBottom = 713

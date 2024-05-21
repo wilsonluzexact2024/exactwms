@@ -111,8 +111,8 @@ Procedure GetEvolucaoAtendimentoPed(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
 Procedure GetEvolucaoAtendimentoVol(Req: THorseRequest; Res: THorseResponse;
   Next: TProc);
-Procedure GetEvolucaoAtendimentoUnid(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEvolucaoAtendimentoUnid(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure GetEvolucaoAtendimentoUnidZona(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetEvolucaoAtendimentoUnidEmbalagem(Req: THorseRequest;
   Res: THorseResponse; Next: TProc);
 Procedure DeleteReservaCorrecao(Req: THorseRequest; Res: THorseResponse;
@@ -219,6 +219,7 @@ begin
     .Get('/pedido/dsboard/evolucaoatendimentoped', GetEvolucaoAtendimentoPed)
     .Get('/pedido/dsboard/evolucaoatendimentovol', GetEvolucaoAtendimentoVol)
     .Get('/pedido/dsboard/evolucaoatendimentounid', GetEvolucaoAtendimentoUnid)
+    .Get('/pedido/dsboard/evolucaoatendimentounidzona', GetEvolucaoAtendimentoUnidZona)
     .Get('/pedido/dsboard/evolucaoatendimentounidembalagem', GetEvolucaoAtendimentoUnidEmbalagem)
     .Delete('/pedido/reservacorrecao', DeleteReservaCorrecao)
     .Get('/pedido/processo/:pedidoid', GetPedidoProcesso)
@@ -537,8 +538,7 @@ begin
   End;
 end;
 
-Procedure GetEvolucaoAtendimentoUnid(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
+Procedure GetEvolucaoAtendimentoUnid(Req: THorseRequest; Res: THorseResponse;  Next: TProc);
 var
   PedidoSaidaDAO: TPedidoSaidaDAO;
   AQueryParam: TDictionary<String, String>;
@@ -642,8 +642,7 @@ begin
         FreeAndNil(PedidoSaidaDAO);
         Exit;
       End;
-      JsonArrayRetorno := PedidoSaidaDAO.GetEvolucaoAtendimentoUnid(vDataIni,
-        vDataFin, vZonaId, vRotaId);
+      JsonArrayRetorno := PedidoSaidaDAO.GetEvolucaoAtendimentoUnid(vDataIni, vDataFin, vZonaId, vRotaId);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
         Req.Headers['terminal'], ClientIP(Req), THorse.Port, '/v1/saida',
@@ -663,6 +662,106 @@ begin
           Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
           ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
           Req.Headers['versao']);
+      End;
+    end;
+  Finally
+    FreeAndNil(PedidoSaidaDAO);
+  End;
+end;
+
+Procedure GetEvolucaoAtendimentoUnidZona(Req: THorseRequest; Res: THorseResponse;  Next: TProc);
+var PedidoSaidaDAO: TPedidoSaidaDAO;
+    AQueryParam: TDictionary<String, String>;
+    vDataIni, vDataFin: TDateTime;
+    vZonaId: Integer;
+    vRotaId: Integer;
+    vParamsOk: Integer;
+    JsonArrayErro: TJSonArray;
+    JsonArrayRetorno: TJSonArray;
+    HrInicioLog: TTime;
+begin
+  PedidoSaidaDAO := TPedidoSaidaDAO.Create;
+  Try
+    Try
+      HrInicioLog := Time;
+      vDataIni    := 0;
+      vDataFin    := 0;
+      vZonaId     := 0;
+      vRotaId     := 0;
+      AQueryParam := Req.Query.Dictionary;
+
+      If AQueryParam.Count <= 0 then Begin
+         JsonArrayErro := TJSonArray.Create();
+         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Parâmetros da consulta não definidos!')));
+         Res.Send<TJSonArray>(JsonArrayErro).Status(THttpStatus.Created);
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayErro.Count.ToString + ' Registros.',
+                         403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+         FreeAndNil(PedidoSaidaDAO);
+         Exit;
+      End;
+      vParamsOk := 0;
+      if AQueryParam.ContainsKey('datainicio') then Begin
+        Try
+          vDataIni := StrToDate(AQueryParam.Items['datainicio']);
+          vParamsOk := vParamsOk + 1;
+        Except
+          JsonArrayErro := TJSonArray.Create();
+          JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Inicial dos Pedidos é inválida!')));
+          Res.Send<TJSonArray>(JsonArrayErro).Status(THttpStatus.BadRequest);
+          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                          '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayErro.Count.ToString + ' Registros.',
+                          403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+          FreeAndNil(PedidoSaidaDAO);
+          Exit;
+        End;
+      End;
+      if AQueryParam.ContainsKey('datafinal') then Begin
+        Try
+          vDataFin := StrToDate(AQueryParam.Items['datafinal']);
+          vParamsOk := vParamsOk + 1;
+        Except
+          JsonArrayErro := TJSonArray.Create();
+          JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Data Final dos Pedidos é inválida!')));
+          Res.Send<TJSonArray>(JsonArrayErro).Status(THttpStatus.BadRequest);
+          Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', 'Data Final inválida!',
+                         403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+          FreeAndNil(PedidoSaidaDAO);
+          Exit;
+        End;
+      End;
+      if AQueryParam.ContainsKey('zonaid') then Begin
+         vZonaId := StrToIntDef(AQueryParam.Items['zonaid'], 0);
+         vParamsOk := vParamsOk + 1;
+      End;
+      if AQueryParam.ContainsKey('rotaid') then Begin
+         vRotaId := StrToIntDef(AQueryParam.Items['rotaid'], 0);
+         vParamsOk := vParamsOk + 1;
+      End;
+      if vParamsOk <> AQueryParam.Count then Begin
+         JsonArrayErro := TJSonArray.Create();
+         JsonArrayErro.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', 'Parâmetros da consulta definidos incorretamente!')));
+         Res.Send<TJSonArray>(JsonArrayErro).Status(THttpStatus.BadRequest);
+         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                         '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayErro.Count.ToString + ' Registros.',
+                         403, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+         FreeAndNil(PedidoSaidaDAO);
+         Exit;
+      End;
+      JsonArrayRetorno := PedidoSaidaDAO.GetEvolucaoAtendimentoUnidZona(vDataIni, vDataFin, vZonaId, vRotaId);
+      Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
+                      201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
+    Except On E: Exception do
+      Begin
+        JsonArrayErro := TJSonArray.Create;
+        JsonArrayErro.AddElement(TJSONObject.Create.AddPair('Erro', E.Message));
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THttpStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/pedido/dsboard/evolucaoatendimentounid', Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' + Req.Headers['versao']);
       End;
     end;
   Finally
@@ -1384,42 +1483,30 @@ begin
   End;
 End;
 
-Procedure GetPedidoResumoAtendimento(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  PedidoSaidaDAO: TPedidoSaidaDAO;
-  JsonArrayRetorno: TJSonArray;
-  HrInicioLog: TTime;
+Procedure GetPedidoResumoAtendimento(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var PedidoSaidaDAO: TPedidoSaidaDAO;
+    JsonArrayRetorno: TJSonArray;
+    HrInicioLog: TTime;
 begin
   Try
     HrInicioLog := Time;
     try
       PedidoSaidaDAO := TPedidoSaidaDAO.Create;
-      JsonArrayRetorno := PedidoSaidaDAO.GetPedidoResumoAtendimento
-        (StrToIntDef(Req.Params.Items['pedidoid'], 0),
-        StrToIntDef(Req.Params.Items['divergencia'], 0), 0, 0);
+      JsonArrayRetorno := PedidoSaidaDAO.GetPedidoResumoAtendimento(StrToIntDef(Req.Params.Items['pedidoid'], 0),
+                          StrToIntDef(Req.Params.Items['divergencia'], 0), 0, 0);
       Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal',
-        Trim(Req.Params.Content.Text), Req.Body, '',
-        'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.', 201,
-        ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-        Req.Headers['versao']);
-    Except
-      On E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal', Trim(Req.Params.Content.Text), Req.Body, '',
+                      'Retorno: ' + JsonArrayRetorno.Count.ToString + ' Registros.',
+                      201, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
+    Except On E: Exception do
       Begin
         JsonArrayRetorno := TJSonArray.Create;
-        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
-        Res.Send<TJSonArray>(JsonArrayRetorno)
-          .Status(THttpStatus.InternalServerError);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal',
-          Trim(Req.Params.Content.Text), Req.Body, '', E.Message, 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: ' +
-          Req.Headers['versao']);
+        JsonArrayRetorno.AddElement(TJSONObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Send<TJSonArray>(JsonArrayRetorno).Status(THttpStatus.InternalServerError);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/saida/resumoatendimento/:pedidoid/:divergencia/:datainicial/:datafinal', Trim(Req.Params.Content.Text), Req.Body, '', E.Message,
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname'] + '_V: '+Req.Headers['versao']);
       End;
     end;
   Finally
@@ -1427,13 +1514,11 @@ begin
   End;
 End;
 
-Procedure GetClientesRotaCarga(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var
-  JsonErro: TJSonArray;
-  PedidoSaidaDAO: TPedidoSaidaDAO;
-  JsonArrayRetorno: TJSonArray;
-  HrInicioLog: TTime;
+Procedure GetClientesRotaCarga(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var JsonErro: TJSonArray;
+    PedidoSaidaDAO: TPedidoSaidaDAO;
+    JsonArrayRetorno: TJSonArray;
+    HrInicioLog: TTime;
 begin
   Try
     HrInicioLog := Time;

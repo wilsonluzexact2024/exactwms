@@ -75,6 +75,7 @@ Type
     Function GetMovimentacao(pPedidoId : Integer; pDataInicio, pDataFinal : TDateTime; pProdutoId : Integer) : TJsonArray;
     Function GetEvolucaoAtendimentoPed(aParams: TDictionary<String, String>)  : TJsonArray;
     Function GetEvolucaoAtendimentoUnid(aParams: TDictionary<String, String>) : TJsonArray;
+    Function GetEvolucaoAtendimentoUnidZona(aParams: TDictionary<String, String>) : TJsonArray;
     Function GetEvolucaoAtendimentoUnidEmbalagem(aParams: TDictionary<String, String>; pTipo : String) : TJsonArray;
     Function GetEvolucaoAtendimentoVol(aParams: TDictionary<String, String>)  : TJsonArray;
     Function DeleteReservaCorrecao : TJsonArray;
@@ -929,6 +930,30 @@ begin
   if ptipo = 'Unid' then
      vResourceURI := vResourceURI+'&tipo='+'Unid'
   Else vResourceURI := vResourceURI+'&tipo='+'Vol';
+  vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
+  DmeXactWMS.RequestReport.Resource := vResourceURI;
+  DmeXactWMS.RequestReport.Method   := RmGet;
+  DmeXactWMS.RequestReport.Execute;
+  if (DmeXactWMS.ResponseReport.StatusCode = 200) or (DmeXactWMS.ResponseReport.StatusCode = 201) Then
+     Result := DmeXactWMS.ResponseReport.JSONValue as TJSONArray
+  Else
+    raise Exception.Create('Erro: '+DmeXactWMS.ResponseReport.StatusText);
+end;
+
+function TPedidoSaidaDao.GetEvolucaoAtendimentoUnidZona(
+  aParams: TDictionary<String, String>): TJsonArray;
+Var vResourceURI : String;
+begin
+  DmeXactWMS.ResetRest('R');
+  vResourceURI := 'v1/pedido/dsboard/evolucaoatendimentounidzona?';
+  if aParams.ContainsKey('datainicio') then
+     vResourceURI := vResourceURI+'&datainicio='+aParams.Items['datainicio'];
+  if aParams.ContainsKey('datafinal') then
+     vResourceURI := vResourceURI+'&datafinal='+aParams.Items['datafinal'];
+  if aParams.ContainsKey('zonaid') then
+     vResourceURI := vResourceURI+'&zonaid='+aParams.Items['zonaid'];
+  if aParams.ContainsKey('rotaid') then
+     vResourceURI := vResourceURI+'&rotaid='+aParams.Items['rotaid'];
   vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
   DmeXactWMS.RequestReport.Resource := vResourceURI;
   DmeXactWMS.RequestReport.Method   := RmGet;

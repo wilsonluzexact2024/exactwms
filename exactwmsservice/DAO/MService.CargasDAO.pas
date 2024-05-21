@@ -156,7 +156,7 @@ begin
     FConexao.Query.SQL.Add('			        From PedidoVolumes Pv');
     FConexao.Query.SQL.Add('			        inner Join vDocumentoEtapas De ON De.Documento = Pv.Uuid');
     FConexao.Query.SQL.Add('			        Left Join CargaCarregamento CC On Cc.PedidoVolumeId = Pv.PedidoVolumeId');
-    FConexao.Query.SQL.Add('			        where DE.Horario = (Select Max(Horario) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
+    FConexao.Query.SQL.Add('			        where DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = Pv.uuid and Status = 1)');
     FConexao.Query.SQL.Add('			        And De.ProcessoId <> 15) CC On Cc.PedidoId = Cp.PedidoId and CC.PedidoVOlumeId is Null');
     FConexao.Query.SQL.Add('where Cp.CargaId = @CargaId and Cp.PedidoId = @PedidoId');
     if DebugHook <> 0 then

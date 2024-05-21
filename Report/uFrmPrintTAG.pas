@@ -1405,6 +1405,7 @@ begin
     ColWidths[8]  :=  65+Trunc(65*ResponsivoVideo);
     ColWidths[10] :=  70+Trunc(70*ResponsivoVideo);
     LstEnderecoAdv.HideColumn(9);
+    LstEnderecoAdv.HideColumn(10);
     Alignments[2, 0] := taCenter;
     Alignments[7, 0] := taCenter;
     Alignments[8, 0] := taCenter;

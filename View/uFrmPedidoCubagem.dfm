@@ -1472,7 +1472,7 @@ inherited FrmPedidoCubagem: TFrmPedidoCubagem
         end
       end
       object BtnProcessar: TPanel
-        Left = 865
+        Left = 864
         Top = 360
         Width = 183
         Height = 29

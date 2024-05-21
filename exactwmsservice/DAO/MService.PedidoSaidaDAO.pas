@@ -101,8 +101,8 @@ type
       pDataTermino: TDateTime; pRotaId: Integer): TjSonArray;
     Function GetEvolucaoAtendimentoVol(Const pDataInicio,
       pDataTermino: TDateTime; pZonaId: Integer; pRotaId: Integer): TjSonArray;
-    Function GetEvolucaoAtendimentoUnid(Const pDataInicio,
-      pDataTermino: TDateTime; pZonaId: Integer; pRotaId: Integer): TjSonArray;
+    Function GetEvolucaoAtendimentoUnid(Const pDataInicio, pDataTermino: TDateTime; pZonaId: Integer; pRotaId: Integer): TjSonArray;
+    Function GetEvolucaoAtendimentoUnidZona(Const pDataInicio, pDataTermino: TDateTime; pZonaId: Integer; pRotaId: Integer): TjSonArray;
     Function GetEvolucaoAtendimentoUnidEmbalagem(Const pDataInicio,
       pDataTermino: TDateTime; pZonaId: Integer; pRotaId: Integer;
       pTipo: String): TjSonArray;
@@ -570,8 +570,7 @@ begin
     FConexao.Query.Open();
     if FConexao.Query.IsEmpty then
     Begin
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        'Não há cálculo para caixa fechada!')));
+      Result.AddElement(TJsonObject.Create(TJSONPair.Create('MSG', 'Não há cálculo para caixa fechada!')));
       Exit;
     End;
     With FConexao.Query do
@@ -696,11 +695,9 @@ begin
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('EvolucaoAtendimentoUnid.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty Then
-    Begin
+    if FConexao.Query.IsEmpty Then Begin
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Sem Dados da Estrutura da Tabela.'))
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Sem Dados da Estrutura da Tabela.'))
     End
     Else
       Result := FConexao.Query.ToJSONArray;
@@ -710,6 +707,38 @@ begin
       raise Exception.Create('Tabela: Perfil - ' + StringReplace(E.Message,
         '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
         '', [rfReplaceAll]));
+    End;
+  end;
+end;
+
+function TPedidoSaidaDao.GetEvolucaoAtendimentoUnidZona(const pDataInicio,
+  pDataTermino: TDateTime; pZonaId, pRotaId: Integer): TjSonArray;
+begin
+  Try
+    FConexao.Query.SQL.Add(TuEvolutConst.SqlGetEvolucaoAtendimentoUnidZona);
+    if pDataInicio = 0 then
+       FConexao.Query.ParamByName('pDtInicio').Value := 0
+    Else
+       FConexao.Query.ParamByName('pDtInicio').Value := FormatDateTime('YYYY-MM-DD', pDataInicio);
+    if pDataTermino = 0 then
+       FConexao.Query.ParamByName('pDtTermino').Value := 0
+    Else
+       FConexao.Query.ParamByName('pDtTermino').Value := FormatDateTime('YYYY-MM-DD', pDataTermino);
+    FConexao.Query.ParamByName('pZonaId').Value := pZonaId;
+    FConexao.Query.ParamByName('pRotaId').Value := pRotaId;
+    if DebugHook <> 0 then
+       FConexao.Query.SQL.SaveToFile('EvolucaoAtendimentoUnid.Sql');
+    FConexao.Query.Open;
+    if FConexao.Query.IsEmpty Then Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Sem Dados da Estrutura da Tabela.'))
+    End
+    Else
+       Result := FConexao.Query.ToJSONArray;
+  Except On E: Exception do
+    Begin
+      raise Exception.Create('Tabela: Perfil - ' + StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
+                             '', [rfReplaceAll]));
     End;
   end;
 end;
@@ -1316,13 +1345,12 @@ function TPedidoSaidaDao.GetPedidoResumoAtendimento(pPedidoId: Integer;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlGetPedidoResumoAtendimento);
-    FConexao.Query.ParamByName('pPedidoId').Value := pPedidoId;
+    FConexao.Query.ParamByName('pPedidoId').Value    := pPedidoId;
     FConexao.Query.ParamByName('pDivergencia').Value := pDivergencia;
     FConexao.Query.ParamByName('pDataInicial').Value := 0;
-    FConexao.Query.ParamByName('pDataFinal').Value := 0;
+    FConexao.Query.ParamByName('pDataFinal').Value   := 0;
     if DebugHook <> 0 then
-      FConexao.Query.SQL.SaveToFile('PedidoResumoAtendimento.Sql');
-
+       FConexao.Query.SQL.SaveToFile('PedidoResumoAtendimento.Sql');
     FConexao.Query.Open;
     if FConexao.Query.IsEmpty then
     Begin

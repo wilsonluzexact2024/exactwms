@@ -71,6 +71,7 @@ Type
     Function GetMovimentacao(pPedidoId: Integer; pDataInicio, pDataFinal: TDateTime; pProdutoId: Integer): TJsonArray;
     Function GetEvolucaoAtendimentoPed(aParams : TDictionary<String, String>) : TJsonArray;
     Function GetEvolucaoAtendimentoUnid(aParams : TDictionary<String, String>) : TJsonArray;
+    Function GetEvolucaoAtendimentoUnidZona(aParams : TDictionary<String, String>) : TJsonArray;
     Function GetEvolucaoAtendimentoVol(aParams : TDictionary<String, String>) : TJsonArray;
     Function GetEvolucaoAtendimentoUnidEmbalagem(aParams : TDictionary<String, String>; pTipo : String) : TJsonArray;  //Unid-Uniades Vol-Volumes
     Function DeleteReservaCorrecao : TjsonArray;
@@ -363,6 +364,22 @@ begin
   Try
     ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
     Result := ObjPedidoSaidaDAO.GetEvolucaoAtendimentoUnidEmbalagem(aParams, pTipo);
+    ObjPedidoSaidaDAO.Free;
+  Except ON E: Exception do Begin
+    Result := TJsonArray.Create;
+    Result.AddElement(TJsonObject.Create.AddPair('Erro', E.Message));
+    ObjPedidoSaidaDAO.Free;
+    End;
+  End;
+end;
+
+function TPedidoSaidaCtrl.GetEvolucaoAtendimentoUnidZona(
+  aParams: TDictionary<String, String>): TJsonArray;
+Var ObjPedidoSaidaDAO : TPedidoSaidaDAO;
+begin
+  Try
+    ObjPedidoSaidaDAO := TPedidoSaidaDAO.Create;
+    Result := ObjPedidoSaidaDAO.GetEvolucaoAtendimentoUnidZona(aParams);
     ObjPedidoSaidaDAO.Free;
   Except ON E: Exception do Begin
     Result := TJsonArray.Create;

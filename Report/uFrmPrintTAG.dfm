@@ -30410,7 +30410,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagLocalizacao
+        Properties.ActivePage = TbTagVolume
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -33752,7 +33752,6 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
           OnShow = TbTagCaixaShow
-          ExplicitTop = 26
           object Label26: TLabel
             Left = 20
             Top = 110
@@ -40205,10 +40204,10 @@ inherited FrmPrintTag: TFrmPrintTag
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 730
-    Top = 336
-    ExplicitLeft = 730
-    ExplicitTop = 336
+    Left = 914
+    Top = 280
+    ExplicitLeft = 914
+    ExplicitTop = 280
     inherited LblLanguagePrinter: TLabel
       Color = clBtnFace
     end

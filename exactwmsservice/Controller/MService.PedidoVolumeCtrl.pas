@@ -512,13 +512,11 @@ begin
   End;
 End;
 
-Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-var
-  JsonArrayRetorno: TJsonArray;
-  LService: TServicePedidoVolume;
-  JsonArrayErro: TJsonArray;
-  HrInicioLog: Ttime;
+Procedure EtiquetaVolumePorRua(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var JsonArrayRetorno: TJsonArray;
+    LService: TServicePedidoVolume;
+    JsonArrayErro: TJsonArray;
+    HrInicioLog: Ttime;
 begin
   Try
     HrInicioLog := Time;
