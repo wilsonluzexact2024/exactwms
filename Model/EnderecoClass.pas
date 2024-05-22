@@ -108,8 +108,42 @@ begin
 end;
 
 class function TEndereco.JsonToClass(Json: String): TEndereco;
+Var JsonEndereco : TJsonObject;
 begin
-  Result := tJson.JsonToObject<TEndereco>(Json, [joDateFormatUnix])
+  JsonEndereco := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Json), 0) as TJSonObject;
+  Result := TEndereco.Create;
+  Result.FEnderecoId  := JsonEndereco.GetValue<Integer>('enderecoid');
+  Result.FDescricao   := JsonEndereco.GetValue<String>('descricao');
+  Result.FAltura      := JsonEndereco.GetValue<Double>('altura');
+  Result.FLargura     := JsonEndereco.GetValue<Double>('largura');
+  Result.FComprimento := JsonEndereco.GetValue<Double>('comprimento');
+  Result.Volume       := JsonEndereco.GetValue<Double>('volume');
+  Result.FCapacidade  := JsonEndereco.GetValue<Double>('capacidade');
+  Result.FCurva       := '';//JsonEndereco.GetValue<string>('curva');
+  Result.FStatus      := JsonEndereco.GetValue<integer>('status');
+
+  Result.FEnderecoEstrutura.EstruturaId := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<Integer>('estruturaid');
+  Result.FEnderecoEstrutura.Descricao   := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<string>('descricao');
+  Result.FEnderecoEstrutura.PickingFixo := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<Integer>('pickingfixo');
+  Result.FEnderecoEstrutura.Mascara     := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<string>('mascara');
+
+  Result.FEnderecoRua.RuaId     := JsonEndereco.GetValue<TJsonObject>('enderecorua').GetValue<Integer>('ruaid');
+  Result.FEnderecoRua.Descricao := JsonEndereco.GetValue<TJsonObject>('enderecorua').GetValue<string>('descricao');
+  Result.FEnderecoRua.lado      := JsonEndereco.GetValue<TJsonObject>('enderecorua').GetValue<string>('lado');
+  Result.FEnderecoRua.Ordem     := JsonEndereco.GetValue<TJsonObject>('enderecorua').GetValue<Integer>('ordem');
+
+  Result.FEnderecamentoZona.ZonaId        := JsonEndereco.GetValue<TJsonObject>('enderecamentozona').GetValue<Integer>('zonaid');
+  Result.FEnderecamentoZona.Descricao     := JsonEndereco.GetValue<TJsonObject>('enderecamentozona').GetValue<String>('descricao');
+  Result.FEnderecamentoZona.EstoqueTipoId := JsonEndereco.GetValue<TJsonObject>('enderecamentozona').GetValue<Integer>('estoquetipoid');
+  Result.FEnderecamentoZona.status        := JsonEndereco.GetValue<TJsonObject>('enderecamentozona').GetValue<Integer>('status');
+  Result.FEnderecamentoZona.ProdutoSNGPC  := JsonEndereco.GetValue<TJsonObject>('enderecamentozona').GetValue<Integer>('produtosngpc');
+
+  Result.FDesenhoArmazem.Id        := JsonEndereco.GetValue<TJsonObject>('desenhoarmazem').GetValue<Integer>('Id');
+  Result.FDesenhoArmazem.Descricao := JsonEndereco.GetValue<TJsonObject>('desenhoarmazem').GetValue<String>('descricao');
+
+  Result.FProdutoId  := JsonEndereco.GetValue<TJsonObject>('produto').GetValue<Integer>('produtoid');
+  Result.FCodProduto := JsonEndereco.GetValue<TJsonObject>('produto').GetValue<Integer>('codproduto');
+//Result := tJson.JsonToObject<TEndereco>(Json, [joDateFormatUnix])
 end;
 
 procedure TEndereco.Limpar;

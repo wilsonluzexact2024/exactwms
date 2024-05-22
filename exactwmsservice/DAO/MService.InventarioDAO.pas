@@ -779,7 +779,7 @@ begin
     end;
     if AParams.ContainsKey('pendente') then begin
        if AParams.Items['pendente'].ToInteger() = 1 then
-          FConexao.Query.SQL.Add('and (De.ProcessoId in (23, 25))');
+          FConexao.Query.SQL.Add('and (De.ProcessoId in (123, 133))');
        Inc(vParamOk);
     end;
     if AParams.ContainsKey('produtoid') then begin

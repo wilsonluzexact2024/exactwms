@@ -1055,17 +1055,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\App\eXactWMS\Mobile\provider_paths.xml" Configuration="Release" Class="AndroidFileProvider">
-                    <Platform Name="Android64">
-                        <RemoteName>provider_paths.xml</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="C:\App\eXactWMS\Mobile\splash_image_def.xml" Configuration="Release" Class="AndroidSplashImageDef">
-                    <Platform Name="Android64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="C:\App\eXactWMS\Mobile\strings.xml" Configuration="Debug" Class="Android_Strings"/>
                 <DeployFile LocalName="C:\App\eXactWMS\Mobile\strings.xml" Configuration="Debug" Class="Android_Strings">
                     <Platform Name="Android64">
@@ -1082,11 +1071,6 @@
                 <DeployFile LocalName="C:\App\eXactWMS\Mobile\styles-v21.xml" Configuration="Release" Class="AndroidSplashStylesV21">
                     <Platform Name="Android64">
                         <RemoteName>styles.xml</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="C:\App\eXactWMS\Mobile\styles.xml" Configuration="Release" Class="AndroidSplashStyles">
-                    <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

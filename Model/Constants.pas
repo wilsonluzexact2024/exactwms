@@ -1655,7 +1655,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       '                 select Ia.LoteId, Max(De.Data) Data' + sLineBreak +
       '                 from InventarioAjuste Ia' + sLineBreak +
       '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId'+ sLineBreak +
-      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26'+sLineBreak +
+      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153'+sLineBreak +
       '                 Group by Ia.LoteId) MovEst' + sLineBreak+
       '           Group by LoteId) Mov On Mov.LoteId = Pvt.LoteId' + sLineBreak +
       'Order by Vencimento';
@@ -1722,7 +1722,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       '                 select Ia.LoteId, Max(De.Data) Data' + sLineBreak +
       '                 from InventarioAjuste Ia' + sLineBreak +
       '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId' + sLineBreak +
-      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26' + sLineBreak +
+      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153' + sLineBreak +
       '                 Group by Ia.LoteId) MovEst' + sLineBreak+
       '           Group by LoteId) Mov On Mov.LoteId = Pvt.LoteId' + sLineBreak +
       'Order by Vencimento';
@@ -1920,7 +1920,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       sLineBreak +
       '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId'
       + sLineBreak +
-      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26'
+      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153'
       + sLineBreak + '                 Group by Pl.CodProduto) MovEst' +
       sLineBreak +
       '           Group by CodProduto) Mov On Mov.CodProduto = Prd.CodProduto' +
@@ -1977,7 +1977,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       '                 from inventarioajuste Ia' + sLineBreak +
       '                 Inner Join vProdutoLotes Pl On Pl.LoteId = Ia.LoteId' + sLineBreak +
       '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId' + sLineBreak +
-      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26' + sLineBreak +
+      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153' + sLineBreak +
       '                 Group by Pl.CodProduto) MovEst' + sLineBreak +
       '           Group by CodProduto) Mov On Mov.CodProduto = Prd.CodProduto' + sLineBreak +
       'Left Join (Select EnderecoId, LoteId, Rd.Data as DtInclusao '+sLineBreak+
@@ -2037,7 +2037,7 @@ Const SqlGerarVolumeLoteCaixaFechada = 'Declare @PedidoVolumeId Integer = (Selec
       sLineBreak +
       '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId'
       + sLineBreak +
-      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26'
+      '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153'
       + sLineBreak + '                 Group by Pl.CodProduto) MovEst' +
       sLineBreak +
       '           Group by CodProduto) Mov On Mov.CodProduto = Est.CodProduto' +
@@ -2079,7 +2079,7 @@ Const SqlRelEstoquePreOrVencido = 'Declare @CodProduto Integer   = :pCodProduto'
                                   '                 from inventarioajuste Ia'+sLineBreak+
                                   '                 Inner Join vProdutoLotes Pl On Pl.LoteId = Ia.LoteId'+sLineBreak+
                                   '                 Inner join Inventarios Inv On Inv.InventarioId = Ia.InventarioId'+sLineBreak+
-                                  '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 26'+sLineBreak+
+                                  '                 Inner Join vDocumentoEtapas De ON De.Documento = Inv.uuid and De.ProcessoId = 153'+sLineBreak+
                                   '                 Group by Pl.CodProduto) MovEst'+sLineBreak+
                                   '           Group by CodProduto) Mov On Mov.CodProduto = Est.CodProduto'+sLineBreak+
                                   'Inner Join vProduto prd On prd.CodProduto = Est.CodProduto'+sLineBreak+
@@ -4989,7 +4989,7 @@ Const SqlGetPedidoResumoAtendimento = 'Declare @PedidoId Integer = :pPedidoId'+s
 	     '       , U.UsuarioId UsuarioIdFechamento, U.Nome UsuarioFechamento'+sLineBreak+
       'From Inventarios I' + sLineBreak +
       'Left Join vDocumentoEtapas DE On De.Documento = I.uuid' + sLineBreak +
-      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'+sLineBreak +
+      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 123 and Dc.Status = 1'+sLineBreak +
       'Left Join Usuarios U  ON U.Usuarioid = De.UsuarioId' +sLineBreak +
       'Left Join Usuarios Uc ON Uc.Usuarioid = Dc.UsuarioId'+sLineBreak+
       'Where DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = I.uuid and Status = 1) '+sLineBreak + ''; // 'Order by InventarioId';
@@ -5003,8 +5003,8 @@ Const SqlGetPedidoResumoAtendimento = 'Declare @PedidoId Integer = :pPedidoId'+s
       'Select I.*, (Select Data From vDocumentoEtapas Where Documento = I.Uuid and ProcessoId = (Select ProcessoId From ProcessoEtapas where Descricao = '
       + #39 + 'Inventario - Gerado' + #39 + ') and Status = 1) DataCriacao,' +
       sLineBreak + '        (Case When InventarioTipo = 1 then ' + #39 +
-      'Por Endere�o' + #39 + sLineBreak +
-      '         When inventarioTipo = 2 then ' + #39 + 'Priorit�rio' + #39 +
+      'Por Endereço' + #39 + sLineBreak +
+      '         When inventarioTipo = 2 then ' + #39 + 'Prioriário' + #39 +
       sLineBreak + '         When InventarioTipo = 3 then ' + #39 + 'Ciclico' +
       #39 + ' End) Tipo,' + sLineBreak +
       '        De.ProcessoId, De.Descricao Processo, De.Data, De.Hora, De.Horario, De.UsuarioId, U.Nome USuario, De.Terminal'
@@ -5325,7 +5325,7 @@ Const SqlSaveContagem =
       'select De.ProcessoId, De.Descricao Processo, Count(*) TotalInventario' +
       sLineBreak + 'From inventarios I' + sLineBreak +
       'inner join vdocumentoetapas De on De.Documento = I.uuid' + sLineBreak +
-      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'
+      'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 123 and Dc.Status = 1'
       + sLineBreak +
       'where DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas where Documento = I.uuid and Status = 1)'
       + sLineBreak + '  and I.inventariotipo = 1' + sLineBreak +
@@ -5383,7 +5383,7 @@ Const SqlSaveContagem =
     *)
       'Left Join vProduto Prd On Prd.IdProduto = II.ProdutoId' + sLineBreak +
       'Left Join vEnderecamentos E On E.EnderecoId = II.EnderecoId' + sLineBreak
-      + 'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 23 and Dc.Status = 1'
+      + 'Left Join vDocumentoEtapas DC On DC.Documento = I.uuid and Dc.ProcessoID = 123 and Dc.Status = 1'
       + sLineBreak +
       'Where (@InventarioIdInicial = 0 or I.InventarioId >= @InventarioIdInicial)'
       + sLineBreak +

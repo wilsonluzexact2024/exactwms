@@ -1712,7 +1712,7 @@ Begin
     Else if ObjInventarioCtrl.ObjInventario.InventarioTipo = 2 then
        InventarioTipo := poPrioritario;
     vProcessoId := JsonArrayProcesso.Items[0].GetValue<Integer>('codigo');
-    if Not (ObjInventarioCtrl.ObjInventario.ProcessoId in [23, 25]) then Begin //<> vProcessoId then Begin
+    if Not (ObjInventarioCtrl.ObjInventario.ProcessoId in [123, 133]) then Begin //<> vProcessoId then Begin
        HideLoading;
        ShowErro('Inventário não pode ser Editado.');
        //JsonArrayProcesso.DisposeOf;

@@ -589,6 +589,7 @@ begin
     FrmInventario.Module := 'Operacional';
     FrmInventario.ModuleMenu := 'Inventário';
     FrmInventario.Show;
+    FrmInventario.PgcBase.ActivePage := FrmInventario.TabListagem;
   except on e: Exception do
     begin
       FreeAndNil(FrmInventario);

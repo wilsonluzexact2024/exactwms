@@ -290,6 +290,7 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure EdtInventarioIdKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     SelZona, SelDisponivel, SelSelecao : Boolean;
@@ -1301,6 +1302,7 @@ begin
   RbInventarioTipo.ItemIndex := -1;
   OpenDlgArqTerceirizada.InitialDir := ExtractFilePath(Application.ExeName);
   ShowFinalizacao(False);
+  PgcBase.ActivePage := TabListagem;
 end;
 
 procedure TFrmInventario.FormDestroy(Sender: TObject);
@@ -1313,6 +1315,12 @@ procedure TFrmInventario.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
 //  inherited;
+end;
+
+procedure TFrmInventario.FormShow(Sender: TObject);
+begin
+  inherited;
+  PgcBase.ActivePage := TabListagem
 end;
 
 procedure TFrmInventario.GetApuracao;
@@ -1895,9 +1903,10 @@ begin
     LstEnderecoContagem.Cells[0, xEndereco] := EnderecoMask(FdMemEndereco.FieldByName('Descricao').AsString, FdMemEndereco.FieldByName('Mascara').AsString, True);
     LstEnderecoContagem.Cells[1, xEndereco] := FdMemEndereco.FieldByName('Estrutura').AsString;
     LstEnderecoContagem.Cells[2, xEndereco] := FdMemEndereco.FieldByName('Zona').AsString;
-    If FdMemEndereco.FieldByName('Status').AsString <> 'I' then
+    If (FdMemEndereco.FieldByName('Status').AsString <> 'I') and (ObjInventarioCtrl.ObjInventario.processoid < 143) then
        LstEnderecoContagem.Cells[3, xEndereco] := '2'
-    Else LstEnderecoContagem.Cells[3, xEndereco] := '3';
+    Else
+       LstEnderecoContagem.Cells[3, xEndereco] := '3';
     LstEnderecoContagem.Alignments[0, xEndereco] := taRightJustify;
     LstEnderecoContagem.FontStyles[0, xEndereco] := [FsBold];
     If FdMemEndereco.FieldByName('Status').AsString = 'I' then Begin
@@ -2506,8 +2515,8 @@ begin
   if Not JsonArrayProcesso.Items[0].TryGetValue('Erro', vErro) then Begin
      LblProcesso.Caption := LblProcesso.Caption + ' '+JsonArrayProcesso.Items[0].GetValue<String>('descricao');
      ChkCadastro.Checked := JsonArrayProcesso.Items[0].GetValue<Integer>('status') = 1;
-     ShowFinalizacao(ObjInventarioCtrl.ObjInventario.ProcessoId in [24, 26]);
-     if ObjInventarioCtrl.ObjInventario.ProcessoId  = 26 then
+     ShowFinalizacao(ObjInventarioCtrl.ObjInventario.ProcessoId in [143, 153]);
+     if ObjInventarioCtrl.ObjInventario.ProcessoId  = 153 then
         LblDtFinalizacao.Caption := 'Dt.Finalizado'
      Else
         LblDtFinalizacao.Caption := 'Dt.Cancelado';
