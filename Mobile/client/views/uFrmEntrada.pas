@@ -209,6 +209,7 @@ type
     Label11: TLabel;
     Label43: TLabel;
     CbRastroTipo: TComboBox;
+    FDMemSegregadoCausa: TFDMemTable;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure LstPrincipalDblClick(Sender: TObject);
@@ -306,6 +307,8 @@ type
     Procedure GetLotesParaDevolucao;
     Procedure ShowDadosProdutosParaDevolucao;
     Procedure GetProdutoControle;
+    Procedure GetSegregadoCausa;
+
     Procedure ThreadAtualizarRastroTerminate(Sender : TObject);
   public
     { Public declarations }
@@ -327,7 +330,8 @@ implementation
 
 {$R *.fmx}
 
-uses uFrmeXactWMS, uLibThread, U_MsgD, Notificacao, uFuncoes, uDmClient, System.Threading;
+uses uFrmeXactWMS, uLibThread, U_MsgD, Notificacao, uFuncoes, uDmClient, System.Threading,
+  SegregadoCausaCtrl;
 
 { TFrmEntrada }
 
@@ -1138,12 +1142,16 @@ end;
 
 procedure TFrmEntrada.EdtQtdUnidPrimCheckInKeyUp(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
+Var vQtdDig : String;
 begin
   inherited;
   if TEdit(Sender).Text = '' then Exit;
   if (key = 13)  then Begin
-     if StrToIntDef(TEdit(Sender).Text, 0) <= 0 then
-        raise Exception.Create('Quantidade inválida!');
+     if StrToIntDef(TEdit(Sender).Text, 0) <= 0 then Begin
+        vQtdDig := TEdit(Sender).Text;
+        TEdit(Sender).Text := '';
+        raise Exception.Create('Quantidade('+vQtdDig+') inválida!');
+     End;
      SbSalvarCheckInClick(EdtQtdUnidPrimCheckIn);
   End;
 end;
@@ -1625,6 +1633,7 @@ begin
   TipoAutorizarAlteracaoLote := TTipoAutorizarAlteracaoLote(FrmeXactWMS.ConfigWMS.AutorizarAltLote);
   BtnLoginMaster.Visible     := Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Recebimentos - Visualizar Divergências no CheckIn');
   GetProdutoControle;
+  GetSegregadoCausa;
 end;
 
 Function TFrmEntrada.GetCodigoERP(pCodProduto: String) : Integer;
@@ -1980,6 +1989,33 @@ begin
         ArrayRetorno := Nil;
     End;
   End;
+end;
+
+procedure TFrmEntrada.GetSegregadoCausa;
+Var JsonArrayRetorno : TJsonArray;
+    ObjSegregaCausaCtrl : TSegregadoCausaCtrl;
+    vErro : String;
+begin
+  If FdMemSegregadoCausa.Active then
+     FdMemSegregadoCausa.EmptyDataSet;
+  FdMemSegregadoCausa.Close;
+  ObjSegregaCausaCtrl := TSegregadoCausaCtrl.Create;
+  JsonArrayRetorno := ObjSegregaCausaCtrl.GetSegregadoCausa(0, '', 1);
+  if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+     ShowErro('Erro: '+vErro)
+  Else if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+     ShowErro('Aten~ção: '+vErro)
+  Else Begin
+     FDMemSegregadoCausa.LoadFromJSON(JsonArrayRetorno, False);
+     CbCausaDevolucaoSegregado.Items.Clear;
+     FDMemSegregadoCausa.First;
+     while Not FDMemSegregadoCausa.Eof do Begin
+       CbCausaDevolucaoSegregado.Items.Add(FDMemSegregadoCausa.FieldByName('Descricao').AsString);
+       FDMemSegregadoCausa.Next;
+     End;
+  End;
+  JsonArrayRetorno := Nil;
+  FreeAndNil(ObjSegregaCausaCtrl);
 end;
 
 procedure TFrmEntrada.LiberarFuncaoBloqueada;
@@ -2416,14 +2452,6 @@ begin
      EdtFatorConversao.Text := '1';
   If Not ValidarQuantidade then
      Exit;
-{
-   if (FdMemEntradaProduto.FieldByName('QtdCheckIn').AsInteger+
-      FdMemEntradaProduto.FieldByName('QtdSegregada').AsInteger+
-      FdMemEntradaProduto.FieldByName('QtdXDevolvida').AsInteger) = 0 then Begin
-      ShowErro('Informe as quantidades conferidas!');
-      Exit;
-   End;
-}
   vLote       := 'SL';
   vFabricacao := Now(); //StrToDate('01/01/1900');
   vVencimento := now()+(360*10); //StrToDate('31/12/2099');
@@ -2515,7 +2543,7 @@ begin
 end;
 
 procedure TFrmEntrada.SbSalvarDevSegClick(Sender: TObject);
-Var vQtdDevolvida, vQtdSegregada : Integer;
+Var vQtdDevolvida, vQtdSegregada, vCodMotivoDevSeg : Integer;
 begin
   inherited;
   if CbTipoMovimentacaoDevSeg.ItemIndex < 0 then Begin
@@ -2529,6 +2557,13 @@ begin
   end;
   if StrToIntDef(EdtQtdeDevSeg.Text, 0) <= 0 then
      raise Exception.Create('Informe uma quantidade válida.');
+  FDMemSegregadoCausa.First;
+  If FDMemSegregadoCausa.Locate('Descricao', CbCausaDevolucaoSegregado.Items.Strings[CbCausaDevolucaoSegregado.ItemIndex], []) then
+     vCodMotivoDevSeg := FDMemSegregadoCausa.FieldByName('segregadocausaid').AsInteger
+  Else Begin
+     CbCausaDevolucaoSegregado.SetFocus;
+     raise Exception.Create('Motivo Inválido!');
+  End;
   if FdMemEntradaProduto.FieldByName('QtdXml').AsInteger <
      (StrToIntDef(EdtQtdeDevSeg.Text, 0)+FdMemEntradaProduto.FieldByName('QtdCheckIn').AsInteger+
       FdMemEntradaProduto.FieldByName('QtdDevolvida').AsInteger+FdMemEntradaProduto.FieldByName('QtdSegregada').AsInteger) Then Begin
@@ -2536,6 +2571,7 @@ begin
      ShowErro('Quantidade Total maior que na Nota!');
      Exit;
   End;
+
   if CbTipoMovimentacaoDevSeg.ItemIndex = 0 then Begin
      vQtdDevolvida := StrToIntDef(EdtQtdeDevSeg.Text, 0);
      vQtdSegregada := 0;
@@ -2544,7 +2580,7 @@ begin
      vQtdDevolvida := 0;
      vQtdSegregada := StrToIntDef(EdtQtdeDevSeg.Text, 0);
   End;
-  if SaveItemCheckIn(vQtdDevolvida, vQtdSegregada, CbCausaDevolucaoSegregado.ItemIndex+1) then  begin
+  if SaveItemCheckIn(vQtdDevolvida, vQtdSegregada, vCodMotivoDevSeg) then  begin
      FdMemEntradaProduto.Edit;
      if CbLoteDevSeg.ItemIndex = 0 then
         FdMemEntradaProduto.FieldByName('QtdDevolvida').AsInteger   := FdMemEntradaProduto.FieldByName('QtdDevolvida').AsInteger+

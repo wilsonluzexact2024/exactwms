@@ -233,6 +233,7 @@ type
     procedure ativarbotoes;
     Procedure ShowErro(pMensagem: String = ''; pFileSound : String = 'toast4');
     Procedure ShowOk(pMensagem : String = ''; pFileSound : String = 'ok');
+    Procedure ShowMSG(pMensagem : String = ''; pFileSound : String = 'ok');
     function IfThen(AValue: Boolean; const ATrue, AFalse: String): String;
     function IfThenInt(AValue: Boolean; const ATrue, AFalse: Integer): Integer;
     Procedure MontarPaginacao(pRegistro : Integer);
@@ -1104,6 +1105,18 @@ begin
   PnlErro.Color   := $00AAAAFF;
   vLastErro       := pMensagem;
   LblMensShowErro.Caption := pMensagem;
+  pnlErro.Visible := True;
+  TmErro.Enabled  := True;
+  Player(pFileSound);
+  Application.ProcessMessages;
+end;
+
+procedure TFrmBase.ShowMSG(pMensagem, pFileSound: String);
+begin
+   Application.ProcessMessages;
+  PnlErro.Color   := $0095FFFF;
+  vLastErro       := pMensagem;
+  LblMensShowErro.Caption := 'Atenção: '+pMensagem;
   pnlErro.Visible := True;
   TmErro.Enabled  := True;
   Player(pFileSound);

@@ -75,43 +75,37 @@ begin
   inherited;
 end;
 
-function TServiceSegregadoCausa.GetSegregadoCausa
-  (AQueryParam: TDictionary<String, String>): TJsonArray;
+function TServiceSegregadoCausa.GetSegregadoCausa(AQueryParam: TDictionary<String, String>): TJsonArray;
 begin
   Result := TJsonArray.Create;
   Try
     FConexao.Query.Sql.Add('Select * from SegregadoCausa');
-    FConexao.Query.Sql.Add('Where 1 = 1');
-    if AQueryParam.ContainsKey('id') then
-    begin
-      FConexao.Query.Sql.Add(' And (SegregadoCausaId = :pSegregadoCausaId)');
-      FConexao.Query.ParamByName('pSegregadoCausaId').Value :=
-        AQueryParam.Items['id'].ToInt64;
+    FConexao.Query.Sql.Add('Where (1 = 1) ');
+    if AQueryParam.ContainsKey('id') then begin
+       FConexao.Query.Sql.Add(' And (SegregadoCausaId = :pSegregadoCausaId)');
+       FConexao.Query.ParamByName('pSegregadoCausaId').Value := AQueryParam.Items['id'].ToInt64;
     end;
-    if AQueryParam.ContainsKey('descricao') then
-    begin
-      FConexao.Query.Sql.Add(' And (Descricao Like :pDescricao)');
-      FConexao.Query.ParamByName('pDescricao').Value := '%' + AQueryParam.Items
-        ['descricao'] + '%';
+    if AQueryParam.ContainsKey('descricao') then begin
+       FConexao.Query.Sql.Add(' And (Descricao Like :pDescricao)');
+       FConexao.Query.ParamByName('pDescricao').Value := '%' + AQueryParam.Items['descricao'] + '%';
+    end;
+    if AQueryParam.ContainsKey('status') then begin
+       FConexao.Query.Sql.Add(' And (Status = :pStatus)');
+       FConexao.Query.ParamByName('pStatus').Value := AQueryParam.Items['status'].ToInteger;
     end;
     if DebugHook <> 0 then
-      FConexao.Query.Sql.SaveToFile('GetSegregadoCausaService.Sql');
+       FConexao.Query.Sql.SaveToFile('GetSegregadoCausaService.Sql');
     FConexao.Query.Open;
-    if FConexao.Query.IsEmpty then
-    Begin
-      Result := TJsonArray.Create;
-      Result.AddElement(TJsonObject.Create(TJSONPair.Create('Erro',
-        tuEvolutConst.QrySemDados)));
+    if FConexao.Query.IsEmpty then Begin
+       Result := TJsonArray.Create;
+       Result.AddElement(TJsonObject.Create(TJSONPair.Create('MSG', tuEvolutConst.QrySemDados)));
     End
     Else
-      Result := FConexao.Query.ToJSONArray();
-  Except
-    ON E: Exception do
+       Result := FConexao.Query.ToJSONArray();
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Processo: GetSegregadoCausa(Service) - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: GetSegregadoCausa(Service) - ' +StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

@@ -54,12 +54,10 @@ begin
       LService := TServiceSegregadoCausa.Create;
       JsonArrayRetorno := LService.GetSegregadoCausa(Req.Query.Dictionary);
       Res.Status(200).Send<TJsonArray>(JsonArrayRetorno);
-    Except
-      On E: Exception do
+    Except On E: Exception do
       Begin
         JsonArrayRetorno := TJsonArray.Create;
-        JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
+        JsonArrayRetorno.AddElement(tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Status(500).Send<TJsonArray>(JsonArrayRetorno);
       End;
     End;

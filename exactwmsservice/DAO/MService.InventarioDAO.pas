@@ -358,8 +358,7 @@ begin
     ON E: Exception do
     Begin
       raise Exception.Create('Tabela: Inventarios - ' + StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

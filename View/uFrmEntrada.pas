@@ -320,6 +320,7 @@ type
     FDMemEntradaLoteVencimento: TDateField;
     FDMemEntradaProdutoEnderecoId: TIntegerField;
     FDMemEntradaProdutoProdutoSNGPC: TIntegerField;
+    FDMemSegregadoCausa: TFDMemTable;
     procedure FormCreate(Sender: TObject);
     procedure BtnIncluirClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -474,6 +475,7 @@ type
     Function VerificarSeLoteExiste : Boolean;
     Procedure ReturnFinalizarEntrada;
     Procedure GetProdutoControle;
+    Procedure GetSegregadoCausa;
     procedure ThreadAtualizarRastroTerminate(Sender: TObject);
     Procedure SetCampoRastro;
     Procedure OpenEntrada;
@@ -504,7 +506,7 @@ implementation
 
 uses uFrmeXactWMS, uFuncoes, UFrmConfirmacao, uFrmRelEspelhoEntrada,
   uFrmRelTagProduto, typinfo, ACBrUtil, ACBrDeviceSerial, ProdutoCodBarrasCtrl,
-  Vcl.DialogMessage, Views.Pequisa.Pessoas;
+  Vcl.DialogMessage, Views.Pequisa.Pessoas, SegregadoCausaCtrl;
 
 { TFrmEntrada }
 
@@ -523,9 +525,10 @@ Var //ObjEntradaCtrl      : TEntradaCtrl;
     //vErro : String;
     xColVisible, xLotes : Integer;
 begin
-  if (FrmeXactWMS.ObjUsuarioCtrl.ObjUsuario.Perfil.PerfilId = 1) then
+  if (FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Visualizar Quantidade Recebida(XML) - Recebimentos')) then
      xColVisible := 1
-  Else xColVisible := 0;
+  Else
+     xColVisible := 0;
   if (aCol in [7+xColVisible, 8+xColVisible]) and (pAgrupamentoId <> 0) then Begin
      ShowErro('Operação não permitida. Recebimento pertence ao Agupramento: '+pAgrupamentoId.ToString);
      Exit;
@@ -533,9 +536,9 @@ begin
 
   inherited;
   if (aCol = 7+xColVisible) and (FdMemEntrada.FieldByName('Status').AsInteger <= 2) and ((AdvSGItensEntrada.Cells[8, ARow].ToInteger()+
-     AdvSGItensEntrada.Cells[9, ARow].ToInteger()+
-                      AdvSGItensEntrada.Cells[10, ARow].ToInteger())>0) and (Application.MessageBox(pWideChar('Produto: '+
-     AdvSGItensEntrada.Cells[1, ARow]+' - '+AdvSGItensEntrada.Cells[2, ARow]+'?'), 'Reiniciar CheckIn do Item',
+                                 AdvSGItensEntrada.Cells[9, ARow].ToInteger()+AdvSGItensEntrada.Cells[10, ARow].ToInteger())<>0) and
+                                 (Application.MessageBox(pWideChar('Produto: '+AdvSGItensEntrada.Cells[1, ARow]+' - '+
+                                 AdvSGItensEntrada.Cells[2, ARow]+'?'), 'Reiniciar CheckIn do Item',
      MB_ICONQUESTION + MB_YESNO) = mrYes) then Begin
      If ObjEntradaItensCtrl.DelCheckIn(FdMemEntrada.FieldByName('PedidoId').AsInteger, AdvSGItensEntrada.Ints[1, ARow]) then
         GetListaEntradaItens;
@@ -940,7 +943,7 @@ begin
 end;
 
 Function TFrmEntrada.CalcularQuantidade : Boolean;
-Var vQtdeTotal       : Integer;
+Var vQtdeTotal       : Int64;
     JsonArrayRetorno : TJsonArray;
     vErro : String;
 begin
@@ -949,21 +952,25 @@ begin
   EdtQtdTotCheckIn.Value := EdtQtdUnidPrimCheckIn.Value +
                             (EdtQtdUnidSecCheckIn.Value*
                              FdMemEntradaProduto.FieldByName('FatorConversao').AsInteger);
+  vQtdeTotal := 0;
   if FrmeXactWMS.ConfigWMS.ObjConfiguracao.CheckInItem = 0 then
-     vQtdeTotal := Trunc(EdtQtdTotCheckIn.Value+vTotCheckIn+vTotDev+vTotSegr)
+     vQtdeTotal := Trunc(EdtQtdTotCheckIn.Value)+vTotCheckIn+vTotDev+vTotSegr
   Else
-     vQtdeTotal := Trunc(EdtQtdTotCheckIn.Value+            vTotDev+vTotSegr);
+     vQtdeTotal := Trunc(EdtQtdTotCheckIn.Value)+            vTotDev+vTotSegr;
   if FdMemEntradaProduto.FieldByName('QtdXml').AsInteger < vQtdeTotal then Begin
      EdtQtdUnidPrimCheckIn.Clear;
+     EdtQtdUnidSecCheckIn.Clear;
      EdtQtdUnidPrimCheckIn.SetFocus;
      ShowErro('CheckIn com erro. Quantidade total do CheckIn maior que quantidade no documento.');
-  End;
-  if EdtQtdUnidSecCheckIn.Value > 0 then
-     LblQtdTotCheckIn.Caption := EdtQtdUnidSecCheckIn.Value.ToString()+' '+LblUnidSecCheckIn.Caption+' ';
-  if EdtQtdUnidPrimCheckIn.Value > 0 then
-     LblQtdTotCheckIn.Caption := LblQtdTotCheckIn.Caption + EdtQtdUnidPrimCheckIn.Value.ToString()+' '+LblUnidPrimCheckIn.Caption;
+  End
+  else Begin
+     if EdtQtdUnidSecCheckIn.Value > 0 then
+        LblQtdTotCheckIn.Caption := EdtQtdUnidSecCheckIn.Value.ToString()+' '+LblUnidSecCheckIn.Caption+' ';
+     if EdtQtdUnidPrimCheckIn.Value > 0 then
+        LblQtdTotCheckIn.Caption := LblQtdTotCheckIn.Caption + EdtQtdUnidPrimCheckIn.Value.ToString()+' '+LblUnidPrimCheckIn.Caption;
 
-  Result := ValidarQuantidade; //Certificar que informações no banco não foram alteradas por outro usuário/computador
+     Result := ValidarQuantidade; //Certificar que informações no banco não foram alteradas por outro usuário/computador
+  End;
 end;
 
 procedure TFrmEntrada.CbLotesDevSegClick(Sender: TObject);
@@ -1683,8 +1690,9 @@ end;
 procedure TFrmEntrada.EdtQtdUnidPrimCheckInKeyPress(Sender: TObject;
   var Key: Char);
 begin
+  soNumeros(Key);
   inherited;
-  if key = #13 then Begin
+  if (key = #13) and (tJvCalcEdit(Sender).Text<>'') then Begin
      Key := #0;
      keybd_event(VK_F2, 0, 0, 0);
      if ((Sender=EdtQtdUnidSecCheckIn)  and (EdtQtdUnidSecCheckIn.Enabled) and (Not EdtQtdUnidSecCheckIn.ReadOnly)) or
@@ -1885,6 +1893,7 @@ begin
   ObjUsuarioAltLoteCtrl := TUsuarioCtrl.Create();
   PnlReport.Top         := PnlBtnCheckIn.Top;
   GetProdutoControle;
+  GetSegregadoCausa; //Segregado e Devolução
 end;
 
 procedure TFrmEntrada.FormDestroy(Sender: TObject);
@@ -1920,7 +1929,7 @@ begin
     Result := False;
     ObjEntradaCtrl       := TEntradaCtrl.Create;
     JsonArrayEntrada     := ObjEntradaCtrl.GetEntradaBasica(pPedidoId, pPessoaId, PDocumento, pRazao,
-                             pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0, pCodProduto);
+                            pRegistroERP, pDtNotaFiscal, pPendente, pAgrupamentoId, 0, pCodProduto);
     if JsonArrayEntrada.Items[0].TryGetValue('Erro', vErro) then begin
        ShowErro('Erro: '+vErro);
        JsonArrayEntrada := Nil;
@@ -2208,6 +2217,33 @@ begin
   End;
   JsonArrayRetorno := Nil;
   ObjEntradaCtrl.Free;
+end;
+
+procedure TFrmEntrada.GetSegregadoCausa;
+Var JsonArrayRetorno : TJsonArray;
+    ObjSegregaCausaCtrl : TSegregadoCausaCtrl;
+    vErro : String;
+begin
+  If FdMemSegregadoCausa.Active then
+     FdMemSegregadoCausa.EmptyDataSet;
+  FdMemSegregadoCausa.Close;
+  ObjSegregaCausaCtrl := TSegregadoCausaCtrl.Create;
+  JsonArrayRetorno := ObjSegregaCausaCtrl.GetSegregadoCausa(0, '', 1);
+  if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+     ShowErro('Erro: '+vErro)
+  Else if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
+     ShowMSG(vErro)
+  Else Begin
+     FDMemSegregadoCausa.LoadFromJSON(JsonArrayRetorno, False);
+     cbMotivo.Items.Clear;
+     FDMemSegregadoCausa.First;
+     while Not FDMemSegregadoCausa.Eof do Begin
+       CbMotivo.Items.Add(FDMemSegregadoCausa.FieldByName('Descricao').AsString);
+       FDMemSegregadoCausa.Next;
+     End;
+  End;
+  JsonArrayRetorno := Nil;
+  FreeAndNil(ObjSegregaCausaCtrl);
 end;
 
 procedure TFrmEntrada.HidePanelDevolucaoSegregado;
@@ -3425,6 +3461,7 @@ procedure TFrmEntrada.BtnSalvarDevolucaoSegregadoClick(Sender: TObject);
 Var xProdLotes : Integer;
     ObjEntradaCtrl   : TEntradaCtrl;
     vQtdDevolucao, vQtdSegregada : Integer;
+    vCodMotivoDevSeg : Integer;
 begin
   inherited;
   if CbLotesDevSeg.ItemIndex < 0 then begin
@@ -3436,6 +3473,13 @@ begin
      raise Exception.Create('Informe o motivo da operação.');
   if EdtQtdeDevSeg.Value <= 0 then
      raise Exception.Create('Informe uma quantidade válida.');
+  FDMemSegregadoCausa.First;
+  If FDMemSegregadoCausa.Locate('Descricao', CbMotivo.Items.Strings[CbMotivo.ItemIndex], []) then
+     vCodMotivoDevSeg := FDMemSegregadoCausa.FieldByName('segregadocausaid').AsInteger
+  Else Begin
+     CbMotivo.SetFocus;
+     raise Exception.Create('Motivo Inválido!');
+  End;
   vQtdDevolucao := 0;
   vQtdSegregada := 0;
   if RbDevolucao.Checked then
@@ -3445,7 +3489,7 @@ begin
   If (Not SalvarCheckAPI(CbLotesDevSeg.Text, StrToDate(EdtFabricacaoDevSeg.Text), StrToDate(EdtVencimentoDevSeg.Text),
                             0, //Qtde.Checkin
                             vQtdDevolucao, vQtdSegregada, //Qtde. Devolvida e Segregada
-                            CbMotivo.ItemIndex+1)) then Begin
+                            vCodMotivoDevSeg)) then Begin
      Exit;
   End
   Else Begin

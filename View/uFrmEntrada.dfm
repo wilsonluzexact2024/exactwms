@@ -3,6 +3,8 @@ inherited FrmEntrada: TFrmEntrada
   ClientHeight = 639
   ClientWidth = 1177
   OnDestroy = FormDestroy
+  ExplicitLeft = -164
+  ExplicitTop = -132
   ExplicitWidth = 1179
   ExplicitHeight = 641
   PixelsPerInch = 96
@@ -10,6 +12,7 @@ inherited FrmEntrada: TFrmEntrada
   inherited PgcBase: TcxPageControl
     Width = 1178
     Height = 577
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1178
     ExplicitHeight = 577
     ClientRectBottom = 577
@@ -100,7 +103,6 @@ inherited FrmEntrada: TFrmEntrada
       end
     end
     inherited TabPrincipal: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1178
       ExplicitHeight = 553
       inherited ShCadastro: TShape
@@ -683,8 +685,8 @@ inherited FrmEntrada: TFrmEntrada
             25)
         end
         object PnlCheckIn: TPanel
-          Left = 78
-          Top = 86
+          Left = 72
+          Top = 0
           Width = 794
           Height = 362
           CustomHint = BalloonHint1
@@ -12059,8 +12061,8 @@ inherited FrmEntrada: TFrmEntrada
           end
         end
         object PnlDevolucaoSegregado: TPanel
-          Left = 313
-          Top = 62
+          Left = 303
+          Top = -10
           Width = 726
           Height = 271
           CustomHint = BalloonHint1
@@ -12140,7 +12142,7 @@ inherited FrmEntrada: TFrmEntrada
           end
           object BtnSalvarDevolucaoSegregado: TsImage
             Left = 101
-            Top = 222
+            Top = 224
             Width = 24
             Height = 24
             Cursor = crHandPoint
@@ -17576,16 +17578,7 @@ inherited FrmEntrada: TFrmEntrada
             ParentFont = False
             TabOrder = 5
             Items.Strings = (
-              'PRODUTO TROCADO'
-              'AVARIA NO PRODUTO'
-              'AVARIA NA EMBALAGEM'
-              'VENCIMENTO PROXIMO'
-              'FALTA'
-              'DESACORDO COMERCIAL'
-              'FALTA DO FORNECEDOR'
-              'FALTA INFORMA'#199#195'O DO PRODUTO'
-              'PROBLEMA NO C'#211'DIGO DE BARRAS'
-              'CARACTERISITICAS DO PRODUTO EM N'#195'O CONFORMIDADE')
+              'NENHUM ADICIONADO')
           end
         end
         object PnlAutorizarAltLote: TPanel
@@ -17754,7 +17747,7 @@ inherited FrmEntrada: TFrmEntrada
             Left = 136
             Top = 124
             Width = 119
-            Height = 23
+            Height = 25
             CustomHint = BalloonHint1
             Color = clWhite
             Ctl3D = False
@@ -17784,7 +17777,7 @@ inherited FrmEntrada: TFrmEntrada
             Left = 138
             Top = 60
             Width = 90
-            Height = 23
+            Height = 25
             CustomHint = BalloonHint1
             Color = clWhite
             Ctl3D = False
@@ -17842,8 +17835,8 @@ inherited FrmEntrada: TFrmEntrada
               AlignWithMargins = True
               Left = 3
               Top = 3
-              Width = 80
-              Height = 23
+              Width = 179
+              Height = 35
               CustomHint = BalloonHint1
               Align = alClient
               Alignment = taCenter
@@ -17862,6 +17855,8 @@ inherited FrmEntrada: TFrmEntrada
               OnClick = LblLoginClick
               OnMouseEnter = BtnLoginMouseEnter
               OnMouseLeave = BtnLoginMouseLeave
+              ExplicitWidth = 80
+              ExplicitHeight = 23
             end
           end
         end
@@ -28976,9 +28971,6 @@ inherited FrmEntrada: TFrmEntrada
       Caption = 'Agrupamento de Notas'
       ImageIndex = 4
       OnShow = TabGroupNotaShow
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PnlGroupNotaLeft: TPanel
         Left = 0
         Top = 0
@@ -29008,12 +29000,13 @@ inherited FrmEntrada: TFrmEntrada
           object LblTitGroup: TLabel
             Left = 1
             Top = 1
-            Width = 306
+            Width = 618
             Height = 17
             CustomHint = BalloonHint1
             Align = alTop
             Alignment = taCenter
             Caption = 'Selecionar Fornecedor / Notas para Agrupamento'
+            ExplicitWidth = 306
           end
           object LblFornecedorGroup: TLabel
             Left = 142
@@ -29909,12 +29902,13 @@ inherited FrmEntrada: TFrmEntrada
           object Label32: TLabel
             Left = 1
             Top = 13
-            Width = 161
+            Width = 556
             Height = 17
             CustomHint = BalloonHint1
             Align = alBottom
             Alignment = taCenter
             Caption = 'Agrupamentos Dipon'#237'veis'
+            ExplicitWidth = 161
           end
         end
         object LstAgrupamentoLista: TAdvStringGrid
@@ -31084,6 +31078,9 @@ inherited FrmEntrada: TFrmEntrada
     Width = 1177
     ExplicitTop = 617
     ExplicitWidth = 1177
+    inherited LblMensShowErro: TLabel
+      Width = 1177
+    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 1007
@@ -31659,5 +31656,16 @@ inherited FrmEntrada: TFrmEntrada
     object FDMemEntradaLoteVencimento: TDateField
       FieldName = 'Vencimento'
     end
+  end
+  object FDMemSegregadoCausa: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 250
+    Top = 292
   end
 end

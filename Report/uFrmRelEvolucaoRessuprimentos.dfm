@@ -7179,13 +7179,9 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
       end
     end
     inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 623
     end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
       ExplicitHeight = 623
       inherited DbgImporta: TDBGrid
         Height = 419

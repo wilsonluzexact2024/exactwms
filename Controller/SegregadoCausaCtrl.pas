@@ -2,7 +2,7 @@ unit SegregadoCausaCtrl;
 
 interface
 
-Uses System.UITypes, System.StrUtils, System.SysUtils, Vcl.Controls,
+Uses System.UITypes, System.StrUtils, System.SysUtils,
      Generics.Collections, OperacaoTipoClass, Rest.Json, System.Json, Rest.Types;
 
 Type
@@ -12,7 +12,7 @@ Type
   Public
     //constructor Create;
     //destructor Destroy; override;
-    Function GetSegregadoCausa(pSegregadoCausaId : Integer; pDescricao : String) : tJsonArray;
+    Function GetSegregadoCausa(pSegregadoCausaId : Integer = 0; pDescricao : String = ''; pStatus : Integer = 99) : tJsonArray;
     Function Salvar(pJsonArray : TJsonArray) : Boolean;
     Function Delete(pSegregadoCausaId : Integer) : Boolean;
   End;
@@ -21,7 +21,7 @@ implementation
 
 uses uDmeXactWMS;
 
-Function TSegregadoCausaCtrl.GetSegregadoCausa(pSegregadoCausaId : Integer; pDescricao : String) : tJsonArray;
+Function TSegregadoCausaCtrl.GetSegregadoCausa(pSegregadoCausaId : Integer; pDescricao : String; pStatus : Integer) : tJsonArray;
 Var vResourceURI, pCompl : String;
 Begin
   DmeXactWMS.ResetRest;
@@ -33,6 +33,10 @@ Begin
   End;
   if (pDescricao<>'') then Begin
      vResourceURI := vResourceURI + pCompl + 'descricao='+pDescricao;
+     pCompl := '&';
+  End;
+  if (pStatus<>99) then Begin
+     vResourceURI := vResourceURI + pCompl + 'status='+pStatus.ToString;
      pCompl := '&';
   End;
   DmeXactWMS.RESTRequestWMS.Resource := vResourceURI;

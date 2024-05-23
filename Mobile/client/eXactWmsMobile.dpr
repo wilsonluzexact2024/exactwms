@@ -131,7 +131,8 @@ uses
   uFrmCorrecaoLotes in 'views\uFrmCorrecaoLotes.pas' {FrmCorrecaoLotes},
   uFrmCheckListEstoque in 'views\uFrmCheckListEstoque.pas' {FrmCheckListEstoque},
   UnidadeCtrl in '..\..\Controller\UnidadeCtrl.pas',
-  LaboratorioCtrl in '..\..\Controller\LaboratorioCtrl.Pas';
+  LaboratorioCtrl in '..\..\Controller\LaboratorioCtrl.Pas',
+  SegregadoCausaCtrl in '..\..\Controller\SegregadoCausaCtrl.pas';
 
 {$R *.res}
 

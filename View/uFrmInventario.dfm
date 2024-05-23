@@ -8,11 +8,13 @@ inherited FrmInventario: TFrmInventario
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 723
-    Properties.ActivePage = TabContagem
+    Properties.ActivePage = TabApuracao
     ExplicitTop = 59
     ExplicitHeight = 723
     ClientRectBottom = 723
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 699
       inherited LstCadastro: TAdvStringGrid
         Height = 661
@@ -2889,9 +2891,13 @@ inherited FrmInventario: TFrmInventario
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 699
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
       ExplicitHeight = 699
       inherited LblAguardeImportacaoCSV: TLabel
         Left = 233
@@ -9450,7 +9456,7 @@ inherited FrmInventario: TFrmInventario
           TabOrder = 1
           object BtnInventarioFechar: TPanel
             Left = 33
-            Top = 31
+            Top = 32
             Width = 183
             Height = 29
             Cursor = crHandPoint
@@ -15201,6 +15207,10 @@ inherited FrmInventario: TFrmInventario
         Left = 75
         ExplicitLeft = 75
       end
+      inherited BtnExcluir: TsImage
+        Top = 5
+        ExplicitTop = 5
+      end
       inherited BtnSalvar: TsImage
         Left = 257
         ExplicitLeft = 257
@@ -15223,12 +15233,21 @@ inherited FrmInventario: TFrmInventario
   inherited PnlErro: TPanel
     Top = 756
     ExplicitTop = 756
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 943
     Top = 394
     ExplicitLeft = 943
     ExplicitTop = 394
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited OpenTextFileDialog1: TOpenTextFileDialog
     Left = 584

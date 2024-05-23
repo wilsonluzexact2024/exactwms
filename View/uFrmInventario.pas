@@ -291,6 +291,7 @@ type
     procedure EdtInventarioIdKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormShow(Sender: TObject);
+    procedure BtnExcluirClick(Sender: TObject);
   private
     { Private declarations }
     SelZona, SelDisponivel, SelSelecao : Boolean;
@@ -428,6 +429,18 @@ begin
   BtnExportarStand.Grayed  := True;
   BtnExportarStand.Enabled := False;
   ShowFinalizacao(False);
+end;
+
+procedure TFrmInventario.BtnExcluirClick(Sender: TObject);
+begin
+  if Not FrmeXactWMS.ObjUsuarioCtrl.AcessoFuncionalidade('Inventário - Excluir') then
+     raise Exception.Create('Acesso não autorizado a esta funcionalidade!');
+  if ObjInventarioCtrl.ObjInventario.processoid > 123 then
+     if ObjInventarioCtrl.ObjInventario.processoid = 133 then
+        raise Exception.Create('Exclusão não permitida! Cancele o inventário')
+     Else
+        raise Exception.Create('Exclusão não permitida!');
+  inherited;
 end;
 
 procedure TFrmInventario.BtnExportarStandClick(Sender: TObject);
