@@ -221,7 +221,7 @@ begin
     ShowLoading;
     ObjEnderecoCtrl  := TEnderecoCtrl.Create;
     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEndereco.Text,
-                        EdtEndereco.Text, 'T');
+                        EdtEndereco.Text, 'T', 99, 0);
     if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
        EdtEndereco.Text := '';
        HideLoading;

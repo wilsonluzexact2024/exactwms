@@ -321,7 +321,7 @@ begin
           vEndereco := Text;
           ObjEnderecoCtrl  := TEnderecoCtrl.Create;
           RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EnderecoMask(EdtEndereco.Text, '', False),
-                                                              EnderecoMask(EdtEndereco.Text, '', False), 'T', 0);
+                                                              EnderecoMask(EdtEndereco.Text, '', False), 'T', 99, 0, 0);
           if RetornoJsonArray.Count < 1 then Begin
              Text := '';
              MensagemStand('Endereço '+vEndereco+'não encontrado!');

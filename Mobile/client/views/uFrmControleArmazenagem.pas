@@ -537,7 +537,7 @@ begin
            ObjEnderecoDestinoCtrl := TEnderecoCtrl.Create;
        //End;
        ObjEnderecoDestinoCtrl.ObjEndereco := ObjEnderecoDestinoCtrl.GetEndereco(0, 0, vZonaId, 0,
-                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 0, 1)[0];
+                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 99, 0, 1)[0];
      Except On E: Exception do Begin
          raise Exception.Create('Erro 44 - '+E.Message);
          End;

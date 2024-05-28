@@ -846,7 +846,7 @@ begin
         raise Exception.Create('Não é permitido movimentar para o mesmo endereço.');
      End;
      ObjEnderecoDestinoCtrl.ObjEndereco := ObjEnderecoDestinoCtrl.GetEndereco(0, 0, vZonaId, 0,
-                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 0, 1)[0];
+                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 99, 0, 1)[0];
      if ObjEnderecoDestinoCtrl.ObjEndereco.EnderecoId > 0 then With ObjEnderecoDestinoCtrl.ObjEndereco do Begin
         if Status = 0 then Begin
            EdtEnderecoDestino.Clear;
