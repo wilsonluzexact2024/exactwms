@@ -47,7 +47,7 @@ type
     Function PutInventarioIntegracao(pInventarioId: String): TJsonArray;
     Function PutInventarioIntegracaoLote(pInventarioId: String): TJsonArray;
 
-  
+
   end;
 
 implementation
@@ -56,18 +56,15 @@ uses uSistemaControl, Constants;
 
 { TClienteDao }
 
-function TInventarioDao.ApuracaoInventarioEndereco(const AParams
-  : TDictionary<string, string>): TJsonArray;
-Var
-  pProcessoId: Integer;
-  ErroJsonArray: TJsonArray;
+function TInventarioDao.ApuracaoInventarioEndereco(const AParams : TDictionary<string, string>): TJsonArray;
+Var pProcessoId: Integer;
+    ErroJsonArray: TJsonArray;
 begin
   Try
     FConexao.Query.connection.StartTransaction;
     FConexao.Query.Close;
     FConexao.Query.SQL.Add('Declare @IntegraAjusteERP Integer;');
-    FConexao.Query.SQL.Add
-      ('If (Select IntegrarAjusteERP From Configuracao) = 0');
+    FConexao.Query.SQL.Add('If (Select IntegrarAjusteERP From Configuracao) = 0');
     FConexao.Query.SQL.Add('   Set @IntegraAjusteERP = 2');
     FConexao.Query.SQL.Add('Else Set @IntegraAjusteERP = 0');
     FConexao.Query.SQL.Add('Declare @InventarioId Integer = ' + AParams.Items
@@ -113,19 +110,14 @@ begin
 
     FConexao.Query.SQL.Add('--Update no lotes já existentes' + sLineBreak +
       'Update Est Set Qtde = Ctg.Contagem' + sLineBreak +
-      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'
-      + sLineBreak + '		      from InventarioInicial II' + sLineBreak +
-      '	       Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'
-      + sLineBreak +
-      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak
-      + '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'
-      + sLineBreak +
-      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'
-      + sLineBreak +
-      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'
-      + sLineBreak +
+      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'+sLineBreak +
+      '		      from InventarioInicial II' + sLineBreak +
+      '	       Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'+sLineBreak +
+      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak+
+      '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +sLineBreak +
+      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'+sLineBreak +
+      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'+sLineBreak +
+      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'+sLineBreak +
       'where Coalesce(Est.EstoqueTipoId, 0) <> 6 and (Est.EnderecoId is Not Null)');
     FConexao.Query.SQL.Add('--Registrar Ajuste no Kardex');
     {
@@ -138,91 +130,68 @@ begin
     }
 
     FConexao.Query.SQL.Add('Delete Est' + sLineBreak +
-      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'
-      + sLineBreak + '		      from InventarioInicial II' + sLineBreak +
-      '		      Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'
-      + sLineBreak +
-      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak
-      + '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'
-      + sLineBreak +
-      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'
-      + sLineBreak +
-      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'
-      + sLineBreak + 'where Qtde = 0');
+      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'+sLineBreak +
+      '		      from InventarioInicial II' + sLineBreak +
+      '		      Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'+sLineBreak +
+      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak+
+      '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +sLineBreak +
+      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'+sLineBreak +
+      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'+sLineBreak +
+      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'+sLineBreak +
+      'where Qtde = 0');
     // Apagar Estoque existente e não contado
-    FConexao.Query.SQL.Add
-      ('If (Select InventarioTipo From Inventarios Where InventarioId = @InventarioId) = 1 begin');
+    FConexao.Query.SQL.Add('If (Select InventarioTipo From Inventarios Where InventarioId = @InventarioId) = 1 begin');
     FConexao.Query.SQL.Add('	  Insert Into InventarioAjuste ');
-    FConexao.Query.SQL.Add
-      ('           Select @InventarioId, Est.enderecoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
+    FConexao.Query.SQL.Add('           Select @InventarioId, Est.enderecoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
     FConexao.Query.SQL.Add('	          from Estoque Est');
     FConexao.Query.SQL.Add('	          inner Join (Select EnderecoId');
     FConexao.Query.SQL.Add('			                    From InventarioInicial');
-    FConexao.Query.SQL.Add
-      ('			                    Where InventarioId = @InventarioId');
-    FConexao.Query.SQL.Add
-      ('			                    Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
-    FConexao.Query.SQL.Add
-      ('	          Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
-    FConexao.Query.SQL.Add
-      ('	          Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    FConexao.Query.SQL.Add('			                    Where InventarioId = @InventarioId');
+    FConexao.Query.SQL.Add('			                    Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
+    FConexao.Query.SQL.Add('	          Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
+    FConexao.Query.SQL.Add('	          Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     FConexao.Query.SQL.Add('');
     FConexao.Query.SQL.Add('	Delete Est');
     FConexao.Query.SQL.Add('	from Estoque Est');
     FConexao.Query.SQL.Add('	inner Join (Select EnderecoId');
     FConexao.Query.SQL.Add('			   From InventarioInicial');
     FConexao.Query.SQL.Add('			   Where InventarioId = @InventarioId');
-    FConexao.Query.SQL.Add
-      ('			   Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
-    FConexao.Query.SQL.Add
-      ('	Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
-    FConexao.Query.SQL.Add
-      ('	Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    FConexao.Query.SQL.Add('			   Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
+    FConexao.Query.SQL.Add('	Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
+    FConexao.Query.SQL.Add('	Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     FConexao.Query.SQL.Add('End');
     FConexao.Query.SQL.Add('Else Begin');
-    FConexao.Query.SQL.Add
-      ('  Insert Into InventarioAjuste Select @InventarioId, Est.enderecoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
+    FConexao.Query.SQL.Add('  Insert Into InventarioAjuste Select @InventarioId, Est.enderecoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
     FConexao.Query.SQL.Add('  from Estoque Est');
-    FConexao.Query.SQL.Add
-      ('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
+    FConexao.Query.SQL.Add('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
     FConexao.Query.SQL.Add('  inner Join (Select ProdutoId');
     FConexao.Query.SQL.Add('		      From InventarioInicial');
     FConexao.Query.SQL.Add('			  Where InventarioId = @InventarioId');
-    FConexao.Query.SQL.Add
-      ('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
-    FConexao.Query.SQL.Add
-      ('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
+    FConexao.Query.SQL.Add('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
+    FConexao.Query.SQL.Add('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
     FConexao.Query.SQL.Add('            and II.Loteid = Est.LoteId');
     FConexao.Query.SQL.Add('			and II.EnderecoId = Est.EnderecoId');
-    FConexao.Query.SQL.Add
-      ('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    FConexao.Query.SQL.Add('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     FConexao.Query.SQL.Add('');
     FConexao.Query.SQL.Add('  Delete Est');
     FConexao.Query.SQL.Add('  from Estoque Est');
-    FConexao.Query.SQL.Add
-      ('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
+    FConexao.Query.SQL.Add('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
     FConexao.Query.SQL.Add('  inner Join (Select ProdutoId');
     FConexao.Query.SQL.Add('		      From InventarioInicial');
     FConexao.Query.SQL.Add('			  Where InventarioId = @InventarioId');
-    FConexao.Query.SQL.Add
-      ('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
-    FConexao.Query.SQL.Add
-      ('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
+    FConexao.Query.SQL.Add('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
+    FConexao.Query.SQL.Add('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
     FConexao.Query.SQL.Add('            and II.Loteid = Est.LoteId');
     FConexao.Query.SQL.Add('			and II.EnderecoId = Est.EnderecoId');
-    FConexao.Query.SQL.Add
-      ('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    FConexao.Query.SQL.Add('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     FConexao.Query.SQL.Add('End;');
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('ApuracaoInventario.Sql');
     FConexao.Query.ExecSQL;
     FConexao.Query.Close;
     FConexao.Query.SQL.Clear;
-    FConexao.Query.SQL.Add
-      ('Select ProcessoId From ProcessoEtapas where Descricao = ' + #39 +
-      'Inventario - Finalizado' + #39);
+    FConexao.Query.SQL.Add('Select ProcessoId From ProcessoEtapas where Descricao = ' + #39 +
+                           'Inventario - Finalizado' + #39);
     FConexao.Query.Open();
     pProcessoId := FConexao.Query.FieldByName('ProcessoId').AsInteger;
     // Realizar Apuração de acordo com
@@ -233,29 +202,23 @@ begin
     // FConexao.Query.ParamByName('pInventarioId').Value := AParams.Items['inventarioid'].ToInteger();
     // FConexao.Query.ParamByName('pEstacao').Value   := AParams.Items['terminal'];
     // FConexao.Query.ParamByName('pUsuario').value  := AParams.Items['usuarioid'];
-    FConexao.Query.SQL.Add
-      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where ' +
-      'InventarioId = ' + AParams.Items['inventarioid'] + ')');
+    FConexao.Query.SQL.Add('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios');
+    FConexao.Query.SQL.Add(' where InventarioId = ' + AParams.Items['inventarioid'] + ')');
     FConexao.Query.SQL.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
-    FConexao.Query.ParamByName('pTerminal').Value := AParams.Items['terminal'];
+    FConexao.Query.ParamByName('pTerminal').Value   := AParams.Items['terminal'];
     FConexao.Query.ParamByName('pProcessoId').Value := pProcessoId;
-    FConexao.Query.ParamByName('pUsuarioId').Value :=
-      AParams.Items['usuarioid'];
+    FConexao.Query.ParamByName('pUsuarioId').Value  := AParams.Items['usuarioid'];
     if DebugHook <> 0 then
       FConexao.Query.SQL.SaveToFile('ApuracaoInventarioFinalizar.Sql');
     FConexao.Query.ExecSQL;
     FConexao.Query.connection.Commit;
     Result := TJsonArray.Create;
-    Result.AddElement(TJsonObject.Create.AddPair('Ok',
-      'Apuração de resultado concluída!'));
-  Except
-    ON E: Exception do
+    Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Apuração de resultado concluída!'));
+  Except ON E: Exception do
     Begin
       FConexao.Query.connection.Rollback;
-      raise Exception.Create('Tabela: Inventario Apuração(Fechar) - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: Inventario Apuração(Fechar) - '+StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;

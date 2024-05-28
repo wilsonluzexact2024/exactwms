@@ -175,6 +175,11 @@ type
     FdMemCaixaEmbalagem: TFDMemTable;
     Label31: TLabel;
     CbFormatoEtqCaixaVolume: TComboBox;
+    CbFormatoEtqArmazenagem: TComboBox;
+    Label32: TLabel;
+    Bevel1: TBevel;
+    FDMemProdutoLotesEtqArmazenagemZonaId: TIntegerField;
+    FDMemProdutoLotesEtqArmazenagemZona: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnTagProdutoClick(Sender: TObject);
@@ -261,7 +266,11 @@ type
     Procedure MontaListaCaixaEmbalagem;
     Procedure MontaListaEtqArmazenagem;
     Procedure PrintTagArmazenagem;
+    procedure PrintTagArmazenagem5x10etqEpl2(pJsonArray: TJsonArray);
     procedure PrintTagArmazenagem8x10etqEpl2(pJsonArray: TJsonArray);
+    procedure PrintTagArmazenagem5x10etqPpla(pJsonArray: TJsonArray);
+    procedure PrintTagArmazenagem8x10etqPpla(pJsonArray: TJsonArray);
+
     Procedure ClearLstVolumes;
     Procedure TagVolumeOrdem(pOnOff : Boolean);
     Procedure TagEndereco3x10etqEpl2;
@@ -304,110 +313,6 @@ uses EnderecamentoZonaClass, EnderecamentoZonaCtrl, EnderecoEstruturaClass, Ende
      Views.Pequisa.Endereco, Views.Pequisa.EnderecamentoZonas, Views.Pequisa.EnderecamentoRuas, ProdutoCtrl,
      Views.Pequisa.Produtos, EntradaCtrl, EstoqueCtrl, Views.Pequisa.Rotas,
   EmbalagemCaixaCtrl;
-
-Procedure TFrmPrintTag.PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
-Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
-    vTipoEtiqueta : String;
-  Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
-  Var Lin, EtqPrint : Integer;
-      vEndereco     : String;
-  Begin
-    Try
-      ACBrETQConfig.DPI           := TACBrETQDPI(0);
-      ACBrETQConfig.Temperatura   := vTemperatura;
-      With ACBrETQConfig do Begin
-        Ativar;
-        IniciarEtiqueta;
-        Lin := 1;
-//PedidoId	DocumentoNr	Data	CodPessoaERP	Razao	Fantasia	QtdItens	(Nenhum nome de coluna)
-//          ImprimirCaixa(LinIni, ColIni, Largura(col), Altura(Lin), Espessura 1, Espessura 1);
-        ImprimirCaixa(Lin,  5, 50, 14, 0, 0);
-        ImprimirCaixa(Lin, 55, 45, 14, 0, 0);
-        ImprimirTexto(orNormal, 3, 1, 1, Lin+2,  7, JsonEtq.GetValue<String>('zona'), 0, True);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+6,  7, 'Impressão:', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+9, 18, DateToStr(Date()), 0, False);
-        ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+2, 60, JsonEtq.GetValue<String>('codproduto'), 8, becSIM);
-//Produto
-        ImprimirCaixa(Lin+15, 5, 95, 12, 0, 0);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+16, 7, 'Produto', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+19, 7, Copy(JsonEtq.GetValue<String>('descricao'), 1, 60), 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+23, 7, COpy(JsonEtq.GetValue<String>('descricao'), 61, 40), 0, False);
-//Lote
-        ImprimirCaixa(Lin+28, 5, 95, 9, 0, 0);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+29,  7, 'Lote', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 37, 'Fabricação', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 57, 'Vencimento', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 80, 'Quantidade', 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+32,  7, JsonEtq.GetValue<String>('descrlote'), 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 37, JsonEtq.GetValue<String>('fabricacao'), 0, False);
-        ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 57, JsonEtq.GetValue<String>('vencimento'), 0, False);
-        ImprimirTexto(orNormal, 2, 2, 2, Lin+32, 74, Repl(' ',6-Length(pQuant.ToString))+pQuant.ToString, 0, False);
-
-//Fornecedor - Pedido
-        if RbRecebimento.Checked then Begin
-           ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
-           ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
-           ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
-           ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
-           ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
-
-           ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
-           ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
-
-           ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 7, 'Picking', 0, False);
-           ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
-        End
-        ELse
-        Begin
-           ImprimirTexto(orNormal, 3, 1, 1, Lin+40, 7, 'Picking', 0, False);
-           //ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
-           vEndereco := EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True);
-           ImprimirTexto(orNormal, 5, 2, 4, Lin+47,  7, Copy(vEndereco, 1, 2), 0, False);
-           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 23, Copy(vEndereco, 3, 1), 0, False);
-
-           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 29, Copy(vEndereco, 4, 2), 0, False);
-           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 46, Copy(vEndereco, 6, 1), 0, False);
-
-           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 49, Copy(vEndereco, 7, 2), 0, False);
-           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 68, Copy(vEndereco, 9, 1), 0, False);
-
-           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 72, Copy(vEndereco, 10, 3), 0, False);
-        End;
-
-        ImprimirTexto(orNormal, 2, 1, 1, 72, 82, 'eXactWMS®', 0, False);
-//DESATIVAR PARA BRASIL
-        if Pos('BRASIL', UpperCase(FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa)) <= 0 then Begin
-           if (vTipoEtiqueta = 'F') Then // JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
-              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Fracionados', 0, False)
-           Else
-              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Cxa.Fechada', 0, False);
-        End;
-        FinalizarEtiqueta;
-        Imprimir(1, 0);
-        Sleep(vTimeEtiqueta);
-        Desativar;
-      End;
-    Except On E: Exception do Begin
-      ShowErro('Erro: Problema de comunicação com impressora...'+#13+E.Message);
-      End;
-    End;
-  End;
-Begin
-  for xJsonEtq := 0 to Pred(pJsonArray.Count) do Begin
-    //Caixa Fechada
-    for EtqCxaFechada := 1 to pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdcxafechada') do Begin
-      vTipoEtiqueta := 'C'; //Caixa Fechada
-      PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('fatorconversao'));
-    End;
-    //Fracionados
-    if pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada') > 0 then Begin
-       vTipoEtiqueta := 'F'; //Caixa Fracionada
-       for EtqCxaFechada := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
-         PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada'));
-    End;
-  End;
-End;
-
 
 procedure TFrmPrintTag.PrintTagCaixaEmbalagemEtqPpla;
 Var xEtq  : Integer;
@@ -501,6 +406,11 @@ begin
      EdtQtdEtiquetaIndividual.SetFocus;
      Exit;
   End;
+  if CbFormatoEtqArmazenagem.ItemIndex < 0 then Begin
+     ShowErro('Informe o formato da Etiqueta!');
+     CbFormatoEtqArmazenagem.SetFocus;
+     Exit;
+  End;
   FDMemProdutoLotesEtqArmazenagem.Filter   := 'Impr = 1';
   FDMemProdutoLotesEtqArmazenagem.Filtered := True;
   if FDMemProdutoLotesEtqArmazenagem.IsEmpty then Begin
@@ -563,20 +473,23 @@ begin
           JsonEtqIndividual.AddPair('qtdfracionada', TJsonNumber.Create( 0 ))
        End;
        JsonEtqIndividual.AddPair('endereco', EdtPickingProdutoEtqIndividual.Text);
-       JsonEtqIndividual.AddPair('zonaid', TJsonNumber.Create(1)); //Corrigir
-       JsonEtqIndividual.AddPair('zona', '');
+       JsonEtqIndividual.AddPair('zonaid', TJsonNumber.Create(FDMemProdutoLotesEtqArmazenagem.FieldByName('Zonaid').AsInteger)); //Corrigir
+       JsonEtqIndividual.AddPair('zona', FDMemProdutoLotesEtqArmazenagem.FieldByName('Zona').AsString);
        JsonEtqIndividual.AddPair('mascara', '99.99.99.999');
        JsonArrayEtqIndividual.AddElement(JsonEtqIndividual);
-       PrintTagArmazenagem8x10etqEpl2( JsonArrayEtqIndividual );
+       If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then Begin
+          If CbFormatoEtqArmazenagem.ItemIndex = 0  then
+             PrintTagArmazenagem5x10etqPpla( JsonArrayEtqIndividual )
+          Else
+             PrintTagArmazenagem8x10etqPpla( JsonArrayEtqIndividual );
+       End
+       Else If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) then Begin
+          If CbFormatoEtqArmazenagem.ItemIndex = 0 then
+             PrintTagArmazenagem5x10etqEpl2( JsonArrayEtqIndividual )
+          Else
+             PrintTagArmazenagem8x10etqEpl2( JsonArrayEtqIndividual );
+       End;
        Inc(EtqPrint);
-{
-        if EdtQuantidadeEstIndividual.Value > 0 then Begin
-           for EtqPrint := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
-              PrintTagArmazenagem8x10etqEpl2( JsonArrayEtqIndividual );
-        End
-        Else
-              PrintTagArmazenagem8x10etqEpl2( JsonArrayEtqIndividual );
-}
        JsonArrayEtqIndividual.Free;
     End;
     FDMemProdutoLotesEtqArmazenagem.Next;
@@ -795,7 +708,7 @@ begin
      vEstruturaId := CbEstrutura.ItemIndex;
      ObjEnderecoCtrl := TEnderecoCtrl.Create;
      LstEndereco     := ObjEnderecoCtrl.GetEndereco(0, vEstruturaId,
-                        StrToIntDef(EdtZona.Text, 0), StrToIntDef(EdtRuaId.Text,0), EdtEnderecoIni.Text, EdtEnderecoFin.Text, 'T', 2, 0);
+                        StrToIntDef(EdtZona.Text, 0), StrToIntDef(EdtRuaId.Text,0), EdtEnderecoIni.Text, EdtEnderecoFin.Text, 'T', 2, 0, 0);
      if LstEndereco.Count <= 0 then // ArrayJsonEndereco.Get(0).tryGetValue<String>('Erro', vErro) then
         ShowErro('Não foram encontrado(s) dados!')
      Else Begin
@@ -965,8 +878,10 @@ begin
      FDMemProdutoLotesEtqArmazenagem.Edit;
      FDMemProdutoLotesEtqArmazenagem.FieldByName('Impr').AsInteger := 1;
      FDMemProdutoLotesEtqArmazenagem.Post;
-     if Not RgPrinterEtqIndividual.ItemIndex < 0 then
-        RgPrinterEtqIndividual.SetFocus;
+     if RgPrinterEtqIndividual.ItemIndex < 0 then
+        RgPrinterEtqIndividual.SetFocus
+     else
+        EdtQtdEtiquetaIndividual.SetFocus;
      BtnEtqIndividual.Enabled := True;
   End
   else Begin
@@ -1377,6 +1292,7 @@ begin
     vTemperatura  := vlIni.ReadInteger('PRINTER',  'Temperatura' , 10);
     CbComposicao.ItemIndex := vlIni.ReadInteger('PRINTER',  'PrintEnderecoComposicao' , -1);
     CbFormato.ItemIndex    := vlIni.ReadInteger('PRINTER',  'PrintEnderecoFormato' , -1);
+    CbFormatoEtqArmazenagem.ItemIndex := vlIni.ReadInteger('PRINTER',  'FormatoEtqArmazenagem' , -1);
   finally
     vlIni.Free;
   end;
@@ -1836,7 +1752,7 @@ begin
         pDtPedido       := DateToStr(StrToDate(jsonVolumeParaEtiqueta.Items[0].GetValue<String>('dtpedido')));
         pPedidoVolumeId := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('pedidovolumeid');
         pSequencia      := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('sequencia');
-        pCodPessoaERP   := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('codpesssoaerp');
+        pCodPessoaERP   := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('codpessoaerp');
         prazao          := jsonVolumeParaEtiqueta.Items[0].GetValue<String>('razao');
         pRotaId         := jsonVolumeParaEtiqueta.Items[0].GetValue<Integer>('rotaid');
         protas          := jsonVolumeParaEtiqueta.Items[0].GetValue<String>('rotas');
@@ -2286,7 +2202,7 @@ begin
                                                    FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
                                                    vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal,
                                                    pProcessoId, pRotaId, vTotalVolumes, FDMemEtiquetaVolumePorRua.FieldByName('Zona').AsString)
-                 Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then
+                 Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) then
                     TagVolumeFracionado8x10etqEpl2(pPedidoid, pPedidoVolumeId, pSequencia, pCodPessoaERP,
                                                    FDMemEtiquetaVolumePorRua.FieldByName('ordem').AsInteger, vItens,
                                                    vTotUnid, prazao, protas, vPredini, vPredFin, pDtPedido, pDocumentoOriginal,
@@ -2343,98 +2259,255 @@ Var xPed, Lin, EtqPrint : Integer;
     Start : Boolean;
     ObjEntradaEtqCtrl : TEntradaCtrl;
     vErro : String;
-
-{
-      Procedure PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
-      Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
-        Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
-        Begin
-          ACBrETQConfig.DPI             := TACBrETQDPI(0);
-          Try
-            ConfigACBrETQ;
-            ACBrETQConfig.DPI           := TACBrETQDPI(0);
-            With ACBrETQConfig do Begin
-              Ativar;
-              Lin := 5;
-    //PedidoId	DocumentoNr	Data	CodPessoaERP	Razao	Fantasia	QtdItens	(Nenhum nome de coluna)
-    //          ImprimirCaixa(LinIni, ColIni, Largura(col), Altura(Lin), Espessura 1, Espessura 1);
-              ImprimirCaixa(Lin,  5, 50, 14, 0, 0);
-              ImprimirCaixa(Lin, 55, 45, 14, 0, 0);
-              ImprimirTexto(orNormal, 3, 1, 1, Lin+2,  7, JsonEtq.GetValue<String>('zona'), 0, True);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+6,  7, 'Impressão:', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+9, 18, DateToStr(Date()), 0, False);
-              ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+2, 60, JsonEtq.GetValue<String>('codproduto'), 8, becSIM);
-    //Produto
-              ImprimirCaixa(Lin+15, 5, 95, 12, 0, 0);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+16, 7, 'Produto', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+19, 7, Copy(JsonEtq.GetValue<String>('descricao'), 1, 30), 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+23, 7, COpy(JsonEtq.GetValue<String>('descricao'), 31, 30)+'TESTE', 0, False);
-    //Lote
-              ImprimirCaixa(Lin+28, 5, 95, 9, 0, 0);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+29,  7, 'Lote', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 37, 'Fabricação', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 57, 'Vencimento', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 80, 'Quantidade', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+32,  7, JsonEtq.GetValue<String>('descrlote'), 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 37, JsonEtq.GetValue<String>('fabricacao'), 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 57, JsonEtq.GetValue<String>('vencimento'), 0, False);
-              ImprimirTexto(orNormal, 2, 2, 2, Lin+32, 74, Repl(' ',6-Length(pQuant.ToString))+pQuant.ToString, 0, False);
-
-    //Fornecedor - Pedido
-              ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
-
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
-              ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
-
-              ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 7, 'Picking', 0, False);
-              ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
-
-              ImprimirTexto(orNormal, 2, 1, 1, 72, 82, 'eXactWMS®', 0, False);
-              FinalizarEtiqueta;
-              Imprimir(SpCopias.Value, 0);
-              Sleep(150);
-              Desativar;
-            End;
-          Except On E: Exception do Begin
-            ShowErro('Erro: Problema de comunicação com impressora...'+#13+E.Message);
-            End;
-          End;
-        End;
-      Begin
-        for xJsonEtq := 0 to Pred(pJsonArray.Count) do Begin
-          //Caixa Fechada
-          for EtqCxaFechada := 1 to pJsonArray.Items[0].GetValue<Integer>('qtdcxafechada') do
-            PrintEtq(pJsonArray.Items[0] as TJsonObject, pJsonArray.Items[0].GetValue<Integer>('fatorconversao'));
-          //Fracionados
-          if pJsonArray.Items[0].GetValue<Integer>('qtdfracionada') > 0 then
-             PrintEtq(pJsonArray.Items[0] as TJsonObject, pJsonArray.Items[0].GetValue<Integer>('qtdfracionada'));
-        End;
-
-      End
-}
 begin
   Start    := True;
   EtqPrint := 0;
   for xPed := 1 to Pred(LstTagArmazenagem.RowCount) do Begin
     ObjEntradaEtqCtrl := TEntradaCtrl.Create;
     if LstTagArmazenagem.Cells[8, xPed] = '1' then Begin
+
        JsonArrayRetorno  := ObjEntradaEtqCtrl.GetEtiquetaArmazenagem(0, 0, StrToIntDef(LstTagArmazenagem.Cells[0, xPed], 0),
                             EdtDocumentoNr.Text, StrToIntDef(EdtZonaId.Text, 0), StrToIntDef(EdtCodProduto.Text, 0), 0);
        if not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
-          PrintTagArmazenagem8x10etqEpl2( JsonArrayRetorno );
+          If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqPpla' ) then Begin
+             If CbFormatoEtqArmazenagem.ItemIndex = 0 Then
+                PrintTagArmazenagem5x10etqPpla( JsonArrayRetorno )
+             Else
+                PrintTagArmazenagem8x10etqPpla( JsonArrayRetorno );
+          End
+          Else If (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) then Begin
+             If CbFormatoEtqArmazenagem.ItemIndex = 0 then
+                PrintTagArmazenagem5x10etqEpl2( JsonArrayRetorno )
+             Else
+                PrintTagArmazenagem8x10etqEpl2( JsonArrayRetorno );
+          End;
           Inc(EtqPrint);
-       End;
+       End
+       else
+          ShowErro('Erro: '+vErro);
        JsonArrayRetorno := Nil;
-       //ObjEntradaEtqCtrl.Free;
+       FreeAndNil(ObjEntradaEtqCtrl);
     End;
   End;
   if EtqPrint = 0 then
      ShowErro('Não foram impressas etiquetas.')
   Else ShowOk('Impressas '+EtqPrint.ToString+' etiquetas!');
+end;
+
+procedure TFrmPrintTag.PrintTagArmazenagem5x10etqEpl2(pJsonArray: TJsonArray);
+begin
+
+end;
+
+procedure TFrmPrintTag.PrintTagArmazenagem5x10etqPpla(pJsonArray: TJsonArray);
+Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
+    vTipoEtiqueta : String;
+  Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
+  Var Lin, EtqPrint : Integer;
+      vEndereco     : String;
+  Begin
+    Try
+      ACBrETQConfig.DPI           := TACBrETQDPI(0);
+      ACBrETQConfig.Temperatura   := vTemperatura;
+      With ACBrETQConfig do Begin
+        Ativar;
+        IniciarEtiqueta;
+//PedidoId	DocumentoNr	Data	CodPessoaERP	Razao	Fantasia	QtdItens	(Nenhum nome de coluna)
+//          ImprimirCaixa(LinIni, ColIni, Largura(col), Altura(Lin), Espessura 1, Espessura 1);
+//        ImprimirCaixa(Lin,  5, 50, 14, 0, 0);
+//        ImprimirCaixa(Lin, 55, 45, 14, 0, 0);
+        ImprimirTexto(orNormal, 3, 1, 1, 48,  7, JsonEtq.GetValue<String>('zona'), 0, True); // Copy(JsonEtq.GetValue<String>('zona'), 1, 20)
+        ImprimirBarras(orNormal, barCODE128, 2, 2, 45, 70, JsonEtq.GetValue<String>('codproduto'), 8, becNAO);
+        ImprimirTexto(orNormal, 2, 1, 1, 45,  7, 'Impressão:', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, 42,  80, JsonEtq.GetValue<String>('codproduto'), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, 42, 7, DateToStr(Date())+ ' '+Copy(TimeToStr(Time()), 1, 5)+'h', 0, False);
+        //ImprimirCaixa(Lin+15, 5, 95, 12, 0, 0);
+        ImprimirTexto(orNormal, 2, 1, 1, 38, 7, 'Produto', 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, 34, 7, Copy(JsonEtq.GetValue<String>('descricao'), 1, 45), 0, False);
+        ImprimirTexto(orNormal, 3, 1, 1, 30, 7, COpy(JsonEtq.GetValue<String>('descricao'), 46, 45), 0, False);
+//Produto
+//Lote
+        //ImprimirCaixa(Lin+28, 5, 95, 9, 0, 0);
+        ImprimirTexto(orNormal, 2, 1, 1, 27,  7, 'Lote', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, 27, 37, 'Fabricação', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, 27, 57, 'Vencimento', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, 27, 80, 'Quantidade', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, 22,  7, JsonEtq.GetValue<String>('descrlote'), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, 22, 37, JsonEtq.GetValue<String>('fabricacao'), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, 22, 57, JsonEtq.GetValue<String>('vencimento'), 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, 22, 77, Repl(' ',6-Length(pQuant.ToString))+pQuant.ToString, 0, False);
+
+//Fornecedor - Pedido
+        if RbRecebimento.Checked then Begin
+           ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
+
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
+
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 15, 'Picking', 0, False);
+           ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+        End
+        ELse
+        Begin
+           ImprimirTexto(orNormal, 2, 1, 1, 18, 15, 'Picking', 0, False);
+           //ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+           vEndereco := EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True);
+           ImprimirTexto(orNormal, 3, 2, 3, 8,  28, Copy(vEndereco, 1, 2), 0, False);
+           //ImprimirTexto(orNormal, 4, 3, 2, 16, 23, Copy(vEndereco, 3, 1), 0, False);
+
+           ImprimirTexto(orNormal, 3, 2, 3, 8, 42, Copy(vEndereco, 4, 2), 0, False);
+           //ImprimirTexto(orNormal, 4, 3, 2, 16, 46, Copy(vEndereco, 6, 1), 0, False);
+
+           ImprimirTexto(orNormal, 3, 2, 3, 8, 56, Copy(vEndereco, 7, 2), 0, False);
+           //ImprimirTexto(orNormal, 4, 3, 2, 16, 68, Copy(vEndereco, 9, 1), 0, False);
+
+           ImprimirTexto(orNormal, 3, 2, 3, 8, 70, Copy(vEndereco, 10, 3), 0, False);
+        End;
+{}
+        ImprimirTexto(orNormal, 2, 1, 1, 2, 82, 'eXactWMS®', 0, False);
+//DESATIVAR PARA BRASIL
+        if Pos('BRASIL', UpperCase(FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa)) <= 0 then Begin
+           if (vTipoEtiqueta = 'F') Then // JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
+              ImprimirTexto(orNormal, 2, 1, 2, 2, 10, 'Fracionados', 0, False)
+           Else
+              ImprimirTexto(orNormal, 2, 1, 2, 2, 10, 'Cxa.Fechada', 0, False);
+        End;
+        FinalizarEtiqueta;
+        Imprimir(1, 0);
+        Sleep(vTimeEtiqueta);
+        Desativar;
+      End;
+    Except On E: Exception do Begin
+      ShowErro('Erro: Problema de comunicação com impressora...'+#13+E.Message);
+      End;
+    End;
+  End;
+Begin
+  for xJsonEtq := 0 to Pred(pJsonArray.Count) do Begin
+    //Caixa Fechada
+    for EtqCxaFechada := 1 to pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdcxafechada') do Begin
+      vTipoEtiqueta := 'C'; //Caixa Fechada
+      PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('fatorconversao'));
+    End;
+    //Fracionados
+    if pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada') > 0 then Begin
+       vTipoEtiqueta := 'F'; //Caixa Fracionada
+       for EtqCxaFechada := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
+         PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada'));
+    End;
+  End;
+end;
+
+Procedure TFrmPrintTag.PrintTagArmazenagem8x10etqEpl2(pJsonArray : TJsonArray);
+Var xJsonEtq, xEtq, EtqCxaFechada : Integer;
+    vTipoEtiqueta : String;
+  Procedure PrintEtq(JsonEtq : TJsonObject; pQuant : Integer);
+  Var Lin, EtqPrint : Integer;
+      vEndereco     : String;
+  Begin
+    Try
+      ACBrETQConfig.DPI           := TACBrETQDPI(0);
+      ACBrETQConfig.Temperatura   := vTemperatura;
+      With ACBrETQConfig do Begin
+        Ativar;
+        IniciarEtiqueta;
+        Lin := 1;
+//PedidoId	DocumentoNr	Data	CodPessoaERP	Razao	Fantasia	QtdItens	(Nenhum nome de coluna)
+//          ImprimirCaixa(LinIni, ColIni, Largura(col), Altura(Lin), Espessura 1, Espessura 1);
+        ImprimirCaixa(Lin,  5, 50, 14, 0, 0);
+        ImprimirCaixa(Lin, 55, 45, 14, 0, 0);
+        ImprimirTexto(orNormal, 3, 1, 1, Lin+2,  7, JsonEtq.GetValue<String>('zona'), 0, True);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+6,  7, 'Impressão:', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+9, 18, DateToStr(Date()), 0, False);
+        ImprimirBarras(orNormal, barCODE128, 3, 3, Lin+2, 60, JsonEtq.GetValue<String>('codproduto'), 8, becSIM);
+//Produto
+        ImprimirCaixa(Lin+15, 5, 95, 12, 0, 0);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+16, 7, 'Produto', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+19, 7, Copy(JsonEtq.GetValue<String>('descricao'), 1, 60), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+23, 7, COpy(JsonEtq.GetValue<String>('descricao'), 61, 40), 0, False);
+//Lote
+        ImprimirCaixa(Lin+28, 5, 95, 9, 0, 0);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+29,  7, 'Lote', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 37, 'Fabricação', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 57, 'Vencimento', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 1, Lin+29, 80, 'Quantidade', 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+32,  7, JsonEtq.GetValue<String>('descrlote'), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 37, JsonEtq.GetValue<String>('fabricacao'), 0, False);
+        ImprimirTexto(orNormal, 2, 1, 2, Lin+32, 57, JsonEtq.GetValue<String>('vencimento'), 0, False);
+        ImprimirTexto(orNormal, 2, 2, 2, Lin+32, 74, Repl(' ',6-Length(pQuant.ToString))+pQuant.ToString, 0, False);
+
+//Fornecedor - Pedido
+        if RbRecebimento.Checked then Begin
+           ImprimirCaixa(Lin+39, 5, 95, 17, 0, 0);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40,  7, 'Documento', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+40, 45, 'Data', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43,  7, JsonEtq.GetValue<String>('documentonr'), 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+43, 45, JsonEtq.GetValue<String>('data'), 0, False);
+
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+48, 7, 'Fornecedor', 0, False);
+           ImprimirTexto(orNormal, 2, 1, 2, Lin+51, 7, Copy(JsonEtq.GetValue<String>('fantasia'), 1, 60), 0, False);
+
+           ImprimirTexto(orNormal, 2, 1, 1, Lin+57, 7, 'Picking', 0, False);
+           ImprimirTexto(orNormal, 4, 3, 4, Lin+60, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+        End
+        ELse
+        Begin
+           ImprimirTexto(orNormal, 3, 1, 1, Lin+40, 7, 'Picking', 0, False);
+           //ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 7, EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True), 0, False);
+           vEndereco := EnderecoMask(JsonEtq.GetValue<String>('endereco'), JsonEtq.GetValue<String>('mascara'), True);
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47,  7, Copy(vEndereco, 1, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 23, Copy(vEndereco, 3, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 29, Copy(vEndereco, 4, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 46, Copy(vEndereco, 6, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 49, Copy(vEndereco, 7, 2), 0, False);
+           ImprimirTexto(orNormal, 4, 3, 2, Lin+47+19, 68, Copy(vEndereco, 9, 1), 0, False);
+
+           ImprimirTexto(orNormal, 5, 2, 4, Lin+47, 72, Copy(vEndereco, 10, 3), 0, False);
+        End;
+
+        ImprimirTexto(orNormal, 2, 1, 1, 72, 82, 'eXactWMS®', 0, False);
+//DESATIVAR PARA BRASIL
+        if Pos('BRASIL', UpperCase(FrmeXactWMS.ConfigWMS.ObjConfiguracao.Empresa)) <= 0 then Begin
+           if (vTipoEtiqueta = 'F') Then // JsonEtq.GetValue<Integer>('tipoetiqueta') = 1 then
+              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Fracionados', 0, False)
+           Else
+              ImprimirTexto(orNormal, 2, 2, 2, 73, 10, 'Cxa.Fechada', 0, False);
+        End;
+        FinalizarEtiqueta;
+        Imprimir(1, 0);
+        Sleep(vTimeEtiqueta);
+        Desativar;
+      End;
+    Except On E: Exception do Begin
+      ShowErro('Erro: Problema de comunicação com impressora...'+#13+E.Message);
+      End;
+    End;
+  End;
+Begin
+  for xJsonEtq := 0 to Pred(pJsonArray.Count) do Begin
+    //Caixa Fechada
+    for EtqCxaFechada := 1 to pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdcxafechada') do Begin
+      vTipoEtiqueta := 'C'; //Caixa Fechada
+      PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('fatorconversao'));
+    End;
+    //Fracionados
+    if pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada') > 0 then Begin
+       vTipoEtiqueta := 'F'; //Caixa Fracionada
+       for EtqCxaFechada := 1 to StrToIntDef(EdtQtdEtiquetaIndividual.Text, 1) do
+         PrintEtq(pJsonArray.Items[xJsonEtq] as TJsonObject, pJsonArray.Items[xJsonEtq].GetValue<Integer>('qtdfracionada'));
+    End;
+  End;
+End;
+
+procedure TFrmPrintTag.PrintTagArmazenagem8x10etqPpla(pJsonArray: TJsonArray);
+begin
+
 end;
 
 procedure TFrmPrintTag.PrintTagVolumeCxaFechada8x10etqEpl2; //Modelo 0 (Zero)

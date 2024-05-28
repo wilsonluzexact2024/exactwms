@@ -37,6 +37,7 @@ procedure GetZona(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure EnderecoBloquear(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Procedure EnderecoBloqueioDeUso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure GetPickingMask(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Procedure MontarPaginacao(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -70,6 +71,7 @@ begin
     .Post('/endereco', Insert)
     .Put('/endereco/:enderecoid', Update)
     .Put('/endereco/bloquear', EnderecoBloquear)
+    .Put('/endereco/enderecobloqueiodeuso', EnderecoBloqueioDeUso)
     .Delete('/endereco/:enderecoid', Delete)
     .Get('/endereco/montarpaginacao', MontarPaginacao)
     .Get('/endereco4D', GetEndereco4D)
@@ -210,6 +212,26 @@ begin
   End;
 end;
 
+Procedure EnderecoBloqueioDeUso(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var EnderecoDAO  : TEnderecoDAO;
+    JsonEndereco : TJsonArray;
+begin
+  Try
+    Try
+      EnderecoDAO := TEnderecoDAO.Create;
+      EnderecoDAO.EnderecoBloqueioDeUso(Req.Body<TJSonArray>);
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
+          'Bloqueio/Desbloqueio de Endereço realizado com Sucesso!'))).Status(THttpStatus.Created);
+    Except On E: Exception do
+      Begin
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', E.Message))).Status(THttpStatus.ExpectationFailed);
+      End;
+    End;
+  Finally
+    FreeAndNil(enderecoDAO);
+  End;
+end;
+
 Procedure ExportFile(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   EnderecoDAO: TEnderecoDAO;
@@ -235,7 +257,7 @@ procedure GetLista(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 Var
   EnderecoDAO: TEnderecoDAO;
   AQueryParam: TDictionary<String, String>;
-  pEnderecoId, pEstruturaId, pZonaId, pRuaId, pStatus: Integer;
+  pEnderecoId, pEstruturaId, pZonaId, pRuaId, pStatus, pBloqueado: Integer;
   pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pListaZona, pCurva: String;
 Begin
   Try
@@ -278,8 +300,12 @@ Begin
         pStatus := AQueryParam.Items['status'].ToInteger
       Else
         pStatus := 99;
+      If AQueryParam.ContainsKey('bloqueado') then
+        pBloqueado := AQueryParam.Items['bloqueado'].ToInteger
+      Else
+        pBloqueado := 0;
       Res.Send<TJSonArray>(EnderecoDAO.GetLista(pEnderecoId, pEstruturaId,
-        pZonaId, pRuaId, pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus,
+        pZonaId, pRuaId, pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus, pBloqueado,
         pListaZona, pCurva)).Status(THTTPStatus.Ok);
     Except
       on E: Exception do
@@ -553,13 +579,10 @@ begin
     try
       EnderecoDAO := TEnderecoDAO.Create;
       EnderecoDAO.manutencao(Req.Body<TJSONObject>);
-      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado',
-        'Registro salvo com Sucesso!'))).Status(THttpStatus.Created);
-    Except
-      on E: Exception do
+      Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Resultado', 'Registro salvo com Sucesso!'))).Status(THttpStatus.Created);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THttpStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THttpStatus.ExpectationFailed);
       End;
     End;
   Finally

@@ -70,6 +70,7 @@ inherited FrmPrintTag: TFrmPrintTag
       end
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1309
       ExplicitHeight = 689
       inherited ShCadastro: TShape
@@ -30410,7 +30411,7 @@ inherited FrmPrintTag: TFrmPrintTag
         ParentBackground = False
         TabOrder = 2
         TabStop = False
-        Properties.ActivePage = TbTagVolume
+        Properties.ActivePage = TbTagArmazenagem
         Properties.CustomButtons.Buttons = <>
         Properties.NavigatorPosition = npLeftTop
         Properties.Style = 9
@@ -30424,6 +30425,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Produtos'
           ImageIndex = 1
           OnShow = TabListagemShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label8: TLabel
             Left = 90
             Top = 64
@@ -30471,6 +30475,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Endere'#231'os'
           ImageIndex = 0
           OnShow = TbTagLocalizacaoShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label2: TLabel
             Left = 15
             Top = 13
@@ -32642,6 +32649,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Volumes'
           ImageIndex = 2
           OnShow = TbTagVolumeShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LblEtiquetas: TLabel
             Left = 1001
             Top = 130
@@ -33752,6 +33762,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Caixas/Baget'
           ImageIndex = 3
           OnShow = TbTagCaixaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label26: TLabel
             Left = 20
             Top = 110
@@ -34066,6 +34079,9 @@ inherited FrmPrintTag: TFrmPrintTag
           Caption = 'Tag Armazenagem'
           ImageIndex = 4
           OnShow = TbTagArmazenagemShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object LblTotRegCaption: TLabel
             Left = 2
             Top = 182
@@ -34721,9 +34737,25 @@ inherited FrmPrintTag: TFrmPrintTag
             Height = 180
             CustomHint = BalloonHint1
             TabOrder = 0
+            object Label32: TLabel
+              Left = 20
+              Top = 125
+              Width = 119
+              Height = 17
+              CustomHint = BalloonHint1
+              Caption = 'Formato da Etiqueta'
+            end
+            object Bevel1: TBevel
+              Left = 20
+              Top = 114
+              Width = 151
+              Height = 11
+              CustomHint = BalloonHint1
+              Shape = bsBottomLine
+            end
             object RbRecebimento: TRadioButton
               Left = 20
-              Top = 34
+              Top = 24
               Width = 145
               Height = 17
               CustomHint = BalloonHint1
@@ -34733,13 +34765,35 @@ inherited FrmPrintTag: TFrmPrintTag
             end
             object RbIndividual: TRadioButton
               Left = 20
-              Top = 120
+              Top = 64
               Width = 139
               Height = 17
               CustomHint = BalloonHint1
               Caption = 'Individual/Produto'
               TabOrder = 1
               OnClick = RbRecebimentoClick
+            end
+            object CbFormatoEtqArmazenagem: TComboBox
+              Left = 20
+              Top = 141
+              Width = 119
+              Height = 25
+              CustomHint = BalloonHint1
+              Style = csDropDownList
+              Color = clWhite
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clBlack
+              Font.Height = -13
+              Font.Name = 'Segoe UI'
+              Font.Style = []
+              ItemIndex = 0
+              ParentFont = False
+              TabOrder = 2
+              TabStop = False
+              Text = '5 x 10'
+              Items.Strings = (
+                '5 x 10'
+                '8 x 10')
             end
           end
           object PnlEtqArmazenagemIndividual: TPanel
@@ -39824,7 +39878,7 @@ inherited FrmPrintTag: TFrmPrintTag
               TabOrder = 0
               object Label30: TLabel
                 Left = 9
-                Top = 25
+                Top = 21
                 Width = 43
                 Height = 17
                 CustomHint = BalloonHint1
@@ -39832,7 +39886,7 @@ inherited FrmPrintTag: TFrmPrintTag
               end
               object LblProdutoEtqIndividual: TLabel
                 Left = 217
-                Top = 26
+                Top = 22
                 Width = 326
                 Height = 16
                 CustomHint = BalloonHint1
@@ -39847,7 +39901,7 @@ inherited FrmPrintTag: TFrmPrintTag
               end
               object EdtCodProdutoEtqIndividual: TEdit
                 Left = 58
-                Top = 26
+                Top = 18
                 Width = 130
                 Height = 24
                 CustomHint = BalloonHint1
@@ -39863,7 +39917,7 @@ inherited FrmPrintTag: TFrmPrintTag
               end
               object BtnPesqProdutoEtqIndividual: TBitBtn
                 Left = 187
-                Top = 22
+                Top = 18
                 Width = 24
                 Height = 24
                 CustomHint = BalloonHint1
@@ -40198,10 +40252,6 @@ inherited FrmPrintTag: TFrmPrintTag
     Width = 1308
     ExplicitTop = 746
     ExplicitWidth = 1308
-    inherited LblMensShowErro: TLabel
-      Width = 1308
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 914
@@ -40219,11 +40269,6 @@ inherited FrmPrintTag: TFrmPrintTag
       Top = 107
       ExplicitLeft = 146
       ExplicitTop = 107
-    end
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
     end
   end
   inherited BalloonHint1: TBalloonHint
@@ -40582,6 +40627,13 @@ inherited FrmPrintTag: TFrmPrintTag
     end
     object FDMemProdutoLotesEtqArmazenagemSaldo: TIntegerField
       FieldName = 'Saldo'
+    end
+    object FDMemProdutoLotesEtqArmazenagemZonaId: TIntegerField
+      FieldName = 'ZonaId'
+    end
+    object FDMemProdutoLotesEtqArmazenagemZona: TStringField
+      FieldName = 'Zona'
+      Size = 30
     end
   end
   object DsProdutoLotesEtqArmazenagem: TDataSource

@@ -90,41 +90,30 @@ begin
     .Get('/inventario/dshcontageminventario', GetDSHAcompanhamentoContagem)
 end;
 
-Procedure ApuracaoInventarioEndereco(Req: THorseRequest; Res: THorseResponse;
-  Next: TProc);
-Var // ObjArray         : TJSONObject;
-  InventarioDAO: TInventarioDao;
-  LService: TServiceInventario;
-  JsonArrayRetorno: TJsonArray;
-  JsonArrayErro: TJsonArray;
-  HrInicioLog: TTime;
+Procedure ApuracaoInventarioEndereco(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+Var InventarioDAO: TInventarioDao;
+    LService: TServiceInventario;
+    JsonArrayRetorno: TJsonArray;
+    JsonArrayErro: TJsonArray;
+    HrInicioLog: TTime;
 begin
   Try
     HrInicioLog := Time;
     Try
       LService := TServiceInventario.Create;
-      JsonArrayRetorno := LService.ApuracaoInventarioEndereco
-        (Req.Query.Dictionary);
+      JsonArrayRetorno := LService.ApuracaoInventarioEndereco(Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
-      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0),
-        Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
-        Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
-        ' Registros.', 200, ((Time - HrInicioLog) / 1000),
-        Req.Headers['appname']);
-    Except
-      On E: Exception do
+      Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                      '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+    Except On E: Exception do
       Begin
         JsonArrayErro := TJsonArray.Create;
-        JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro',
-          E.Message)));
-        Res.Send<TJsonArray>(JsonArrayErro)
-          .Status(THttpStatus.ExpectationFailed);
-        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'],
-          0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-          '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text),
-          Req.Body, '', JsonArrayErro.ToString(), 500,
-          ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
+        JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
+        Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
+        Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
+                        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
+                        500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     end;
   Finally

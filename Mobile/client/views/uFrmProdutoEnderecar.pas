@@ -294,7 +294,7 @@ Try
   if EdtEndereco.Text = '' then Exit;
   ShowLoading;
   ObjEnderecoCtrl  := TEnderecoCtrl.Create;
-  JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 99, 0);
+  JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 99, 0, 0);
   if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
      EdtEndereco.Text := '';
      JsonArrayRetorno := Nil;
@@ -449,7 +449,7 @@ begin
        pZonaId := StrToIntDef(LvItem.Text, 0);
        ObjEnderecoCtrl   := TEnderecoCtrl.Create;
        JsonArrayEndereco := TJsonArray.Create;
-       JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, pZonaId, 0, '', '', 'L', 1);
+       JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, pZonaId, 0, '', '', 'L', 0, 1);
        if Not JsonArrayEndereco.Items[0].TryGetValue<String>('Erro', vErro) then Begin
           for xLista := 0 to Pred(JsonArrayEndereco.Count) do Begin
               TMyListview.AddItem(lvEnderecoDisponivel, JsonArrayEndereco.Items[xLista].GetValue<TJsonObject>('enderecamentozona').GetValue<String>('zonaid'),

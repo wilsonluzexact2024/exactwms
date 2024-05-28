@@ -60,6 +60,9 @@ inherited FrmControleArmazenagem: TFrmControleArmazenagem
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Movimenta'#231#227'o de Estoque'
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TLabel [0]
         Left = 409
         Top = 398
@@ -21263,22 +21266,11 @@ inherited FrmControleArmazenagem: TFrmControleArmazenagem
   end
   inherited SpPaginacao: TJvSpinEdit [4]
   end
-  inherited PnlErro: TPanel
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
-  end
   inherited PnlConfigPrinter: TPanel
     Left = 606
     Top = 426
     ExplicitLeft = 606
     ExplicitTop = 426
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited DsPesqGeral: TDataSource
     DataSet = FdMemEstoqueOrigem

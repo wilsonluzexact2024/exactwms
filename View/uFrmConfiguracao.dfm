@@ -26,6 +26,8 @@ inherited FrmConfiguracao: TFrmConfiguracao
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Sistema'
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 602
       inherited ShCadastro: TShape
         Left = 796
@@ -1463,6 +1465,9 @@ inherited FrmConfiguracao: TFrmConfiguracao
       Caption = 'Impressora'
       ImageIndex = 2
       OnShow = TabImpressoraShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 22
         Top = 14
@@ -1584,6 +1589,9 @@ inherited FrmConfiguracao: TFrmConfiguracao
       CustomHint = BalloonHint1
       Caption = 'Integra'#231#227'o'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TLabel
         Left = 79
         Top = 27
@@ -1858,21 +1866,12 @@ inherited FrmConfiguracao: TFrmConfiguracao
   inherited PnlErro: TPanel
     Top = 659
     ExplicitTop = 659
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 730
     Top = -102
     ExplicitLeft = 730
     ExplicitTop = -102
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   object ACBrETQ: TACBrETQ
     Porta = 'LPT1'

@@ -60,17 +60,14 @@ implementation
 
 { TProvidersBase1 }
 
-function TServiceInventario.ApuracaoInventarioEndereco(const AParams
-  : TDictionary<string, string>): TJsonArray;
-Var
-  vQryApuracao: TFDQuery;
-  vQryRegistrarRetorno: TFDQuery;
-  xPedido, vApuracao, pProcessoId: Integer;
+function TServiceInventario.ApuracaoInventarioEndereco(const AParams : TDictionary<string, string>): TJsonArray;
+Var vQryApuracao: TFDQuery;
+    vQryRegistrarRetorno: TFDQuery;
+    xPedido, vApuracao, pProcessoId: Integer;
 begin
   Try
     Result := TJsonArray.Create;
     vQryApuracao := FConexao.GetQuery;
-
     vQryApuracao.connection.StartTransaction;
     vQryApuracao.connection.TxOptions.Isolation := xiReadCommitted;
     vQryApuracao.Close;
@@ -78,183 +75,139 @@ begin
     vQryApuracao.SQL.Add('If (Select IntegrarAjusteERP From Configuracao) = 0');
     vQryApuracao.SQL.Add('   Set @IntegraAjusteERP = 2');
     vQryApuracao.SQL.Add('Else Set @IntegraAjusteERP = 0');
-    vQryApuracao.SQL.Add('Declare @InventarioId Integer = ' + AParams.Items
-      ['inventarioid'] + sLineBreak +
-      '-- Inserir Ajuste para Integração e Consultas Futuras' + sLineBreak +
-      'Insert inventarioajuste' + sLineBreak +
-      '  select @InventarioId, Ctg.enderecoid, Ctg.ProdutoId, Ctg.loteid, Ctg.Contagem, Ctg.Ajuste, @IntegraAjusteERP Status, NEWID()'
-      + sLineBreak +
-      '  From (Select Prd.CodProduto, II.enderecoid, II.ProdutoId, II.loteid, '
-      + sLineBreak +
-      '               II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'
-      + sLineBreak + '        from InventarioInicial II' + sLineBreak +
-      '        Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'
-      + sLineBreak +
-      '        Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak
-      + '        Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      '        Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'
-      + sLineBreak + '        Where InventarioId = @InventarioId) Ctg' +
-      sLineBreak + '  --Where Ajuste <> 0');
+    vQryApuracao.SQL.Add('Declare @InventarioId Integer = ' + AParams.Items['inventarioid']);
+    vQryApuracao.SQL.Add('-- Inserir Ajuste para Integração e Consultas Futuras');
+    vQryApuracao.SQL.Add('Insert inventarioajuste');
+    vQryApuracao.SQL.Add('  select @InventarioId, Ctg.enderecoid, Ctg.ProdutoId, ');
+    vQryApuracao.SQL.Add('         Ctg.loteid, Ctg.Contagem, Ctg.Ajuste, @IntegraAjusteERP Status, NEWID()');
+    vQryApuracao.SQL.Add('  From (Select Prd.CodProduto, II.enderecoid, II.ProdutoId, II.loteid, ');
+    vQryApuracao.SQL.Add(  '               II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste');
+    vQryApuracao.SQL.Add('        from InventarioInicial II');
+    vQryApuracao.SQL.Add('        Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId');
+    vQryApuracao.SQL.Add('        Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId');
+    vQryApuracao.SQL.Add('        Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('        Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And');
+    vQryApuracao.SQL.Add('                  (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))');
+    vQryApuracao.SQL.Add('        Where InventarioId = @InventarioId) Ctg');
+    vQryApuracao.SQL.Add('  --Where Ajuste <> 0');
 
     vQryApuracao.SQL.Add('--Incluir estoque de lotes inexistente');
-    vQryApuracao.SQL.Add
-      ('Insert Into Estoque Select Ctg.loteid, Ctg.enderecoid, 4, Ctg.Contagem, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
-    vQryApuracao.SQL.Add
-      ('           (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), Null, Null, Null, Null');
-    vQryApuracao.SQL.Add
-      ('from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste');
+    vQryApuracao.SQL.Add('Insert Into Estoque Select Ctg.loteid, Ctg.enderecoid, 4, Ctg.Contagem, (Select IdData From Rhema_Data Where Data = Cast(GetDate() as Date)),');
+    vQryApuracao.SQL.Add('           (select IdHora From Rhema_Hora where Hora = (select SUBSTRING(CONVERT(VARCHAR,SYSDATETIME()),12,5))), Null, Null, Null, Null');
+    vQryApuracao.SQL.Add('from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste');
     vQryApuracao.SQL.Add('		      from InventarioInicial II');
-    vQryApuracao.SQL.Add
-      ('       	Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId');
-    vQryApuracao.SQL.Add
-      ('        Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId');
-    vQryApuracao.SQL.Add
-      ('        Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId');
-    vQryApuracao.SQL.Add
-      ('       	Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))');
-    vQryApuracao.SQL.Add
-      ('	       Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg');
-    vQryApuracao.SQL.Add
-      ('Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid');
-    vQryApuracao.SQL.Add
-      ('where Coalesce(Est.EstoqueTipoId, 0) <> 6 and (Est.EnderecoId is Null)');
+    vQryApuracao.SQL.Add('       	Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId');
+    vQryApuracao.SQL.Add('        Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId');
+    vQryApuracao.SQL.Add('        Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('       	Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))');
+    vQryApuracao.SQL.Add('	       Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg');
+    vQryApuracao.SQL.Add('Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid');
+    vQryApuracao.SQL.Add('where Coalesce(Est.EstoqueTipoId, 0) <> 6 and (Est.EnderecoId is Null)');
 
-    vQryApuracao.SQL.Add('--Update no lotes já existentes' + sLineBreak +
-      'Update Est Set Qtde = Ctg.Contagem' + sLineBreak +
-      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'
-      + sLineBreak + '		      from InventarioInicial II' + sLineBreak +
-      '	       Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'
-      + sLineBreak +
-      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak
-      + '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'
-      + sLineBreak +
-      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'
-      + sLineBreak +
-      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'
-      + sLineBreak +
-      'where Coalesce(Est.EstoqueTipoId, 0) <> 6 and (Est.EnderecoId is Not Null)');
+    vQryApuracao.SQL.Add('--Update no lotes já existentes');
+    vQryApuracao.SQL.Add('Update Est Set Qtde = Ctg.Contagem');
+    vQryApuracao.SQL.Add('From   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, ');
+    vQryApuracao.SQL.Add('Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste');
+    vQryApuracao.SQL.Add('		      from InventarioInicial II');
+    vQryApuracao.SQL.Add('	       Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId');
+    vQryApuracao.SQL.Add('		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId');
+    vQryApuracao.SQL.Add('		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId ');
+    vQryApuracao.SQL.Add('             And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))');
+    vQryApuracao.SQL.Add('		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg');
+    vQryApuracao.SQL.Add('Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid');
+    vQryApuracao.SQL.Add('where Coalesce(Est.EstoqueTipoId, 0) <> 6 and (Est.EnderecoId is Not Null)');
     vQryApuracao.SQL.Add('--Registrar Ajuste no Kardex');
-    vQryApuracao.SQL.Add('Delete Est' + sLineBreak +
-      'from   (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial, Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste'
-      + sLineBreak + '		      from InventarioInicial II' + sLineBreak +
-      '		      Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId'
-      + sLineBreak +
-      '		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId' + sLineBreak
-      + '		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId' +
-      sLineBreak +
-      '		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))'
-      + sLineBreak +
-      '		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg'
-      + sLineBreak +
-      'Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid'
-      + sLineBreak + 'where Qtde = 0');
+    vQryApuracao.SQL.Add('Delete Est');
+    vQryApuracao.SQL.Add('from (Select Prd.CodProduto, II.enderecoid, II.loteid, II.EstoqueInicial,');
+    vQryApuracao.SQL.Add('     Ic.Quantidade Contagem, (Ic.Quantidade - II.EstoqueInicial) Ajuste');
+    vQryApuracao.SQL.Add('		      from InventarioInicial II');
+    vQryApuracao.SQL.Add('		      Left Join Enderecamentos TEnd On TEnd.EnderecoId  = II.EnderecoId');
+    vQryApuracao.SQL.Add('		      Left Join ProdutoLotes Pl On Pl.LoteId = II.LoteId');
+    vQryApuracao.SQL.Add('		      Left Join Produto Prd On Prd.IdProduto = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('		      Left Join InventarioContagem Ic on Ic.Itemid = II.ItemId ');
+    vQryApuracao.SQL.Add('             And (Ic.ContagemId = (Select Max(ContagemId) From InventarioContagem Where ItemId=Ic.ItemId))');
+    vQryApuracao.SQL.Add('		      Where InventarioId = @InventarioId and (Ic.Quantidade - II.EstoqueInicial) <> 0) Ctg');
+    vQryApuracao.SQL.Add('Left Join Estoque Est on Est.EnderecoId = Ctg.enderecoid and Est.LoteId = Ctg.loteid');
+    vQryApuracao.SQL.Add('where Qtde = 0');
     // Apagar Estoque existente e não contado
-    vQryApuracao.SQL.Add
-      ('If (Select InventarioTipo From Inventarios Where InventarioId = @InventarioId) = 1 begin');
+    vQryApuracao.SQL.Add('If (Select InventarioTipo From Inventarios Where InventarioId = @InventarioId) = 1 begin --Por Produto');
     vQryApuracao.SQL.Add('	  Insert Into InventarioAjuste ');
-    vQryApuracao.SQL.Add
-      ('           Select @InventarioId, Est.enderecoId, Pl.ProdutoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
+    vQryApuracao.SQL.Add('           Select @InventarioId, Est.enderecoId, Pl.ProdutoId, Est.LoteId, 0, Est.Qtde*-1, @IntegraAjusteERP, NewId()');
     vQryApuracao.SQL.Add('	          from Estoque Est');
     vQryApuracao.SQL.Add('	          inner Join (Select EnderecoId');
     vQryApuracao.SQL.Add('			                    From InventarioInicial');
-    vQryApuracao.SQL.Add
-      ('			                    Where InventarioId = @InventarioId');
-    vQryApuracao.SQL.Add
-      ('			                    Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
-    vQryApuracao.SQL.Add
-      ('	          Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
-    vQryApuracao.SQL.Add
-      ('           Left Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
-    vQryApuracao.SQL.Add
-      ('	          Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    vQryApuracao.SQL.Add('			                    Where InventarioId = @InventarioId');
+    vQryApuracao.SQL.Add('			                    Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
+    vQryApuracao.SQL.Add('	          Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
+    vQryApuracao.SQL.Add('           Left Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
+    vQryApuracao.SQL.Add('	          Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     vQryApuracao.SQL.Add('');
     vQryApuracao.SQL.Add('	Delete Est');
     vQryApuracao.SQL.Add('	from Estoque Est');
     vQryApuracao.SQL.Add('	inner Join (Select EnderecoId');
     vQryApuracao.SQL.Add('			   From InventarioInicial');
     vQryApuracao.SQL.Add('			   Where InventarioId = @InventarioId');
-    vQryApuracao.SQL.Add
-      ('			   Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
-    vQryApuracao.SQL.Add
-      ('	Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
-    vQryApuracao.SQL.Add
-      ('	Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    vQryApuracao.SQL.Add('			   Group By Enderecoid)  IE On IE.EnderecoId = Est.EnderecoId');
+    vQryApuracao.SQL.Add('	Left Join InventarioInicial II On II.EnderecoId = Est.EnderecoId and II.Loteid = Est.LoteId');
+    vQryApuracao.SQL.Add('	Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     vQryApuracao.SQL.Add('End');
-    vQryApuracao.SQL.Add('Else Begin');
-    vQryApuracao.SQL.Add
-      ('  Insert Into InventarioAjuste Select @InventarioId, Est.enderecoId, Pl.ProdutoId, Est.LoteId, @IntegraAjusteERP, Est.Qtde*-1, 0, NewId()');
+    vQryApuracao.SQL.Add('Else Begin --Por Endereço');
+    vQryApuracao.SQL.Add('  Insert Into InventarioAjuste Select @InventarioId, Est.enderecoId, Pl.ProdutoId, Est.LoteId, 0, Est.Qtde*-1, @IntegraAjusteERP, NewId()');
     vQryApuracao.SQL.Add('  from Estoque Est');
-    vQryApuracao.SQL.Add
-      ('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
+    vQryApuracao.SQL.Add('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
     vQryApuracao.SQL.Add('  inner Join (Select ProdutoId');
     vQryApuracao.SQL.Add('		      From InventarioInicial');
     vQryApuracao.SQL.Add('			  Where InventarioId = @InventarioId');
-    vQryApuracao.SQL.Add
-      ('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
-    vQryApuracao.SQL.Add
-      ('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
     vQryApuracao.SQL.Add('            and II.Loteid = Est.LoteId');
     vQryApuracao.SQL.Add('			and II.EnderecoId = Est.EnderecoId');
-    vQryApuracao.SQL.Add
-      ('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    vQryApuracao.SQL.Add('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     vQryApuracao.SQL.Add('');
     vQryApuracao.SQL.Add('  Delete Est');
     vQryApuracao.SQL.Add('  from Estoque Est');
-    vQryApuracao.SQL.Add
-      ('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
+    vQryApuracao.SQL.Add('  Inner Join ProdutoLotes Pl On Pl.LoteId = Est.LoteId');
     vQryApuracao.SQL.Add('  inner Join (Select ProdutoId');
     vQryApuracao.SQL.Add('		      From InventarioInicial');
     vQryApuracao.SQL.Add('			  Where InventarioId = @InventarioId');
-    vQryApuracao.SQL.Add
-      ('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
-    vQryApuracao.SQL.Add
-      ('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('	  	      Group By Produtoid)  IE On IE.ProdutoId = Pl.ProdutoId');
+    vQryApuracao.SQL.Add('  Left Join InventarioInicial II On II.ProdutoId = Pl.ProdutoId');
     vQryApuracao.SQL.Add('            and II.Loteid = Est.LoteId');
     vQryApuracao.SQL.Add('			and II.EnderecoId = Est.EnderecoId');
-    vQryApuracao.SQL.Add
-      ('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
+    vQryApuracao.SQL.Add('  Where II.LoteId Is Null and Est.EstoqueTipoId In (1,4)');
     vQryApuracao.SQL.Add('End;');
     if DebugHook <> 0 then
-      vQryApuracao.SQL.SaveToFile('ApuracaoInventario.Sql');
+       vQryApuracao.SQL.SaveToFile('ApuracaoInventario.Sql');
     vQryApuracao.ExecSQL;
     vQryApuracao.Close;
     vQryApuracao.SQL.Clear;
-    vQryApuracao.SQL.Add
-      ('Select ProcessoId From ProcessoEtapas where Descricao = ' + #39 +
-      'Inventario - Finalizado' + #39);
+    vQryApuracao.SQL.Add('Select ProcessoId From ProcessoEtapas');
+    vQryApuracao.Sql.Add('where Descricao = '+#39+ 'Inventario - Finalizado' + #39);
     vQryApuracao.Open();
     pProcessoId := vQryApuracao.FieldByName('ProcessoId').AsInteger;
     vQryApuracao.Close;
     vQryApuracao.SQL.Clear;
-    vQryApuracao.SQL.Add
-      ('declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios where ' +
-      'InventarioId = ' + AParams.Items['inventarioid'] + ')');
+    vQryApuracao.SQL.Add('Declare @uuid UNIQUEIDENTIFIER = (Select uuid From Inventarios');
+    vQryApuracao.SQL.Add('                                  Where InventarioId = ' + AParams.Items['inventarioid'] + ')');
     vQryApuracao.SQL.Add(TuEvolutConst.SqlRegistrarDocumentoEtapa);
     vQryApuracao.ParamByName('pTerminal').Value := AParams.Items['terminal'];
     vQryApuracao.ParamByName('pProcessoId').Value := pProcessoId;
     vQryApuracao.ParamByName('pUsuarioId').Value := AParams.Items['usuarioid'];
-    // if DebugHook <> 0 then vQryApuracao.Sql.SaveToFile('ApuracaoInventarioRegistrar.Sql');
+    if DebugHook <> 0 then
+       vQryApuracao.Sql.SaveToFile('ApuracaoInventarioRegistrar.Sql');
     vQryApuracao.ExecSQL;
     vQryApuracao.Close;
     vQryApuracao.connection.Commit;
-
-    Result.AddElement(TJsonObject.Create.AddPair('Ok',
-      'Apuração de resultado concluída!'));
+    Result.AddElement(TJsonObject.Create.AddPair('Ok', 'Apuração de resultado concluída!'));
     FConexao.DB.Connected := False;
-  Except
-    On E: Exception do
+  Except On E: Exception do
     Begin
       vQryApuracao.Close;
       vQryApuracao.connection.Rollback;
-
       FConexao.DB.Connected := False;
-      raise Exception.Create('Processo: ApuraçãoInventarioEndereco - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Processo: ApuraçãoInventarioEndereco - ' + StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   End;
 end;

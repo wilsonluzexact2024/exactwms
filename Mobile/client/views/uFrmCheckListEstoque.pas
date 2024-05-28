@@ -283,8 +283,7 @@ begin
   Try
     ShowLoading;
     ObjEnderecoCtrl  := TEnderecoCtrl.Create;
-    JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtCodigo.Text,
-                        EdtCodigo.Text, 'T');
+    JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtCodigo.Text, EdtCodigo.Text, 'T');
     if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
        EdtCodigo.Text := '';
        HideLoading;

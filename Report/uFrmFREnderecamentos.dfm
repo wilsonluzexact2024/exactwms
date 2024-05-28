@@ -3,7 +3,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
-    Properties.ActivePage = TabReUsoPicking
+    Properties.ActivePage = TabPrincipal
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -56,7 +56,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
         Top = 162
         Height = 362
         TabStop = False
-        ColCount = 14
+        ColCount = 15
         TabOrder = 7
         ColumnHeaders.Strings = (
           'Id'#9
@@ -67,6 +67,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
           'Picking'
           'Zona'
           'Status'
+          'Bloqueado'
           'C'#243'd.ERP'
           'Produto vinculado'
           'Saldo'
@@ -78,6 +79,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
         ColWidths = (
           74
           118
+          74
           74
           74
           74
@@ -1448,7 +1450,7 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
         end
       end
       object GbOcupacaoEndereco: TGroupBox
-        Left = 685
+        Left = 773
         Top = 70
         Width = 336
         Height = 66
@@ -1490,9 +1492,9 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
         end
       end
       object GbStatus: TGroupBox
-        Left = 407
+        Left = 385
         Top = 70
-        Width = 258
+        Width = 388
         Height = 66
         CustomHint = BalloonHint1
         Caption = ' [ Status ] '
@@ -1527,6 +1529,16 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
           CustomHint = BalloonHint1
           Caption = 'Inativo'
           TabOrder = 2
+          OnClick = EdtEnderecoIniChange
+        end
+        object RbBloqueado: TRadioButton
+          Left = 264
+          Top = 32
+          Width = 107
+          Height = 17
+          CustomHint = BalloonHint1
+          Caption = 'Bloqueado'
+          TabOrder = 3
           OnClick = EdtEnderecoIniChange
         end
       end
@@ -2445,10 +2457,10 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
     end
   end
   inherited PnlImgObjeto: TPanel
-    Left = 1032
-    Top = 228
-    ExplicitLeft = 1032
-    ExplicitTop = 228
+    Left = 1042
+    Top = 17
+    ExplicitLeft = 1042
+    ExplicitTop = 17
   end
   inherited PnlErro: TPanel
     inherited LblMensShowErro: TLabel
@@ -2457,10 +2469,10 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 890
-    Top = 59
-    ExplicitLeft = 890
-    ExplicitTop = 59
+    Left = 833
+    Top = -65
+    ExplicitLeft = 833
+    ExplicitTop = -65
     inherited LblPortConfigPrinter: TLabel
       OnClick = BtnDesvincularPickingClick
     end
@@ -2523,6 +2535,9 @@ inherited FrmFREnderecamentos: TFrmFREnderecamentos
     object FdMemPesqGeralStatus: TIntegerField
       FieldName = 'Status'
       OnGetText = FdMemPesqGeralStatusGetText
+    end
+    object FdMemPesqGeralBloqueado: TIntegerField
+      FieldName = 'Bloqueado'
     end
     object FdMemPesqGeralMascara: TStringField
       FieldName = 'Mascara'

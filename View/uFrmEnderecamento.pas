@@ -282,12 +282,17 @@ type
     FDMemEnderecamentosOcupacao: TFloatField;
     FDMemEnderecamentosCurva: TStringField;
     ChkBloquear: TCheckBox;
-    ShManutencaoBloquear: TShape;
+    ShBloquear: TShape;
     LblObs1RemVinculo: TLabel;
     EdtQtdeTransferencia: TEdit;
     Label57: TLabel;
     Label59: TLabel;
     EdtSaldoPicking: TEdit;
+    ChkBloqueado: TCheckBox;
+    ChkDesbloquear: TCheckBox;
+    ShDesbloquear: TShape;
+    Bevel1: TBevel;
+    Bevel2: TBevel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure EdtEnderecoIdKeyPress(Sender: TObject; var Key: Char);
     procedure EdtEnderecoIdEnter(Sender: TObject);
@@ -349,6 +354,8 @@ type
     procedure SbSimularCreateAddressClick(Sender: TObject);
     procedure SbSalvarCreateAddressClick(Sender: TObject);
     procedure EdtRuaInicialCEKeyPress(Sender: TObject; var Key: Char);
+    procedure ChkBloquearClick(Sender: TObject);
+    procedure ChkDesbloquearClick(Sender: TObject);
   private
     { Private declarations }
     SelAtivaDesativa : Boolean;
@@ -706,6 +713,26 @@ begin
   ObjEstoqueCtrl.Free
 end;
 
+procedure TFrmEnderecamento.ChkBloquearClick(Sender: TObject);
+begin
+  inherited;
+  ShBloquear.Visible     := ChkBloquear.Checked;
+  if (ChkBloquear.Checked) and (ChkDesbloquear.Checked) then begin
+     ChkDesbloquear.Checked := False;
+     ShDesbloquear.Visible  := False;
+  end;
+end;
+
+procedure TFrmEnderecamento.ChkDesbloquearClick(Sender: TObject);
+begin
+  inherited;
+  ShDesbloquear.Visible := ChkDesbloquear.Checked;
+  if (ChkDesbloquear.Checked) and (ChkBloquear.Checked) then begin
+     ChkBloquear.Checked := False;
+     ShBloquear.Visible  := False;
+  end;
+end;
+
 procedure TFrmEnderecamento.ChkManutencaoAtivarClick(Sender: TObject);
 begin
   inherited;
@@ -799,7 +826,7 @@ begin
   if (EdtEndereco.Text<>'') then Begin
      Limpar;
      ObjEnderecoCtrl := TEnderecoCtrl.Create;
-     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 2, 0);
+     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 2, 0, 0);
      if Not JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then Begin
         If OperacaoCrud = poSearch Then
            JsonToDataSet_ShowDados(JsonArrayRetorno)
@@ -838,7 +865,7 @@ begin
      ObjEnderecoCtrl := TEnderecoCtrl.Create;
      if StrToIntDef(EdtEnderecoId.Text, 0) <= 0 then
         raise Exception.Create('Id('+EdtEnderecoId.Text+') inválido!');
-     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(StrToIntDef(EdtEnderecoId.Text, 0), 0, 0, 0, '', '', 'T', 2, 1);
+     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(StrToIntDef(EdtEnderecoId.Text, 0), 0, 0, 0, '', '', 'T', 2, 0, 1);
      if JsonArrayRetorno.Items[0].TryGetValue('Erro', vErro) then
         ShowErro('Erro: '+vErro)
      Else
@@ -1019,7 +1046,7 @@ begin
   if EdtPickingAtual.Text = '' then Exit;
   //ArrayJsonEndereco := TJsonArray.Create;
   ObjEndereco := TEnderecoCtrl.Create;
-  ArrayJsonEndereco := ObjEndereco.GetEnderecoJson(0, 2, 0, 0, EdtPickingAtual.Text, EdtPickingAtual.Text, 'T', 99, 0);
+  ArrayJsonEndereco := ObjEndereco.GetEnderecoJson(0, 2, 0, 0, EdtPickingAtual.Text, EdtPickingAtual.Text, 'T', 99, 0, 0);
   if ArrayJsonEndereco.Items[0].TryGetValue<string>('Erro', vErro) then Begin
      ShowErro('Endereço de Picking não encontrado!');
      EdtPickingAtual.Clear;
@@ -1084,7 +1111,7 @@ begin
      Exit;
   End;
   ObjEnderecoCtrl := TEnderecoCtrl.Create;
-  ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtPickingNovo.Text, EdtPickingNovo.Text, 'L', 1, 0);
+  ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtPickingNovo.Text, EdtPickingNovo.Text, 'L', 1, 0, 0);
   if ArrayJsonEndereco.Items[0].TryGetValue<string>('Erro', vErro) then Begin
      ShowErro('Picking(Novo) não encontrado ou já vinculado a outro produto.');
      EdtPickingNovo.Clear;
@@ -1219,18 +1246,18 @@ begin
   vEnderecoEdit := '';
   SelAtivaDesativa := False;
   With LstCadastro do Begin
-    ColWidths[0]  := 70;
-    ColWidths[1]  := 150;
-    ColWidths[2]  := 150;
-    ColWidths[3]  := 120;
-    ColWidths[4]  := 60;
-    ColWidths[5]  := 70;
-    ColWidths[6]  := 120;
-    ColWidths[7]  := 80;
-    ColWidths[8]  := 80;
-    ColWidths[9]  := 100;
-    ColWidths[10] := 200;
-    ColWidths[11] := 40;
+    ColWidths[0]  := 70+Trunc(70*ResponsivoVideo);
+    ColWidths[1]  := 150+Trunc(150*ResponsivoVideo);
+    ColWidths[2]  := 150+Trunc(150*ResponsivoVideo);
+    ColWidths[3]  := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[4]  := 60+Trunc(60*ResponsivoVideo);
+    ColWidths[5]  := 70+Trunc(70*ResponsivoVideo);
+    ColWidths[6]  := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[7]  := 80+Trunc(80*ResponsivoVideo);
+    ColWidths[8]  := 80+Trunc(80*ResponsivoVideo);
+    ColWidths[9]  := 100+Trunc(100*ResponsivoVideo);
+    ColWidths[10] := 200+Trunc(200*ResponsivoVideo);
+    ColWidths[11] := 40+Trunc(40*ResponsivoVideo);
     Alignments[0, 0]  := taRightJustify;
     FontStyles[0, 0]  := [FsBold];
     Alignments[4, 0]  := taCenter;
@@ -1240,14 +1267,14 @@ begin
     Alignments[11, 0] := taCenter;
   End;
  With LstCreateAddress do Begin
-    ColWidths[0]  := 120;
-    ColWidths[1]  :=  50;
-    ColWidths[2]  :=  50;
-    ColWidths[3]  :=  50;
-    ColWidths[4]  :=  50;
-    ColWidths[5]  := 160;
-    ColWidths[6]  :=  50;
-    ColWidths[7]  :=  50;
+    ColWidths[0]  := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[1]  :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[2]  :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[3]  :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[4]  :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[5]  := 160+Trunc(160*ResponsivoVideo);
+    ColWidths[6]  :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[7]  :=  50+Trunc(50*ResponsivoVideo);
     Alignments[0, 0]  := taCenter;
     FontStyles[0, 0]  := [FsBold];
     Alignments[1, 0]  := taCenter;
@@ -1286,14 +1313,14 @@ begin
      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, vEstruturaId,
                                                           StrToIntDef(EdtZonaIdAtivaDesativa.Text, 0), 0,
                                                           EdtEnderecoIniAtiva.Text, EdtEnderecoFinAtiva.Text,
-                                                          'T', 99, 0);
+                                                          'T', 99, 0, 0);
   End
   Else if PgcManutencao.ActivePage = TabManutencaoMudarZona then Begin
      if CbEstruturaMudarZona.ItemIndex < 0 then vEstruturaId := 0;
      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, vEstruturaId,
                                                           StrToIntDef(EdtZonaIdMudarZona.Text, 0), 0,
                                                           EdtEnderecoIniMudarZona.Text, EdtEnderecoFinMudarZona.Text,
-                                                          'T', 99, 0);
+                                                          'T', 99, 0, 0);
   End
   Else if PgcManutencao.ActivePage = TabManutencaoCubagem then Begin
      if CbEstruturaCubagem.ItemIndex < 0 then vEstruturaId := 0;
@@ -1307,14 +1334,14 @@ begin
      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, vEstruturaId,
                                                           StrToIntDef(EdtZonaIdExcluir.Text, 0), 0,
                                                           EdtEnderecoIniExcluir.Text, EdtEnderecoFinExcluir.Text,
-                                                          'L', 99, 0);
+                                                          'L', 99, 0, 0);
   End
   Else if PgcManutencao.ActivePage = TabManutencaoRemoverVinculo then Begin
      if CbEstruturaRemoverVinculo.ItemIndex < 0 then vEstruturaId := 0;
      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 2,
                                                           StrToIntDef(EdtZonaIdRemoverVinculo.Text, 0), 0,
                                                           EdtEnderecoIniRemoverVinculo.Text, EdtEnderecoFinRemoverVinculo.Text,
-                                                          'O', 99, 0);
+                                                          'O', 99, 0, 0);
   End;
   if ArrayJsonEndereco.Items[0].TryGetValue<string>('Erro', vErro) then Begin
      ShowErro('Não foram encontrado(s) dados para o relatório');
@@ -1484,7 +1511,7 @@ Var ObjEnderecoCtrl : TEnderecoCtrl;
     ObjProdutoCtrl  : TProdutoCtrl;
 begin
   ObjEnderecoCtrl := TEnderecoCtrl.Create;
-  LstEnderecos := ObjEnderecoCtrl.GetEndereco(pEnderecoId, pEstruturaId, pZonaId, 0, pEnderecoIni, pEnderecoFin, 'T', 2, 1);
+  LstEnderecos := ObjEnderecoCtrl.GetEndereco(pEnderecoId, pEstruturaId, pZonaId, 0, pEnderecoIni, pEnderecoFin, 'T', 2, 0, 1);
   Result := (LstEnderecos.Count >= 1) and (LstEnderecos[0].EnderecoId<>0);
   If LstEnderecos.Count >= 1 then  Begin
      LstCadastro.RowCount := LstEnderecos.Count+1;
@@ -1536,16 +1563,16 @@ procedure TFrmEnderecamento.HeaderLstManutencao(pLstManutencao : TAdvStringGrid)
 begin
   if PgcManutencao.ActivePage = TabManutencaoCubagem then Begin
      With LstManutencaoCubagem do Begin
-       ColWidths[0] :=  80;
-       ColWidths[1] := 100;
-       ColWidths[2] := 110;
-       ColWidths[3] :=  60;
-       ColWidths[4] := 150;
-       ColWidths[5] :=  80;
-       ColWidths[6] := 300;
-       ColWidths[7] :=  50;
-       ColWidths[8] :=  50;
-       ColWidths[9] :=  50;
+       ColWidths[0] :=  80+Trunc(80*ResponsivoVideo);
+       ColWidths[1] := 100+Trunc(100*ResponsivoVideo);
+       ColWidths[2] := 110+Trunc(110*ResponsivoVideo);
+       ColWidths[3] :=  60+Trunc(60*ResponsivoVideo);
+       ColWidths[4] := 150+Trunc(150*ResponsivoVideo);
+       ColWidths[5] :=  80+Trunc(80*ResponsivoVideo);
+       ColWidths[6] := 300+Trunc(300*ResponsivoVideo);
+       ColWidths[7] :=  50+Trunc(50*ResponsivoVideo);
+       ColWidths[8] :=  50+Trunc(50*ResponsivoVideo);
+       ColWidths[9] :=  50+Trunc(50*ResponsivoVideo);
        Alignments[0, 0] := taRightJustify;
        FontStyles[0, 0] := [FsBold];
        Alignments[1, 0] := taCenter;
@@ -1560,17 +1587,17 @@ begin
 
   Else Begin
      With pLstManutencao do Begin
-       ColWidths[ 0] :=  80;
-       ColWidths[ 1] := 100;
-       ColWidths[ 2] := 110;
-       ColWidths[ 3] :=  60;
-       ColWidths[ 4] := 150;
-       ColWidths[ 5] :=  80;
-       ColWidths[ 6] := 300;
-       ColWidths[ 7] :=  50;
-       ColWidths[ 8] :=  55;
-       ColWidths[ 9] :=  50;
-       ColWidths[10] :=  50;
+       ColWidths[ 0] :=  80+Trunc(80*ResponsivoVideo);
+       ColWidths[ 1] := 100+Trunc(100*ResponsivoVideo);
+       ColWidths[ 2] := 110+Trunc(110*ResponsivoVideo);
+       ColWidths[ 3] :=  60+Trunc(60*ResponsivoVideo);
+       ColWidths[ 4] := 150+Trunc(150*ResponsivoVideo);
+       ColWidths[ 5] :=  80+Trunc(80*ResponsivoVideo);
+       ColWidths[ 6] := 300+Trunc(300*ResponsivoVideo);
+       ColWidths[ 7] :=  50+Trunc(50*ResponsivoVideo);
+       ColWidths[ 8] :=  55+Trunc(55*ResponsivoVideo);
+       ColWidths[ 9] :=  50+Trunc(50*ResponsivoVideo);
+       ColWidths[10] :=  50+Trunc(50*ResponsivoVideo);
        Alignments[ 0, 0] := taRightJustify;
        FontStyles[ 0, 0] := [FsBold];
        Alignments[ 1, 0] := taCenter;
@@ -1663,6 +1690,7 @@ begin
   EdtComprimento.Value   := 0;
   EdtVolume.Value        := 0;
   ChkCadastro.Checked    := False;
+  ChkBloqueado.Checked   := False;
   LblEstrutura.Caption   := '...';
   LblRua.Caption         := '...';
   LblZona.Caption        := '...';
@@ -1738,6 +1766,8 @@ begin
      EdtEnderecoFinAtiva.Clear;
      ChkManutencaoAtivar.Checked    := False;
      ChkManutencaoDesativar.Checked := False;
+     ChkBloquear.Checked    := False;
+     ChkDesbloquear.Checked := False;
      LimparLstManutencao;
      CbEstruturaAtivaDesativa.SetFocus;
   End
@@ -1861,13 +1891,13 @@ begin
         SelAtivaDesativa := Not SelAtivaDesativa;
      End
      Else Begin
-       if (((((PgcManutencao.ActivePage = TabManutencaoAtivaDesativa) And (Not ChkManutencaoAtivar.Checked)) or
-                (PgcManutencao.ActivePage = TabManutencaoExcluir)) and
-                ((StrToIntDef(TAdvStringGrid(Sender).Cells[5, aRow], 0) <> 0) or
-                 (TAdvStringGrid(Sender).Cells[7, aRow].ToInteger() <> 0))) or
-            ((PgcManutencao.ActivePage = TabManutencaoRemoverVinculo) and
-              ((TAdvStringGrid(Sender).Cells[7, aRow].ToInteger<>0) or
-               (TAdvStringGrid(Sender).Cells[8, aRow].ToInteger<>0)))) then
+       if (((((PgcManutencao.ActivePage = TabManutencaoAtivaDesativa) And ((Not ChkManutencaoAtivar.Checked) and
+                                                                           (Not ChkManutencaoDesativar.Checked) and
+                                                                           (Not ChkBloquear.Checked) and (Not ChkDesbloquear.Checked) )) or
+              (PgcManutencao.ActivePage = TabManutencaoExcluir)) and ((StrToIntDef(TAdvStringGrid(Sender).Cells[5, aRow], 0) <> 0) or
+                                                                      (TAdvStringGrid(Sender).Cells[7, aRow].ToInteger() <> 0))) or
+              ((PgcManutencao.ActivePage = TabManutencaoRemoverVinculo) and ((TAdvStringGrid(Sender).Cells[7, aRow].ToInteger<>0) or
+                                                                             (TAdvStringGrid(Sender).Cells[8, aRow].ToInteger<>0)))) then
           Exit;
        if (PgcManutencao.ActivePage = TabManutencaoCubagem) then Begin
           If (StrToIntDef(TAdvStringGrid(Sender).Cells[13, aRow], 0) = 0) then
@@ -2029,7 +2059,14 @@ begin
   ObjEnderecoCtrl.ObjEndereco.Comprimento := EdtComprimento.Value;
   ObjEnderecoCtrl.ObjEndereco.Volume      := EdtVolume.Value;
   ObjEnderecoCtrl.ObjEndereco.Capacidade  := EdtPeso.Value;
-  If ChkCadastro.Checked Then ObjEnderecoCtrl.ObjEndereco.Status := 1 Else ObjEnderecoCtrl.ObjEndereco.Status := 0;
+  If ChkCadastro.Checked Then
+     ObjEnderecoCtrl.ObjEndereco.Status := 1
+  Else
+     ObjEnderecoCtrl.ObjEndereco.Status := 0;
+  If ChkBloqueado.Checked Then
+     ObjEnderecoCtrl.ObjEndereco.Bloqueado := 1
+  Else
+     ObjEnderecoCtrl.ObjEndereco.Bloqueado := 1;
   If Not ObjEnderecoCtrl.Salvar.TryGetValue('Erro', vErro) then Begin
      ObjEnderecoCtrl.ObjEndereco.EnderecoId := 0;
      Result := True
@@ -2081,6 +2118,7 @@ end;
 procedure TFrmEnderecamento.SbSalvarExcluirClick(Sender: TObject);
 Var ObjEnderecoCtrl : TEnderecoCtrl;
     JsonManutencao    : TJsonObject;
+    JsonArrayTipoAcao : TJsonArray; //Ativar/Desatibar/<Des>Bloquear
     ArrayJsonEndereco : TJsonArray;
     xEndereco         : Integer;
     vErro             : String;
@@ -2110,18 +2148,25 @@ begin
   End
   Else Begin
     if PgcManutencao.ActivePage = TabManutencaoAtivaDesativa then Begin
-       if (Not ChkManutencaoAtivar.Checked) and (Not ChkManutencaodesativar.Checked) then
+       if (Not ChkManutencaoAtivar.Checked) and (Not ChkManutencaodesativar.Checked) and
+          (Not ChkBloquear.Checked) and (Not ChkDesbloquear.Checked) then
           raise Exception.Create('Informe a ação desejada. Ativar ou Desativar.');
        If StrToIntDef(LblTotRegistroOnOff.Caption, 0) <= 0 then Begin
          ShowErro('Selecione os endereços para aplicar a manutenção.');
          Exit;
        End;
        JsonManutencao := TJsonObject.Create;
+       JsonArrayTipoAcao := TJsonArray.Create;
        JsonManutencao.AddPair('operacao', 'AtivaDesativa');
        if ChkManutencaoAtivar.Checked then
-          JsonManutencao.AddPair('acao', 'Ativar')
+          JsonArrayTipoAcao.AddElement(TJsonObject.Create.AddPair('acao', 'ativar'))
        Else if ChkManutencaoDesativar.Checked then
-          JsonManutencao.AddPair('acao', 'Desativar');
+          JsonArrayTipoAcao.AddElement(TJsonObject.Create.AddPair('acao', 'desativar'));
+       if ChkBloquear.Checked then
+          JsonArrayTipoAcao.AddElement(TJsonObject.Create.AddPair('acao', 'bloquear'))
+       Else if ChkDesbloquear.Checked then
+          JsonArrayTipoAcao.AddElement(TJsonObject.Create.AddPair('acao', 'desbloquear'));
+       JsonManutencao.AddPair('acao', JsonArrayTipoAcao);
        ArrayJsonEndereco := TJsonArray.Create;
        for xEndereco := 1 to Pred(LstManutencaoAtivaDesativa.RowCount) do Begin
          if LstManutencaoAtivaDesativa.Cells[10, xEndereco] = '1' then
@@ -2306,13 +2351,15 @@ procedure TFrmEnderecamento.TabManutencaoAtivaDesativaShow(Sender: TObject);
 begin
   inherited;
   if Sender = TabManutencaoAtivaDesativa then Begin
-     CbEstruturaAtivaDesativa.Enabled     := True;
-     EdtZonaIdAtivaDesativa.ReadOnly      := False;
-     GbEnderecoAtivaDesativa.Enabled      := True;
-     EdtEnderecoIniAtiva.ReadOnly         := False;
-     EdtEnderecoFinAtiva.ReadOnly         := False;
-     ChkManutencaoAtivar.Enabled          := True;
-     ChkManutencaoDesativar.Enabled       := True;
+     CbEstruturaAtivaDesativa.Enabled := True;
+     EdtZonaIdAtivaDesativa.ReadOnly  := False;
+     GbEnderecoAtivaDesativa.Enabled  := True;
+     EdtEnderecoIniAtiva.ReadOnly     := False;
+     EdtEnderecoFinAtiva.ReadOnly     := False;
+     ChkManutencaoAtivar.Enabled      := True;
+     ChkManutencaoDesativar.Enabled   := True;
+     ChkBloquear.Enabled              := True;
+     ChkDesbloquear.Enabled           := True;
   End
   Else if Sender = TabManutencaoMudarZona then Begin
      CbEstruturaMudarZona.Enabled     := True;

@@ -639,7 +639,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEnderecoFinal.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       EdtEnderecoFinal.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 0, 1)[0].Descricao;
        EdtEnderecoFinalExit(EdtEnderecoFinal);
        ObjEnderecoCtrl.Free;
     End;
@@ -658,7 +658,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 0, 1)[0].Descricao;
        EdtEnderecoFinal.SetFocus;
        ObjEnderecoCtrl.Free;
     End;
@@ -1257,8 +1257,8 @@ begin
      ((Sender=EdtEnderecoFinalModelo) and (EdtEnderecoFinalModelo.Text  = '')) then Exit;
   ObjEnderecoCtrl := TEnderecoCtrl.Create();
   if Sender = EdtEnderecoFinal then
-     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoFinal.Text, EdtEnderecoFinal.Text, 'T', 2, 0)
-  Else JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoFinalModelo.Text, EdtEnderecoFinalModelo.Text, 'T', 2, 0);
+     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoFinal.Text, EdtEnderecoFinal.Text, 'T', 2, 0, 0)
+  Else JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoFinalModelo.Text, EdtEnderecoFinalModelo.Text, 'T', 2, 0, 0);
   if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
      if Sender = EdtEnderecoFinal then Begin
         EdtEnderecoFinal.Clear;
@@ -1287,8 +1287,8 @@ begin
       ((Sender=EdtEnderecoInicialModelo) and (EdtEnderecoInicialModelo.Text  = '')) then Exit;
    ObjEnderecoCtrl := TEnderecoCtrl.Create();
    if Sender = EdtEnderecoInicial then
-     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoInicial.Text, EdtEnderecoInicial.Text, 'T', 2, 0)
-   Else JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoInicialModelo.Text, EdtEnderecoInicialModelo.Text, 'T', 2, 0);
+     JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoInicial.Text, EdtEnderecoInicial.Text, 'T', 2, 0, 0)
+   Else JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EdtEnderecoInicialModelo.Text, EdtEnderecoInicialModelo.Text, 'T', 2, 0, 0);
    if JsonArrayRetorno.Items[0].TryGetValue<String>('Erro', vErro) then Begin
       if Sender = EdtEnderecoInicial then Begin
          EdtEnderecoInicial.SetFocus;
@@ -2161,7 +2161,7 @@ begin
         LstReposicaoItens.FixedRows := 1;
         ObjEnderecoCtrl := TEnderecoCtrl.Create();
         vMascara := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, FdMemReposicaoItens.FieldByName('Endereco').AsString,
-                                        FdMemReposicaoItens.FieldByName('Endereco').AsString, 'T', 2, 0).
+                                        FdMemReposicaoItens.FieldByName('Endereco').AsString, 'T', 2, 0, 0).
                                         Items[0].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara');
         for xItens := 1 to FdmemReposicaoItens.RecordCount do begin
           LstReposicaoItens.Cells[0, xItens] := FdMemReposicaoItens.FieldByName('CodProduto').AsString;

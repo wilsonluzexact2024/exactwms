@@ -379,7 +379,7 @@ end;
 procedure TFrmRelEvolucaoRessuprimentos.FormCreate(Sender: TObject);
 begin
   inherited;
-  pTipoResumo := 0;
+  pTipoResumo := 1;
   ColumnHeader(pTipoResumo);
   LblRegistro.caption      := '0';
   LblRecebido.Caption      := '0';
@@ -731,53 +731,75 @@ begin
   vCancelado := 0;
   vCortes    := 0;
   while Not FdMemPesqGeral.Eof do Begin
-    //LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.Recno.ToString;
-    if pTipoResumo = 0 then
-       LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Data').AsString
-    Else
+    if pTipoResumo = 0 then Begin
+       LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Data').AsString;
+       LstReport.Cells[1, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Demanda').AsString;
+       LstReport.Cells[2, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Recebido').AsString;
+       LstReport.Cells[3, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Cubagem').AsString;
+       LstReport.Cells[4, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Apanhe').AsString;
+       LstReport.Cells[5, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('CheckOut').AsString;
+       LstReport.Cells[6, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Expedicao').AsString;
+       LstReport.Cells[7, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Cancelado').AsString;
+       LstReport.Cells[8, FdMemPesqGeral.RecNo]  := (FdMemPesqGeral.FieldByName('Demanda').AsInteger-
+                                                     (FdMemPesqGeral.FieldByName('Recebido').AsInteger+
+                                                      FdMemPesqGeral.FieldByName('Cubagem').AsInteger+
+                                                      FdMemPesqGeral.FieldByName('Apanhe').AsInteger+
+                                                      FdMemPesqGeral.FieldByName('CheckOut').AsInteger+
+                                                      FdMemPesqGeral.FieldByName('Expedicao').AsInteger)-
+                                                      FdMemPesqGeral.FieldByName('Cancelado').AsInteger ).ToString;
+       LstReport.Cells[9, FdMemPesqGeral.RecNo]  := FormatFloat('0.00', FdMemPesqGeral.FieldByName('Eficiencia').AsFloat);
+       vDemanda   := vDemanda   + FdMemPesqGeral.FieldByName('Demanda').AsInteger;
+       vRecebido  := vRecebido  + FdMemPesqGeral.FieldByName('Recebido').AsInteger;
+       vCubagem   := vCubagem   + FdMemPesqGeral.FieldByName('Cubagem').AsInteger;
+       vApanhe    := vApanhe    + FdMemPesqGeral.FieldByName('Apanhe').AsInteger;
+       vCheckout  := vCheckout  + FdMemPesqGeral.FieldByName('CheckOut').AsInteger;
+       vExpedicao := vExpedicao + FdMemPesqGeral.FieldByName('Expedicao').AsInteger;
+       vCancelado := vCancelado + FdMemPesqGeral.FieldByName('Cancelado').AsInteger;
+       vCortes    := vCortes    + (FdMemPesqGeral.FieldByName('Demanda').AsInteger-
+                                  (FdMemPesqGeral.FieldByName('Recebido').AsInteger+
+                                   FdMemPesqGeral.FieldByName('Cubagem').AsInteger+
+                                   FdMemPesqGeral.FieldByName('Apanhe').AsInteger+
+                                   FdMemPesqGeral.FieldByName('CheckOut').AsInteger+
+                                   FdMemPesqGeral.FieldByName('Expedicao').AsInteger)-
+                                   FdMemPesqGeral.FieldByName('Cancelado').AsInteger );
+       if FdMemPesqGeral.FieldByName('Eficiencia').AsFloat = 100 then
+          LstReport.Colors[9, FdMemPesqGeral.RecNo] := ClGreen
+       Else If FdMemPesqGeral.FieldByName('Eficiencia').AsFloat > 90 then
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := clYellow
+       Else If FdMemPesqGeral.FieldByName('Expedicao').AsFloat > 0 then
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := ClRed
+       Else
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := LstReport.Colors[8, FdMemPesqGeral.RecNo];;
+    End
+    Else Begin
        LstReport.Cells[0, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Zona').AsString;
-    LstReport.Cells[1, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Demanda').AsString;
-    LstReport.Cells[2, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Recebido').AsString;
-    LstReport.Cells[3, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Cubagem').AsString;
-    LstReport.Cells[4, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Apanhe').AsString;
-    LstReport.Cells[5, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('CheckOut').AsString;
-    LstReport.Cells[6, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Expedicao').AsString;
-    LstReport.Cells[7, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Cancelado').AsString;
-    LstReport.Cells[8, FdMemPesqGeral.RecNo]  := (FdMemPesqGeral.FieldByName('Demanda').AsInteger-
-                                                  (FdMemPesqGeral.FieldByName('Recebido').AsInteger+
-                                                   FdMemPesqGeral.FieldByName('Cubagem').AsInteger+
-                                                   FdMemPesqGeral.FieldByName('Apanhe').AsInteger+
-                                                   FdMemPesqGeral.FieldByName('CheckOut').AsInteger+
-                                                   FdMemPesqGeral.FieldByName('Expedicao').AsInteger)-
-                                                   FdMemPesqGeral.FieldByName('Cancelado').AsInteger ).ToString;
-    LstReport.Cells[9, FdMemPesqGeral.RecNo]  := FormatFloat('0.00', FdMemPesqGeral.FieldByName('Eficiencia').AsFloat);
-    vDemanda   := vDemanda   + FdMemPesqGeral.FieldByName('Demanda').AsInteger;
-    vRecebido  := vRecebido  + FdMemPesqGeral.FieldByName('Recebido').AsInteger;
-    vCubagem   := vCubagem   + FdMemPesqGeral.FieldByName('Cubagem').AsInteger;
-    vApanhe    := vApanhe    + FdMemPesqGeral.FieldByName('Apanhe').AsInteger;
-    vCheckout  := vCheckout  + FdMemPesqGeral.FieldByName('CheckOut').AsInteger;
-    vExpedicao := vExpedicao + FdMemPesqGeral.FieldByName('Expedicao').AsInteger;
-    vCancelado := vCancelado + FdMemPesqGeral.FieldByName('Cancelado').AsInteger;
-    vCortes    := vCortes    + (FdMemPesqGeral.FieldByName('Demanda').AsInteger-
-                               (FdMemPesqGeral.FieldByName('Recebido').AsInteger+
-                                FdMemPesqGeral.FieldByName('Cubagem').AsInteger+
-                                FdMemPesqGeral.FieldByName('Apanhe').AsInteger+
-                                FdMemPesqGeral.FieldByName('CheckOut').AsInteger+
-                                FdMemPesqGeral.FieldByName('Expedicao').AsInteger)-
-                                FdMemPesqGeral.FieldByName('Cancelado').AsInteger );
-    if FdMemPesqGeral.FieldByName('Eficiencia').AsFloat = 100 then
-       LstReport.Colors[8, FdMemPesqGeral.RecNo] := ClGreen
-    Else If FdMemPesqGeral.FieldByName('Eficiencia').AsFloat > 90 then
-      LstReport.Colors[8, FdMemPesqGeral.RecNo] := clYellow
-    Else If FdMemPesqGeral.FieldByName('Expedicao').AsFloat > 0 then
-      LstReport.Colors[8, FdMemPesqGeral.RecNo] := ClRed;
-//    if FdMemPesqGeral.FieldByName('Demanda').AsInteger > (FdMemPesqGeral.FieldByName('Expedicao').AsInteger+FdMemPesqGeral.FieldByName('Cancelado').AsInteger) then
-//       LstReport.Colors[11, FdMemPesqGeral.RecNo] := ClRed
-//    Else If FdMemPesqGeral.FieldByName('Demanda').AsInteger = (FdMemPesqGeral.FieldByName('Expedicao').AsInteger+FdMemPesqGeral.FieldByName('Cancelado').AsInteger) then
-//      LstReport.Colors[11, FdMemPesqGeral.RecNo] := ClGreen
-//    Else
-//      LstReport.Colors[11, FdMemPesqGeral.RecNo] := ClWhite;
-    LstReport.Alignments[0, FdMemPesqGeral.RecNo] := taRightJustify;
+       LstReport.Cells[1, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('Demanda').AsString;
+       LstReport.Cells[2, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('NProcessado').AsString;
+       LstReport.Cells[3, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('QtdProcessada').AsString;
+       LstReport.Cells[4, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('QtdSeparacao').AsString;
+       LstReport.Cells[5, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('QtdCheckOut').AsString;
+       LstReport.Cells[6, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('QtdExpedido').AsString;
+       LstReport.Cells[7, FdMemPesqGeral.RecNo]  := FdMemPesqGeral.FieldByName('QtdCancelada').AsString;
+       LstReport.Cells[8, FdMemPesqGeral.RecNo]  := (FdMemPesqGeral.FieldByName('QtdCorte').AsInteger+FdMemPesqGeral.FieldByName('CorteAutomatico').AsInteger).ToString();
+       LstReport.Cells[9, FdMemPesqGeral.RecNo]  := FormatFloat('0.00', Round(FdMemPesqGeral.FieldByName('QtdExpedido').AsFloat/FdMemPesqGeral.FieldByName('Demanda').AsFloat*100));
+       vDemanda   := vDemanda   + FdMemPesqGeral.FieldByName('Demanda').AsInteger;
+       vRecebido  := vRecebido  + FdMemPesqGeral.FieldByName('NProcessado').AsInteger;
+       vCubagem   := vCubagem   + FdMemPesqGeral.FieldByName('QtdProcessada').AsInteger;
+       vApanhe    := vApanhe    + FdMemPesqGeral.FieldByName('QtdSeparacao').AsInteger;
+       vCheckout  := vCheckout  + FdMemPesqGeral.FieldByName('QtdCheckOut').AsInteger;
+       vExpedicao := vExpedicao + FdMemPesqGeral.FieldByName('QtdExpedido').AsInteger;
+       vCancelado := vCancelado + FdMemPesqGeral.FieldByName('QtdCancelada').AsInteger;
+       vCortes    := vCortes    + FdMemPesqGeral.FieldByName('QtdCorte').AsInteger+FdMemPesqGeral.FieldByName('CorteAutomatico').AsInteger;
+       if Round(FdMemPesqGeral.FieldByName('QtdExpedido').AsFloat/FdMemPesqGeral.FieldByName('Demanda').AsFloat*100) = 100 then
+          LstReport.Colors[9, FdMemPesqGeral.RecNo] := ClGreen
+       Else If Round(FdMemPesqGeral.FieldByName('QtdExpedido').AsFloat/FdMemPesqGeral.FieldByName('Demanda').AsFloat*100) > 90 then
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := clYellow
+       Else If FdMemPesqGeral.FieldByName('QtdExpedido').AsFloat > 0 then
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := ClRed
+       Else
+         LstReport.Colors[9, FdMemPesqGeral.RecNo] := LstReport.Colors[8, FdMemPesqGeral.RecNo];
+    End;
+    LstReport.Alignments[0, FdMemPesqGeral.RecNo] := taLeftJustify;
     LstReport.FontStyles[0, FdmemPesqGeral.Recno] := [FsBold];
     LstReport.Alignments[1, FdMemPesqGeral.RecNo] := taRightJustify;
     LstReport.Alignments[2, FdMemPesqGeral.RecNo] := taRightJustify;
@@ -851,6 +873,10 @@ begin
       ObjPedidoSaidaCtrl : TPedidoSaidaCtrl;
       vErro : String;
   begin
+    TThread.Synchronize(nil, procedure
+    Begin
+      FrmRelEvolucaoRessuprimentos.Enabled := False;
+    End);
     ObjPedidoSaidaCtrl := TPedidoSaidaCtrl.Create;
     if CbTipoAnalise.ItemIndex = 0 then Begin
        JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoPed(aParams);
@@ -867,7 +893,7 @@ begin
        End;
     End
     Else if CbTipoAnalise.ItemIndex = 2 then Begin
-      if pTipoResumo = 0 then
+      if (pTipoResumo = 0) or (CbTipoAnalise.ItemIndex <> 2) then
          JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnid(aParams)
       Else
          JsonArrayRetorno := ObjPedidoSaidaCtrl.GetEvolucaoAtendimentoUnidZona(aParams);
@@ -904,6 +930,7 @@ end;
 procedure TFrmRelEvolucaoRessuprimentos.ThreadValidarPesquisarDados(
   Sender: TObject);
 begin
+  FrmRelEvolucaoRessuprimentos.Enabled := True;
   if Assigned(TThread(Sender).FatalException) then begin
      ShowErro(Exception(TThread(sender).FatalException).Message, 'alerta');
      Exit;

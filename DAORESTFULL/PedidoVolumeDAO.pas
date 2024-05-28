@@ -83,7 +83,7 @@ begin
     DmeXactWMS.RestRequestWMS.ClearBody;
     DmeXactWMS.RestRequestWMS.AddBody(pJsonArray.ToJson, ContentTypeFromString('application/json'));
     DmeXactWMS.RESTRequestWMS.Resource := 'v1/pedidovolume/atualizarconferenciasemlotes';
-    DmeXactWMS.RESTRequestWMS.Method := rmPUT;
+    DmeXactWMS.RESTRequestWMS.Method   := rmPUT;
     DmeXactWMS.RESTRequestWMS.Execute;
     Result := DmeXactWMS.RESTResponseWMS.JSONValue as TJsonArray
   Except On E: Exception do Begin

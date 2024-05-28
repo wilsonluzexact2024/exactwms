@@ -2,6 +2,8 @@ inherited FrmRelPedidos: TFrmRelPedidos
   Caption = 'FrmRelPedidos'
   ClientHeight = 768
   ClientWidth = 1366
+  ExplicitLeft = -329
+  ExplicitTop = -5
   ExplicitWidth = 1368
   ExplicitHeight = 770
   PixelsPerInch = 96
@@ -9,7 +11,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
   inherited PgcBase: TcxPageControl
     Width = 1367
     Height = 713
-    Properties.ActivePage = TabRelVolumes
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1367
     ExplicitHeight = 713
     ClientRectBottom = 713
@@ -461,7 +463,7 @@ inherited FrmRelPedidos: TFrmRelPedidos
         CustomHint = BalloonHint1
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 6
-        Properties.ActivePage = TabPedidos
+        Properties.ActivePage = TabVolumes
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 9
         ClientRectBottom = 495
@@ -1313,15 +1315,17 @@ inherited FrmRelPedidos: TFrmRelPedidos
           CustomHint = BalloonHint1
           Caption = 'Volumes'
           ImageIndex = 1
+          DesignSize = (
+            1350
+            471)
           object LstVolumesAdv: TAdvStringGrid
             Left = 0
             Top = 0
-            Width = 760
+            Width = 890
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1
             Align = alLeft
-            Anchors = [akTop, akRight, akBottom]
             ColCount = 12
             DefaultColWidth = 74
             DefaultRowHeight = 25
@@ -1786,14 +1790,13 @@ inherited FrmRelPedidos: TFrmRelPedidos
               25)
           end
           object LstVolumeEtapas: TAdvStringGrid
-            Left = 778
+            Left = 926
             Top = 0
-            Width = 572
+            Width = 424
             Height = 247
             Cursor = crDefault
             CustomHint = BalloonHint1
-            Align = alRight
-            Anchors = [akLeft, akTop, akRight, akBottom]
+            Anchors = [akTop, akRight, akBottom]
             DefaultColWidth = 74
             DefaultRowHeight = 25
             DrawingStyle = gdsClassic
@@ -3234,7 +3237,6 @@ inherited FrmRelPedidos: TFrmRelPedidos
             Cursor = crDefault
             CustomHint = BalloonHint1
             Align = alLeft
-            Anchors = [akTop, akRight, akBottom]
             ColCount = 12
             DefaultColWidth = 74
             DefaultRowHeight = 25
@@ -6224,10 +6226,10 @@ inherited FrmRelPedidos: TFrmRelPedidos
     end
   end
   inherited PnlImgObjeto: TPanel
-    Left = 1313
-    Top = 330
-    ExplicitLeft = 1313
-    ExplicitTop = 330
+    Left = 1271
+    Top = 539
+    ExplicitLeft = 1271
+    ExplicitTop = 539
   end
   inherited PnlErro: TPanel
     Top = 746

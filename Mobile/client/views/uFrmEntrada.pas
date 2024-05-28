@@ -919,7 +919,8 @@ begin
   End;
   Try
     StrToDate(TEdit(Sender).Text);
-    if StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130') then
+    if (StrToDate(TEdit(Sender).Text) < StrToDate('01/01/1990')) or
+       (StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130')) then
        if Sender = EdtDtFabricacao then
           raise Exception.Create('Dt.Fabricação inválida!')
        else raise Exception.Create('Dt.Vencimento inválida!');
@@ -1086,7 +1087,7 @@ begin
   if (EdtPicking.Text <> '') and (EdtPicking.Text <> FdMemEntradaProduto.FieldByName('Picking').AsString) then Begin
         Try
           ObjEnderecoCtrl  := TEnderecoCtrl.Create;
-          EnderecoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EnderecoMask(EdtPicking.Text, '', False), EnderecoMask(EdtPicking.Text, '', False), 'T', 2, 0);
+          EnderecoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EnderecoMask(EdtPicking.Text, '', False), EnderecoMask(EdtPicking.Text, '', False), 'T', 2, 0, 0);
           if (EnderecoJsonArray.Items[0].TryGetValue('Erro', vErro)) or (EnderecoJsonArray.Count < 1) then Begin
              SetCampoDefault('EdtPicking');
              ShowErro('Endereço '+EnderecoMask(EdtPicking.Text, '', False)+' não encontrado!');
@@ -1094,7 +1095,12 @@ begin
           End
           Else If EnderecoJsonArray.Items[0].GetValue<Integer>('status') = 0 then Begin
              SetCampoDefault('EdtPicking');
-             ShowErro('Endereco('+EnderecoMask(EdtPicking.Text, '', True)+') inativo!');
+             ShowErro('Endereço('+EnderecoMask(EdtPicking.Text, '', True)+') inativo!');
+             EdtPicking.Text := '';
+          End
+          Else If EnderecoJsonArray.Items[0].GetValue<Integer>('bloqueado') = 1 then Begin
+             SetCampoDefault('EdtPicking');
+             ShowErro('Endereço('+EnderecoMask(EdtPicking.Text, '', True)+') bloqueado para uso!');
              EdtPicking.Text := '';
           End
           Else if ((EnderecoJsonArray.Items[0].GetValue<TJsonObject>('produto')).GetValue<Integer>('produtoid') <> 0) and

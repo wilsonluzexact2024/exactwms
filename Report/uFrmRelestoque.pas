@@ -129,6 +129,7 @@ type
     FdMemPesqGeralmascara: TStringField;
     FdMemPesqGeralmascarapicking: TStringField;
     FdMemPesqGeralDtInclusao: TDateField;
+    FdMemPesqGeralBloqueado: TIntegerField;
     procedure BtnSchProdutoClick(Sender: TObject);
     procedure EdtProdutoIdExit(Sender: TObject);
     procedure EdtProdutoIdChange(Sender: TObject);
@@ -273,7 +274,7 @@ begin
        Else if Sender = BtnPesqEnderecoDestino then
           vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       vEndereco := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       vEndereco := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 0, 1)[0].Descricao;
        if Sender = BtnSchEndereco then Begin
           EdtEndereco.Text := vEndereco;
           EdtEnderecoExit(EdtEndereco);
@@ -421,7 +422,7 @@ begin
       LblEnderecoDestino.Caption := '';
    if TEdit(Sender).Text  = '' then Exit;
    ObjEnderecoCtrl := TEnderecoCtrl.Create();
-   JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, TEdit(Sender).Text, TEdit(Sender).Text, 'T', 2, 1);
+   JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, TEdit(Sender).Text, TEdit(Sender).Text, 'T', 2, 0, 1);
    if JsonArrayRetorno.Count < 1 Then Begin //Items[0].TryGetValue<String>('Erro', vErro) then Begin
       EdtProdutoId.Text := '';
       TEdit(Sender).SetFocus;
@@ -619,7 +620,7 @@ begin
   LstReport.ColWidths[1]  := 300;
   LstReport.ColWidths[2]  := 100;
   LstReport.ColWidths[3]  :=  80;
-  LstReport.ColWidths[4]  := 100;
+  LstReport.ColWidths[4]  :=  80;
   LstReport.ColWidths[5]  := 100;
   LstReport.ColWidths[6]  := 120;
   LstReport.ColWidths[7]  := 120;
@@ -817,9 +818,13 @@ begin
                                        FdMemPesqGeral.FieldByName('AnoVencimento').AsString
     Else
        LstReport.Cells[3, xProd+1] := FdMemPesqGeral.FieldByName('Embalagem').AsString;
-
     LstReport.Cells[4, xProd+1]  := EnderecoMask(FdMemPesqGeral.FieldByName('endereco').AsString,
                                      FdMemPesqGeral.FieldByName('mascara').AsString, True);
+    if FdMemPesqGeral.FieldByName('bloqueado').AsInteger = 1 then
+        LstReport.Colors[4, xProd+1] := clYellow
+    Else
+       LstReport.Colors[4, xProd+1] := LstReport.Colors[12, LstReport.Row];
+
     LstReport.Cells[5, xProd+1]  := FdMemPesqGeral.FieldByName('estrutura').AsString;
     LstReport.Cells[6, xProd+1]  := FdMemPesqGeral.FieldByName('zona').AsString;
     LstReport.Cells[7, xProd+1]  := FdMemPesqGeral.FieldByName('descrlote').AsString;
@@ -829,6 +834,10 @@ begin
     LstReport.Cells[11, xProd+1] := FdMemPesqGeral.FieldByName('qtdproducao').AsString;
     LstReport.Cells[12, xProd+1] := FdMemPesqGeral.FieldByName('reserva').AsString;
     LstReport.Cells[13, xProd+1] := FdMemPesqGeral.FieldByName('saldo').AsString;
+    if FdMemPesqGeral.FieldByName('Saldo').AsInteger < 0 then
+        LstReport.Colors[13, xProd+1] := ClRed
+    Else
+       LstReport.Colors[13, xProd+1] := LstReport.Colors[12, LstReport.Row];
     LstReport.Cells[14, xProd+1] := FdMemPesqGeral.FieldByName('qtdcrosdocking').AsString;
     LstReport.Cells[15, xProd+1] := FdMemPesqGeral.FieldByName('segregado').AsString;
     LstReport.Cells[16, xProd+1] := FdMemPesqGeral.FieldByName('Expedicao').AsString;

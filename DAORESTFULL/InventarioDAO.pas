@@ -260,7 +260,7 @@ Begin
   if (DmeXactWMS.RESTResponseWMS.StatusCode = 200) or (DmeXactWMS.RESTResponseWMS.StatusCode = 201) Then
      Result := True
   Else
-    raise Exception.Create('Erro: '+DmeXactWMS.RESTResponseWMS.StatusText);
+    raise Exception.Create('Erro: '+(DmeXactWMS.RESTResponseWMS.JSONValue as TJSONArray).Items[0].GetValue<String>('Erro'));
 End;
 
 function TInventarioDao.LimparContagem(pInventarioId, pEnderecoId, pProdutoId: Integer): TJsonArray;

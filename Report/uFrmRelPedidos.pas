@@ -915,7 +915,7 @@ begin
   LstVolumesAdv.ColWidths[7] := 120+Trunc(120*ResponsivoVideo);
   LstVolumesAdv.ColWidths[8] :=  40+Trunc(40*ResponsivoVideo);
   LstVolumesAdv.ColWidths[9] :=  40+Trunc(40*ResponsivoVideo);
-  LstVolumesAdv.ColWidths[10] :=  40+Trunc(40*ResponsivoVideo);
+  LstVolumesAdv.ColWidths[10] := 40+Trunc(40*ResponsivoVideo);
   LstVolumesAdv.Alignments[ 0, 0] := taRightJustify;
   LstVolumesAdv.FontStyles[ 0, 0] := [FsBold];
   LstVolumesAdv.Alignments[ 1, 0] := taRightJustify;
@@ -930,14 +930,14 @@ begin
   LstVolumesAdv.width := (100+Trunc(100*ResponsivoVideo))+
                          (60+Trunc(60*ResponsivoVideo))+
                          (180+Trunc(180*ResponsivoVideo))+
-                         (160+Trunc(160*ResponsivoVideo))+
+                         //(160+Trunc(160*ResponsivoVideo))+
                          (40+Trunc(40*ResponsivoVideo))+
-                         (40+Trunc(40*ResponsivoVideo))+
+                         //(40+Trunc(40*ResponsivoVideo))+
                          (70+Trunc(70*ResponsivoVideo))+
                          (120+Trunc(120*ResponsivoVideo))+
                          (40+Trunc(40*ResponsivoVideo))+
                          (40+Trunc(40*ResponsivoVideo))+
-                         (40+Trunc(40*ResponsivoVideo));
+                         (40+Trunc(40*ResponsivoVideo))+20;
   //Resumo Atendimento do Pedido
   LstPedidoResumoAdv.ColWidths[0] := 80+Trunc(80*ResponsivoVideo);
   LstPedidoResumoAdv.ColWidths[1] := 60+Trunc(60*ResponsivoVideo);
@@ -978,7 +978,7 @@ begin
   LstVolumeProdutosAdv.Alignments[7, 0] := taRightJustify;
   LstVolumeProdutosAdv.Alignments[8, 0] := taRightJustify;
   LstVolumeProdutosAdv.Alignments[10, 0] := taCenter;
-
+  //LstVolumeEtapas.Left := LstVolumesAdv.Width+50;
   lstVolumeEtapas.ColWidths[0]     := 100+Trunc(100*ResponsivoVideo);
   lstVolumeEtapas.ColWidths[1]     :=  80+Trunc(80*ResponsivoVideo);
   lstVolumeEtapas.ColWidths[2]     :=  65+Trunc(65*ResponsivoVideo);
@@ -986,7 +986,7 @@ begin
   lstVolumeEtapas.ColWidths[4]     := 120+Trunc(120*ResponsivoVideo);
   lstVolumeEtapas.Alignments[1, 0] := taCenter;
   lstVolumeEtapas.Alignments[2, 0] := taCenter;
-
+  
   LstPedidoProcesso.ColWidths[0]     := 100+Trunc(100*ResponsivoVideo);
   LstPedidoProcesso.ColWidths[1]     :=  80+Trunc(80*ResponsivoVideo);
   LstPedidoProcesso.ColWidths[2]     :=  65+Trunc(65*ResponsivoVideo);
@@ -2536,10 +2536,10 @@ begin
           End
           Else if (FrmeXactWMS.ConfigWMS.ObjConfiguracao.ModeloPrinterCodBarra = 'etqEpl2' ) then Begin
              FrmPrintTag.TagVolumeFracionado8x10etqEpl2(jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('pedidoid'),
-                         pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpesssoaerp'),
+                         pPedidoVolumeId, jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('sequencia'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('codpessoaerp'),
                          jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('ordem'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('itens'),
                          jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('qtdsuprida'), jsonEtiquetasPorVolume.Items[0].GetValue<String>('fantasia'),
-                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateToStr(StrToDate(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido'))),
+                         jsonEtiquetasPorVolume.Items[0].GetValue<String>('rotas'), vPredini, vPredFin, DateEUAToBr(jsonEtiquetasPorVolume.Items[0].GetValue<String>('dtpedido')),
                          jsonEtiquetasPorVolume.Items[0].GetValue<String>('documentooriginal'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('processoid'),
                          jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('rotaid'), jsonEtiquetasPorVolume.Items[0].GetValue<Integer>('totalvolumes'))
           End;

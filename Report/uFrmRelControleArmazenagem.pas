@@ -101,7 +101,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEndereco.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       EdtEndereco.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 0, 1)[0].Descricao;
        EdtEnderecoExit(EdtEndereco);
        ObjEnderecoCtrl := Nil;
     End;
@@ -181,7 +181,7 @@ begin
    vEnderecoId := 0;
    if EdtEndereco.Text  = '' then Exit;
    ObjEnderecoCtrl := TEnderecoCtrl.Create();
-   JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 2, 1);
+   JsonArrayRetorno := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 2, 0, 1);
    if JsonArrayRetorno.Count < 1 Then Begin //Items[0].TryGetValue<String>('Erro', vErro) then Begin
       EdtEndereco.SetFocus;
       ShowErro('Endereço não encontrado!');

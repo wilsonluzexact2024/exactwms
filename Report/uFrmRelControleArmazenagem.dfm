@@ -3,6 +3,11 @@ inherited FrmRelControleArmazenagem: TFrmRelControleArmazenagem
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    inherited TabListagem: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+    end
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
       ExplicitWidth = 1157
@@ -542,6 +547,16 @@ inherited FrmRelControleArmazenagem: TFrmRelControleArmazenagem
         end
       end
     end
+    inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+    end
+    inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+    end
   end
   inherited PnlImgObjeto: TPanel
     Left = 950
@@ -549,22 +564,11 @@ inherited FrmRelControleArmazenagem: TFrmRelControleArmazenagem
     ExplicitLeft = 950
     ExplicitTop = 10
   end
-  inherited PnlErro: TPanel
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
-  end
   inherited PnlConfigPrinter: TPanel
     Left = 591
     Top = 398
     ExplicitLeft = 591
     ExplicitTop = 398
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited frxReport1: TfrxReport
     Datasets = <

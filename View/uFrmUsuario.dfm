@@ -6,6 +6,9 @@ inherited FrmUsuario: TFrmUsuario
   inherited PgcBase: TcxPageControl
     Properties.ActivePage = TabPrincipal
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 10
         ColumnHeaders.Strings = (
@@ -1035,15 +1038,7 @@ inherited FrmUsuario: TFrmUsuario
         OnClick = ChkConectadoClick
       end
     end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-    end
     inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inherited DbgImporta: TDBGrid
         OnDrawColumnCell = DbgImportaDrawColumnCell
       end
@@ -1325,11 +1320,22 @@ inherited FrmUsuario: TFrmUsuario
     ExplicitLeft = 950
     ExplicitTop = 96
   end
+  inherited PnlErro: TPanel
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
+  end
   inherited PnlConfigPrinter: TPanel
     Left = 891
     Top = 248
     ExplicitLeft = 891
     ExplicitTop = 248
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited DsPesqGeral: TDataSource
     Left = 711

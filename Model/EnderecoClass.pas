@@ -33,6 +33,7 @@ Type
     FCodProduto: Integer;
     FCurva: String;
     FStatus: Integer;
+    FBloqueado : Integer;
     procedure SetDescricao(const Value: String);
     procedure SetEnderecoId(const Value: Integer);
     procedure SetStatus(const Value: Integer);
@@ -62,6 +63,7 @@ Type
     Property CodProduto: Integer Read FCodProduto Write FCodProduto;
     Property Curva: String Read FCurva Write FCurva;
     Property Status: Integer read FStatus write SetStatus;
+    Property Bloqueado: Integer read FBloqueado write FBloqueado;
   End;
 
 implementation
@@ -87,15 +89,16 @@ begin
   FEnderecoEstrutura := TEnderecoEstrutura.Create;
   FEnderecamentoZona := TEnderecamentoZona.Create;
   FDesenhoArmazem := TDesenhoArmazem.Create;
-  FAltura := 0;
-  FLargura := 0;
+  FAltura      := 0;
+  FLargura     := 0;
   FComprimento := 0;
-  FVolume := 0;
-  FCapacidade := 0; // Peso(g)
-  FProdutoId := 0;
-  FCodProduto := 0;
-  FCurva := '';
-  FStatus := 1;
+  FVolume      := 0;
+  FCapacidade  := 0; // Peso(g)
+  FProdutoId   := 0;
+  FCodProduto  := 0;
+  FCurva       := '';
+  FStatus      := 1;
+  FBloqueado   := 0;
 end;
 
 destructor TEndereco.Destroy;
@@ -113,14 +116,15 @@ begin
   JsonEndereco := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(Json), 0) as TJSonObject;
   Result := TEndereco.Create;
   Result.FEnderecoId  := JsonEndereco.GetValue<Integer>('enderecoid');
-  Result.FDescricao   := JsonEndereco.GetValue<String>('descricao');
-  Result.FAltura      := JsonEndereco.GetValue<Double>('altura');
-  Result.FLargura     := JsonEndereco.GetValue<Double>('largura');
-  Result.FComprimento := JsonEndereco.GetValue<Double>('comprimento');
-  Result.Volume       := JsonEndereco.GetValue<Double>('volume');
-  Result.FCapacidade  := JsonEndereco.GetValue<Double>('capacidade');
+  Result.FDescricao   := JsonEndereco.GetValue<String>('descricao', '');
+  Result.FAltura      := JsonEndereco.GetValue<Double>('altura', 0);
+  Result.FLargura     := JsonEndereco.GetValue<Double>('largura', 0);
+  Result.FComprimento := JsonEndereco.GetValue<Double>('comprimento', 0);
+  Result.Volume       := JsonEndereco.GetValue<Double>('volume', 0);
+  Result.FCapacidade  := JsonEndereco.GetValue<Double>('capacidade', 0);
   Result.FCurva       := '';//JsonEndereco.GetValue<string>('curva');
-  Result.FStatus      := JsonEndereco.GetValue<integer>('status');
+  Result.FStatus      := JsonEndereco.GetValue<integer>('status', 0);
+  Result.Bloqueado    := JsonEndereco.GetValue<Integer>('bloqueado', 0);
 
   Result.FEnderecoEstrutura.EstruturaId := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<Integer>('estruturaid');
   Result.FEnderecoEstrutura.Descricao   := JsonEndereco.GetValue<TJsonObject>('enderecoestrutura').GetValue<string>('descricao');
@@ -154,15 +158,16 @@ begin
   FEnderecamentoZona.Limpar;
   FDescricao := '';
   FDesenhoArmazem.Limpar;
-  FAltura := 0;
-  FLargura := 0;
+  FAltura      := 0;
+  FLargura     := 0;
   FComprimento := 0;
-  FVolume := 0;
-  FCapacidade := 0; // Peso(g)
-  FProdutoId := 0;
-  FCodProduto := 0;
-  FCurva := '';
-  FStatus := 0;
+  FVolume      := 0;
+  FCapacidade  := 0; // Peso(g)
+  FProdutoId   := 0;
+  FCodProduto  := 0;
+  FCurva       := '';
+  FStatus      := 0;
+  FBloqueado   := 0;
 end;
 
 procedure TEndereco.SetDescricao(const Value: String);

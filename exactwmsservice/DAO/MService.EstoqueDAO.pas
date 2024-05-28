@@ -570,13 +570,10 @@ begin
         Result.AddElement(xObjJson);
         FConexao.Query.Next;
       End;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Tabela: Estoque(Endereço por Tipo de Estoque) - '
-        + StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: Estoque(Endereço por Tipo de Estoque) - ' + StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
@@ -663,10 +660,8 @@ begin
 end;
 
 function TEstoqueDao.GetEstoqueLotePorTipo(pProdutoId, pLoteId, pEnderecoId,
-  pEstoqueTipoId, pProducao, pDistribuicao: Integer; pZerado, pNegativo: String)
-  : TJsonArray;
-var
-  xObjJson: TJsonObject;
+  pEstoqueTipoId, pProducao, pDistribuicao: Integer; pZerado, pNegativo: String) : TJsonArray;
+var xObjJson: TJsonObject;
 begin
   Result := TJsonArray.Create;
   try
@@ -691,40 +686,23 @@ begin
       Begin
         // Criar Json Manual
         xObjJson := TJsonObject.Create;
-        xObjJson.AddPair('produtoid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('ProdutoId')
-          .AsInteger));
-        xObjJson.AddPair('loteid',
-          TJsonNumber.Create(FConexao.Query.FieldByName('LoteId').AsInteger));
-        xObjJson.AddPair('fatorconversao',
-          TJsonNumber.Create(FConexao.Query.FieldByName('FatorConversao')
-          .AsInteger));
-        xObjJson.AddPair('descrlote', FConexao.Query.FieldByName('DescrLote')
-          .AsString);
-        xObjJson.AddPair('fabricacao', FConexao.Query.FieldByName('Fabricacao')
-          .AsString);
-        xObjJson.AddPair('vencimento', FConexao.Query.FieldByName('Vencimento')
-          .AsString);
+        xObjJson.AddPair('produtoid', TJsonNumber.Create(FConexao.Query.FieldByName('ProdutoId').AsInteger));
+        xObjJson.AddPair('loteid', TJsonNumber.Create(FConexao.Query.FieldByName('LoteId').AsInteger));
+        xObjJson.AddPair('fatorconversao', TJsonNumber.Create(FConexao.Query.FieldByName('FatorConversao').AsInteger));
+        xObjJson.AddPair('descrlote', FConexao.Query.FieldByName('DescrLote').AsString);
+        xObjJson.AddPair('zonaid', TJsonNumber.Create(FConexao.Query.FieldByName('ZonaId').AsInteger));
+        xObjJson.AddPair('zona', FConexao.Query.FieldByName('Zona').AsString);
+        xObjJson.AddPair('fabricacao', FConexao.Query.FieldByName('Fabricacao').AsString);
+        xObjJson.AddPair('vencimento', FConexao.Query.FieldByName('Vencimento').AsString);
         // Horario
-        xObjJson.AddPair('stage',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Stage').AsInteger));
-        xObjJson.AddPair('crossdocking',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Crossdocking')
-          .AsInteger));
-        xObjJson.AddPair('segregado',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Segregado')
-          .AsInteger));
-        xObjJson.AddPair('producao',
-          TJsonNumber.Create(FConexao.Query.FieldByName('producao').AsInteger));
-        xObjJson.AddPair('expedicao',
-          TJsonNumber.Create(FConexao.Query.FieldByName('expedicao')
-          .AsInteger));
-        xObjJson.AddPair('reserva',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Reserva').AsInteger));
-        xObjJson.AddPair('saldo',
-          TJsonNumber.Create(FConexao.Query.FieldByName('Saldo').AsInteger));
-        xObjJson.AddPair('dtultimamovimentacao',
-          FConexao.Query.FieldByName('DtUltimaMovimentacao').AsString);
+        xObjJson.AddPair('stage', TJsonNumber.Create(FConexao.Query.FieldByName('Stage').AsInteger));
+        xObjJson.AddPair('crossdocking', TJsonNumber.Create(FConexao.Query.FieldByName('Crossdocking').AsInteger));
+        xObjJson.AddPair('segregado', TJsonNumber.Create(FConexao.Query.FieldByName('Segregado').AsInteger));
+        xObjJson.AddPair('producao', TJsonNumber.Create(FConexao.Query.FieldByName('producao').AsInteger));
+        xObjJson.AddPair('expedicao', TJsonNumber.Create(FConexao.Query.FieldByName('expedicao').AsInteger));
+        xObjJson.AddPair('reserva', TJsonNumber.Create(FConexao.Query.FieldByName('Reserva').AsInteger));
+        xObjJson.AddPair('saldo', TJsonNumber.Create(FConexao.Query.FieldByName('Saldo').AsInteger));
+        xObjJson.AddPair('dtultimamovimentacao', FConexao.Query.FieldByName('DtUltimaMovimentacao').AsString);
         Result.AddElement(xObjJson);
         FConexao.Query.Next;
       End;

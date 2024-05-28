@@ -429,28 +429,6 @@ begin
       LblTipoMovimentacao.Text := 'Retirando da Stage';
       LblEdtOrigem.Text  := 'Stage - Origem';
       LblEdtDestino.Text := 'Destino';
-      //EdtEnderecoOrigem.Enabled := False;
-(*
-       LstEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 2, 1);
-       if LstEndereco.Count = 1 then Begin
-          ObjEnderecoCtrl.ObjEndereco := LstEndereco[0];//   ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 0)[0];
-          DelayedSetFocus(EdtProduto);
-          EdtEnderecoOrigem.Text      := LstEndereco[0].Descricao;
-          //Ver como acionar o evento OnValidate
-
-          //EdtEnderecoOrigemExit(EdtEnderecoOrigem);
-          //GetEstoque(0, 0, ObjEnderecoCtrl.ObjEndereco.EnderecoId, 0, 1, 1, EdtEnderecoOrigem);
-          if FdMemEstoqueOrigem.IsEmpty then Begin
-             SetCampoDefault('EdtEnderecoOrigem');
-             ShowErro('Não há estoque disponível na Stage.');
-             Exit;
-          End;
-          EdtEnderecoOrigem.Enabled   := False;
-          //DelayedSetFocus(EdtProduto);
-       End
-       Else
-*)        DelayedSetFocus(EdtEnderecoOrigem);
-
     End;
     poSegregado: Begin
       LblTipoMovimentacao.Text := 'Estoque Segregaddo';
@@ -559,7 +537,7 @@ begin
            ObjEnderecoDestinoCtrl := TEnderecoCtrl.Create;
        //End;
        ObjEnderecoDestinoCtrl.ObjEndereco := ObjEnderecoDestinoCtrl.GetEndereco(0, 0, vZonaId, 0,
-                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 1)[0];
+                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 0, 1)[0];
      Except On E: Exception do Begin
          raise Exception.Create('Erro 44 - '+E.Message);
          End;
@@ -575,6 +553,12 @@ begin
            SetCampoDefault('EdtEnderecoDestino');
            //ExitFocus(Sender);
            ShowErro('Endereço('+EdtEnderecoDestino.Text+') inativo!');
+           Exit;
+        End;
+        if Bloqueado = 1 then Begin
+           SetCampoDefault('EdtEnderecoDestino');
+           //ExitFocus(Sender);
+           ShowErro('Endereço('+EdtEnderecoDestino.Text+') Bloqueado para uso!');
            Exit;
         End;
         LblDestino.Text := EnderecoMask(Descricao, EnderecoEstrutura.Mascara, True)+
@@ -709,7 +693,7 @@ Var JsonArrayEndereco : TJsonArray;
 begin
   inherited;
   if Text = '' then Exit;
-  JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEnderecoOrigem.Text, EdtEnderecoOrigem.Text, 'T', 99, 0);
+  JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EdtEnderecoOrigem.Text, EdtEnderecoOrigem.Text, 'T', 99, 0, 0);
   if JsonArrayEndereco.Items[0].TryGetValue('Erro', vErro) then Begin
      SetCampoDefault(TEdit(Sender).name);
      Text := '';
@@ -727,6 +711,13 @@ begin
        Text := '';
        SetCampoDefault('EdtEnderecoOrigem');
        ShowErro('Endereço inativo!');
+       JsonArrayEndereco := Nil;
+       Exit;
+    End;
+    if JsonArrayEndereco.Items[0].GetValue<Integer>('bloqueado') = 1 then Begin
+       Text := '';
+       SetCampoDefault('EdtEnderecoOrigem');
+       ShowErro('Endereço bloqueado para uso!');
        JsonArrayEndereco := Nil;
        Exit;
     End;
@@ -1364,7 +1355,7 @@ begin
   End;
   ObjDestino := TEnderecoCtrl.Create;
   JsonArrayDestino := ObjDestino.GetEnderecoJson(0, 0, 0, 0,
-                                 EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 2, 0);
+                                 EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 2, 0, 0);
   if JsonArrayDestino.Items[0].TryGetValue('Erro', vErro) then Begin
      ShowErro(vErro);
      JsonArrayDestino := Nil;

@@ -9,6 +9,9 @@
       ExplicitHeight = 524
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inherited ShCadastro: TShape
         Left = 720
         Top = 35
@@ -5544,21 +5547,10 @@
     ExplicitLeft = 950
     ExplicitTop = 304
   end
-  inherited PnlErro: TPanel
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
-  end
   inherited PnlConfigPrinter: TPanel
     Left = 726
     Top = 322
     ExplicitLeft = 726
     ExplicitTop = 322
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
 end

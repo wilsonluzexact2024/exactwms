@@ -482,7 +482,7 @@ begin
   if JsonArrayTopicos.Items[0].tryGetValue<String>('Erro', vErro) then
      LstTopicoAcesso.RowCount := 1
   Else begin
-{     LstTopicoAcesso.RowCount  := JsonArrayTopicos.Count+1;
+     LstTopicoAcesso.RowCount  := JsonArrayTopicos.Count+1;
      LstTopicoAcesso.FixedRows := 1;
      for xImg := 1 to LstTopicoAcesso.RowCount - 1 do
      begin
@@ -496,7 +496,7 @@ begin
        LstTopicoAcesso.Alignments[0, xTopico+1] := taRightJustify;
        LstTopicoAcesso.Alignments[2, xTopico+1] := taCenter;
      End;
-}  End;
+  End;
   If FdMemPesqGeral.Active then
        FdMemPesqGeral.EmptyDataSet;
   FdMemPesqGeral.Close;

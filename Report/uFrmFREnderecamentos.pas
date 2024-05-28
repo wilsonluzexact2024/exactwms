@@ -80,6 +80,8 @@ type
     ImgDesvincularPicking: TsImage;
     FdMemPesqGeralQtdePicking: TIntegerField;
     FdMemPesqGeralQtdeReserva: TIntegerField;
+    FdMemPesqGeralBloqueado: TIntegerField;
+    RbBloqueado: TRadioButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnPesquisarStandClick(Sender: TObject);
     procedure EdtEnderecoIniChange(Sender: TObject);
@@ -182,6 +184,7 @@ Var ArrayJsonEndereco : TJsonArray;
     vOcupacao, vErro  : String;
     xRetorno, vStatus : Integer;
     vEstruturaId      : Integer;
+    vBloqueado        : Integer;
 begin
   if PgcBase.ActivePage = TabReUsoPicking then
      PesquisarPickingReuso
@@ -211,13 +214,17 @@ begin
            vOcupacao := 'O';
         End
      Else vOcupacao := 'T';
+     if RbBloqueado.Checked then
+        vBloqueado := 1
+     Else
+        vBloqueado := 0;
        //Tela Aguarde...
      TDialogMessage.ShowWaitMessage('Buscando Informações...',
        procedure
        Var xRetorno : Integer;
            vErro : String;
        begin
-         ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, vEstruturaId, StrToIntDef(EdtZona.Text, 0), 0, EdtEnderecoIni.Text, EdtEnderecoFin.Text, vOcupacao, vStatus, 0);
+         ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, vEstruturaId, StrToIntDef(EdtZona.Text, 0), 0, EdtEnderecoIni.Text, EdtEnderecoFin.Text, vOcupacao, vStatus, vBloqueado, 0);
          if ArrayJsonEndereco.Items[0].TryGetValue<string>('Erro', vErro) then Begin
             ShowErro('Não foram encontrado(s) dados para o relatório');
             //ObjEnderecoCtrl.Free;
@@ -229,6 +236,7 @@ begin
             For xRetorno := 1 to LstReport.RowCount - 1 do Begin
               LstReport.AddDataImage(5, xRetorno, 0, haCenter,vaTop);
               LstReport.AddDataImage(7, xRetorno, 0, haCenter,vaTop);
+              LstReport.AddDataImage(8, xRetorno, 0, haCenter,vaTop);
             End;
             If FdMemPesqGeral.Active then
                FdmemPesqGeral.EmptyDataSet;
@@ -236,10 +244,10 @@ begin
             FdMemPesqGeral.Open;
             ImprimirExportar(True);
             for XRetorno := 0 to Pred(ArrayJsonEndereco.Count) do Begin
-              LstReport.Cells[0, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<Integer>('enderecoid').ToString;
-              LstReport.Cells[1, xRetorno+1] :=  EnderecoMask(ArrayJsonEndereco.Items[xRetorno].GetValue<String>('descricao'), ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara'), True);
-              LstReport.Cells[2, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('descricao');
-              LstReport.Cells[3, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecorua').GetValue<String>('descricao');
+              LstReport.Cells[0, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<Integer>('enderecoid').ToString;
+              LstReport.Cells[1, xRetorno+1] := EnderecoMask(ArrayJsonEndereco.Items[xRetorno].GetValue<String>('descricao'), ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara'), True);
+              LstReport.Cells[2, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('descricao');
+              LstReport.Cells[3, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecorua').GetValue<String>('descricao');
               if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecorua').GetValue<String>('lado') = 'U' then
                  LstReport.Cells[4, xRetorno+1] := 'Único'
               Else if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecorua').GetValue<String>('lado') = 'I' then
@@ -247,38 +255,40 @@ begin
               Else if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecorua').GetValue<String>('lado') = 'P' then
                  LstReport.Cells[4, xRetorno+1] := 'Par'
               Else LstReport.Cells[4, xRetorno+1] := '---';
-              LstReport.Cells[5, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('pickingfixo');
-              LstReport.Cells[6, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecamentozona').GetValue<String>('descricao');
-              LstReport.Cells[7, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<String>('status');
+              LstReport.Cells[5, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('pickingfixo');
+              LstReport.Cells[6, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecamentozona').GetValue<String>('descricao');
+              LstReport.Cells[7, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<String>('status');
+              LstReport.Cells[8, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<String>('bloqueado');
               if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('codproduto') <> 0then begin
-                 LstReport.Cells[8, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<String>('codproduto');
-                 LstReport.Cells[9, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<String>('descricao');
+                 LstReport.Cells[ 9, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<String>('codproduto');
+                 LstReport.Cells[10, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<String>('descricao');
               end
               Else Begin
-                 LstReport.Cells[8, xRetorno+1] := '';
-                 LstReport.Cells[9, xRetorno+1] := '';
+                 LstReport.Cells[ 9, xRetorno+1] := '';
+                 LstReport.Cells[10, xRetorno+1] := '';
               End;
               if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtde') <> 0 then
-                 LstReport.Cells[10, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtde').ToString()
-              Else LstReport.Cells[10, xRetorno+1] := '';
+                 LstReport.Cells[11, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtde').ToString()
+              Else LstReport.Cells[11, xRetorno+1] := '';
               if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdereserva') <> 0 then
-                 LstReport.Cells[11, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdereserva').ToString()
-              Else LstReport.Cells[11, xRetorno+1] := '0';
+                 LstReport.Cells[12, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdereserva').ToString()
+              Else LstReport.Cells[12, xRetorno+1] := '0';
               if ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdepulmao') <> 0 then
-                 LstReport.Cells[12, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdepulmao').ToString()
-              Else LstReport.Cells[12, xRetorno+1] := '';
-              LstReport.Cells[13, xRetorno+1] :=  ArrayJsonEndereco.Items[xRetorno].GetValue<String>('Ocupacao')+'%';
+                 LstReport.Cells[13, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('qtdepulmao').ToString()
+              Else LstReport.Cells[14, xRetorno+1] := '';
+              LstReport.Cells[14, xRetorno+1] := ArrayJsonEndereco.Items[xRetorno].GetValue<String>('Ocupacao')+'%';
               LstReport.Alignments[0,  xRetorno+1] := taRightJustify;
               LstReport.FontStyles[0,  xRetorno+1] := [FsBold];
               LstReport.FontStyles[1,  xRetorno+1] := [FsBold];
               LstReport.Alignments[1,  xRetorno+1] := taCenter;
               LstReport.Alignments[5,  xRetorno+1] := taCenter;
               LstReport.Alignments[7,  xRetorno+1] := taCenter;
-              LstReport.Alignments[8,  xRetorno+1] := taRightJustify;
-              LstReport.Alignments[10, xRetorno+1] := taRightJustify;
+              LstReport.Alignments[8,  xRetorno+1] := taCenter;
+              LstReport.Alignments[9,  xRetorno+1] := taRightJustify;
               LstReport.Alignments[11, xRetorno+1] := taRightJustify;
               LstReport.Alignments[12, xRetorno+1] := taRightJustify;
               LstReport.Alignments[13, xRetorno+1] := taRightJustify;
+              LstReport.Alignments[14, xRetorno+1] := taRightJustify;
               With FdMemPesqGeral do begin
                 Append;
                 FieldByName('EnderecoId').AsInteger  := ArrayJsonEndereco.Items[xRetorno].GetValue<Integer>('enderecoid');
@@ -294,6 +304,7 @@ begin
                 FieldByName('Endereco').AsString     := EnderecoMask(ArrayJsonEndereco.Items[xRetorno].GetValue<String>('descricao'), ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara'), True);
                 FieldByName('DesenhoArmazemID').AsInteger := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('desenhoarmazem').GetValue<integer>('Id');
                 FieldByName('Status').AsInteger      := ArrayJsonEndereco.Items[xRetorno].GetValue<Integer>('status');
+                FieldByName('Bloqueado').AsInteger   := ArrayJsonEndereco.Items[xRetorno].GetValue<Integer>('bloqueado');
                 FieldByName('Mascara').AsString      := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara');
                 FieldByName('CodProduto').AsInteger  := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<Integer>('codproduto');
                 FieldByName('Produto').AsString      := ArrayJsonEndereco.Items[xRetorno].GetValue<TJsonObject>('produto').GetValue<String>('descricao');
@@ -440,41 +451,42 @@ begin
   SetReadOnly;
   LstReport.RowCount   := 1;
   With LstReport do Begin
-    ColWidths[0]  :=  70;
-    ColWidths[1]  := 100;
-    ColWidths[2]  :=  100;
-    ColWidths[3]  :=  70;
-    ColWidths[4]  :=  80;
-    ColWidths[5]  :=  60;
-    ColWidths[6]  :=  120;
-    ColWidths[7]  :=  60;
-    ColWidths[8]  :=  80;
-    ColWidths[9]  :=  300;
-    ColWidths[10] :=  70;
-    ColWidths[11] :=  70;
-    ColWidths[12] :=  80;
-    ColWidths[13] :=  100;
+    ColWidths[0]  :=  80+Trunc(80*ResponsivoVideo);
+    ColWidths[1]  :=  90+Trunc(90*ResponsivoVideo);
+    ColWidths[2]  := 100+Trunc(100*ResponsivoVideo);
+    ColWidths[3]  :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[4]  :=  80+Trunc(80*ResponsivoVideo);
+    ColWidths[5]  :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[6]  := 160+Trunc(160*ResponsivoVideo);
+    ColWidths[7]  :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[8]  :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[9]  :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[10] := 300+Trunc(300*ResponsivoVideo);
+    ColWidths[11] :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[12] :=  60+Trunc(60*ResponsivoVideo);
+    ColWidths[13] :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[14] := 80+Trunc(80*ResponsivoVideo);
     Alignments[0, 0]  := taRightJustify;
     FontStyles[0, 0]  := [FsBold];
     FontStyles[1, 0]  := [FsBold];
     Alignments[1, 0]  := taCenter;
     Alignments[5, 0]  := taCenter;
     Alignments[7, 0]  := taCenter;
-    Alignments[8, 0]  := taRightJustify;
-    Alignments[10, 0] := taRightJustify;
+    Alignments[8, 0]  := taCenter;
     Alignments[11, 0] := taRightJustify;
     Alignments[12, 0] := taRightJustify;
     Alignments[13, 0] := taRightJustify;
+    Alignments[14, 0] := taRightJustify;
   End;
   With LstPickingReuso do Begin
-    ColWidths[0] :=  70;
-    ColWidths[1] := 120;
-    ColWidths[2] := 100;
-    ColWidths[3] := 400;
-    ColWidths[4] := 180;
-    ColWidths[5] :=  70;
-    ColWidths[6] :=  50;
-    ColWidths[7] :=  50;
+    ColWidths[0] :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[1] := 120+Trunc(120*ResponsivoVideo);
+    ColWidths[2] := 100+Trunc(100*ResponsivoVideo);
+    ColWidths[3] := 400+Trunc(400*ResponsivoVideo);
+    ColWidths[4] := 180+Trunc(180*ResponsivoVideo);
+    ColWidths[5] :=  70+Trunc(70*ResponsivoVideo);
+    ColWidths[6] :=  50+Trunc(50*ResponsivoVideo);
+    ColWidths[7] :=  50+Trunc(50*ResponsivoVideo);
     Alignments[0, 0] := taRightJustify;
     FontStyles[1, 0] := [FsBold];
     Alignments[1, 0] := taCenter;

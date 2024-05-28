@@ -448,7 +448,7 @@ Var ObjEnderecoCtrl   : TEnderecoCtrl;
     vErro             : String;
 begin
   ObjEnderecoCtrl   := TEnderecoCtrl.Create;
-  JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, TEdit(Sender).Text, TEdit(Sender).Text, 'T', 99, 0);
+  JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, TEdit(Sender).Text, TEdit(Sender).Text, 'T', 99, 0, 0);
   if JsonArrayEndereco.Items[0].TryGetValue('Erro', vErro) then Begin
      SetCampoDefault('EdtEndereco');
      ShowErro(vErro);

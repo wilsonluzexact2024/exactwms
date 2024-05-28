@@ -152,7 +152,7 @@ begin
   inherited;
   if (Not EdtEndereco.ReadOnly) then Begin
      ObjEnderecoCtrl := TEnderecoCtrl.Create;
-     RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 3, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 3);
+     RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 3, 0, EdtEndereco.Text, EdtEndereco.Text, 'T', 3, 0);
      if (RetornoJsonArray.Items[0].TryGetValue('Erro', vErro)) or (RetornoJsonArray.Count < 1) then Begin
         EdtEndereco.Text := '';
         RetornoJsonArray := Nil;

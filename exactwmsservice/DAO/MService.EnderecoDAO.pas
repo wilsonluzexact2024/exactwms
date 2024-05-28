@@ -21,24 +21,19 @@ type
     Destructor Destroy; OverRide;
     function InsertUpdate(pJsonEndereco: TJsonObject): TjSonArray;
     function GetId(pEnderecoId: String): TjSonArray;
-    function GetEndereco4D(const AParams: TDictionary<string, string>)
-      : TJsonObject;
-    Function GetLista(pEnderecoId: Integer; pEstruturaId: Integer;
-      pZonaId: Integer; pRuaId: Integer; pEnderecoIni: String;
-      pEnderecoFin, pOcupacaoEndereco: String; pStatus: Integer;
-      pListaZona: String; pCurva: String): TjSonArray;
-    Function GetEnderecoToReposicao(pZonaId: Integer;
-      pEnderecoIni, pEnderecoFin, pRuaInicial, pRuaFinal: String;
-      pRuaParImpar: Integer; pPredioInicial, pPredioFinal: String;
-      pPredioParImpar: Integer; pNivelInicial, pNivelFinal: String;
-      pNivelParImpar: Integer; pAptoInicial, pAptoFinal: String;
-      pAptoParImpar: Integer): TjSonArray;
+    function GetEndereco4D(const AParams: TDictionary<string, string>) : TJsonObject;
+    Function GetLista(pEnderecoId: Integer; pEstruturaId: Integer; pZonaId: Integer; pRuaId: Integer; pEnderecoIni: String;
+             pEnderecoFin, pOcupacaoEndereco: String; pStatus: Integer; pBloqueado : Integer; pListaZona: String; pCurva: String): TjSonArray;
+    Function GetEnderecoToReposicao(pZonaId: Integer; pEnderecoIni, pEnderecoFin, pRuaInicial, pRuaFinal: String;
+             pRuaParImpar: Integer; pPredioInicial, pPredioFinal: String; pPredioParImpar: Integer; pNivelInicial,
+             pNivelFinal: String; pNivelParImpar: Integer; pAptoInicial, pAptoFinal: String; pAptoParImpar: Integer): TjSonArray;
     function GetEstrutura(pEstruturaId: Integer): TjSonArray;
     Function GetPickingMask: TjSonArray;
     Function GetReUsoPicking(pZonaId, pDias: Integer): TjSonArray;
     function GetZona(pEstruturaId: Integer): TjSonArray;
     Function Delete(pEnderecoId: Integer): Boolean;
     Function EnderecoBloquear(ArrayEndereco: TjSonArray): TjSonArray;
+    Function EnderecoBloqueioDeUso(ArrayEndereco: TjSonArray): TjSonArray;
     Function MontarPaginacao: TJsonObject;
     Function PutDesvincularPicking(pJsonArray: TjSonArray): TjSonArray;
     Function Estrutura: TjSonArray;
@@ -86,32 +81,53 @@ begin
   end;
 end;
 
+//Inicialmente criado para Inativar Endereço
 function TEnderecoDao.EnderecoBloquear(ArrayEndereco: TjSonArray): TjSonArray;
+Var xEndereco: Integer;
+begin
+  Try
+    FConexao.Query.Close;
+    FConexao.Query.Sql.Clear;
+    FConexao.Query.Sql.Add('Update Enderecamentos Set Status = 0');
+    FConexao.Query.Sql.Add('Where EnderecoId = :EnderecoId');
+    FConexao.Query.connection.StartTransaction;
+    for xEndereco := 0 to ArrayEndereco.Count - 1 do Begin
+      FConexao.Query.ParamByName('EnderecoId').Value := ArrayEndereco.Get(xEndereco).GetValue<Integer>('enderecoid', 0);
+      FConexao.Query.ExecSQL;
+    End;
+    FConexao.Query.connection.Commit;
+    Result := TjSonArray.Create;
+  Except ON E: Exception do
+    Begin
+      Result := TjSonArray.Create;
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Tabela: Enderecamentos - ' +
+             StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll])));
+    End;
+  end;
+end;
+
+function TEnderecoDao.EnderecoBloqueioDeUso( ArrayEndereco: TjSonArray): TjSonArray;
 Var
   xEndereco: Integer;
 begin
   Try
     FConexao.Query.Close;
     FConexao.Query.Sql.Clear;
-    FConexao.Query.Sql.Add
-      ('Update Enderecamentos Set Status = 0 Where EnderecoId = :EnderecoId');
+    FConexao.Query.Sql.Add('Update Enderecamentos Set Bloqueado = :pBloqueio');
+    FConexao.Query.Sql.Add('Where EnderecoId = :pEnderecoId');
     FConexao.Query.connection.StartTransaction;
-    for xEndereco := 0 to ArrayEndereco.Count - 1 do
-    Begin
-      FConexao.Query.ParamByName('EnderecoId').Value := ArrayEndereco.Get(xEndereco)
-        .GetValue<Integer>('enderecoid', 0);
+    for xEndereco := 0 to ArrayEndereco.Count - 1 do Begin
+      FConexao.Query.ParamByName('pEnderecoId').Value := ArrayEndereco.Get(xEndereco).GetValue<Integer>('enderecoid', 0);
+      FConexao.Query.ParamByName('pBloqueio').Value   := ArrayEndereco.Get(xEndereco).GetValue<Integer>('bloqueio', 0);
       FConexao.Query.ExecSQL;
     End;
     FConexao.Query.connection.Commit;
     Result := TjSonArray.Create;
-  Except
-    ON E: Exception do
+  Except ON E: Exception do
     Begin
       Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Tabela: Enderecamentos - ' + StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll])));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Tabela: Enderecamentos - ' +
+             StringReplace(E.Message, '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll])));
     End;
   end;
 end;
@@ -279,55 +295,41 @@ var
 begin
   Result := TJsonObject.Create();
   QryPesquisa := FConexao.GetQuery;
-  QryPesquisa.Sql.Add
-    ('select EnderecoId, Endereco, Estrutura, Rua, Lado, Zona, Status, Curva From vEnderecamentos where 1 = 1');
+  QryPesquisa.Sql.Add('select EnderecoId, Endereco, Estrutura, Rua, Lado, Zona, Status, Curva');
+  QryPesquisa.Sql.Add('From vEnderecamentos where 1 = 1');
   QryRecordCount := FConexao.GetQuery;
-  QryRecordCount.Sql.Add
-    ('Select Count(EnderecoId) cReg From vEnderecamentos where 1=1');
-  if AParams.ContainsKey('endereco') then
-  begin
-    QryPesquisa.Sql.Add('and Endereco = :Endereco');
-    QryPesquisa.ParamByName('Endereco').AsString := AParams.Items['endereco'];
-    QryRecordCount.Sql.Add('and Endereco = :Endereco');
-    QryRecordCount.ParamByName('Endereco').AsString :=
-      AParams.Items['endereco'];
+  QryRecordCount.Sql.Add('Select Count(EnderecoId) cReg From vEnderecamentos where 1=1');
+  if AParams.ContainsKey('endereco') then begin
+     QryPesquisa.Sql.Add('and Endereco = :Endereco');
+     QryPesquisa.ParamByName('Endereco').AsString := AParams.Items['endereco'];
+     QryRecordCount.Sql.Add('and Endereco = :Endereco');
+     QryRecordCount.ParamByName('Endereco').AsString := AParams.Items['endereco'];
   end;
-  if AParams.ContainsKey('zona') then
-  begin
-    QryPesquisa.Sql.Add('and zona Like :zona');
-    QryPesquisa.ParamByName('zona').AsString := '%' + AParams.Items['descricao']
-      .ToUpper + '%';
-    QryRecordCount.Sql.Add('and zona like :zona');
-    QryRecordCount.ParamByName('zona').AsString := '%' + AParams.Items
-      ['descricao'].ToUpper + '%';
+  if AParams.ContainsKey('zona') then begin
+     QryPesquisa.Sql.Add('and zona Like :zona');
+     QryPesquisa.ParamByName('zona').AsString := '%' + AParams.Items['descricao'].ToUpper + '%';
+     QryRecordCount.Sql.Add('and zona like :zona');
+     QryRecordCount.ParamByName('zona').AsString := '%' + AParams.Items['descricao'].ToUpper + '%';
   end;
-  if AParams.ContainsKey('curva') then
-  begin
-    QryPesquisa.Sql.Add('and curva = :curva');
-    QryPesquisa.ParamByName('curva').AsString := AParams.Items['curva'].ToUpper;
-    QryRecordCount.Sql.Add('and curva = :curva');
-    QryRecordCount.ParamByName('curva').AsString :=
-      AParams.Items['curva'].ToUpper;
+  if AParams.ContainsKey('curva') then begin
+     QryPesquisa.Sql.Add('and curva = :curva');
+     QryPesquisa.ParamByName('curva').AsString := AParams.Items['curva'].ToUpper;
+     QryRecordCount.Sql.Add('and curva = :curva');
+     QryRecordCount.ParamByName('curva').AsString := AParams.Items['curva'].ToUpper;
   end;
-  if AParams.ContainsKey('limit') then
-  begin
-    QryPesquisa.FetchOptions.RecsMax := StrToIntDef(AParams.Items['limit'], 50);
-    QryPesquisa.FetchOptions.RowsetSize :=
-      StrToIntDef(AParams.Items['limit'], 50);
+  if AParams.ContainsKey('limit') then begin
+     QryPesquisa.FetchOptions.RecsMax    := StrToIntDef(AParams.Items['limit'], 50);
+     QryPesquisa.FetchOptions.RowsetSize := StrToIntDef(AParams.Items['limit'], 50);
   end;
   if AParams.ContainsKey('offset') then
-    QryPesquisa.FetchOptions.RecsSkip :=
-      StrToIntDef(AParams.Items['offset'], 0);
+     QryPesquisa.FetchOptions.RecsSkip := StrToIntDef(AParams.Items['offset'], 0);
   QryPesquisa.Sql.Add('order by Endereco');
   QryPesquisa.Open();
   Result.AddPair('data', QryPesquisa.ToJSONArray());
   QryRecordCount.Open();
-  Result.AddPair('records',
-    TJsonNumber.Create(QryRecordCount.FieldByName('cReg').AsInteger));
+  Result.AddPair('records', TJsonNumber.Create(QryRecordCount.FieldByName('cReg').AsInteger));
   QryPesquisa.Close;
-  
   QryRecordCount.Close;
-  
 end;
 
 function TEnderecoDao.GetEnderecoToReposicao(pZonaId: Integer;
@@ -339,96 +341,62 @@ function TEnderecoDao.GetEnderecoToReposicao(pZonaId: Integer;
 begin
   try
     FConexao.Query.Sql.Add('Declare @ZonaId Integer = ' + pZonaId.ToString());
-    FConexao.Query.Sql.Add('Declare @EnderecoIni VarChar(40)  = ' + #39 +
-      pEnderecoIni + #39);
-    FConexao.Query.Sql.Add('Declare @EnderecoFin VarChar(40)  = ' + #39 +
-      pEnderecoFin + #39);
-    FConexao.Query.Sql.Add('Declare @RuaInicial VarChar(2)    = ' + #39 +
-      pRuaInicial + #39);
-    FConexao.Query.Sql.Add('Declare @RuaFinal  VarChar(2)     = ' + #39 +
-      pRuaFinal + #39);
-    FConexao.Query.Sql.Add('Declare @RuaParImpar Integer      = ' +
-      pRuaParImpar.ToString());
-    FConexao.Query.Sql.Add('Declare @PredioInicial VarChar(2) = ' + #39 +
-      pPredioInicial + #39);
-    FConexao.Query.Sql.Add('Declare @PredioFinal   VarChar(2) = ' + #39 +
-      pPredioFinal + #39);
-    FConexao.Query.Sql.Add('Declare @PredioParImpar Integer   = ' +
-      pPredioParImpar.ToString());
-    FConexao.Query.Sql.Add('Declare @NivelInicial VarChar(2)  = ' + #39 +
-      pNivelInicial + #39);
-    FConexao.Query.Sql.Add('Declare @NivelFinal   VarChar(2)  = ' + #39 +
-      pNivelFinal + #39);
-    FConexao.Query.Sql.Add('Declare @NivelParImpar Integer    = ' +
-      pNivelParImpar.ToString());
-    FConexao.Query.Sql.Add('Declare @AptoInicial VarChar(2)   = ' + #39 +
-      pAptoInicial + #39);
-    FConexao.Query.Sql.Add('Declare @AptoFinal   VarChar(2)   = ' + #39 +
-      pAptoFinal + #39);
-    FConexao.Query.Sql.Add('Declare @AptoParImpar Integer     = ' +
-      pAptoParImpar.ToString());
-
-    FConexao.Query.Sql.Add
-      ('Select (select vEnd.enderecoid, vEnd.Endereco, vEnd.Mascara, vEnd.Descricao Produto,');
+    FConexao.Query.Sql.Add('Declare @EnderecoIni VarChar(40)  = ' + #39 +pEnderecoIni + #39);
+    FConexao.Query.Sql.Add('Declare @EnderecoFin VarChar(40)  = ' + #39 +pEnderecoFin + #39);
+    FConexao.Query.Sql.Add('Declare @RuaInicial VarChar(2)    = ' + #39 +pRuaInicial + #39);
+    FConexao.Query.Sql.Add('Declare @RuaFinal  VarChar(2)     = ' + #39 +pRuaFinal + #39);
+    FConexao.Query.Sql.Add('Declare @RuaParImpar Integer      = ' +pRuaParImpar.ToString());
+    FConexao.Query.Sql.Add('Declare @PredioInicial VarChar(2) = ' + #39 +pPredioInicial + #39);
+    FConexao.Query.Sql.Add('Declare @PredioFinal   VarChar(2) = ' + #39 +pPredioFinal + #39);
+    FConexao.Query.Sql.Add('Declare @PredioParImpar Integer   = ' +pPredioParImpar.ToString());
+    FConexao.Query.Sql.Add('Declare @NivelInicial VarChar(2)  = ' + #39 +pNivelInicial + #39);
+    FConexao.Query.Sql.Add('Declare @NivelFinal   VarChar(2)  = ' + #39 +pNivelFinal + #39);
+    FConexao.Query.Sql.Add('Declare @NivelParImpar Integer    = ' +pNivelParImpar.ToString());
+    FConexao.Query.Sql.Add('Declare @AptoInicial VarChar(2)   = ' + #39 +pAptoInicial + #39);
+    FConexao.Query.Sql.Add('Declare @AptoFinal   VarChar(2)   = ' + #39 +pAptoFinal + #39);
+    FConexao.Query.Sql.Add('Declare @AptoParImpar Integer     = ' +pAptoParImpar.ToString());
+    FConexao.Query.Sql.Add('Select (select vEnd.enderecoid, vEnd.Endereco, vEnd.Mascara, vEnd.Descricao Produto,');
     FConexao.Query.Sql.Add('        Cast(vEnd.altura as Decimal(15,3)) altura,');
     FConexao.Query.Sql.Add('        Cast(vEnd.largura as Decimal(15,3)) largua,');
-    FConexao.Query.Sql.Add
-      ('        Cast(vEnd.comprimento as Decimal(15,3)) comprimento,');
+    FConexao.Query.Sql.Add('        Cast(vEnd.comprimento as Decimal(15,3)) comprimento,');
     FConexao.Query.Sql.Add('        Cast(vEnd.volume as Decimal(15,6)) volume,');
     FConexao.Query.Sql.Add('        Cast(vEnd.capacidade as Decimal(15,3)) capacidade,');
-    FConexao.Query.Sql.Add('        vEnd.Zona, Coalesce(Est.Qtde, 0) as ' + #39 + 'qtde' +
-      #39 + ', Coalesce(EstPulmao.Qtde, 0) as ' + #39 + 'qtdepulmao' + #39);
+    FConexao.Query.Sql.Add('        vEnd.Zona, Coalesce(Est.Qtde, 0) as ' + #39 + 'qtde' +#39 + ', Coalesce(EstPulmao.Qtde, 0) as ' + #39 + 'qtdepulmao' + #39);
     FConexao.Query.Sql.Add('From vEnderecamentos vEnd');
-    // FConexao.Query.Sql.Add('Left Join (Select Produtoid, Coalesce(Sum(Qtde), 0) Qtde From vEstoque Group By ProdutoId) Est ON Est.Produtoid = vEnd.ProdutoId');
-    FConexao.Query.Sql.Add
-      ('Left Join (Select EnderecoId, Coalesce(Sum(Qtde), 0) Qtde From vEstoque Group By EnderecoId) Est ON Est.Enderecoid = vEnd.EnderecoId');
-    FConexao.Query.Sql.Add('Left Join (Select CodigoERP, Coalesce(Sum(Qtde), 0) Qtde' +
-      sLineBreak + 'From vEstoque Where EstruturaId <> 2' + sLineBreak +
-      'Group By CodigoERP) EstPulmao ON EstPulmao.CodigoERP = vEnd.CodProduto');
+    FConexao.Query.Sql.Add('Left Join (Select EnderecoId, Coalesce(Sum(Qtde), 0) Qtde From vEstoque Group By EnderecoId) Est ON Est.Enderecoid = vEnd.EnderecoId');
+    FConexao.Query.Sql.Add('Left Join (Select CodigoERP, Coalesce(Sum(Qtde), 0) Qtde');
+    FConexao.Query.Sql.Add('From vEstoque Where EstruturaId <> 2');
+    FConexao.Query.Sql.Add('Group By CodigoERP) EstPulmao ON EstPulmao.CodigoERP = vEnd.CodProduto');
     FConexao.Query.Sql.Add('Where (@ZonaId = 0 or vEnd.ZonaId = @ZonaId) and');
-    FConexao.Query.Sql.Add('      (@EnderecoIni = ' + #39 + #39 +
-      ' or Substring(vEnd.Endereco, 1, LEN( @EnderecoIni)) >= @EnderecoIni) and ');
-    FConexao.Query.Sql.Add('      (@EnderecoFin = ' + #39 + #39 +
-      ' or Substring(vEnd.Endereco, 1, LEN( @EnderecoFin)) <= @EnderecoFin) and ');
-    FConexao.Query.Sql.Add('      (@RuaInicial  = ' + #39 + #39 +
-      ' or SubString(vEnd.Endereco,1,2) >= @RuaInicial) and');
-    FConexao.Query.Sql.Add('      (@RuaFinal    = ' + #39 + #39 +
-      ' or SubString(vEnd.Endereco,1,2) <= @RuaFinal) and');
-    FConexao.Query.Sql.Add
-      ('      (@RuaParImpar = 2 or (@RuaParImpar=0 and SubString(vEnd.Endereco,1,2) % 2 = 0) or ');
-    FConexao.Query.Sql.Add
-      ('                           (@RuaParImpar=1 and SubString(vEnd.Endereco,1,2) % 2 = 1) ) and');
-    FConexao.Query.Sql.Add('      (vEnd.EstruturaId=2 and vEnd.Status = 1)');
+    FConexao.Query.Sql.Add('      (@EnderecoIni = '+#39+#39+' or Substring(vEnd.Endereco, 1, LEN( @EnderecoIni)) >= @EnderecoIni) and ');
+    FConexao.Query.Sql.Add('      (@EnderecoFin = ' + #39 + #39+' or Substring(vEnd.Endereco, 1, LEN( @EnderecoFin)) <= @EnderecoFin) and ');
+    FConexao.Query.Sql.Add('      (@RuaInicial  = ' + #39 + #39+' or SubString(vEnd.Endereco,1,2) >= @RuaInicial) and');
+    FConexao.Query.Sql.Add('      (@RuaFinal    = ' + #39 + #39+' or SubString(vEnd.Endereco,1,2) <= @RuaFinal) and');
+    FConexao.Query.Sql.Add('      (@RuaParImpar = 2 or (@RuaParImpar=0 and SubString(vEnd.Endereco,1,2) % 2 = 0) or ');
+    FConexao.Query.Sql.Add('                           (@RuaParImpar=1 and SubString(vEnd.Endereco,1,2) % 2 = 1) ) and');
+    FConexao.Query.Sql.Add('      (vEnd.EstruturaId=2 and vEnd.Status = 1 and IsNull(vEnd.Bloqueado, 0) = 0)');
     FConexao.Query.Sql.Add('Order by vEnd.Endereco'); // by RuaId, Lado, Endereco');
     FConexao.Query.Sql.Add('For Json Path, INCLUDE_NULL_VALUES) as ConsultaRetorno');
     if DebugHook <> 0 then
       FConexao.Query.Sql.SaveToFile('RelEnderecoToReposicao.Sql');
     FConexao.Query.Open;
-    if (FConexao.Query.IsEmpty) or (FConexao.Query.FieldByName('ConsultaRetorno')
-      .AsString = '') Then
-    Begin
-      Result := TjSonArray.Create;
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Endereço não encontrado.'));
+    if (FConexao.Query.IsEmpty) or (FConexao.Query.FieldByName('ConsultaRetorno').AsString = '') Then Begin
+       Result := TjSonArray.Create;
+       Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Endereço não encontrado.'));
     End
     Else
-      Result := TJsonObject.ParseJSONValue
-        (TEncoding.UTF8.GetBytes(FConexao.Query.FieldByName('ConsultaRetorno').AsString),
-        0) as TjSonArray;
-  Except
-    ON E: Exception do
+       Result := TJsonObject.ParseJSONValue(TEncoding.UTF8.GetBytes(FConexao.Query.FieldByName('ConsultaRetorno').AsString), 0) as TjSonArray;
+  Except ON E: Exception do
     Begin
-      raise Exception.Create('Tabela: Enderecamentos - ' +
-        StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll]));
+      raise Exception.Create('Tabela: Enderecamentos - ' + StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll]));
     End;
   end;
 end;
 
 function TEnderecoDao.GetLista(pEnderecoId, pEstruturaId, pZonaId: Integer;
   pRuaId: Integer; pEnderecoIni, pEnderecoFin, pOcupacaoEndereco: String;
-  pStatus: Integer; pListaZona: String; pCurva: String): TjSonArray;
+  pStatus: Integer; pBloqueado : Integer; pListaZona: String; pCurva: String): TjSonArray;
 begin
   try
     FConexao.Query.Sql.Add('SET NOCOUNT ON');
@@ -437,15 +405,12 @@ begin
     FConexao.Query.Sql.Add('Declare @EstruturaId Integer = ' + pEstruturaId.ToString());
     FConexao.Query.Sql.Add('Declare @ZonaId Integer = ' + pZonaId.ToString());
     FConexao.Query.Sql.Add('Declare @Ruaid Integer  = ' + pRuaId.ToString());
-    FConexao.Query.Sql.Add('Declare @EnderecoIni VarChar(40) = ' + #39 +
-      pEnderecoIni + #39);
-    FConexao.Query.Sql.Add('Declare @EnderecoFin VarChar(40) = ' + #39 +
-      pEnderecoFin + #39);
-    FConexao.Query.Sql.Add('Declare @OcupacaoEndereco Varchar(1) = ' + #39 +
-      pOcupacaoEndereco + #39);
-    FConexao.Query.Sql.Add('Declare @Curva Varchar(30)           = ' + #39 +
-      pCurva + #39);
+    FConexao.Query.Sql.Add('Declare @EnderecoIni VarChar(40) = ' + #39 +pEnderecoIni + #39);
+    FConexao.Query.Sql.Add('Declare @EnderecoFin VarChar(40) = ' + #39 +pEnderecoFin + #39);
+    FConexao.Query.Sql.Add('Declare @OcupacaoEndereco Varchar(1) = ' + #39 +pOcupacaoEndereco + #39);
+    FConexao.Query.Sql.Add('Declare @Curva Varchar(30)           = ' + #39 +pCurva + #39);
     FConexao.Query.Sql.Add('Declare @Status Integer = ' + pStatus.ToString());
+    FConexao.Query.Sql.Add('Declare @Bloqueado Integer = ' + pBloqueado.ToString());
     // vqry.SQL.Add('select vEnd.*, Est.Qtde ');
     FConexao.Query.Sql.Add('Select (select vEnd.enderecoid,');
     FConexao.Query.Sql.Add('   vEnd.Endereco descricao,');
@@ -454,7 +419,7 @@ begin
     FConexao.Query.Sql.Add('   Cast(vEnd.comprimento as Decimal(15,3)) comprimento, ');
     FConexao.Query.Sql.Add('   Cast(vEnd.volume as Decimal(15,6)) volume,');
     FConexao.Query.Sql.Add('   Cast(vEnd.capacidade as Decimal(15,3)) capacidade,');
-    FConexao.Query.Sql.Add('   vEnd.status,');
+    FConexao.Query.Sql.Add('   vEnd.status, vEnd.bloqueado,');
     FConexao.Query.Sql.Add('   vEnd.EstruturaId as '#39 + 'enderecoestrutura.estruturaid'#39 + ',');
     FConexao.Query.Sql.Add('   vEnd.estrutura as '#39 + 'enderecoestrutura.descricao'#39 + ',');
     FConexao.Query.Sql.Add('   vEnd.PickingFixo as '#39 + 'enderecoestrutura.pickingfixo'#39 + ',');
@@ -521,7 +486,8 @@ begin
     FConexao.Query.Sql.Add('      ((@OcupacaoEndereco = ' + #39 + 'T' + #39 +') or (@OcupacaoEndereco=' + #39 + 'L' + #39 + ' and vEnd.ProdutoId Is Null) or ');
     FConexao.Query.Sql.Add('      (@OcupacaoEndereco=' + #39 + 'O' + #39 + ' and vEnd.ProdutoId is Not Null)) And ');
     FConexao.Query.Sql.Add('      (@Curva = ' + #39 + #39 + ' or vEnd.Curva = @Curva) and');
-    FConexao.Query.Sql.Add('      (@Status Not In (0,1) or (@Status = Status))');
+    FConexao.Query.Sql.Add('      (@Status Not In (0,1) or (@Status = Status)) and');
+    FConexao.Query.Sql.Add('      (@Bloqueado <> 1 or (@Bloqueado = vEnd.Bloqueado))');
     if pListaZona <> '' then
       FConexao.Query.Sql.Add('      and (ZonaId in (' + pListaZona + '))');
     FConexao.Query.Sql.Add('Order by vEnd.Endereco'); // by RuaId, Lado, Endereco');
@@ -585,31 +551,26 @@ function TEnderecoDao.GetPickingMask: TjSonArray;
 begin
   Result := TjSonArray.Create;
   try
-    FConexao.Query.Open('Select Mascara From EnderecamentoEstruturas where Descricao = ' +
-      QuotedStr('Picking'));
-    Result.AddElement(TJsonObject.Create(TJSONPair.Create('mascara',
-      FConexao.Query.FieldByName('Mascara').AsString)));
-  Except
-    ON E: Exception do
+    FConexao.Query.Open('Select Mascara From EnderecamentoEstruturas'+sLineBreak+
+                        'where Descricao = ' + QuotedStr('Picking'));
+    Result.AddElement(TJsonObject.Create(TJSONPair.Create('mascara', FConexao.Query.FieldByName('Mascara').AsString)));
+  Except ON E: Exception do
     Begin
-      Result.AddElement(TJsonObject.Create.AddPair('Erro',
-        'Tabela: Enderecamento - ' + StringReplace(E.Message,
-        '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]',
-        '', [rfReplaceAll])));
+      Result.AddElement(TJsonObject.Create.AddPair('Erro', 'Tabela: Enderecamento - ' + StringReplace(E.Message,
+            '[FireDAC][Phys][ODBC][Microsoft][SQL Server Native Client 11.0][SQL Server]', '', [rfReplaceAll])));
     End;
   end;
 end;
 
 function TEnderecoDao.GetReUsoPicking(pZonaId, pDias: Integer): TjSonArray;
-var
-  vSql: String;
+var vSql: String;
 begin
   try
     FConexao.Query.Sql.Add(TuEvolutConst.SqlReUsoPicking);
     FConexao.Query.ParamByName('pZonaId').Value := pZonaId;
-    FConexao.Query.ParamByName('pDias').Value := pDias;
+    FConexao.Query.ParamByName('pDias').Value   := pDias;
     if DebugHook <> 0 then
-      FConexao.Query.Sql.SaveToFile('RelReUsoPicking.Sql');
+       FConexao.Query.Sql.SaveToFile('RelReUsoPicking.Sql');
     FConexao.Query.Open;
     if (FConexao.Query.IsEmpty) Then
     Begin
@@ -745,23 +706,23 @@ begin
 end;
 
 function TEnderecoDao.Manutencao(pJsonManutencao: TJsonObject): TJsonObject;
-var
-  vSql: String;
-  
-  xManutencao: Integer;
-  vOperacao: String;
-  vAcao: String;
-  vZonaId: Integer;
-  vPicking, vPickingNovo: String;
-  vAltura, vLargura, vComprimento, vPeso: double;
-  vEndereco: String;
-  
+var vSql: String;
+    xManutencao: Integer;
+    vOperacao: String;
+    vAcao: String;
+    vZonaId: Integer;
+    vPicking, vPickingNovo: String;
+    vAltura, vLargura, vComprimento, vPeso: double;
+    vEndereco  : String;
+    vQtAcao    : Integer;
+    vComplAcao : String;
 begin
   try
     Fconexao.Query.Connection.StartTransaction;
     vOperacao := pJsonManutencao.GetValue<String>('operacao');
-    if vOperacao = 'AtivaDesativa' then
-      vAcao := pJsonManutencao.GetValue<String>('acao')
+    if vOperacao = 'AtivaDesativa' then Begin
+      vAcao := ''; //pJsonManutencao.GetValue<String>('acao');
+    End
     Else if vOperacao = 'MudarZona' then
     Begin
       vZonaId := pJsonManutencao.GetValue<Integer>('zonaid');
@@ -773,36 +734,43 @@ begin
       vComprimento := pJsonManutencao.GetValue<double>('comprimento');
       vPeso := pJsonManutencao.GetValue<double>('peso');
     End;
-    if vOperacao <> 'Transferencia' then
-    Begin
-      For xManutencao :=
-        0 to Pred(pJsonManutencao.GetValue<TjSonArray>('lista').Count) do
-      Begin
-        vEndereco := pJsonManutencao.GetValue<TjSonArray>('lista')
-          .Items[xManutencao].GetValue<String>('endereco');
-        if vOperacao = 'AtivaDesativa' then
-        Begin
-          FConexao.Query.Close;
-          FConexao.Query.Sql.Clear;
-          FConexao.Query.Sql.Add('Update Enderecamentos');
-          if vAcao = 'Ativar' then
-             FConexao.Query.Sql.Add('  Set Status = 1')
-          Else
-             FConexao.Query.Sql.Add('  Set Status = 0');
-          FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(vEndereco) + ')');
+    if vOperacao <> 'Transferencia' then Begin
+      For xManutencao := 0 to Pred(pJsonManutencao.GetValue<TjSonArray>('lista').Count) do Begin
+        vEndereco := pJsonManutencao.GetValue<TjSonArray>('lista').Items[xManutencao].GetValue<String>('endereco');
+        if vOperacao = 'AtivaDesativa' then Begin
+           FConexao.Query.Close;
+           FConexao.Query.Sql.Clear;
+           FConexao.Query.Sql.Add('Update Enderecamentos Set');
+           vComplAcao := '';
+           for vQtAcao := 0 to Pred(pJsonManutencao.GetValue<TJsonArray>('acao').Count) do Begin
+             vAcao := pJsonManutencao.GetValue<TJsonArray>('acao').Items[vQtAcao].GetValue<String>('acao');
+             if vAcao = 'ativar' Then Begin
+                FConexao.Query.Sql.Add('   '+vComplAcao+'Status = 1');
+                vComplAcao:= ', ';
+             End
+             Else if vAcao = 'desativar' then Begin
+                FConexao.Query.Sql.Add('   '+vComplAcao+'Status = 0');
+                vComplAcao:= ', ';
+             End
+             Else if vAcao = 'bloquear' then Begin
+                FConexao.Query.Sql.Add('   '+vComplAcao+'Bloqueado = 1');
+                vComplAcao:= ', ';
+             End
+             Else if vAcao = 'desbloquear' then Begin
+                FConexao.Query.Sql.Add('   '+vComplAcao+'Bloqueado = 0');
+                vComplAcao:= ', ';
+             End
+           End;
+           FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = ' + QuotedStr(vEndereco) + ')');
         End
-        Else if vOperacao = 'MudarZona' then
-        Begin
-          FConexao.Query.Close;
-          FConexao.Query.Sql.Clear;
-          FConexao.Query.Sql.Add('Update Enderecamentos');
-          FConexao.Query.Sql.Add('  Set ZonaId = ' + vZonaId.ToString());
-          FConexao.Query.Sql.Add
-            ('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = '
-            + QuotedStr(vEndereco) + ')');
+        Else if vOperacao = 'MudarZona' then Begin
+           FConexao.Query.Close;
+           FConexao.Query.Sql.Clear;
+           FConexao.Query.Sql.Add('Update Enderecamentos');
+           FConexao.Query.Sql.Add('  Set ZonaId = ' + vZonaId.ToString());
+           FConexao.Query.Sql.Add('Where EnderecoId = (Select EnderecoId From Enderecamentos Where Descricao = '+QuotedStr(vEndereco) + ')');
         End
-        Else if vOperacao = 'Cubagem' then
-        Begin
+        Else if vOperacao = 'Cubagem' then Begin
           FConexao.Query.Close;
           FConexao.Query.Sql.Clear;
           FConexao.Query.Sql.Add('Update Enderecamentos');

@@ -15,8 +15,9 @@ Type
     constructor Create;
     Function BloquearEndereco : tjsonObject;
     Function Delete : Boolean;
-    Function GetEndereco(pEnderecoId : Integer = 0; pEstruturaId : Integer = 0;
-             pZonaId : Integer = 0;  pRuaId : Integer = 0; pEnderecoIni : String = ''; pEnderecoFin : String = ''; pOcupacaoEndereco : String = 'T'; pStatus : Integer = 99; pShowErro : Integer = 1) : tJsonArray;
+    Function GetEndereco(pEnderecoId : Integer = 0; pEstruturaId : Integer = 0; pZonaId : Integer = 0;  pRuaId : Integer = 0;
+             pEnderecoIni : String = ''; pEnderecoFin : String = ''; pOcupacaoEndereco : String = 'T'; pStatus : Integer = 99;
+             pBloqueado : Integer = 0; pShowErro : Integer = 1) : tJsonArray;
     Function GetEnderecoPorListaZona(pEnderecoId, pEstruturaID, pZonaId: Integer; pEnderecoIni, pEnderecoFin, pOcupacaoEndereco: String; pStatus: Integer; pListaZona: String; pShowErro: Integer): TJsonArray;
     Function GetEnderecoToReposicao(pZonaId: Integer; pEnderecoIni, pEnderecoFin, pRuaInicial, pRuaFinal: String;
                                     pRuaParImpar: Integer; pPredioInicial, pPredioFinal: String; pPredioParImpar: Integer;
@@ -107,7 +108,8 @@ begin
 end;
 
 function TEnderecoDao.GetEndereco(pEnderecoId, pEstruturaId, pZonaId: Integer; pRuaId : Integer;
-  pEnderecoIni : String; pEnderecoFin : String; pOcupacaoEndereco : String; pStatus : Integer; pShowErro: Integer): tJsonArray;
+         pEnderecoIni : String; pEnderecoFin : String; pOcupacaoEndereco : String; pStatus : Integer;
+         pBloqueado : Integer; pShowErro: Integer): tJsonArray;
 Var jSonObj         : tJsonObject;
     xItens          : Integer;
     ObjEndereco     : TEndereco;
@@ -132,6 +134,8 @@ Try
      vResourceURI := vResourceURI+'&enderecofin='+pEnderecoFin;
   vResourceURI := vResourceURI+'&ocupacaoendereco='+pOcupacaoEndereco;
   vResourceURI := vResourceURI+'&status='+pStatus.Tostring();
+  if pBloqueado <> 0 then
+     vResourceURI := vResourceURI+'&bloqueado='+pBloqueado.Tostring();
   vResourceURI := StringReplace(vResourceURI, '?&', '?', [rfReplaceAll]);
   DmeXactWMS.RESTRequestWMS.Resource := vResourceURI;
   DmeXactWMS.RESTRequestWMS.Method := RmGet;

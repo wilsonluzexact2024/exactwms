@@ -234,7 +234,7 @@ begin
   inherited;
   if FrmeXactWMS.ConfigWMS.ObjConfiguracao.EnderecoIdVolumeExpedidoCancelado <> 0 then Begin
      ObjEnderecoCtrl := TEnderecoCtrl.Create;
-     JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(FrmeXactWMS.ConfigWMS.ObjConfiguracao.EnderecoIdVolumeExpedidoCancelado, 0, 0, 0, '', '', 'T', 2, 0);
+     JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(FrmeXactWMS.ConfigWMS.ObjConfiguracao.EnderecoIdVolumeExpedidoCancelado, 0, 0, 0, '', '', 'T', 2, 0, 0);
      if Not JsonArrayEndereco.Items[0].TryGetValue('Erro', vErro) then Begin
         FrmeXactWMS.ConfigWMS.ObjConfiguracao.EnderecoVolumeExpedidoCancelado := EnderecoMask(JsonArrayEndereco.items[0].GetValue<String>('descricao'),
                                   JsonArrayEndereco.items[0].GetValue<TJsonObject>('enderecoestrutura').GetValue<String>('mascara'), True);

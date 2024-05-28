@@ -530,7 +530,7 @@ end;
 procedure TFrmControleArmazenagem.GetListaEndereco(pEnderecoId, pEstruturaID,
   pZonaId: Integer; pEnderecoIni, pEnderecoFin: String);
 begin
-  FdMemEnderecoOrigem.LoadFromJson(ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, '', '', 'T', 2, 1), False);
+  FdMemEnderecoOrigem.LoadFromJson(ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, '', '', 'T', 2, 0, 1), False);
   FDMemEnderecoOrigem.IndexFieldNames:= 'descricao'; //Descrição do Endereço
 end;
 
@@ -748,11 +748,11 @@ begin
       EdtEnderecoOrigem.EditLabel.Caption  := 'Stage - Origem';
       EdtEnderecoDestino.EditLabel.Caption := 'Destino';
       //EdtEnderecoOrigem.Enabled := False;
-      LstEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 2, 1);
+      LstEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 2, 0, 1);
       if LstEndereco[0].EnderecoId <=0 then
          raise Exception.Create('Não existe endereço na Stage');
       if LstEndereco.Count = 1 then Begin
-         ObjEnderecoCtrl.ObjEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 2, 0)[0];
+         ObjEnderecoCtrl.ObjEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, 1, 0, '', '', 'T', 2, 0, 0)[0];
          if ObjEnderecoCtrl.ObjEndereco.Status = 0 then Begin
             ShowErro('Endereço('+EdtEnderecoOrigem.Text+') inativo! Não pode ser utilizado.');
             EdtEnderecoOrigem.Clear;
@@ -846,13 +846,19 @@ begin
         raise Exception.Create('Não é permitido movimentar para o mesmo endereço.');
      End;
      ObjEnderecoDestinoCtrl.ObjEndereco := ObjEnderecoDestinoCtrl.GetEndereco(0, 0, vZonaId, 0,
-                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 1)[0];
+                                           EdtEnderecoDestino.Text, EdtEnderecoDestino.Text, 'T', 0, 1)[0];
      if ObjEnderecoDestinoCtrl.ObjEndereco.EnderecoId > 0 then With ObjEnderecoDestinoCtrl.ObjEndereco do Begin
         if Status = 0 then Begin
            EdtEnderecoDestino.Clear;
            EdtEnderecoDestino.SetFocus;
            ExitFocus(Sender);
            raise Exception.Create('Endereço('+EdtEnderecoDestino.Text+') inativo! Não pode ser utilizado.');
+        End;
+        if Bloqueado = 0 then Begin
+           EdtEnderecoDestino.Clear;
+           EdtEnderecoDestino.SetFocus;
+           ExitFocus(Sender);
+           raise Exception.Create('Endereço('+EdtEnderecoDestino.Text+') bloqueado para uso.');
         End;
         LblDestino.Caption := EnderecoMask(Descricao, EnderecoEstrutura.Mascara, True)+
                                      '   Rua: ' + EnderecoRua.Descricao + ' Lado: ' + EnderecoRua.Lado;
@@ -971,10 +977,13 @@ begin
   If TipoMovimentacao = poRetidadaStage then vZonaId := 1
   //Else If TipoMovimentacao = poSegregado then vZonaId := 3
   Else vZonaId := 0;
-  ObjEnderecoCtrl.ObjEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, vZonaId, 0, EdtEnderecoOrigem.Text, EdtEnderecoOrigem.Text, 'T', 2, 1)[0];
+  ObjEnderecoCtrl.ObjEndereco := ObjEnderecoCtrl.GetEndereco(0, 0, vZonaId, 0, EdtEnderecoOrigem.Text, EdtEnderecoOrigem.Text, 'T', 2, 0, 1)[0];
   if ObjEnderecoCtrl.ObjEndereco.EnderecoId > 0 then With ObjEnderecoCtrl.ObjEndereco do Begin
      if Status = 0 then Begin
         raise Exception.Create('Endereço('+vEndereco+') inativo! Não pode ser utilizado.');
+     End;
+     if Bloqueado = 0 then Begin
+        raise Exception.Create('Endereço('+vEndereco+') bloqueado para uso!');
      End;
      LblEnderecoOrigem.Caption := EnderecoMask(Descricao, EnderecoEstrutura.Mascara, True)+
                                   '   Rua: ' + EnderecoRua.Descricao + ' Lado: ' + EnderecoRua.Lado;

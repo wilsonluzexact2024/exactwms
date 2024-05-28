@@ -9,7 +9,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
   inherited PgcBase: TcxPageControl
     Width = 1163
     Height = 732
-    Properties.ActivePage = TabPrincipal
+    Properties.ActivePage = TabManutencaoEndereco
     ExplicitWidth = 1163
     ExplicitHeight = 732
     ClientRectBottom = 732
@@ -814,6 +814,17 @@ inherited FrmEnderecamento: TFrmEnderecamento
         TabStop = False
         OnClick = BtnPesqArmazemClick
       end
+      object ChkBloqueado: TCheckBox
+        Left = 289
+        Top = 237
+        Width = 82
+        Height = 17
+        CustomHint = BalloonHint1
+        TabStop = False
+        Caption = 'Bloqueado'
+        TabOrder = 13
+        OnClick = ChkCadastroClick
+      end
     end
     inherited TbFrameWeb: TcxTabSheet
       ExplicitTop = 24
@@ -834,6 +845,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
       Caption = 'Manuten'#231#227'o de Endere'#231'os'
       ImageIndex = 4
       OnShow = TabManutencaoEnderecoShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object RgManutencao: TRadioGroup
         Left = 29
         Top = 14
@@ -843,7 +857,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
         Caption = '[ Tipo de Manuten'#231#227'o ]'
         Columns = 4
         Items.Strings = (
-          'Ativar / Desativar(Bloquear)'
+          'Ativar / Desativar / <Des>Bloquear'
           'Mudar Zona'
           'Definir Cubagem'
           'Excluir'
@@ -862,7 +876,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
         Align = alBottom
         Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 1
-        Properties.ActivePage = TabCreateAddress
+        Properties.ActivePage = TabManutencaoAtivaDesativa
         Properties.CustomButtons.Buttons = <>
         Properties.Style = 10
         ClientRectBottom = 586
@@ -873,6 +887,23 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Ativar / Desativar'
           ImageIndex = 0
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
+          object Bevel2: TBevel
+            Left = 29
+            Top = 98
+            Width = 276
+            Height = 29
+            CustomHint = BalloonHint1
+          end
+          object Bevel1: TBevel
+            Left = 322
+            Top = 98
+            Width = 276
+            Height = 29
+            CustomHint = BalloonHint1
+          end
           object Label18: TLabel
             Left = 29
             Top = 30
@@ -904,7 +935,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             ParentFont = False
           end
           object ShManutencaoAtivar: TShape
-            Left = 90
+            Left = 112
             Top = 101
             Width = 24
             Height = 24
@@ -912,6 +943,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             Brush.Color = clGreen
             Pen.Color = clGreen
             Shape = stCircle
+            Visible = False
           end
           object ImgSaveManut: TsImage
             Left = 450
@@ -1099,7 +1131,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             ParentFont = False
           end
           object ShManutencaoDesativar: TShape
-            Left = 418
+            Left = 248
             Top = 101
             Width = 24
             Height = 24
@@ -1107,6 +1139,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             Brush.Color = clRed
             Pen.Color = clRed
             Shape = stCircle
+            Visible = False
           end
           object LblRegistroOnOff: TLabel
             Left = 832
@@ -1137,14 +1170,24 @@ inherited FrmEnderecamento: TFrmEnderecamento
             Font.Style = [fsBold]
             ParentFont = False
           end
-          object ShManutencaoBloquear: TShape
-            Left = 260
+          object ShBloquear: TShape
+            Left = 418
             Top = 101
             Width = 24
             Height = 24
             CustomHint = BalloonHint1
             Brush.Color = clYellow
             Pen.Color = clYellow
+            Shape = stCircle
+            Visible = False
+          end
+          object ShDesbloquear: TShape
+            Left = 566
+            Top = 101
+            Width = 24
+            Height = 24
+            CustomHint = BalloonHint1
+            Pen.Color = clWhite
             Shape = stCircle
             Visible = False
           end
@@ -2281,7 +2324,6 @@ inherited FrmEnderecamento: TFrmEnderecamento
             SortSettings.HeaderMirrorColorTo = 16182488
             Version = '8.4.2.2'
             WordWrap = False
-            ExplicitWidth = 1157
             ColWidths = (
               74
               118
@@ -2763,7 +2805,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             OnClick = BtnPesqZonaAtivaDesativaClick
           end
           object ChkManutencaoAtivar: TCheckBox
-            Left = 29
+            Left = 51
             Top = 101
             Width = 55
             Height = 17
@@ -2780,7 +2822,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             OnClick = ChkManutencaoAtivarClick
           end
           object SbSalvarAtivaDesativa: TPanel
-            Left = 600
+            Left = 621
             Top = 94
             Width = 175
             Height = 29
@@ -2870,7 +2912,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             end
           end
           object ChkManutencaoDesativar: TCheckBox
-            Left = 336
+            Left = 166
             Top = 101
             Width = 76
             Height = 17
@@ -2887,7 +2929,7 @@ inherited FrmEnderecamento: TFrmEnderecamento
             OnClick = ChkManutencaoDesativarClick
           end
           object ChkBloquear: TCheckBox
-            Left = 178
+            Left = 336
             Top = 101
             Width = 76
             Height = 17
@@ -2901,8 +2943,24 @@ inherited FrmEnderecamento: TFrmEnderecamento
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 8
-            Visible = False
-            OnClick = ChkManutencaoDesativarClick
+            OnClick = ChkBloquearClick
+          end
+          object ChkDesbloquear: TCheckBox
+            Left = 463
+            Top = 101
+            Width = 97
+            Height = 17
+            CustomHint = BalloonHint1
+            TabStop = False
+            Caption = 'Desbloquear'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -13
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 9
+            OnClick = ChkDesbloquearClick
           end
         end
         object TabManutencaoMudarZona: TcxTabSheet
@@ -2910,6 +2968,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Mudar Zona'
           ImageIndex = 1
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label21: TLabel
             Left = 29
             Top = 30
@@ -5142,6 +5203,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Cubagem'
           ImageIndex = 2
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label20: TLabel
             Left = 29
             Top = 30
@@ -7064,6 +7128,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Excluir'
           ImageIndex = 3
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label24: TLabel
             Left = 29
             Top = 30
@@ -9966,6 +10033,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Remover V'#237'nculo'
           ImageIndex = 5
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label35: TLabel
             Left = 29
             Top = 30
@@ -11754,6 +11824,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           CustomHint = BalloonHint1
           Caption = 'Manuten'#231#227'o'
           ImageIndex = 6
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label8: TLabel
             Left = 450
             Top = 184
@@ -11774,6 +11847,9 @@ inherited FrmEnderecamento: TFrmEnderecamento
           Caption = 'Cria'#231#227'o de M'#250'ltiplos Endere'#231'os'
           ImageIndex = 7
           OnShow = TabManutencaoAtivaDesativaShow
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object Label37: TLabel
             Left = 60
             Top = 147
@@ -14068,21 +14144,12 @@ inherited FrmEnderecamento: TFrmEnderecamento
     Width = 1162
     ExplicitTop = 765
     ExplicitWidth = 1162
-    inherited LblMensShowErro: TLabel
-      Width = 1162
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 659
     Top = -42
     ExplicitLeft = 659
     ExplicitTop = -42
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited TmFrameWeb: TTimer
     Left = 250

@@ -10,6 +10,8 @@ inherited FrmRelEstoque: TFrmRelEstoque
     ExplicitHeight = 559
     ClientRectBottom = 559
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 535
       inherited LstCadastro: TAdvStringGrid
         Height = 497
@@ -22,7 +24,8 @@ inherited FrmRelEstoque: TFrmRelEstoque
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Posi'#231#227'o Estoque'
-      ExplicitTop = 24
+      ExplicitLeft = 1
+      ExplicitTop = 4
       ExplicitWidth = 1157
       ExplicitHeight = 535
       inherited LblTotRegCaption: TLabel
@@ -46,10 +49,9 @@ inherited FrmRelEstoque: TFrmRelEstoque
         TabOrder = 9
       end
       inherited LstReport: TAdvStringGrid
-        Top = 208
-        Height = 305
+        Top = 214
+        Height = 321
         TabStop = False
-        Align = alNone
         ColCount = 19
         TabOrder = 7
         ColumnHeaders.Strings = (
@@ -72,8 +74,8 @@ inherited FrmRelEstoque: TFrmRelEstoque
           'Expedi'#231#227'o'
           'Dt.Entrada'
           'Ult.Movimento')
-        ExplicitTop = 208
-        ExplicitHeight = 305
+        ExplicitTop = 214
+        ExplicitHeight = 321
         ColWidths = (
           74
           118
@@ -794,9 +796,13 @@ inherited FrmRelEstoque: TFrmRelEstoque
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 535
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 535
       inherited DbgImporta: TDBGrid
         Height = 331
@@ -806,6 +812,9 @@ inherited FrmRelEstoque: TFrmRelEstoque
       CustomHint = BalloonHint1
       Caption = 'Movimenta'#231#227'o Interna'
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label5: TLabel
         Left = 4
         Top = 186
@@ -1768,21 +1777,12 @@ inherited FrmRelEstoque: TFrmRelEstoque
   inherited PnlErro: TPanel
     Top = 592
     ExplicitTop = 592
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 901
     Top = 383
     ExplicitLeft = 901
     ExplicitTop = 383
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited FdMemPesqGeral: TFDMemTable
     Top = 281
@@ -1879,6 +1879,9 @@ inherited FrmRelEstoque: TFrmRelEstoque
     end
     object FdMemPesqGeralDtInclusao: TDateField
       FieldName = 'DtInclusao'
+    end
+    object FdMemPesqGeralBloqueado: TIntegerField
+      FieldName = 'Bloqueado'
     end
   end
   inherited frxReport1: TfrxReport

@@ -631,7 +631,9 @@ begin
   EdtDtFabricacao.Enabled       := Not OnOff;
   EdtDtVencimento.Enabled       := Not OnOff;
   EdtQtdUnidPrimCheckIn.Enabled := Not OnOff;
-  if (Assigned(ObjProdutoCheckIn)) and (Not OnOff) and (FdMemEntradaProduto.Active) and (FdMemEntradaProduto.FieldByname('FatorConversao').AsInteger>1) then
+  if (Assigned(ObjProdutoCheckIn)) and (Not OnOff) and
+     (FdMemEntradaProduto.Active) and
+     (FdMemEntradaProduto.FieldByname('FatorConversao').AsInteger>1) then
      EdtQtdUnidSecCheckIn.Enabled  := Not OnOff
   Else
      EdtQtdUnidSecCheckIn.Enabled      := False;
@@ -1312,7 +1314,8 @@ begin
     if Length(TEdit(Sender).Text) = 8 then
        TEdit(Sender).Text := Copy(TEdit(Sender).Text, 1, 6)+'20'+Copy(TEdit(Sender).Text, 7, 2);
     StrToDate(EdtDtFabricacao.Text);
-    if StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130') then
+    if (StrToDate(TEdit(Sender).Text) < StrToDate('01/01/1990')) or
+       (StrToDate(TEdit(Sender).Text) > StrToDate('19/08/2130')) then
        raise Exception.Create('Dt.Fabricação inválida!');
   Except
     EdtDtFabricacao.SetFocus;
@@ -1496,7 +1499,7 @@ begin
         Try
           vEndereco := EdtPickingCheckIn.Text;
           ObjEnderecoCtrl  := TEnderecoCtrl.Create;
-          RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EnderecoMask(EdtPickingCheckIn.Text, '', False), EnderecoMask(EdtPickingCheckIn.Text, '', False), 'T', 2, 0);
+          RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 2, 0, 0, EnderecoMask(EdtPickingCheckIn.Text, '', False), EnderecoMask(EdtPickingCheckIn.Text, '', False), 'T', 2, 0, 0);
           if (RetornoJsonArray.Count < 1) or (RetornoJsonArray.Items[0].TryGetValue('Erro', vErro)) then Begin
              EdtPickingCheckIn.Text := '';
              raise Exception.Create('Endereço '+EnderecoMask(vEndereco, '999999999', False)+' não encontrado!');

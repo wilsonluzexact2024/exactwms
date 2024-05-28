@@ -22,8 +22,12 @@ Type
     //Rotinas Pública (CRUD)
     Function BloquearEndereco(pEnderecoId : Integer) : tjsonObject;
     Function VerificaDados(ObjEndereco : TEndereco) : Boolean;
-    Function GetEndereco(pEnderecoId : Integer = 0; pEstruturaID : Integer = 0; pZonaId : Integer = 0; pRuaId : Integer = 0; pEnderecoIni : String = ''; pEnderecoFin : String = ''; pOcupacaoEndereco : String = 'T'; pStatus : Integer = 2; pShowErro : Integer = 1) : TObjectList<TEndereco>;
-    Function GetEnderecoJson(pEnderecoId : Integer = 0; pEstruturaID : Integer = 0; pZonaId : Integer = 0; pRuaId : Integer = 0; pEnderecoIni : String = ''; pEnderecoFin : String = '';  pOcupacaoEndereco : String = 'T'; pStatus : Integer = 99; pShowErro : Integer = 1) : TJsonArray;
+    Function GetEndereco(pEnderecoId : Integer = 0; pEstruturaID : Integer = 0; pZonaId : Integer = 0; pRuaId : Integer = 0;
+             pEnderecoIni : String = ''; pEnderecoFin : String = ''; pOcupacaoEndereco : String = 'T'; pStatus : Integer = 2;
+             pBloqueado : Integer = 0; pShowErro : Integer = 1) : TObjectList<TEndereco>;
+    Function GetEnderecoJson(pEnderecoId : Integer = 0; pEstruturaID : Integer = 0; pZonaId : Integer = 0; pRuaId : Integer = 0;
+             pEnderecoIni : String = ''; pEnderecoFin : String = '';  pOcupacaoEndereco : String = 'T'; pStatus : Integer = 99;
+             pBloqueado : Integer = 0; pShowErro : Integer = 1) : TJsonArray;
     function GetEnderecoPorListaZonaJson(pEnderecoId, pEstruturaID,
       pZonaId: Integer; pEnderecoIni, pEnderecoFin, pOcupacaoEndereco: String;
       pStatus: Integer; pListaZona: String; pShowErro: Integer): TJsonArray;
@@ -136,7 +140,8 @@ begin
 end;
 
 Function tEnderecoCtrl.GetEndereco(pEnderecoId : Integer = 0; pEstruturaID : Integer = 0;
-         pZonaId : Integer = 0; pRuaId : Integer = 0; pEnderecoIni : String = ''; pEnderecoFin : String = ''; pOcupacaoEndereco : String = 'T'; pStatus : Integer = 2; pShowErro : Integer = 1) : TObjectList<TEndereco>;
+         pZonaId : Integer = 0; pRuaId : Integer = 0; pEnderecoIni : String = ''; pEnderecoFin : String = '';
+         pOcupacaoEndereco : String = 'T'; pStatus : Integer = 2; pBloqueado : Integer = 0; pShowErro : Integer = 1) : TObjectList<TEndereco>;
 Var ObjEnderecoDAO : TEnderecoDAO;
     ReturnJson     : TJsonArray;
     jsonEndereco   : tjsonObject;
@@ -147,7 +152,7 @@ begin
   Try
     ObjEnderecoDAO.Endereco.EnderecoId := ObjEndereco.EnderecoId;
     ObjEndereco.EnderecoEstrutura.EstruturaId := 100;
-    ReturnJson := ObjEnderecoDAO.GetEndereco(pEnderecoId, pEstruturaID, pZonaId, pRuaId, pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus, pShowErro);
+    ReturnJson := ObjEnderecoDAO.GetEndereco(pEnderecoId, pEstruturaID, pZonaId, pRuaId, pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus, pBloqueado, pShowErro);
     ObjEndereco.EnderecoEstrutura.EstruturaId := 150;
     Result     := TObjectList<TEndereco>.Create;
     if (ReturnJson.Count >= 1) and (Not ReturnJson.Items[0].TryGetValue('Erro', verro)) then Begin
@@ -183,14 +188,14 @@ End;
 
 function TEnderecoCtrl.GetEnderecoJson(pEnderecoId, pEstruturaID,
   pZonaId: Integer; pRuaId : Integer; pEnderecoIni, pEnderecoFin: String; pOcupacaoEndereco : String;
-  pStatus : Integer; pShowErro: Integer): TJsonArray;
+  pStatus : Integer; pBloqueado : integer; pShowErro: Integer): TJsonArray;
 Var ObjEnderecoDAO : TEnderecoDAO;
     vErro :  String;
 begin
   ObjEnderecoDAO := TEnderecoDAO.Create;
   ObjEnderecoDAO.Endereco.EnderecoId := ObjEndereco.EnderecoId;
   Result := ObjEnderecoDAO.GetEndereco(pEnderecoId, pEstruturaID, pZonaId, pRuaId,
-            pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus, pShowErro);
+            pEnderecoIni, pEnderecoFin, pOcupacaoEndereco, pStatus, pBloqueado, pShowErro);
   if ((Result.Count < 1) or (Result.Items[0].TryGetValue('Erro', vErro))) and (pShowErro = 1) then
      Raise Exception.Create('Endereço não localizado!');
   ObjEnderecoDAO.Free;

@@ -1,28 +1,60 @@
 inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
   Caption = 'FrmRelEvolucaoRessuprimentos'
   ClientHeight = 702
+  ClientWidth = 1227
+  ExplicitWidth = 1229
   ExplicitHeight = 704
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Width = 1228
     Height = 647
     Properties.ActivePage = TabPrincipal
+    ExplicitWidth = 1228
     ExplicitHeight = 647
     ClientRectBottom = 647
+    ClientRectRight = 1228
     inherited TabListagem: TcxTabSheet
+      ExplicitWidth = 1228
       ExplicitHeight = 623
       inherited LstCadastro: TAdvStringGrid
+        Width = 1208
         Height = 585
+        ExplicitWidth = 1208
         ExplicitHeight = 585
       end
       inherited AdvGridLookupBar1: TAdvGridLookupBar
         Height = 585
         ExplicitHeight = 585
       end
+      inherited PnlPesquisaCadastro: TPanel
+        Width = 1228
+        ExplicitWidth = 1228
+        inherited BtnPesqConsGeral: TsImage
+          Left = 669
+          ExplicitLeft = 669
+        end
+        inherited LblClearFilter: TLabel
+          Left = 704
+          ExplicitLeft = 704
+        end
+        inherited LblRegTit: TLabel
+          Left = 908
+          ExplicitLeft = 908
+        end
+        inherited LblTotReg: TLabel
+          Left = 1044
+          ExplicitLeft = 1044
+        end
+        inherited EdtConteudoPesq: TLabeledEdit
+          Width = 327
+          ExplicitWidth = 327
+        end
+      end
     end
     inherited TabPrincipal: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1157
+      ExplicitWidth = 1228
       ExplicitHeight = 623
       inherited ShCadastro: TShape
         Left = 260
@@ -55,12 +87,11 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
         ExplicitTop = 143
       end
       inherited LstReport: TAdvStringGrid
-        Left = 240
+        Left = 231
         Top = 150
-        Width = 905
-        Height = 469
+        Width = 996
+        Height = 468
         Align = alNone
-        Anchors = [akLeft, akTop, akBottom]
         ColCount = 10
         ColumnHeaders.Strings = (
           'Data'
@@ -73,10 +104,10 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
           'Cancelado'
           'Corte(s)'
           'Efici'#234'ncia')
-        ExplicitLeft = 240
+        ExplicitLeft = 231
         ExplicitTop = 150
-        ExplicitWidth = 905
-        ExplicitHeight = 469
+        ExplicitWidth = 996
+        ExplicitHeight = 468
         ColWidths = (
           74
           118
@@ -7179,34 +7210,57 @@ inherited FrmRelEvolucaoRessuprimentos: TFrmRelEvolucaoRessuprimentos
       end
     end
     inherited TbFrameWeb: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 623
     end
     inherited TabimportacaoCSV: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 623
       inherited DbgImporta: TDBGrid
+        Width = 1228
         Height = 419
       end
     end
   end
+  inherited PnHeader: TPanel
+    Width = 1227
+    ExplicitWidth = 1227
+    inherited ImgClose: TImage
+      Left = 1194
+      ExplicitLeft = 1194
+    end
+    inherited ImgMinimize: TImage
+      Left = 1174
+      ExplicitLeft = 1174
+    end
+    inherited PanWin8: TPanel
+      Width = 1227
+      ExplicitWidth = 1227
+    end
+  end
   inherited PnlImgObjeto: TPanel
-    Left = 912
-    Top = 225
-    ExplicitLeft = 912
-    ExplicitTop = 225
+    Left = 673
+    Top = 121
+    ExplicitLeft = 673
+    ExplicitTop = 121
   end
   inherited PnlErro: TPanel
     Top = 680
+    Width = 1227
     ExplicitTop = 680
+    ExplicitWidth = 1227
     inherited LblMensShowErro: TLabel
-      Width = 1156
+      Width = 1227
       Height = 22
     end
   end
   inherited PnlConfigPrinter: TPanel
-    Left = 541
-    Top = 20
-    ExplicitLeft = 541
-    ExplicitTop = 20
+    Left = 673
+    Top = 25
+    ExplicitLeft = 673
+    ExplicitTop = 25
     inherited Panel7: TPanel
       inherited LblTitConfigPrinter: TLabel
         Width = 313

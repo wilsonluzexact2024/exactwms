@@ -72,6 +72,9 @@ inherited FrmReposicao: TFrmReposicao
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Gerar Reposi'#231#227'o Individual'
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inherited ShCadastro: TShape
         Left = 510
         Top = 11
@@ -1523,16 +1526,6 @@ inherited FrmReposicao: TFrmReposicao
           TabOrder = 1
         end
       end
-    end
-    inherited TbFrameWeb: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-    end
-    inherited TabimportacaoCSV: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object TabReposicaoColeta: TcxTabSheet
       CustomHint = BalloonHint1
@@ -7218,6 +7211,9 @@ inherited FrmReposicao: TFrmReposicao
       Caption = 'Modelo(s) para Reposi'#231#227'o'
       ImageIndex = 5
       OnShow = TabReposicaoModeloShow
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         1157
         524)

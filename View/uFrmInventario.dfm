@@ -8,7 +8,7 @@ inherited FrmInventario: TFrmInventario
   inherited PgcBase: TcxPageControl
     Top = 59
     Height = 723
-    Properties.ActivePage = TabApuracao
+    Properties.ActivePage = TabPrincipal
     ExplicitTop = 59
     ExplicitHeight = 723
     ClientRectBottom = 723
@@ -52,6 +52,8 @@ inherited FrmInventario: TFrmInventario
       end
     end
     inherited TabPrincipal: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
       ExplicitHeight = 699
       inherited ShCadastro: TShape
         Left = 653
@@ -511,6 +513,10 @@ inherited FrmInventario: TFrmInventario
           CustomHint = BalloonHint1
           Caption = 'Geogr'#225'fico'
           ImageIndex = 0
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object PnlEndereco: TPanel
             Left = 0
             Top = 0
@@ -1782,6 +1788,10 @@ inherited FrmInventario: TFrmInventario
           CustomHint = BalloonHint1
           Caption = 'Produto'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object PnlProduto: TPanel
             Left = 0
             Top = 0
@@ -3059,6 +3069,9 @@ inherited FrmInventario: TFrmInventario
       CustomHint = BalloonHint1
       Caption = 'Acompanhamento de Contagem'
       ImageIndex = 4
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PnlTopAcompanhamento: TPanel
         Left = 0
         Top = 0
@@ -9358,6 +9371,9 @@ inherited FrmInventario: TFrmInventario
       CustomHint = BalloonHint1
       Caption = 'Apura'#231#227'o do Invent'#225'rio/Ajuste'
       ImageIndex = 5
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PnlTopApuracao: TPanel
         Left = 0
         Top = 0
@@ -9456,13 +9472,13 @@ inherited FrmInventario: TFrmInventario
           TabOrder = 1
           object BtnInventarioFechar: TPanel
             Left = 33
-            Top = 32
-            Width = 183
+            Top = 31
+            Width = 164
             Height = 29
             Cursor = crHandPoint
             CustomHint = BalloonHint1
             BevelOuter = bvNone
-            Caption = 'Apurar Resultado'
+            Caption = '       Apurar Resultado'
             Color = 7847994
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
@@ -14754,6 +14770,9 @@ inherited FrmInventario: TFrmInventario
       CustomHint = BalloonHint1
       Caption = 'Arquivos - Terceirizada'
       ImageIndex = 6
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label26: TLabel
         Left = 20
         Top = 106
@@ -15233,21 +15252,12 @@ inherited FrmInventario: TFrmInventario
   inherited PnlErro: TPanel
     Top = 756
     ExplicitTop = 756
-    inherited LblMensShowErro: TLabel
-      Width = 1156
-      Height = 22
-    end
   end
   inherited PnlConfigPrinter: TPanel
     Left = 943
     Top = 394
     ExplicitLeft = 943
     ExplicitTop = 394
-    inherited Panel7: TPanel
-      inherited LblTitConfigPrinter: TLabel
-        Width = 313
-      end
-    end
   end
   inherited OpenTextFileDialog1: TOpenTextFileDialog
     Left = 584

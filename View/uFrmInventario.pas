@@ -669,7 +669,7 @@ begin
       FdMemPesqGeral.FieldByName('Endereco').AsString    := MontaValor;
       FdMemPesqGeral.FieldByname('Quantidade').AsInteger := StrToIntDef(MontaValor, 0);
       ObjEnderecoCtrl := TEnderecoCtrl.Create;
-      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, FdMemPesqGeral.FieldByName('Endereco').AsString, FdMemPesqGeral.FieldByName('Endereco').AsString, 'T', 99, 0);
+      ArrayJsonEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, FdMemPesqGeral.FieldByName('Endereco').AsString, FdMemPesqGeral.FieldByName('Endereco').AsString, 'T', 99, 0, 0);
       if Not (ArrayJsonEndereco.Items[0].TryGetValue('Erro', vErro)) then
          vEnderecoId := ArrayJsonEndereco.Items[0].GetValue<Integer>('enderecoid')
       Else vEnderecoid := 0;
@@ -740,7 +740,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEnderecoFinal.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 1)[0].Descricao;
+       EdtEnderecoFinal.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 2, 0, 1)[0].Descricao;
        EdtEnderecoFinalExit(EdtEnderecoFinal);
        ObjEnderecoCtrl := Nil;
     End;
@@ -759,7 +759,7 @@ begin
     if (FrmPesquisaEndereco.ShowModal = mrOk) then  Begin
        vEnderecoId := FrmPesquisaEndereco.Tag;
        ObjEnderecoCtrl := TEnderecoCtrl.Create();
-       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 1, 1)[0].Descricao;
+       EdtEnderecoInicial.Text := ObjEnderecoCtrl.GetEndereco(vEnderecoId, 0, 0, 0, '', '', 'T', 1, 0, 1)[0].Descricao;
        EdtEnderecoFinal.SetFocus;
        ObjEnderecoCtrl := Nil;
     End;
@@ -1655,7 +1655,8 @@ begin
   inherited;
   vOk := False;
   TAdvStringGrid(Sender).Row := aRow;
-  if (TAdvStringGrid(Sender)=LstEnderecoContagem) and (aRow > 0) and (aCol= 3) and (TAdvStringGrid(Sender).Cells[3, aRow].ToInteger()=2) then Begin
+  if (TAdvStringGrid(Sender)=LstEnderecoContagem) and (aRow > 0) and (aCol= 3) and (TAdvStringGrid(Sender).Cells[3, aRow].ToInteger()=2) and
+     (ObjInventarioCtrl.ObjInventario.Processoid < 143) then Begin
 //     if ObjInventarioCtrl.ObjInventario.inventariotipo = 1 then Begin
      if InventarioTipo = poGeografico then Begin
         If FdMemEndereco.Locate('Descricao', StringReplace(LstEnderecoContagem.Cells[0, aRow], '.', '', [rfReplaceAll]), []) Then
@@ -2098,7 +2099,7 @@ begin
     LstEnderecoContagem.Cells[2, xProduto] := EnderecoMask(FDMemProdutoDisponivel.FieldByName('Picking').AsString,
                                                            FDMemProdutoDisponivel.FieldByName('Mascara').AsString, True);
     //FDMemProdutoDisponivel.FieldByName('Picking').AsString;
-    If FDMemProdutoDisponivel.FieldByName('Status').AsString <> 'I' then
+    If (FDMemProdutoDisponivel.FieldByName('Status').AsString <> 'I') and (ObjInventarioCtrl.ObjInventario.ProcessoId < 143) then
        LstEnderecoContagem.Cells[3, xProduto] := '2'
     Else LstEnderecoContagem.Cells[3, xProduto] := '3';
     LstEnderecoContagem.Alignments[0, xProduto] := taRightJustify;
@@ -2526,7 +2527,8 @@ begin
   ObjProcesso := TProcessoCtrl.Create;
   JsonArrayProcesso := ObjProcesso.GetProcesso(ObjInventarioCtrl.ObjInventario.ProcessoId.ToString(), 0);
   if Not JsonArrayProcesso.Items[0].TryGetValue('Erro', vErro) then Begin
-     LblProcesso.Caption := LblProcesso.Caption + ' '+JsonArrayProcesso.Items[0].GetValue<String>('descricao');
+     LblProcesso.Caption := LblProcesso.Caption + ' '+
+                            StringReplace(JsonArrayProcesso.Items[0].GetValue<String>('descricao'), 'Inventario - ', '', [rfReplaceAll]);
      ChkCadastro.Checked := JsonArrayProcesso.Items[0].GetValue<Integer>('status') = 1;
      ShowFinalizacao(ObjInventarioCtrl.ObjInventario.ProcessoId in [143, 153]);
      if ObjInventarioCtrl.ObjInventario.ProcessoId  = 153 then

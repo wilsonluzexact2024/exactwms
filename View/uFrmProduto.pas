@@ -962,7 +962,7 @@ begin
             FdMemPesqGeral.FieldByName('Quantidade').AsInteger := StrTointDef(MontaValor, 0);
 
             ObjEnderecoCtrl := TEnderecoCtrl.Create;
-            JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, pEndereco, pEndereco, 'T', 2, 0);
+            JsonArrayEndereco := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, pEndereco, pEndereco, 'T', 2, 0, 0);
             If JsonArrayEndereco.Items[0].TryGetValue<String>('Erro', vErro) then
                FdMemPesqGeral.FieldByName('Observacao').AsString  := Copy(vErro, 1, 50)
             Else begin
@@ -1329,7 +1329,7 @@ begin
         Try
           vEndereco := EdtPicking.Text;
           ObjEnderecoCtrl  := TEnderecoCtrl.Create;
-          RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EnderecoMask(EdtPicking.Text, '', False), EnderecoMask(EdtPicking.Text, '', False), 'T', 3);
+          RetornoJsonArray := ObjEnderecoCtrl.GetEnderecoJson(0, 0, 0, 0, EnderecoMask(EdtPicking.Text, '', False), EnderecoMask(EdtPicking.Text, '', False), 'T', 3, 0);
           if (RetornoJsonArray.Items[0].TryGetValue('Erro', vErro)) or (RetornoJsonArray.Count < 1) then Begin
              EdtPicking.Text := '';
              EdtPicking.SetFocus;
@@ -1350,6 +1350,11 @@ begin
              EdtPicking.Text := '';
              EdtPicking.SetFocus;
              raise Exception.Create('Endereço('+EnderecoMask(vEndereco, '', True)+') inativo não pode ser usado!');
+          End
+          Else If (RetornoJsonArray.Items[0].GetValue<Integer>('bloqueado') = 1) then Begin
+             EdtPicking.Text := '';
+             EdtPicking.SetFocus;
+             raise Exception.Create('Endereço('+EnderecoMask(vEndereco, '', True)+') Bloqueado para uso!');
           End
           Else if ((RetornoJsonArray.Items[0].GetValue<TJsonObject>('produto')).GetValue<Integer>('produtoid') <> 0) and
                   ((RetornoJsonArray.Items[0].GetValue<TJsonObject>('produto')).GetValue<Integer>('produtoid') <> ObjProdutoCtrl.ObjProduto.IdProduto) then Begin
