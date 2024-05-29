@@ -3,7 +3,11 @@ inherited FrmReposicao: TFrmReposicao
   PixelsPerInch = 96
   TextHeight = 17
   inherited PgcBase: TcxPageControl
+    Properties.ActivePage = TabReposicaoModelo
     inherited TabListagem: TcxTabSheet
+      ExplicitTop = 24
+      ExplicitWidth = 1157
+      ExplicitHeight = 524
       inherited LstCadastro: TAdvStringGrid
         ColCount = 15
         ColumnHeaders.Strings = (
@@ -72,9 +76,6 @@ inherited FrmReposicao: TFrmReposicao
     end
     inherited TabPrincipal: TcxTabSheet
       Caption = 'Gerar Reposi'#231#227'o Individual'
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inherited ShCadastro: TShape
         Left = 510
         Top = 11
@@ -1532,9 +1533,6 @@ inherited FrmReposicao: TFrmReposicao
       Caption = 'Registro de Coleta Manual'
       ImageIndex = 4
       OnShow = TabReposicaoColetaShow
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PnlRegistroColeta: TPanel
         Left = 0
         Top = 232
@@ -7211,9 +7209,6 @@ inherited FrmReposicao: TFrmReposicao
       Caption = 'Modelo(s) para Reposi'#231#227'o'
       ImageIndex = 5
       OnShow = TabReposicaoModeloShow
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         1157
         524)
@@ -8165,8 +8160,8 @@ inherited FrmReposicao: TFrmReposicao
         object LblTitModelo: TLabel
           Left = 0
           Top = 0
-          Width = 329
-          Height = 25
+          Width = 1157
+          Height = 22
           CustomHint = BalloonHint1
           Align = alClient
           Alignment = taCenter
@@ -8179,6 +8174,8 @@ inherited FrmReposicao: TFrmReposicao
           Font.Style = [fsBold]
           ParentColor = False
           ParentFont = False
+          ExplicitWidth = 329
+          ExplicitHeight = 25
         end
       end
       object BtnConferiModelo: TBitBtn
@@ -18578,11 +18575,22 @@ inherited FrmReposicao: TFrmReposicao
     ExplicitLeft = 1106
     ExplicitTop = -16
   end
+  inherited PnlErro: TPanel
+    inherited LblMensShowErro: TLabel
+      Width = 1156
+      Height = 22
+    end
+  end
   inherited PnlConfigPrinter: TPanel
     Left = 952
     Top = 260
     ExplicitLeft = 952
     ExplicitTop = 260
+    inherited Panel7: TPanel
+      inherited LblTitConfigPrinter: TLabel
+        Width = 313
+      end
+    end
   end
   inherited DsPesqGeral: TDataSource
     Left = 921

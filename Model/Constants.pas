@@ -4310,9 +4310,9 @@ Const SqlEtiquetaPorVolume_120524 = 'SET STATISTICS IO OFF' + sLineBreak +
       'Order by Prd.Descricao ';
 
     // Pegar os Produtos que precisam serem Reposto.
-  Const
-    SqlGetReposicaoDemanda = 'Declare @DocumentoData Date = :pDocumentoData' +
-      sLineBreak + 'Declare @ZonaId Integer = :pZonaId' + sLineBreak +
+Const SqlGetReposicaoDemanda =
+      'Declare @DocumentoData Date = :pDocumentoData' +sLineBreak +
+      'Declare @ZonaId Integer = :pZonaId' + sLineBreak +
       'Declare @PickingInicial VarChar(11) = :pPickingInicial' + sLineBreak +
       'Declare @PickingFinal   Varchar(11) = :pPickingFinal' + sLineBreak +
       'Declare @TipoGeracao Varchar(1)     = :pTipoGeracao' + sLineBreak +
@@ -4320,106 +4320,73 @@ Const SqlEtiquetaPorVolume_120524 = 'SET STATISTICS IO OFF' + sLineBreak +
       'Insert Into ReposicaoDemandaItens ' + sLineBreak +
       'select Prd.IdProduto ProdutoId, Dem.EmbalagemPadrao, ' + sLineBreak +
       '       Dem.CxaFechada, Dem.Fracionado,' + sLineBreak +
-      '       Coalesce(EstPallet.QtdeCxaFec, 0) SaldoPalletCxaFechada,' +
-      sLineBreak +
-      '   	   (Case When (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) <=0 then 0 Else (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) End) SaldoPicking,'
-      + sLineBreak +
-      '       (Case when Coalesce(Dem.CxaFechada, 0) > Coalesce(EstPallet.QtdeCxaFec, 0) then'
-      + sLineBreak +
-      '	                  Coalesce(Dem.CxaFechada, 0) - Coalesce(EstPallet.QtdeCxaFec, 0)'
-      + sLineBreak +
-      '		           Else 0 End) + Coalesce(Fracionado, 0) - (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) Demanda --QtdeReposicao'
-      + sLineBreak +
-      'From (Select Demanda.ProdutoId, Demanda.EmbalagemPadrao, Demanda.FatorConversao, -- Demanda.Quantidade,'
-      + sLineBreak + '             sum(Demanda.' + #34 + 'Cx.Fechada' + #34 +
-      ') ' + #34 + 'CxaFechada' + #34 + ', Sum(Demanda.Fracionado) Fracionado' +
-      sLineBreak + '      From (select PP.PedidoId,' + sLineBreak +
-      '                   PP.ProdutoId, PP.EmbalagemPadrao, PP.Quantidade, Prd.FatorConversao,'
-      + sLineBreak +
-      '                  (Case When FatorConversao > 1 then (PP.Quantidade / FatorConversao)*Prd.FatorConversao'
-      + sLineBreak + '				                    Else 0 End) ' + #34 +
-      'Cx.Fechada' + #34 + ',' + sLineBreak +
-      '				              (Case When FatorConversao > 1 then (Quantidade % FatorConversao)'
-      + sLineBreak +
-      '				                    Else Quantidade End) Fracionado' + sLineBreak
-      + '            from PedidoProdutos PP' + sLineBreak +
-      '            Inner join (select PedidoId, rd.data DocumentoData, De.ProcessoId, P.OperacaoTipoId'
-      + sLineBreak + '                        From Pedido P' + sLineBreak +
-      '			                     Inner Join vDocumentoEtapas De On De.Documento = p.UUid'
-      + sLineBreak +
-      '						                  Inner join Rhema_Data Rd On Rd.IdData = P.DocumentoData'
-      + sLineBreak +
-      '						                  where DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas'
-      + sLineBreak +
-      '                              where Documento = P.uuid and Status = 1) and P.OperacaoTipoId = 2) Ped on Ped.PedidoId = PP.PedidoId'
-      + sLineBreak +
-      '            Inner Join vProduto Prd on Prd.IdProduto = PP.ProdutoId' +
-      sLineBreak + '            where DocumentoData = @DocumentoData And' +
-      sLineBreak +
-      '			              --(@ZonaId = 0 or Prd.ZonaID = @ZonaId) and' +
-      sLineBreak +
-      '                  Ped.ProcessoId = 1 and Ped.OperacaoTipoId = 2' +
-      sLineBreak +
-      '                  And Coalesce(Prd.SomenteCxaFechada, 0) <> 1) Demanda' +
-      sLineBreak +
-      '            Group by Demanda.ProdutoId, Demanda.EmbalagemPadrao, Demanda.FatorConversao ) Dem'
-      + sLineBreak +
-      '      Inner Join vProduto Prd On Prd.IdProduto = Dem.ProdutoId' +
-      sLineBreak +
-      '      Left Join (Select Produtoid, Sum(Qtde) Qtde, SUM(Qtde / FatorConversao*FatorConversao) QtdeCxaFec'
-      + sLineBreak + '                 From vEstoqueProducao' + sLineBreak +
-      '             	   Where Qtde > 0 and EstruturaId = 1 and (Qtde / FatorConversao)*FatorConversao > 0'
-      + sLineBreak + '                   And (@TipoGeracao <> ' + #39 + 'A' +
-      #39 + ' or ZonaId <> 1)' + sLineBreak +
-      '            		   Group by ProdutoId,FatorConversao,FatorConversao) EstPallet On EstPallet.ProdutoId=Dem.ProdutoId and Qtde > Dem.FatorConversao --Saldo Pallet para Caixa Fechada'
-      + sLineBreak + '      Left Join (Select Produtoid, Sum(Qtde) Qtde' +
-      sLineBreak + '                 From vEstoqueProducao' + sLineBreak +
-      '            		 Where EstruturaId = 2' + sLineBreak +
-      '                 Group by ProdutoId) Est On Est.ProdutoId=Dem.ProdutoId'
-      + sLineBreak +
-      '     		                              --And Est.Qtde >= Dem.EmbalagemPadrao'
-      + sLineBreak +
+      '       Coalesce(EstPallet.QtdeCxaFec, 0) SaldoPalletCxaFechada,' +sLineBreak +
+      '   	   (Case When (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) <=0 then 0 '+sLineBreak+
+      '             Else (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) End) SaldoPicking,'+sLineBreak +
+      '       (Case when Coalesce(Dem.CxaFechada, 0) > Coalesce(EstPallet.QtdeCxaFec, 0) then'+sLineBreak +
+      '	                  Coalesce(Dem.CxaFechada, 0) - Coalesce(EstPallet.QtdeCxaFec, 0)'+sLineBreak +
+      '		           Else 0 End) + Coalesce(Fracionado, 0) - (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) Demanda --QtdeReposicao'+sLineBreak +
+      'From (Select Demanda.ProdutoId, Demanda.EmbalagemPadrao, Demanda.FatorConversao, -- Demanda.Quantidade,'+sLineBreak +
+      '             sum(Demanda.' + #34 + 'Cx.Fechada' + #34 +') ' + #34 + 'CxaFechada' + #34 + ', Sum(Demanda.Fracionado) Fracionado' +sLineBreak +
+      '      From (select PP.PedidoId,' + sLineBreak +
+      '                   PP.ProdutoId, PP.EmbalagemPadrao, PP.Quantidade, Prd.FatorConversao,'+sLineBreak +
+      '                  (Case When FatorConversao > 1 then (PP.Quantidade / FatorConversao)*Prd.FatorConversao'+sLineBreak +
+      '				                    Else 0 End) ' + #34 +'Cx.Fechada' + #34 + ',' + sLineBreak +
+      '				              (Case When FatorConversao > 1 then (Quantidade % FatorConversao)'+sLineBreak +
+      '				                    Else Quantidade End) Fracionado' + sLineBreak+
+      '            from PedidoProdutos PP' + sLineBreak +
+      '            Inner join (select PedidoId, rd.data DocumentoData, De.ProcessoId, P.OperacaoTipoId'+sLineBreak + '                        From Pedido P' + sLineBreak +
+      '			                     Inner Join vDocumentoEtapas De On De.Documento = p.UUid'+sLineBreak +
+      '						                  Inner join Rhema_Data Rd On Rd.IdData = P.DocumentoData'+sLineBreak +
+      '						                  where DE.ProcessoId = (Select Max(ProcessoId) From vDocumentoEtapas'+sLineBreak +
+      '                              where Documento = P.uuid and Status = 1) and P.OperacaoTipoId = 2) Ped on Ped.PedidoId = PP.PedidoId'+sLineBreak +
+      '            Inner Join vProduto Prd on Prd.IdProduto = PP.ProdutoId' +sLineBreak +
+      '            where DocumentoData = @DocumentoData And' +sLineBreak +
+      '			              --(@ZonaId = 0 or Prd.ZonaID = @ZonaId) and' +sLineBreak +
+      '                  Ped.ProcessoId = 1 and Ped.OperacaoTipoId = 2' +sLineBreak +
+      '                  And Coalesce(Prd.SomenteCxaFechada, 0) <> 1) Demanda' +sLineBreak +
+      '            Group by Demanda.ProdutoId, Demanda.EmbalagemPadrao, Demanda.FatorConversao ) Dem'+sLineBreak +
+      '      Inner Join vProduto Prd On Prd.IdProduto = Dem.ProdutoId' +sLineBreak +
+      '      Left Join (Select Produtoid, Sum(Qtde) Qtde, SUM(Qtde / FatorConversao*FatorConversao) QtdeCxaFec'+sLineBreak +
+      '                 From vEstoqueProducao' + sLineBreak +
+      '             	   Where Qtde > 0 and EstruturaId = 1 and (Qtde / FatorConversao)*FatorConversao > 0'+sLineBreak +
+      '                   And (@TipoGeracao <> ' + #39 + 'A' +#39 + ' or (Select Producao=1 From EstoqueTipo where Id = 1) = 1 or ZonaId > 1)' + sLineBreak +
+      '            		   Group by ProdutoId,FatorConversao,FatorConversao) EstPallet On EstPallet.ProdutoId=Dem.ProdutoId '+sLineBreak+
+      '                                                                   and Qtde > Dem.FatorConversao --Saldo Pallet para Caixa Fechada'+sLineBreak+
+      '      Left Join (Select Produtoid, Sum(Qtde) Qtde' +sLineBreak +
+      '                 From vEstoqueProducao' + sLineBreak +
+      '            		   Where EstruturaId = 2' + sLineBreak +
+      '                 Group by ProdutoId) Est On Est.ProdutoId=Dem.ProdutoId'+sLineBreak +
+      '     		                              --And Est.Qtde >= Dem.EmbalagemPadrao'+sLineBreak +
     // Incluir Estoque j� reservado para Reposi��o
-      '      Left Join (Select ProdutoId, Sum(Rc.Qtde) Qtde --Reserva para Coleta'
-      + sLineBreak + '                 From ReposicaoEnderecoColeta Rc' +
-      sLineBreak +
-      '                 Inner Join Reposicao Rep On Rep.ReposicaoId = Rc.ReposicaoId'
-      + sLineBreak +
-      '                 Where Rep.ProcessoId In (27,28) and Rc.QtdRepo Is Null'
-      + sLineBreak +
-      '                 Group by ProdutoId) ResCol On ResCol.ProdutoId = Dem.ProdutoId'
-      + sLineBreak +
-      '      Left Join (Select Produtoid, Sum(Qtde) Qtde, SUM(Qtde) QtdeCxaFec'
-      + sLineBreak + '                 From vEstoqueProducao' + sLineBreak +
+      '      Left Join (Select ProdutoId, Sum(Rc.Qtde) Qtde --Reserva para Coleta'+sLineBreak+
+      '                 From ReposicaoEnderecoColeta Rc'+sLineBreak +
+      '                 Inner Join Reposicao Rep On Rep.ReposicaoId = Rc.ReposicaoId'+sLineBreak +
+      '                 Where Rep.ProcessoId In (27,28) and Rc.QtdRepo Is Null'+sLineBreak +
+      '                 Group by ProdutoId) ResCol On ResCol.ProdutoId = Dem.ProdutoId'+sLineBreak +
+      '      Left Join (Select Produtoid, Sum(Qtde) Qtde, SUM(Qtde) QtdeCxaFec'+sLineBreak +
+      '                 From vEstoqueProducao' + sLineBreak +
       '		             Where Qtde > 0 and EstruturaId = 1' + sLineBreak +
-      '                   And (@TipoGeracao <> ' + #39 + 'A' + #39 +
-      ' or ZonaId <> 1)' + sLineBreak +
-      '		               Group by ProdutoId) EstDisponivel On EstDisponivel.ProdutoId=Dem.ProdutoId'
-      + sLineBreak +
-      'Where (Case when Coalesce(Dem.CxaFechada, 0) > Coalesce(EstPallet.QtdeCxaFec, 0) then'
-      + sLineBreak +
-      '               Coalesce(Dem.CxaFechada, 0) - Coalesce(EstPallet.QtdeCxaFec, 0)'
-      + sLineBreak +
-      '		          Else 0 End) + Coalesce(Fracionado, 0) - (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) > 0 And'
-      + sLineBreak + '      (Coalesce(EstDisponivel.Qtde, 0) -' + sLineBreak +
+      '                   And (@TipoGeracao <> ' + #39 + 'A' + #39 + ' or (Select Producao=1 From EstoqueTipo where Id = 1) = 1 or ZonaId > 1)' + sLineBreak +
+      '		               Group by ProdutoId) EstDisponivel On EstDisponivel.ProdutoId=Dem.ProdutoId'+sLineBreak +
+      'Where (Case when Coalesce(Dem.CxaFechada, 0) > Coalesce(EstPallet.QtdeCxaFec, 0) then'+sLineBreak +
+      '               Coalesce(Dem.CxaFechada, 0) - Coalesce(EstPallet.QtdeCxaFec, 0)'+sLineBreak +
+      '		          Else 0 End) + Coalesce(Fracionado, 0) - (Coalesce(Est.Qtde, 0)+Coalesce(ResCol.Qtde, 0)) > 0 And'+sLineBreak +
+      '      (Coalesce(EstDisponivel.Qtde, 0) -' + sLineBreak +
       '	              (Case When Dem.CxaFechada>0 Then' + sLineBreak +
-      '				                   (Case When Coalesce(EstPallet.QtdeCxaFec, 0) > Dem.CxaFechada then'
-      + sLineBreak + '							                         Dem.CxaFechada' +
-      sLineBreak +
-      '								                     Else Coalesce(EstPallet.QtdeCxaFec, 0) End)'
-      + sLineBreak + '				                    Else 0 End)) > 0' + sLineBreak
-      + '      And (@ZonaId = 0 or Prd.ZonaID = @ZonaId)' + sLineBreak +
-      '      And (@PickingInicial=' + #39 + #39 +
-      ' or SubString(Prd.EnderecoDescricao,1,len(@PickingInicial)) >= @PickingInicial)'
-      + sLineBreak + '      And (@PickingFinal=' + #39 + #39 +
-      ' or SubString(Prd.EnderecoDescricao,1,len(@PickingFinal)) <= @PickingFinal)'
-      + sLineBreak + ' ' + sLineBreak + 'select Prd.CodProduto, Prd.Descricao,'
-      + sLineBreak +
-      '   	   Prd.EnderecoId PickingId, Prd.Mascara MascaraPicking,' +
-      sLineBreak +
-      '	      Prd.EnderecoDescricao Picking, prd.FatorConversao Embalagem,' +
-      sLineBreak + '       RDI.*, Prd.ZonaID, Prd.ZonaDescricao Zona' +
-      sLineBreak + 'from reposicaodemandaitens RDI' + sLineBreak +
+      '				                   (Case When Coalesce(EstPallet.QtdeCxaFec, 0) > Dem.CxaFechada then'+sLineBreak +
+      '							                         Dem.CxaFechada'+sLineBreak +
+      '								                     Else Coalesce(EstPallet.QtdeCxaFec, 0) End)'+sLineBreak +
+      '				                    Else 0 End)) > 0' + sLineBreak+
+      '      And (@ZonaId = 0 or Prd.ZonaID = @ZonaId)' + sLineBreak +
+      '      And (@PickingInicial=' + #39 + #39+' or SubString(Prd.EnderecoDescricao, 1, len(@PickingInicial)) >= @PickingInicial)'+sLineBreak +
+      '      And (@PickingFinal=' + #39 + #39+' or SubString(Prd.EnderecoDescricao, 1, len(@PickingFinal)) <= @PickingFinal)'+sLineBreak +
+      ' ' + sLineBreak +
+      'select Prd.CodProduto, Prd.Descricao,'+sLineBreak +
+      '   	   Prd.EnderecoId PickingId, Prd.Mascara MascaraPicking,' +sLineBreak +
+      '	      Prd.EnderecoDescricao Picking, prd.FatorConversao Embalagem,' +sLineBreak +
+      '       RDI.*, Prd.ZonaID, Prd.ZonaDescricao Zona' +sLineBreak +
+      'from reposicaodemandaitens RDI' + sLineBreak +
       'Inner join vProduto Prd On Prd.IdProduto = RDI.ProdutoId' + sLineBreak +
       'Order by Prd.Descricao ' + sLineBreak + 'OPTION (RECOMPILE);';
 
@@ -6222,6 +6189,7 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       'Declare @ZonaId Integer     = :pZonaId' + sLineBreak +
       'Drop table if exists #PedProd' + sLineBreak +
       'Drop table if exists #Corte' + sLineBreak +
+      'Drop table if exists #Final'+sLineBreak+
       'Select PP.PedidoId, Rd.Data, Pp.ProdutoId, Prd.CodProduto, Prd.Descricao, Pp.Quantidade,' + sLineBreak +
       '      (Case When EmbalagemPadrao = 1 then '+#39+'Unid'+#39+' Else '+#39+'Cxa c/'+#39+'+Cast(EmbalagemPadrao as VarChar) End) Embalagem, De.ProcessoId Into #PedProd' + sLineBreak +
       '      From pedidoprodutos Pp' + sLineBreak +
@@ -6254,14 +6222,16 @@ Const SqlGetPedidoCortesSintetico = 'Declare @DataIni DateTime = :pDataIni' + sL
       '           (Case When PedProd.ProcessoId<>15 then PedProd.Quantidade Else 0 End) End)) Cubagem,' + sLineBreak +
       '       Sum(Coalesce((Case When Demanda>0 and Coalesce(Demanda, 0) > (QtdSuprida+QtdCancelado) then Coalesce(Demanda, 0) - QtdSuprida - QtdCancelado else 0 End), 0)) Checkout,' + sLineBreak +
       '   	   Sum((Case When Coalesce(Demanda, 0) = 0 and PedProd.ProcessoId = 15 then PedProd.Quantidade Else 0 End)+Coalesce(C.QtdCancelado, 0)) Cancelado,' + sLineBreak +
-      '   	   Sum(Coalesce(QtdSuprida, 0)) QtdSuprida, Sum(Coalesce(Est.Estoque, 0)) Estoque, Sum(Coalesce(Est.Vencido, 0)) Vencido' + sLineBreak +
+      '   	   Sum(Coalesce(QtdSuprida, 0)) QtdSuprida Into #Final' + sLineBreak +
       'From #PedProd PedProd' + sLineBreak +
       'left Join #Corte C On C.PedidoId = PedProd.PedidoId and C.ProdutoId = PedProd.ProdutoId' + sLineBreak +
-      'Left Join (Select CodigoERP, Sum(Qtde) Estoque, Sum(Iif(vencimento<@DataIni, qtde, 0)) Vencido' + sLineBreak +
-      '           From vEstoqueProducao Group By CodigoERP) Est On Est.CodigoERP = PedProd.CodProduto' + sLineBreak +
       'Where PedProd.Quantidade > Coalesce(C.QtdSuprida, 0)' + sLineBreak +
       'Group By PedProd.ProdutoId, PedProd.CodProduto, PedProd.Descricao, PedProd.Embalagem' + sLineBreak +
-      'Order by PedProd.Descricao';
+      'select F.*, Est.Estoque, Est.Vencido'+sLineBreak+
+      'From #Final F'+sLineBreak+
+      'Left Join (Select CodigoERP, IsNull(Sum(Qtde), 0) Estoque, IsNull(Sum(Iif(vencimento<@DataIni, qtde, 0)), 0) Vencido'+sLineBreak+
+      '           From vEstoqueProducao Group By CodigoERP) Est On Est.CodigoERP = F.CodProduto'+sLineBreak+
+      'Order by Descricao';
 
 Const SqlGetPedidoCorteSinteticoOLD =      'Select PedProd.ProdutoId, CodProduto, Descricao, Embalagem, Sum(PedProd.Quantidade) Demanda,'+sLineBreak+
       '       Sum((Case When Coalesce(Demanda, 0) > 0 then PedProd.Quantidade - Coalesce(Demanda, 0) Else '+sLineBreak+

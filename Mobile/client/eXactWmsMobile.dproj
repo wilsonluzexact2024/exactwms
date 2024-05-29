@@ -271,11 +271,11 @@
         <Android_LauncherIcon144>Images\Icone\res\mipmap-xxhdpi144x144\GrupoX3.png</Android_LauncherIcon144>
         <Android_SplashImage426>Images\Splash 426x320.png</Android_SplashImage426>
         <DCC_ExeOutput>C:\App\eXactWMS\Mobile\</DCC_ExeOutput>
-        <VerInfo_Keys>package=br.com.rhemasyssolucoes.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=9;versionName=2.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=br.com.rhemasyssolucoes.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=2.1;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <DCC_GenerateAndroidAppBundleFile>true</DCC_GenerateAndroidAppBundleFile>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
-        <VerInfo_Build>9</VerInfo_Build>
+        <VerInfo_Build>1</VerInfo_Build>
         <AUP_READ_EXTERNAL_STORAGE>false</AUP_READ_EXTERNAL_STORAGE>
         <AUP_REQUEST_INSTALL_PACKAGES>false</AUP_REQUEST_INSTALL_PACKAGES>
     </PropertyGroup>
@@ -287,15 +287,16 @@
         <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
-        <VerInfo_Keys>CompanyName=Rhemasys Soluções;FileVersion=2.0.9.0;InternalName=eXactWMSMobile;LegalCopyright=RhemaSys Soluções;LegalTrademarks=eXactWMS;OriginalFilename=eXactWMSMobile.exe;ProductVersion=1.3;Comments=;ProgramID=br.com.rhemasyssolucoes.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Rhemasys Soluções;FileVersion=2.1.1.0;InternalName=eXactWMSMobile;LegalCopyright=RhemaSys Soluções;LegalTrademarks=eXactWMS;OriginalFilename=eXactWMSMobile.exe;ProductVersion=1.3;Comments=;ProgramID=br.com.rhemasyssolucoes.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <Icon_MainIcon>..\..\Rhemasys.ico</Icon_MainIcon>
         <DCC_ExeOutput>c:\App\eXactWMS\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Release>9</VerInfo_Release>
+        <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -1472,12 +1473,6 @@
                 <DeployFile LocalName="c:\App\eXactWMS\eXactWmsMobile.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>eXactWmsMobile.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="c:\App\eXactWMS\eXactWmsMobile.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>eXactWmsMobile.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
