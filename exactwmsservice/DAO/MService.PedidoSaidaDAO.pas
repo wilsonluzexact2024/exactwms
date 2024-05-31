@@ -1422,8 +1422,7 @@ begin
   end;
 end;
 
-function TPedidoSaidaDao.GetClientesRotaCarga(const AParams
-  : TDictionary<string, string>): TjSonArray;
+function TPedidoSaidaDao.GetClientesRotaCarga(const AParams : TDictionary<string, string>): TjSonArray;
 begin
   Try
     FConexao.Query.SQL.Add(TuEvolutConst.SqlPedidoCarga);

@@ -482,19 +482,15 @@ begin
 End;
 
 Procedure GetCargaPessoas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
-Var
-  ObjCargaDAO: TCargasDao;
+Var ObjCargaDAO: TCargasDao;
 begin
   Try
     Try
       ObjCargaDAO := TCargasDao.Create;
-      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPessoas
-        (StrToIntDef(Req.Params.Items['cargaid'], 0))).Status(THTTPStatus.OK);
-    Except
-      on E: Exception do
+      Res.Send<TJsonArray>(ObjCargaDAO.GetCargaPessoas(StrToIntDef(Req.Params.Items['cargaid'], 0))).Status(THTTPStatus.OK);
+    Except on E: Exception do
       Begin
-        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro',
-          E.Message))).Status(THTTPStatus.ExpectationFailed);
+        Res.Send<TJSONObject>(TJSONObject.Create(TJSONPair.Create('Erro', E.Message))).Status(THTTPStatus.ExpectationFailed);
       End;
     End;
   Finally

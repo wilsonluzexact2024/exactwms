@@ -181,7 +181,7 @@ type
     SelClienteRota, SelPedido : Boolean;
     SelEntrega, SelTransito   : Boolean;
     Function GetListaCarga(pCargaId, pRotaId, pProcessoId, pPendente : Integer) : Boolean;
-    Procedure GetClientesRotaCarga;
+    Function GetClientesRotaCarga : Boolean;
     Procedure GetPedidosExpedido(pShowErro : Integer = 0);
     Procedure GetPedidoCarga(pMontagemCarga : Integer); //Pedidos para montagem da carga
     Function GetTransportadora(pTransportadoraId : Integer) : Boolean;
@@ -460,8 +460,8 @@ begin
      EdtDtTerminoMontagem.SetFocus;
      Exit;
   End;
-  GetClientesRotaCarga;
-  GetPedidoCarga(0);
+  If GetClientesRotaCarga then
+     GetPedidoCarga(0);
 end;
 
 procedure TFrmCargaMontar.CalculaPesoVolume;
@@ -911,13 +911,14 @@ begin
   JsonArrayRetorno := Nil;
 end;
 
-procedure TFrmCargaMontar.GetClientesRotaCarga;
+Function TFrmCargaMontar.GetClientesRotaCarga : Boolean;
 Var vDtInicio, vDtFinal : TDateTime;
     vErro : String;
     vProcessoId, vRecebido, vCubagem, vEtiqueta : Integer;
     JsonArrayRetorno : TJsonArray;
     ObjPedidoCtrl    : TPedidoSaidaCtrl;
 begin
+  Result := False;
   vProcessoId := 13;
   Try
     If EdtDtInicioMontagem.Text = '  /  /    ' then
@@ -961,8 +962,10 @@ begin
        LstAdvClientesRota.ClearRect(0, 1, LstAdvClientesRota.ColCount-1, LstAdvClientesRota.RowCount-1);
        LstAdvClientesRota.RowCount := 1;
     End
-    Else
+    Else Begin
        MontaListaClientesRotaCarga(JsonArrayRetorno);
+       Result := True;
+    End;
   End;
   JsonArrayRetorno := Nil;
   ObjPedidoCtrl.Free;
@@ -1845,6 +1848,7 @@ Var ObjProcessoCtrl  : TProcessoCtrl;
     vErro : String;
 begin
   inherited;
+  Try
   EdtRotaId.Text           := ObjCargaCtrl.ObjCargas.RotaId.ToString();
   GetRota(ObjCargaCtrl.ObjCargas.RotaId);
   EdtTransportadoraId.Text := ObjCargaCtrl.ObjCargas.Transportadora.PessoaId.ToString();
@@ -1868,6 +1872,9 @@ begin
         LblProcesso.Caption := ObjCargaCtrl.ObjCargas.ProcessoId.ToString()+' '+JsonArrayRetorno.Items[0].GetValue<String>('descricao');
      ObjProcessoCtrl.Free;
   end;
+  Except On E: Exception do
+     ShowMessage('Erro: '+E.Message);
+  End;
 end;
 
 procedure TFrmCargaMontar.TabListagemShow(Sender: TObject);

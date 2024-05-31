@@ -82,6 +82,7 @@ begin
     .Get('/inventario/contagem/:item', Contagem)
     .Post('/inventario/fechar', InventarioFechar)
     .Post('/inventario/apuracao/endereco', ApuracaoInventarioEndereco)
+
     .Post('/inventario/apuracao/produto', ApuracaoInventarioProduto)
     .Put('/inventario/limparcontagem/:inventarioid/:enderecoid/:produtoid', LimparContagem)
     .Get('/inventario/integracao/consulta', GetInventarioConsultaIntegracao)
@@ -104,7 +105,7 @@ begin
       JsonArrayRetorno := LService.ApuracaoInventarioEndereco(Req.Query.Dictionary);
       Res.Send<TJsonArray>(JsonArrayRetorno).Status(THttpStatus.Created);
       Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                      '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '', 'Retorno: ' + JsonArrayRetorno.Count.ToString +
+                      '/v1/inventario/apuracao/endereco', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayRetorno.ToString +
                       ' Registros.', 200, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
     Except On E: Exception do
       Begin
@@ -112,7 +113,7 @@ begin
         JsonArrayErro.AddElement(tJsonObject.Create(TJSONPair.Create('Erro', E.Message)));
         Res.Send<TJsonArray>(JsonArrayErro).Status(THttpStatus.ExpectationFailed);
         Tutil.SalvarLog(Req.MethodType, StrToIntDef(Req.Headers['usuarioid'], 0), Req.Headers['terminal'], ClientIP(Req), THorse.Port,
-                        '/v1/inventario/loteinventariado', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
+                        '/v1/inventario/apuracao/endereco', Trim(Req.Params.Content.Text), Req.Body, '', JsonArrayErro.ToString(),
                         500, ((Time - HrInicioLog) / 1000), Req.Headers['appname']);
       End;
     end;

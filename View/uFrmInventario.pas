@@ -1112,9 +1112,12 @@ begin
         //JsonArrayInventario.Free;
      End;
      ObjInventarioCtrl.ObjInventario := ObjInventarioCtrl.ObjInventario.JsonToClass((JsonArrayInventario.Items[0] as TJsonObject).ToString);
-     ObjInventarioCtrl.ObjInventario.datacriacao    := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datacriacao')));
-     ObjInventarioCtrl.ObjInventario.DataFechamento := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datafechamento')));
-     ObjInventarioCtrl.ObjInventario.horaFechamento := StrToTime(Copy((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('horafechamento'), 1, 8));
+     Try
+       ObjInventarioCtrl.ObjInventario.datacriacao    := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datacriacao')));
+       ObjInventarioCtrl.ObjInventario.DataFechamento := StrToDate(DateEUAToBr((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('datafechamento')));
+       ObjInventarioCtrl.ObjInventario.horaFechamento := StrToTime(Copy((JsonArrayInventario.Items[0] as TJsonObject).GetValue<String>('horafechamento'), 1, 8));
+     Except
+     End;
      if ObjInventarioCtrl.ObjInventario.InventarioId > 0 then
         ShowDados;
   End;

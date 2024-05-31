@@ -10,7 +10,7 @@ inherited FrmCargaMontar: TFrmCargaMontar
   inherited PgcBase: TcxPageControl
     Width = 1279
     Height = 635
-    Properties.ActivePage = TabAcompanhamentoCarga
+    Properties.ActivePage = TabPrincipal
     ExplicitWidth = 1279
     ExplicitHeight = 635
     ClientRectBottom = 635
@@ -80,7 +80,6 @@ inherited FrmCargaMontar: TFrmCargaMontar
     end
     inherited TabPrincipal: TcxTabSheet
       ParentColor = False
-      ExplicitTop = 0
       ExplicitWidth = 1279
       ExplicitHeight = 611
       inherited ShCadastro: TShape
@@ -6196,16 +6195,17 @@ inherited FrmCargaMontar: TFrmCargaMontar
             Left = 980
             Top = 0
             Width = 247
-            Height = 155
+            Height = 172
             CustomHint = BalloonHint1
             Align = alRight
             Alignment = taRightJustify
             BevelOuter = bvNone
             ParentBackground = False
             TabOrder = 4
+            ExplicitHeight = 155
             DesignSize = (
               247
-              155)
+              172)
             object Label9: TLabel
               Left = 20
               Top = 4

@@ -157,7 +157,7 @@ end;
 
 function TInventarioCtrl.GetPendente: TJsonArray;
 Var ObjInventarioDAO : TInventarioDAO;
-    vErro         : String;
+    vErro            : String;
 begin
   ObjInventarioDAO := TInventarioDAO.Create;
   Result := ObjInventarioDAO.GetPendente;

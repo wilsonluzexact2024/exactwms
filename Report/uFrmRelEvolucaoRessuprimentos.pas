@@ -379,7 +379,7 @@ end;
 procedure TFrmRelEvolucaoRessuprimentos.FormCreate(Sender: TObject);
 begin
   inherited;
-  pTipoResumo := 1;
+  pTipoResumo := 0;
   ColumnHeader(pTipoResumo);
   LblRegistro.caption      := '0';
   LblRecebido.Caption      := '0';
